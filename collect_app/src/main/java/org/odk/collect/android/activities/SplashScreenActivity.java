@@ -22,13 +22,17 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import org.odk.collect.android.BackgroundRxCalls.RxEvents;
+import org.odk.collect.android.BackgroundRxCalls.UnzipDataTask;
+import org.odk.collect.android.BackgroundRxCalls.WebCalls;
+import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
@@ -52,13 +56,15 @@ public class SplashScreenActivity extends Activity {
     private static final boolean EXIT = true;
 
     private int imageMaxWidth;
+    public SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // this splash screen should be a blank slate
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        startGetFormListCall();
+        startUnzipTask();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
@@ -120,18 +126,18 @@ public class SplashScreenActivity extends Activity {
         if (firstRun || showSplash) {
             editor.putBoolean(GeneralKeys.KEY_FIRST_RUN, false);
             editor.commit();
-            startSplashScreen(splashPath);
-        } else {
-            endSplashScreen();
         }
+        showSimpleSplash();
     }
 
     private void endSplashScreen() {
-        startActivity(new Intent(this, MainMenuActivity.class));
-        finish();
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     // decodes image and scales it to reduce memory consumption
+    // Not used
     private Bitmap decodeFile(File f) {
         Bitmap b = null;
         try {
@@ -175,6 +181,7 @@ public class SplashScreenActivity extends Activity {
         return b;
     }
 
+    // Not used
     private void startSplashScreen(String path) {
 
         // add items to the splash screen here. makes things less distracting.
@@ -208,5 +215,38 @@ public class SplashScreenActivity extends Activity {
             }
         };
         t.start();
+    }
+
+    private void showSimpleSplash() {
+        ImageView iv = findViewById(R.id.splash);
+        LinearLayout ll = findViewById(R.id.splash_default);
+        ll.setVisibility(View.GONE);
+        iv.setImageResource(ODKDriver.getSplashScreenImageRes());
+        iv.setVisibility(View.VISIBLE);
+        Handler handler = new Handler();
+        handler.postDelayed(this::endSplashScreen, SPLASH_TIMEOUT);
+    }
+
+    private void startGetFormListCall() {
+        WebCalls.GetFormsListCall(this,
+                "http://142.93.208.135:8080/shiksha-saathi/get-formlist-for-role", new RxEvents() {
+                    @Override
+                    public void onComplete() {
+                        boolean firstRun = sharedPreferences.getBoolean(GeneralKeys.KEY_FIRST_RUN, true);
+                        if (sharedPreferences.getBoolean("isLoggedIn", false)) {
+                            // TODO: Implement Login logic and perform asctions based on that.
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.e("On Error: Could not update the form list %s", e.getMessage());
+                    }
+                });
+    }
+
+    private void startUnzipTask() {
+        UnzipDataTask unzipDataTask = new UnzipDataTask(this);
+        unzipDataTask.gunzipIt();
     }
 }

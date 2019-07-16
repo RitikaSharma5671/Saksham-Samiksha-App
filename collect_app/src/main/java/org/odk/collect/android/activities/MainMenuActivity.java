@@ -26,7 +26,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -655,5 +657,11 @@ public class MainMenuActivity extends CollectAbstractActivity {
                     .create()
                     .show();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getContentResolver().unregisterContentObserver(contentObserver);
     }
 }
