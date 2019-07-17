@@ -200,6 +200,7 @@ dependencies {
     // named "nbi-stubs", which causes there to be at least one .so library
     // present for every ABI (armeabi, armeabi-v7a, arm64-v8a, x86, x86_64).
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation project(":commons")
 
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.browser:browser:1.0.0'
@@ -286,7 +287,8 @@ dependencies {
     // Dagger:
     implementation "com.google.dagger:dagger:${rootProject.daggerVersion}"
     annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}"
-    testAnnotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}" // Needed for injection into Robolectric tests
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}"
+    // Needed for injection into Robolectric tests
 
     // Dagger Android:
     implementation "com.google.dagger:dagger-android:${rootProject.daggerVersion}"
