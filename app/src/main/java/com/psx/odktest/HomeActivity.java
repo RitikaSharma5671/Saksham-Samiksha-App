@@ -1,14 +1,23 @@
 package com.psx.odktest;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-public class HomeActivity extends AppCompatActivity {
+import androidx.appcompat.widget.Toolbar;
+
+import com.psx.odktest.base.BaseActivity;
+
+public class HomeActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        setupToolbar();
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setTitle("Home");
+        setSupportActionBar(toolbar);
     }
 }
