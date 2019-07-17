@@ -16,15 +16,21 @@
 
 package org.odk.collect.android.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
+
+import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 import static org.odk.collect.android.utilities.PermissionUtils.isEntryPointActivity;
@@ -70,6 +76,12 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        modifyToolbar();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         isInstanceStateSaved = true;
         super.onSaveInstanceState(outState);
@@ -82,5 +94,23 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(new LocaleHelper().updateLocale(base));
+    }
+
+    @SuppressLint("ResourceType")
+    private void modifyToolbar() {
+        if (getSupportActionBar() != null && ODKDriver.isModifyToolbarIcon()) {
+            if (ODKDriver.getToolbarIconResId() == Long.MAX_VALUE) {
+                // Hide the Toolbar icon
+                Timber.i("Changing toolbar Icon to null");
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            } else {
+                Timber.i("Changing toolbar icon to set Icon");
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                getSupportActionBar().setHomeAsUpIndicator((int) ODKDriver.getToolbarIconResId());
+            }
+        } else {
+            Timber.w("No toolbar found, cannot modify");
+        }
     }
 }

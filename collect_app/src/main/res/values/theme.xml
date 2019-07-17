@@ -111,4 +111,8 @@
     <style name="SearchViewTheme.Light" parent="Widget.AppCompat.Light.SearchView">
         <item name="searchHintIcon">@null</item>
     </style>
+
+    <style name="AppTheme.TextAppearance.Medium" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:fontFamily">@font/open_sans</item>
+    </style>
 </resources>

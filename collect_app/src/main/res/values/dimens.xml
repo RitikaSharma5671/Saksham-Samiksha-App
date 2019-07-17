@@ -48,4 +48,5 @@
     <dimen name="corner_radius">2dp</dimen>
 
     <dimen name="select_item_border">4dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
 </resources>
