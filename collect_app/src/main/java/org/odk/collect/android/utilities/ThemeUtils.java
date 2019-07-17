@@ -17,12 +17,15 @@ package org.odk.collect.android.utilities;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+
 import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StyleRes;
+
 import android.util.TypedValue;
 
+import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.R;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
@@ -37,16 +40,22 @@ public final class ThemeUtils {
 
     @StyleRes
     public int getAppTheme() {
+        if (ODKDriver.isIsUsingCustomTheme())
+            return ODKDriver.getCustomThemeId();
         return isDarkTheme() ? R.style.DarkAppTheme : R.style.LightAppTheme;
     }
 
     @StyleRes
     public int getFormEntryActivityTheme() {
+        if (ODKDriver.isIsUsingCustomTheme())
+            return ODKDriver.getCustomThemeId_FormEntry();
         return isDarkTheme() ? R.style.FormEntryActivityDarkTheme : R.style.FormEntryActivityLightTheme;
     }
 
     @StyleRes
     public int getSettingsTheme() {
+        if (ODKDriver.isIsUsingCustomTheme())
+            return ODKDriver.getCustomThemeId_Settings();
         return isDarkTheme() ? R.style.AppTheme_SettingsTheme_Dark : R.style.AppTheme_SettingsTheme_Light;
     }
 
