@@ -2,6 +2,7 @@ package com.psx.odktest;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,6 +10,9 @@ import com.psx.commons.ExchangeObject;
 import com.psx.commons.MainApplication;
 import com.psx.commons.Modules;
 import com.psx.commons.RxBus;
+import com.psx.odktest.di.component.ApplicationComponent;
+import com.psx.odktest.di.component.DaggerApplicationComponent;
+import com.psx.odktest.di.modules.ApplicationModule;
 
 import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.application.Collect;
@@ -18,6 +22,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MyApplication extends Collect implements MainApplication {
+
+    protected ApplicationComponent applicationComponent;
 
     private Activity currentActivity = null;
     private RxBus eventBus = null;
@@ -44,6 +50,23 @@ public class MyApplication extends Collect implements MainApplication {
                         }
                     }
                 }));
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        applicationComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+        applicationComponent.inject(this);
+    }
+
+    public ApplicationComponent getApplicationComponent() {
+        return applicationComponent;
+    }
+
+    public static MyApplication get(Context context) {
+        return (MyApplication) context.getApplicationContext();
     }
 
     @Override
