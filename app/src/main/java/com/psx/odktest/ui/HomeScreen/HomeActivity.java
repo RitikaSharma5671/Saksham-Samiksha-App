@@ -52,6 +52,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
         checkIntent();
         homePresenter.setWelcomeText();
         homePresenter.applySettings();
+        homePresenter.downloadForms();
     }
 
     @Override

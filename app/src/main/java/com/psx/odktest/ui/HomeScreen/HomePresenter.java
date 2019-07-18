@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.psx.odktest.Constants;
 import com.psx.odktest.R;
 import com.psx.odktest.base.BasePresenter;
 
@@ -16,13 +18,17 @@ import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.activities.WebViewActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.ActionListener;
+import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceSaver;
+import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.CustomTabHelper;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,8 +36,13 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> extends BasePresenter<V, I> implements HomeMvpPresenter<V, I> {
 
@@ -78,8 +89,33 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     }
 
     @Override
-    public void downloadForms(String formName, String formID) {
+    public void downloadForms() {
+        for (Map.Entry<String, String> formEntry : Constants.FORM_LIST.entrySet()) {
+            String fileName = Collect.FORMS_PATH + File.separator + formEntry.getValue() + ".xml";
+            File file = new File(fileName);
+            String serverURL = new WebCredentialsUtils().getServerUrlFromPreferences();
+            String partURL = "/www/formXml?formId=";
+            String downloadUrl = serverURL + partURL + formEntry.getKey();
 
+            if (file.exists()) {
+                Timber.i("File exists, won't download again");
+            } else {
+                ArrayList<FormDetails> filesToDownload = new ArrayList<>();
+                FormDetails fm = new FormDetails(
+                        formEntry.getValue(),
+                        downloadUrl,
+                        null,
+                        formEntry.getKey(),
+                        "",
+                        null,
+                        null,
+                        false,
+                        false);
+                filesToDownload.add(fm);
+                DownloadFormsTask downloadFormsTask = new DownloadFormsTask();
+                downloadFormsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, filesToDownload);
+            }
+        }
     }
 
     @Override
@@ -136,9 +172,6 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         if (Collect.allowClick(HomeActivity.class.getName())) {
             Intent intent = new Intent(getMvpView().getActivityContext(), clazz);
             getMvpView().getActivityContext().startActivity(intent);
-        } else {
-            // TODO : remove this
-            Log.i("TEST", "Multiple clicks dont register");
         }
     }
 }

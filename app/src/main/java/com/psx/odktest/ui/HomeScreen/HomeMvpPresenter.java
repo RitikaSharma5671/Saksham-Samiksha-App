@@ -20,7 +20,7 @@ public interface HomeMvpPresenter<V extends HomeMvpView, I extends HomeMvpIntera
 
     void setWelcomeText();
 
-    void downloadForms(String formName, String formID);
+    void downloadForms();
 
     void applySettings();
 

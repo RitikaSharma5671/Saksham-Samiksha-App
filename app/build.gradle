@@ -51,6 +51,9 @@ dependencies {
     implementation "com.jakewharton:butterknife:10.1.0"
     annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
 
+    //Timber
+    implementation "com.jakewharton.timber:timber:4.7.1"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation("androidx.test:runner:1.2.0-alpha03") {
         exclude group: 'com.android.support', module: 'support-annotations'
