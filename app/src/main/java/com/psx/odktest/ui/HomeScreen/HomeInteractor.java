@@ -11,4 +11,9 @@ public class HomeInteractor extends BaseInteractor implements HomeMvpInteractor 
     public HomeInteractor(PreferenceHelper preferenceHelper) {
         super(preferenceHelper);
     }
+
+    @Override
+    public String getUserName() {
+        return getPreferenceHelper().getCurrentUserName();
+    }
 }

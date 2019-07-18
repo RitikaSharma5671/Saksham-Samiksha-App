@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.psx.odktest.MyApplication;
 import com.psx.odktest.di.component.ActivityComponent;
 import com.psx.odktest.di.component.DaggerActivityComponent;
@@ -31,7 +32,13 @@ public abstract class BaseActivity extends CollectAbstractActivity implements Mv
         return activityComponent;
     }
 
+    @Override
     public Context getActivityContext() {
         return this;
+    }
+
+    @Override
+    public void showSnackbar(String message, int duration) {
+        Snackbar.make(findViewById(android.R.id.content), message, duration).show();
     }
 }

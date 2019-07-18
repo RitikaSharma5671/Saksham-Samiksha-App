@@ -3,4 +3,6 @@
     <string name="view_issues" translatable="false">View Issues</string>
     <string name="submit_form" translatable="false">Submit Form</string>
     <string name="inspect_school" translatable="false">Inspect School</string>
+    <string name="on_internet_saving_complete" translatable="false">Thanks for filling the inspection report. Your report has been submitted</string>
+    <string name="no_internet_saving_complete" translatable="false">Thank you for filling the inspection report for. Since you have filled the report in offline mode, please manually submit the form when connected to the internet from the "Submit form" option</string>
 </resources>

@@ -16,9 +16,13 @@ public interface HomeMvpPresenter<V extends HomeMvpView, I extends HomeMvpIntera
 
     void onViewIssuesClicked(View v);
 
-    void helplineClicked(View v);
+    void onHelplineButtonClicked(View v);
 
-    String getWelcomeText();
+    void setWelcomeText();
 
     void downloadForms(String formName, String formID);
+
+    void applySettings();
+
+    boolean isNetworkConnected();
 }

@@ -18,7 +18,8 @@ import dagger.Module;
 public abstract class ActivityAbstractProviders {
     @Binds
     @PerActivity
-    abstract HomeMvpPresenter<HomeMvpView, HomeMvpInteractor> provideHomeMvpPresenter(HomePresenter<HomeMvpView, HomeMvpInteractor> presenter);
+    abstract HomeMvpPresenter<HomeMvpView, HomeMvpInteractor> provideHomeMvpPresenter(
+            HomePresenter<HomeMvpView, HomeMvpInteractor> presenter);
 
     @Binds
     @PerActivity
