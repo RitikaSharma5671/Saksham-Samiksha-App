@@ -13,6 +13,7 @@ import com.psx.commons.RxBus;
 import com.psx.odktest.di.component.ApplicationComponent;
 import com.psx.odktest.di.component.DaggerApplicationComponent;
 import com.psx.odktest.di.modules.ApplicationModule;
+import com.psx.odktest.ui.HomeScreen.HomeActivity;
 
 import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.application.Collect;

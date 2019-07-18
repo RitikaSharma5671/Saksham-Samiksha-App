@@ -1,9 +1,10 @@
-package com.psx.odktest;
+package com.psx.odktest.ui.HomeScreen;
 
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.psx.odktest.R;
 import com.psx.odktest.base.BaseActivity;
 
 public class HomeActivity extends BaseActivity {

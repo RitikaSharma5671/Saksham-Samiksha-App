@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:name">
-        <activity android:name=".HomeActivity"
+        <activity android:name=".ui.HomeScreen.HomeActivity"
             android:theme="@style/BaseAppTheme"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>

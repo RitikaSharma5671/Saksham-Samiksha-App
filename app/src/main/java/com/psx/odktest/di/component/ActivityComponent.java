@@ -1,6 +1,6 @@
 package com.psx.odktest.di.component;
 
-import com.psx.odktest.HomeActivity;
+import com.psx.odktest.ui.HomeScreen.HomeActivity;
 import com.psx.odktest.di.PerActivity;
 import com.psx.odktest.di.modules.ActivityModule;
 
