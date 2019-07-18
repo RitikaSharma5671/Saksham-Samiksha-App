@@ -3,6 +3,7 @@ package com.psx.odktest.di.component;
 import android.content.Context;
 
 import com.psx.commons.MainApplication;
+import com.psx.odktest.data.prefs.PreferenceHelper;
 import com.psx.odktest.di.ApplicationContext;
 import com.psx.odktest.di.modules.ApplicationModule;
 
@@ -15,7 +16,7 @@ import dagger.Component;
  * and the objects which express a dependency. It is implemented internally by Dagger at build time.
  */
 @Singleton
-@Component(modules = {ApplicationModule.class})
+@Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
 
     void inject(MainApplication application);
@@ -24,4 +25,6 @@ public interface ApplicationComponent {
     Context getContext();
 
     MainApplication getApplication();
+
+    PreferenceHelper preferenceHelper();
 }

@@ -7,7 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.psx.odktest.R;
 import com.psx.odktest.base.BaseActivity;
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements HomeMvpView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +16,8 @@ public class HomeActivity extends BaseActivity {
         setupToolbar();
     }
 
-    private void setupToolbar() {
+    @Override
+    public void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setTitle("Home");
         setSupportActionBar(toolbar);

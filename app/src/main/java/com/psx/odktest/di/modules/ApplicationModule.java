@@ -3,7 +3,13 @@ package com.psx.odktest.di.modules;
 import android.content.Context;
 
 import com.psx.commons.MainApplication;
+import com.psx.odktest.Constants;
+import com.psx.odktest.data.prefs.AppPreferenceHelper;
+import com.psx.odktest.data.prefs.PreferenceHelper;
 import com.psx.odktest.di.ApplicationContext;
+import com.psx.odktest.di.PreferenceInfo;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -26,5 +32,17 @@ public class ApplicationModule {
     @Provides
     MainApplication provideApplication() {
         return mainApplication;
+    }
+
+    @Singleton
+    @Provides
+    PreferenceHelper providePreferenceHelper(AppPreferenceHelper appPreferenceHelper) {
+        return appPreferenceHelper;
+    }
+
+    @Provides
+    @PreferenceInfo
+    String providePreferenceFileName() {
+        return Constants.PREF_FILE_NAME;
     }
 }
