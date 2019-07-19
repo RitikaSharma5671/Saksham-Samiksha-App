@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.psx.odktest.Constants;
 import com.psx.odktest.R;
 import com.psx.odktest.base.BasePresenter;
+import com.psx.odktest.ui.VisitsScreen.MyVisitsActivity;
 
 import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.activities.WebViewActivity;
@@ -53,8 +54,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void onMyVisitClicked(View v) {
-        // TODO : Create a MyVisits Activity and launch;
-        Toast.makeText(getMvpView().getActivityContext(), "Not Implemented Yet", Toast.LENGTH_SHORT).show();
+        launchActivity(MyVisitsActivity.class);
     }
 
     @Override

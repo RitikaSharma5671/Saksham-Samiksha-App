@@ -39,6 +39,7 @@ public class MyVisitsActivity extends BaseActivity implements MyVisitsMvpView {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         }
     }
 
