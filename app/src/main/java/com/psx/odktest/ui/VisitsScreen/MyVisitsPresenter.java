@@ -39,7 +39,7 @@ public class MyVisitsPresenter<V extends MyVisitsMvpView, I extends MyVisitMvpIn
             Intent i = new Intent(getMvpView().getActivityContext(), InstanceChooserList.class);
             i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.VIEW_SENT);
             i.putExtra(Constants.KEY_CUSTOMIZE_TOOLBAR, UtilityFunctions.generateToolbarModificationObject(true,
-                    R.drawable.ic_arrow_back_white_24dp, true));
+                    R.drawable.ic_arrow_back_white_24dp, "View Submitted Forms", true));
             i.putIntegerArrayListExtra(Constants.CUSTOM_TOOLBAR_ARRAYLIST_HIDE_IDS, null);
             getMvpView().getActivityContext().startActivity(i);
         }

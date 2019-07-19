@@ -161,6 +161,9 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
     private void modifyToolbarUsingModificationMap(HashMap<String, Object> toolbarModificationObject) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            if (toolbarModificationObject.get(Constants.CUSTOM_TOOLBAR_TITLE) != null) {
+                actionBar.setTitle((String) toolbarModificationObject.get(Constants.CUSTOM_TOOLBAR_TITLE));
+            }
             if (!(boolean) toolbarModificationObject.get(Constants.CUSTOM_TOOLBAR_SHOW_NAVICON)) {
                 actionBar.setDisplayShowHomeEnabled(false);
                 actionBar.setDisplayHomeAsUpEnabled(false);
