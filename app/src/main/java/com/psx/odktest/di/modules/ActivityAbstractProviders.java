@@ -6,6 +6,11 @@ import com.psx.odktest.ui.HomeScreen.HomeMvpInteractor;
 import com.psx.odktest.ui.HomeScreen.HomeMvpPresenter;
 import com.psx.odktest.ui.HomeScreen.HomeMvpView;
 import com.psx.odktest.ui.HomeScreen.HomePresenter;
+import com.psx.odktest.ui.SearchActivity.SearchInteractor;
+import com.psx.odktest.ui.SearchActivity.SearchMvpInteractor;
+import com.psx.odktest.ui.SearchActivity.SearchMvpPresenter;
+import com.psx.odktest.ui.SearchActivity.SearchMvpView;
+import com.psx.odktest.ui.SearchActivity.SearchPresenter;
 import com.psx.odktest.ui.VisitsScreen.MyVisitMvpInteractor;
 import com.psx.odktest.ui.VisitsScreen.MyVisitsInteractor;
 import com.psx.odktest.ui.VisitsScreen.MyVisitsMvpPresenter;
@@ -38,4 +43,13 @@ public abstract class ActivityAbstractProviders {
     @Binds
     @PerActivity
     abstract MyVisitMvpInteractor provideVistsMvpInteractor(MyVisitsInteractor myVisitsInteractor);
+
+    @Binds
+    @PerActivity
+    abstract SearchMvpPresenter<SearchMvpView, SearchMvpInteractor> provideSearchMvpPresenter(
+            SearchPresenter<SearchMvpView, SearchMvpInteractor> presenter);
+
+    @Binds
+    @PerActivity
+    abstract SearchMvpInteractor provideSearchMvpInteractor(SearchInteractor searchInteractor);
 }
