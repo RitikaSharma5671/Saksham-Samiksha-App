@@ -3,7 +3,7 @@ package com.psx.odktest.di.modules;
 import android.content.Context;
 
 import com.psx.commons.MainApplication;
-import com.psx.odktest.Constants;
+import com.psx.odktest.AppConstants;
 import com.psx.odktest.data.prefs.AppPreferenceHelper;
 import com.psx.odktest.data.prefs.PreferenceHelper;
 import com.psx.odktest.di.ApplicationContext;
@@ -43,6 +43,6 @@ public class ApplicationModule {
     @Provides
     @PreferenceInfo
     String providePreferenceFileName() {
-        return Constants.PREF_FILE_NAME;
+        return AppConstants.PREF_FILE_NAME;
     }
 }

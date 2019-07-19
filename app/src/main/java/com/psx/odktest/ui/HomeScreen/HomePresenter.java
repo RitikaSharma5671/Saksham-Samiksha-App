@@ -1,16 +1,14 @@
 package com.psx.odktest.ui.HomeScreen;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.psx.odktest.Constants;
+import com.psx.odktest.AppConstants;
 import com.psx.odktest.R;
 import com.psx.odktest.base.BasePresenter;
 import com.psx.odktest.ui.VisitsScreen.MyVisitsActivity;
@@ -38,7 +36,6 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -90,7 +87,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void downloadForms() {
-        for (Map.Entry<String, String> formEntry : Constants.FORM_LIST.entrySet()) {
+        for (Map.Entry<String, String> formEntry : AppConstants.FORM_LIST.entrySet()) {
             String fileName = Collect.FORMS_PATH + File.separator + formEntry.getValue() + ".xml";
             File file = new File(fileName);
             String serverURL = new WebCredentialsUtils().getServerUrlFromPreferences();

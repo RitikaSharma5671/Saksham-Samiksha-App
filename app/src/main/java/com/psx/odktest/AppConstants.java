@@ -2,7 +2,7 @@ package com.psx.odktest;
 
 import java.util.HashMap;
 
-public class Constants {
+public class AppConstants {
     public static final String PREF_FILE_NAME = "SAMAGRA_PREFS";
 
     public static final HashMap<String, String> FORM_LIST = new HashMap<String, String>() {{
