@@ -6,6 +6,11 @@ import com.psx.odktest.ui.HomeScreen.HomeMvpInteractor;
 import com.psx.odktest.ui.HomeScreen.HomeMvpPresenter;
 import com.psx.odktest.ui.HomeScreen.HomeMvpView;
 import com.psx.odktest.ui.HomeScreen.HomePresenter;
+import com.psx.odktest.ui.VisitsScreen.MyVisitMvpInteractor;
+import com.psx.odktest.ui.VisitsScreen.MyVisitsInteractor;
+import com.psx.odktest.ui.VisitsScreen.MyVisitsMvpPresenter;
+import com.psx.odktest.ui.VisitsScreen.MyVisitsMvpView;
+import com.psx.odktest.ui.VisitsScreen.MyVisitsPresenter;
 
 import dagger.Binds;
 import dagger.Module;
@@ -24,4 +29,13 @@ public abstract class ActivityAbstractProviders {
     @Binds
     @PerActivity
     abstract HomeMvpInteractor provideHomeMvpInteractor(HomeInteractor homeInteractor);
+
+    @Binds
+    @PerActivity
+    abstract MyVisitsMvpPresenter<MyVisitsMvpView, MyVisitMvpInteractor> provideVisitsMvpPresenter(
+            MyVisitsPresenter<MyVisitsMvpView, MyVisitMvpInteractor> presenter);
+
+    @Binds
+    @PerActivity
+    abstract MyVisitMvpInteractor provideVistsMvpInteractor(MyVisitsInteractor myVisitsInteractor);
 }

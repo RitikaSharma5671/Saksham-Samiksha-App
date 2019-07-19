@@ -2,8 +2,7 @@ package com.psx.odktest.base;
 
 import android.content.Context;
 
-public interface MvpView {
-    void setupToolbar();
+public interface MvpView extends ODKTestActivity {
 
     Context getActivityContext();
 

@@ -36,6 +36,7 @@ public final class GeneralKeys {
     // google_preferences.xml
     public static final String KEY_SELECTED_GOOGLE_ACCOUNT  = "selected_google_account";
     public static final String KEY_GOOGLE_SHEETS_URL        = "google_sheets_url";
+    public static final String TITLE                        = "title";
 
     // identity_preferences.xml
     static final String KEY_FORM_METADATA                   = "form_metadata";
