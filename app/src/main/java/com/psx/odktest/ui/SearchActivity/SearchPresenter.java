@@ -3,18 +3,14 @@ package com.psx.odktest.ui.SearchActivity;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.JsonReader;
-import android.util.Log;
-import android.widget.EditText;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 import com.psx.odktest.base.BasePresenter;
 import com.psx.odktest.data.models.School;
 import com.psx.odktest.helper.KeyboardHandler;
@@ -59,11 +55,12 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
         super(mvpInteractor);
     }
 
+    //TODO : Make Asynchronous for less delay in loading
     @Override
     public void loadValuesToMemory() {
         File dataFile = new File(Collect.ODK_ROOT + "/data.json");
         try {
-            JsonReader reader = new JsonReader(new FileReader(dataFile));
+            JsonReader jsonReader = new JsonReader(new FileReader(dataFile));
 
             Gson gson = new GsonBuilder()
                     .enableComplexMapKeySerialization()
@@ -72,11 +69,13 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
                     .setVersion(1.0)
                     .create();
 
-            Type listType = new TypeToken<ArrayList<School>>() {
+            Type type = new TypeToken<ArrayList<School>>() {
             }.getType();
-            schools = gson.fromJson(reader.toString(), listType);
+            schools = gson.fromJson(jsonReader, type);
             addDummySchoolAtTheStart();
+            jsonReader.close();
         } catch (Exception e) {
+            e.printStackTrace();
             Timber.e("Exception in loading data to memory %s", e.getMessage());
         }
     }
