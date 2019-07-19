@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.psx.odktest.AppConstants;
 import com.psx.odktest.R;
 import com.psx.odktest.base.BasePresenter;
+import com.psx.odktest.ui.SearchActivity.SearchActivity;
 import com.psx.odktest.ui.VisitsScreen.MyVisitsActivity;
 
 import org.odk.collect.android.activities.InstanceUploaderListActivity;
@@ -56,8 +57,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void onInspectSchoolClicked(View v) {
-        // TODO : Create a Search Activity and launch;
-        Toast.makeText(getMvpView().getActivityContext(), "Not Implemented Yet", Toast.LENGTH_SHORT).show();
+        launchActivity(SearchActivity.class);
     }
 
     @Override
