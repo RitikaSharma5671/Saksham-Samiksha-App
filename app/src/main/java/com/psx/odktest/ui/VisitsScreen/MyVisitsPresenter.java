@@ -3,6 +3,9 @@ package com.psx.odktest.ui.VisitsScreen;
 import android.content.Intent;
 import android.view.View;
 
+import com.psx.commons.Constants;
+import com.psx.odktest.R;
+import com.psx.odktest.UtilityFunctions;
 import com.psx.odktest.base.BasePresenter;
 import com.psx.odktest.ui.ComingSoon.ComingSoon;
 
@@ -34,8 +37,10 @@ public class MyVisitsPresenter<V extends MyVisitsMvpView, I extends MyVisitMvpIn
     public void onViewSubmittedFormsClicked(View v) {
         if (Collect.allowClick(getClass().getName())) {
             Intent i = new Intent(getMvpView().getActivityContext(), InstanceChooserList.class);
-            i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
-                    ApplicationConstants.FormModes.VIEW_SENT);
+            i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.VIEW_SENT);
+            i.putExtra(Constants.KEY_CUSTOMIZE_TOOLBAR, UtilityFunctions.generateToolbarModificationObject(true,
+                    R.drawable.ic_arrow_back_white_24dp, true));
+            i.putIntegerArrayListExtra(Constants.CUSTOM_TOOLBAR_ARRAYLIST_HIDE_IDS, null);
             getMvpView().getActivityContext().startActivity(i);
         }
     }

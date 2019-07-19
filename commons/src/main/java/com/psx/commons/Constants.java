@@ -7,4 +7,10 @@ package com.psx.commons;
 public class Constants {
     public static final String SHOW_ANIMATION = "show_animation";
     public static final String LOGS_UPLOAD_API = "https://someapipath.com/logs/upload";
+
+    public static final String KEY_CUSTOMIZE_TOOLBAR = "customize_toolbar";
+    public static final String CUSTOM_TOOLBAR_SHOW_NAVICON = "show_nav";
+    public static final String CUSTOM_TOOLBAR_RESID_NAVICON = "nav_icon_res";
+    public static final String CUSTOM_TOOLBAR_ARRAYLIST_HIDE_IDS = "menu_items_hide";
+    public static final String CUSTOM_TOOLBAR_BACK_NAVICON_CLICK = "back_on_nav_click";
 }
