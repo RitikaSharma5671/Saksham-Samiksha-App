@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
-import android.widget.Toast;
 
 import com.psx.odktest.AppConstants;
 import com.psx.odktest.R;
@@ -76,8 +76,9 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void onHelplineButtonClicked(View v) {
-        // TODO : Do Some action ?
-        Toast.makeText(getMvpView().getActivityContext(), "Not Implemented Yet", Toast.LENGTH_SHORT).show();
+        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+        callIntent.setData(Uri.parse("tel:9673464857"));
+        v.getContext().startActivity(callIntent);
     }
 
     @Override

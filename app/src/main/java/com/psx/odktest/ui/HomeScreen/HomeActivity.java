@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -36,6 +39,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
     @BindView(R.id.view_issues)
     public LinearLayout viewIssuesLinearLayout;
 
+    private PopupMenu popupMenu;
 
     private Unbinder unbinder;
 
@@ -55,6 +59,12 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
         homePresenter.setWelcomeText();
         homePresenter.applySettings();
         homePresenter.downloadForms();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        customizeToolbar();
     }
 
     private void setupListeners() {
@@ -118,7 +128,47 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
     @Override
     public void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setTitle("Home");
+        setTitle("Shiksha Saathi");
         setSupportActionBar(toolbar);
+    }
+
+    public void customizeToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+        toolbar.setNavigationOnClickListener(this::initAndShowPopupMenu);
+    }
+
+    /**
+     * Giving Control of the UI to XML file for better customization and easier changes
+     */
+    private void initAndShowPopupMenu(View v) {
+        if (popupMenu == null) {
+            popupMenu = new PopupMenu(HomeActivity.this, v);
+            popupMenu.getMenuInflater().inflate(R.menu.home_screen_menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.about_us:
+                        Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.tutorial_video:
+                        Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.profile:
+                        Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.helpline:
+                        Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.important_links:
+                        Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.logout:
+                        Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return true;
+            });
+        }
+        popupMenu.show();
     }
 }
