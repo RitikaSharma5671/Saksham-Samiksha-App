@@ -29,6 +29,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.psx.commons.ExchangeObject;
+import com.psx.commons.Modules;
+
 import org.odk.collect.android.BackgroundRxCalls.RxEvents;
 import org.odk.collect.android.BackgroundRxCalls.UnzipDataTask;
 import org.odk.collect.android.BackgroundRxCalls.WebCalls;
@@ -131,9 +134,13 @@ public class SplashScreenActivity extends Activity {
     }
 
     private void endSplashScreen() {
-        Intent intent = new Intent(this, MainMenuActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        ExchangeObject exchangeObject = createExchangeSignalObject();
+        ODKDriver.applicationInstance.getEventBus().send(exchangeObject);
+    }
+
+    private ExchangeObject createExchangeSignalObject() {
+        Object[] data = {};
+        return new ExchangeObject(data, "SIGNAL", Modules.MAIN_APP, Modules.COLLECT_APP);
     }
 
     // decodes image and scales it to reduce memory consumption

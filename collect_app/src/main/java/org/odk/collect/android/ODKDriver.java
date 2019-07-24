@@ -1,5 +1,7 @@
 package org.odk.collect.android;
 
+import com.psx.commons.MainApplication;
+
 public class ODKDriver {
     public static final String LAUNCH_INTENT_ACTION = "com.psx.odk.START_ODK_APP";
     private static int splashScreenImageRes = R.drawable.notes;
@@ -9,21 +11,23 @@ public class ODKDriver {
     private static int customThemeId_Settings = -1;
     private static long toolbarIconResId = -1;
     private static boolean modifyToolbarIcon = false;
+    public static MainApplication applicationInstance = null;
 
-    public static void init(int splashScreenImageRes) {
+    public static void init(MainApplication applicationInstance, int splashScreenImageRes) {
+        ODKDriver.applicationInstance = applicationInstance;
         ODKDriver.splashScreenImageRes = splashScreenImageRes;
     }
 
-    public static void init(int splashScreenImageRes, int customThemeId, int customThemeId_FormEntry, int customThemeId_Settings) {
+    public static void init(MainApplication applicationInstance, int splashScreenImageRes, int customThemeId, int customThemeId_FormEntry, int customThemeId_Settings) {
         isUsingCustomTheme = true;
         ODKDriver.customThemeId = customThemeId;
         ODKDriver.customThemeId_FormEntry = customThemeId_FormEntry;
         ODKDriver.customThemeId_Settings = customThemeId_Settings;
-        init(splashScreenImageRes);
+        init(applicationInstance, splashScreenImageRes);
     }
 
-    public static void init(int splashScreenImageRes, int customThemeId, int customThemeId_FormEntry, int customThemeId_Settings, long toolbarIconResId) {
-        init(splashScreenImageRes, customThemeId, customThemeId_FormEntry, customThemeId_Settings);
+    public static void init(MainApplication applicationInstance, int splashScreenImageRes, int customThemeId, int customThemeId_FormEntry, int customThemeId_Settings, long toolbarIconResId) {
+        init(applicationInstance, splashScreenImageRes, customThemeId, customThemeId_FormEntry, customThemeId_Settings);
         modifyToolbarIcon = true;
         ODKDriver.toolbarIconResId = toolbarIconResId;
     }
