@@ -1,6 +1,7 @@
 package com.psx.commons.ui.login;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -8,16 +9,17 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import com.psx.commons.Constants;
 import com.psx.commons.R;
 import com.psx.commons.R2;
 import com.psx.commons.base.BaseActivity;
-import com.psx.commons.base.MvpView;
 import com.psx.commons.utils.CommonUtilities;
 import com.psx.commons.utils.SnackbarUtils;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
-import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -49,21 +51,23 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     }
 
 
+    @Override
     @OnClick(R2.id.forgot_password)
-    void changePassword() {
+    public void changePassword() {
         Intent changePassIntent = new Intent(LoginActivity.this, LoginActivity.class /*TODO: Change to ChangePasswordActivity.claass*/);
         startActivity(changePassIntent);
     }
 
     @OnClick(R2.id.login_submit)
-    void performLogin() {
+    @Override
+    public void performLogin() {
         if (CommonUtilities.isNetworkAvailable(this)) {
 
             if (validateInputs(editTextUsername, editTextPassword)) {
                 String username = editTextUsername.getText().toString().trim();
                 String password = editTextPassword.getText().toString().trim();
                 progressBar.setVisibility(View.VISIBLE);
-                //new AuthenticationTask(LoginActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Credentials(username, password));
+                loginPresenter.startAuthenticationTask(username, password);
             } else {
                 // Show snackbar that the inputs cannot be empty
                 SnackbarUtils.showLongSnackbar(content, "Username or Password cannot be blank.");
@@ -79,7 +83,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
      * @param editTextPassword - The {@link EditText} in which user is supposed to type in the password.
      * @return a boolean indicating the result of validation.
      */
-    private boolean validateInputs(EditText editTextUsername, EditText editTextPassword) {
+    @Override
+    public boolean validateInputs(EditText editTextUsername, EditText editTextPassword) {
         if (TextUtils.isEmpty(editTextUsername.getText())) {
             editTextUsername.setError("Username cannot be empty");
             return false;
@@ -97,6 +102,13 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void callHelpline() {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+        callIntent.setData(Uri.parse(Constants.LOGIN_HELPLINE_TELEPHONE));
+        startActivity(callIntent);
     }
 
     @Override

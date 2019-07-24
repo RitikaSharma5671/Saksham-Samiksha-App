@@ -12,6 +12,7 @@ import com.psx.commons.di.PreferenceInfo;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Classes marked with @{@link Module} are responsible for providing objects that can be injected.
@@ -53,5 +54,10 @@ public class CommonsActivityModule {
     @PreferenceInfo
     String providePreferenceFileName() {
         return Constants.COMMON_SHARED_PREFS_NAME;
+    }
+
+    @Provides
+    CompositeDisposable provideCompositeDisposable() {
+        return new CompositeDisposable();
     }
 }

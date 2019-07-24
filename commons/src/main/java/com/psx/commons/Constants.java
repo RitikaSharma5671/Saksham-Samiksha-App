@@ -16,4 +16,5 @@ public class Constants {
     public static final String CUSTOM_TOOLBAR_TITLE = "title";
 
     public static final String COMMON_SHARED_PREFS_NAME = "shared_prefs_odk_common";
+    public static final String LOGIN_HELPLINE_TELEPHONE = "tel:9673464857";
 }

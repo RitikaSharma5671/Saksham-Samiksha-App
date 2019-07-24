@@ -3,6 +3,8 @@ package com.psx.odktest.di.modules;
 import android.content.Context;
 
 import com.psx.commons.MainApplication;
+import com.psx.commons.data.network.BackendCallHelper;
+import com.psx.commons.data.network.BackendCallHelperImpl;
 import com.psx.odktest.AppConstants;
 import com.psx.odktest.data.prefs.AppPreferenceHelper;
 import com.psx.odktest.data.prefs.PreferenceHelper;
@@ -44,5 +46,11 @@ public class ApplicationModule {
     @PreferenceInfo
     String providePreferenceFileName() {
         return AppConstants.PREF_FILE_NAME;
+    }
+
+    @Provides
+    @Singleton
+    BackendCallHelper provideBackendCallsHelper(BackendCallHelperImpl backendCallHelper) {
+        return backendCallHelper;
     }
 }

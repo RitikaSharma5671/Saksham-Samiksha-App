@@ -1,15 +1,23 @@
 package com.psx.commons.base;
 
+import com.psx.commons.data.network.BackendCallHelper;
+
 import javax.inject.Inject;
+
+import io.reactivex.disposables.CompositeDisposable;
 
 public class BasePresenter<V extends MvpView, I extends MvpInteractor> implements MvpPresenter<V, I> {
 
     private V mvpView;
     private I mvpInteractor;
+    private BackendCallHelper apiHelper;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
-    public BasePresenter(I mvpInteractor) {
+    public BasePresenter(I mvpInteractor, BackendCallHelper apiHelper, CompositeDisposable compositeDisposable) {
         this.mvpInteractor = mvpInteractor;
+        this.apiHelper = apiHelper;
+        this.compositeDisposable = compositeDisposable;
     }
 
     @Override
@@ -23,6 +31,16 @@ public class BasePresenter<V extends MvpView, I extends MvpInteractor> implement
     }
 
     @Override
+    public BackendCallHelper getApiHelper() {
+        return apiHelper;
+    }
+
+    @Override
+    public CompositeDisposable getCompositeDisposable() {
+        return this.compositeDisposable;
+    }
+
+    @Override
     public void onAttach(V mvpView) {
         this.mvpView = mvpView;
     }
@@ -30,6 +48,8 @@ public class BasePresenter<V extends MvpView, I extends MvpInteractor> implement
     @Override
     public void onDetach() {
         this.mvpView = null;
+        if (this.compositeDisposable != null)
+            this.compositeDisposable.dispose();
     }
 
     @Override
