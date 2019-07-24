@@ -141,7 +141,7 @@
                     android:id="@+id/helpline_button"
                     android:drawableLeft="@drawable/ic_call_blue_24dp"
                     style="?android:attr/borderlessButtonStyle"
-                    android:textColor="@color/appBlue"
+                    android:textColor="@color/app_blue"
                     android:gravity="center_vertical"
                     android:layout_gravity="center"
                     android:textAlignment="center"

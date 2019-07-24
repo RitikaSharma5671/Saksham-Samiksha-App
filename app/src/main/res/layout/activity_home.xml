@@ -79,7 +79,7 @@
                         android:layout_weight="3"
                         android:padding="10dp"
                         android:src="@drawable/view_filled_forms"
-                        android:tint="@color/appBlue" />
+                        android:tint="@color/app_blue" />
 
                     <TextView
                         android:id="@+id/submitted_forms_text"
@@ -88,7 +88,7 @@
                         android:layout_weight="1.5"
                         android:gravity="center"
                         android:text="My Visits"
-                        android:textColor="@color/appBlue"
+                        android:textColor="@color/app_blue"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -117,7 +117,7 @@
                         android:layout_weight="3"
                         android:padding="10dp"
                         android:src="@drawable/inspect_school"
-                        android:tint="@color/appBlue" />
+                        android:tint="@color/app_blue" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -125,7 +125,7 @@
                         android:layout_weight="1.5"
                         android:gravity="center"
                         android:text="@string/inspect_school"
-                        android:textColor="@color/appBlue"
+                        android:textColor="@color/app_blue"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -163,7 +163,7 @@
                         android:layout_weight="3"
                         android:padding="10dp"
                         android:src="@drawable/submit_form"
-                        android:tint="@color/appBlue" />
+                        android:tint="@color/app_blue" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -171,7 +171,7 @@
                         android:layout_weight="1.5"
                         android:gravity="center"
                         android:text="@string/submit_form"
-                        android:textColor="@color/appBlue"
+                        android:textColor="@color/app_blue"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -199,7 +199,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="3"
                         android:padding="10dp"
-                        android:tint="@color/appBlue"
+                        android:tint="@color/app_blue"
                         app:srcCompat="@drawable/view_issues" />
 
                     <TextView
@@ -208,7 +208,7 @@
                         android:layout_weight="1.5"
                         android:gravity="center"
                         android:text="@string/view_issues"
-                        android:textColor="@color/appBlue"
+                        android:textColor="@color/app_blue"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -248,7 +248,7 @@
                 android:paddingRight="25dp"
                 android:text="HELPLINE"
                 android:textAlignment="center"
-                android:textColor="@color/appBlue" />
+                android:textColor="@color/app_blue" />
 
         </LinearLayout>
 
