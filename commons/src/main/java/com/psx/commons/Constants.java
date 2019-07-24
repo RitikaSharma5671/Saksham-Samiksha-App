@@ -14,4 +14,6 @@ public class Constants {
     public static final String CUSTOM_TOOLBAR_ARRAYLIST_HIDE_IDS = "menu_items_hide";
     public static final String CUSTOM_TOOLBAR_BACK_NAVICON_CLICK = "back_on_nav_click";
     public static final String CUSTOM_TOOLBAR_TITLE = "title";
+
+    public static final String COMMON_SHARED_PREFS_NAME = "shared_prefs_odk_common";
 }
