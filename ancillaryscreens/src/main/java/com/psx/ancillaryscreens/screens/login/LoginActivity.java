@@ -13,6 +13,7 @@ import com.psx.ancillaryscreens.R;
 import com.psx.ancillaryscreens.R2;
 import com.psx.ancillaryscreens.base.BaseActivity;
 import com.psx.ancillaryscreens.data.network.model.LoginRequest;
+import com.psx.ancillaryscreens.data.network.model.LoginResponse;
 import com.psx.ancillaryscreens.utils.CommonUtilities;
 import com.psx.ancillaryscreens.utils.SnackbarUtils;
 import com.psx.commons.Constants;
@@ -23,6 +24,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static org.odk.collect.android.utilities.SnackbarUtils.*;
 
 public class LoginActivity extends BaseActivity implements LoginContract.View {
 
@@ -58,13 +61,26 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     }
 
     @Override
-    public void onLoginSuccess() {
-        // TODO : Update UI to indicate Login Success
+    public void onLoginSuccess(LoginResponse loginResponse) {
+        loginPresenter.getMvpInteractor().persistUserData(loginResponse);
+        loginPresenter.resetSelectedIfRequired();
+        // TODO : End Login Activity
     }
 
     @Override
     public void onLoginFailed() {
-        // TODO : Update UI to indicate Login Failure
+        progressBar.setVisibility(View.GONE);
+        showLongSnackbar(findViewById(org.odk.collect.android.R.id.llParent), "Username or Password didn't match. Please try again");
+    }
+
+    @Override
+    public void showProgressDialog() {
+
+    }
+
+    @Override
+    public void hideProgressDialog() {
+
     }
 
     @OnClick(R2.id.login_submit)

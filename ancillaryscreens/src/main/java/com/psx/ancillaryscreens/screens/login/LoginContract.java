@@ -6,6 +6,7 @@ import com.psx.ancillaryscreens.base.MvpInteractor;
 import com.psx.ancillaryscreens.base.MvpPresenter;
 import com.psx.ancillaryscreens.base.MvpView;
 import com.psx.ancillaryscreens.data.network.model.LoginRequest;
+import com.psx.ancillaryscreens.data.network.model.LoginResponse;
 
 public interface LoginContract {
     interface View extends MvpView {
@@ -17,7 +18,7 @@ public interface LoginContract {
          * @param editTextPassword - The {@link EditText} in which user is supposed to type in the password.
          * @return a boolean indicating the result of validation.
          */
-        boolean validateInputs (EditText editTextUsername, EditText editTextPassword);
+        boolean validateInputs(EditText editTextUsername, EditText editTextPassword);
 
         void callHelpline();
 
@@ -25,19 +26,29 @@ public interface LoginContract {
 
         void changePassword();
 
-        void onLoginSuccess();
+        void onLoginSuccess(LoginResponse loginResponse);
 
         void onLoginFailed();
+
+        void showProgressDialog();
+
+        void hideProgressDialog();
     }
 
     interface Interactor extends MvpInteractor {
 
-    }
+        void persistUserData(LoginResponse loginResponse);
 
+        boolean isFirstLogin();
+    }
 
 
     interface Presenter<V extends View, I extends Interactor> extends MvpPresenter<V, I> {
 
         void startAuthenticationTask(LoginRequest loginRequest);
+
+        void resetSelectedIfRequired();
+
+        void finishAndMoveToHomeScreen(LoginResponse loginResponse);
     }
 }
