@@ -1,1 +1,1 @@
-include ':app', ':collect_app', ':commons'
+include ':app', ':collect_app', ':commons', ':ancillaryscreens'
