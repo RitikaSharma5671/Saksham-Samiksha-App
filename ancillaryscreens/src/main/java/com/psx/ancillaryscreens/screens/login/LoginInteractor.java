@@ -1,4 +1,4 @@
-package com.psx.ancillaryscreens.ui.login;
+package com.psx.ancillaryscreens.screens.login;
 
 import com.psx.ancillaryscreens.base.BaseInteractor;
 import com.psx.ancillaryscreens.data.prefs.CommonsPreferenceHelper;

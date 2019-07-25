@@ -1,4 +1,4 @@
-package com.psx.ancillaryscreens.ui.login;
+package com.psx.ancillaryscreens.screens.login;
 
 import android.content.Intent;
 import android.net.Uri;

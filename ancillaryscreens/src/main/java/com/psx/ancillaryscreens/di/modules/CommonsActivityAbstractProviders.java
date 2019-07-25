@@ -1,9 +1,9 @@
 package com.psx.ancillaryscreens.di.modules;
 
 import com.psx.ancillaryscreens.di.PerActivity;
-import com.psx.ancillaryscreens.ui.login.LoginContract;
-import com.psx.ancillaryscreens.ui.login.LoginInteractor;
-import com.psx.ancillaryscreens.ui.login.LoginPresenter;
+import com.psx.ancillaryscreens.screens.login.LoginContract;
+import com.psx.ancillaryscreens.screens.login.LoginInteractor;
+import com.psx.ancillaryscreens.screens.login.LoginPresenter;
 
 import dagger.Binds;
 import dagger.Module;

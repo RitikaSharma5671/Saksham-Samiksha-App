@@ -3,7 +3,7 @@ package com.psx.ancillaryscreens.di.component;
 import com.psx.ancillaryscreens.di.PerActivity;
 import com.psx.ancillaryscreens.di.modules.CommonsActivityAbstractProviders;
 import com.psx.ancillaryscreens.di.modules.CommonsActivityModule;
-import com.psx.ancillaryscreens.ui.login.LoginActivity;
+import com.psx.ancillaryscreens.screens.login.LoginActivity;
 
 import dagger.Component;
 
