@@ -48,9 +48,4 @@ public class ApplicationModule {
         return AppConstants.PREF_FILE_NAME;
     }
 
-    @Provides
-    @Singleton
-    BackendCallHelper provideBackendCallsHelper(BackendCallHelperImpl backendCallHelper) {
-        return backendCallHelper;
-    }
 }

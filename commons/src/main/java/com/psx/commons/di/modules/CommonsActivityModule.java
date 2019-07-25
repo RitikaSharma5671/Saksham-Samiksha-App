@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.psx.commons.Constants;
+import com.psx.commons.data.network.BackendCallHelper;
+import com.psx.commons.data.network.BackendCallHelperImpl;
 import com.psx.commons.data.prefs.CommonsPreferenceHelper;
 import com.psx.commons.data.prefs.CommonsPrefsHelperImpl;
 import com.psx.commons.di.ActivityContext;
@@ -59,5 +61,10 @@ public class CommonsActivityModule {
     @Provides
     CompositeDisposable provideCompositeDisposable() {
         return new CompositeDisposable();
+    }
+
+    @Provides
+    BackendCallHelper provideApiHelper() {
+        return BackendCallHelperImpl.getInstance();
     }
 }
