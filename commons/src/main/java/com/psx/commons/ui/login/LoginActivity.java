@@ -13,6 +13,7 @@ import com.psx.commons.Constants;
 import com.psx.commons.R;
 import com.psx.commons.R2;
 import com.psx.commons.base.BaseActivity;
+import com.psx.commons.data.network.model.LoginRequest;
 import com.psx.commons.utils.CommonUtilities;
 import com.psx.commons.utils.SnackbarUtils;
 
@@ -58,6 +59,16 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         startActivity(changePassIntent);
     }
 
+    @Override
+    public void onLoginSuccess() {
+        // TODO : Update UI to indicate Login Success
+    }
+
+    @Override
+    public void onLoginFailed() {
+        // TODO : Update UI to indicate Login Failure
+    }
+
     @OnClick(R2.id.login_submit)
     @Override
     public void performLogin() {
@@ -67,7 +78,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                 String username = editTextUsername.getText().toString().trim();
                 String password = editTextPassword.getText().toString().trim();
                 progressBar.setVisibility(View.VISIBLE);
-                loginPresenter.startAuthenticationTask(username, password);
+                loginPresenter.startAuthenticationTask(new LoginRequest(username, password));
             } else {
                 // Show snackbar that the inputs cannot be empty
                 SnackbarUtils.showLongSnackbar(content, "Username or Password cannot be blank.");
