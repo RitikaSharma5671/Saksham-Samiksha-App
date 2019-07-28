@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.psx.ancillaryscreens.AncillaryScreensDriver;
+import com.psx.commons.CommonUtilities;
 import com.psx.commons.ExchangeObject;
 import com.psx.commons.MainApplication;
 import com.psx.commons.Modules;
@@ -35,22 +37,25 @@ public class MyApplication extends Collect implements MainApplication {
         super.onCreate();
         eventBus = new RxBus();
         setupActivityLifecycleListeners();
+        AncillaryScreensDriver.init(this);
         ODKDriver.init(this, R.drawable.splash_screen_ss, R.style.BaseAppTheme, R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
-        /*compositeDisposable.add(this.getEventBus()
+        compositeDisposable.add(this.getEventBus()
                 .toObservable().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(exchangeObject -> {
                     if (exchangeObject instanceof ExchangeObject) {
                         if (((ExchangeObject) exchangeObject).to == Modules.MAIN_APP
-                                && ((ExchangeObject) exchangeObject).from == Modules.COLLECT_APP
-                                && ((ExchangeObject) exchangeObject).type.equals("SIGNAL")) {
-                            Intent intent = new Intent(currentActivity, HomeActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                            startActivity(intent);
+                                && ((ExchangeObject) exchangeObject).from == Modules.ANCILLARY_SCREENS
+                                && ((ExchangeObject) exchangeObject).type == ExchangeObject.ExchangeObjectTypes.SIGNAL) {
+                            ExchangeObject.SignalExchangeObject signalExchangeObject = (ExchangeObject.SignalExchangeObject) exchangeObject;
+                            if (signalExchangeObject.shouldStartAsNewTask)
+                                CommonUtilities.startActivityAsNewTask(signalExchangeObject.intentToLaunch, currentActivity);
+                            else
+                                startActivity(signalExchangeObject.intentToLaunch);
                             compositeDisposable.dispose();
                         }
                     }
-                }));*/
+                }));
     }
 
     @Override

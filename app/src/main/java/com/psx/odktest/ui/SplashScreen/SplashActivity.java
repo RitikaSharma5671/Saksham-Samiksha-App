@@ -1,18 +1,14 @@
 package com.psx.odktest.ui.SplashScreen;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.psx.commons.CommonUtilities;
-import com.psx.commons.ExchangeObject;
-import com.psx.commons.Modules;
+import com.psx.ancillaryscreens.AncillaryScreensDriver;
 import com.psx.odktest.R;
 import com.psx.odktest.base.BaseActivity;
-import com.psx.odktest.ui.HomeScreen.HomeActivity;
 
 import org.odk.collect.android.ODKDriver;
 
@@ -47,15 +43,8 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
     @Override
     public void endSplashScreen() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        CommonUtilities.startActivityAsNewTask(intent, this);
-        /*ExchangeObject exchangeObject = createExchangeSignalObject();
-        ODKDriver.applicationInstance.getEventBus().send(exchangeObject);*/
-    }
-
-    private ExchangeObject createExchangeSignalObject() {
-        Object[] data = {};
-        return new ExchangeObject(data, "SIGNAL", Modules.MAIN_APP, Modules.COLLECT_APP);
+        AncillaryScreensDriver.launchLoginScreen(this);
+        finish();
     }
 
     @Override

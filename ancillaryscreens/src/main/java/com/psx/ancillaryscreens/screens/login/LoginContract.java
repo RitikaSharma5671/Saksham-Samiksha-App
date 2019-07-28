@@ -33,6 +33,8 @@ public interface LoginContract {
         void showProgressDialog();
 
         void hideProgressDialog();
+
+        void finishActivity();
     }
 
     interface Interactor extends MvpInteractor {
@@ -49,6 +51,6 @@ public interface LoginContract {
 
         void resetSelectedIfRequired();
 
-        void finishAndMoveToHomeScreen(LoginResponse loginResponse);
+        void finishAndMoveToHomeScreen();
     }
 }

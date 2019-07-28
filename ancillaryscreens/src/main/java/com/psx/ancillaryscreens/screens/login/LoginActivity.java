@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import androidx.appcompat.widget.AppCompatEditText;
+
 import com.psx.ancillaryscreens.R;
 import com.psx.ancillaryscreens.R2;
 import com.psx.ancillaryscreens.base.BaseActivity;
@@ -18,6 +20,8 @@ import com.psx.ancillaryscreens.utils.SnackbarUtils;
 import com.psx.commons.CommonUtilities;
 import com.psx.commons.Constants;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -25,14 +29,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static org.odk.collect.android.utilities.SnackbarUtils.*;
+import static org.odk.collect.android.utilities.SnackbarUtils.showLongSnackbar;
 
 public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @BindView(R2.id.login_username)
-    public EditText editTextUsername;
+    public AppCompatEditText editTextUsername;
     @BindView(R2.id.login_password)
-    public EditText editTextPassword;
+    public AppCompatEditText editTextPassword;
     @BindView(R2.id.circularProgressBar)
     public ProgressBar progressBar;
     @BindView(android.R.id.content)
@@ -64,7 +68,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     public void onLoginSuccess(LoginResponse loginResponse) {
         loginPresenter.getMvpInteractor().persistUserData(loginResponse);
         loginPresenter.resetSelectedIfRequired();
-        // TODO : End Login Activity
+        loginPresenter.finishAndMoveToHomeScreen();
     }
 
     @Override
@@ -83,22 +87,24 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     }
 
+    @Override
+    public void finishActivity() {
+        finish();
+    }
+
     @OnClick(R2.id.login_submit)
     @Override
     public void performLogin() {
         if (CommonUtilities.isNetworkAvailable(this)) {
-
             if (validateInputs(editTextUsername, editTextPassword)) {
-                String username = editTextUsername.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
+                String username = Objects.requireNonNull(editTextUsername.getText()).toString().trim();
+                String password = Objects.requireNonNull(editTextPassword.getText()).toString().trim();
                 progressBar.setVisibility(View.VISIBLE);
                 loginPresenter.startAuthenticationTask(new LoginRequest(username, password));
-            } else {
-                // Show snackbar that the inputs cannot be empty
-                SnackbarUtils.showLongSnackbar(content, "Username or Password cannot be blank.");
             }
-        } else
+        } else {
             SnackbarUtils.showLongSnackbar(content, "It seems you are not connected to the Internet. Please switch on your Mobile Data to login.");
+        }
     }
 
     /**

@@ -23,7 +23,11 @@
             android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.HomeScreen.HomeActivity"
-            android:theme="@style/BaseAppTheme" />
+            android:theme="@style/BaseAppTheme">
+            <intent-filter>
+                <action android:name="odk_filter_home_activity" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.SplashScreen.SplashActivity"
             android:theme="@android:style/Theme.Holo.NoActionBar">

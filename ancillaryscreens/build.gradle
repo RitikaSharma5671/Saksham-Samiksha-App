@@ -36,6 +36,8 @@ dependencies {
 
     //Dependency Injection (Cant be shared across modules)
     annotationProcessor "com.google.dagger:dagger-compiler:2.19"
+    //Butterknife annotation processor cannot be shared across modules
+    annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
     testImplementation 'junit:junit:4.12'

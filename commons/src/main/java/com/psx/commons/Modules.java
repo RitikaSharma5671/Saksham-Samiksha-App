@@ -11,5 +11,6 @@ public enum Modules {
     MAIN_APP,
     SIMPLE_MATHS,
     LOGGING,
-    COLLECT_APP;
+    COLLECT_APP,
+    ANCILLARY_SCREENS;
 }

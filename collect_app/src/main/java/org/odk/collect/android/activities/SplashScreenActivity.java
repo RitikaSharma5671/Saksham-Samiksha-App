@@ -139,8 +139,8 @@ public class SplashScreenActivity extends Activity {
     }
 
     private ExchangeObject createExchangeSignalObject() {
-        Object[] data = {};
-        return new ExchangeObject(data, "SIGNAL", Modules.MAIN_APP, Modules.COLLECT_APP);
+        Intent intent = new Intent(ODKDriver.LAUNCH_INTENT_ACTION);
+        return new ExchangeObject.SignalExchangeObject(ExchangeObject.ExchangeObjectTypes.SIGNAL, Modules.MAIN_APP, Modules.COLLECT_APP, intent);
     }
 
     // decodes image and scales it to reduce memory consumption
