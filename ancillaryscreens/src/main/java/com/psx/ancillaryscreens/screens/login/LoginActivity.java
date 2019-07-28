@@ -14,8 +14,8 @@ import com.psx.ancillaryscreens.R2;
 import com.psx.ancillaryscreens.base.BaseActivity;
 import com.psx.ancillaryscreens.data.network.model.LoginRequest;
 import com.psx.ancillaryscreens.data.network.model.LoginResponse;
-import com.psx.ancillaryscreens.utils.CommonUtilities;
 import com.psx.ancillaryscreens.utils.SnackbarUtils;
+import com.psx.commons.CommonUtilities;
 import com.psx.commons.Constants;
 
 import javax.inject.Inject;
