@@ -5,6 +5,7 @@ import com.psx.odktest.ui.HomeScreen.HomeActivity;
 import com.psx.odktest.di.PerActivity;
 import com.psx.odktest.di.modules.ActivityModule;
 import com.psx.odktest.ui.SearchActivity.SearchActivity;
+import com.psx.odktest.ui.SplashScreen.SplashActivity;
 import com.psx.odktest.ui.VisitsScreen.MyVisitsActivity;
 
 import dagger.Component;
@@ -22,4 +23,6 @@ public interface ActivityComponent {
     void inject(MyVisitsActivity myVisitsActivity);
 
     void inject(SearchActivity searchActivity);
+
+    void inject(SplashActivity splashActivity);
 }

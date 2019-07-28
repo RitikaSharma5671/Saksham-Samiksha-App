@@ -36,7 +36,7 @@ public class MyApplication extends Collect implements MainApplication {
         eventBus = new RxBus();
         setupActivityLifecycleListeners();
         ODKDriver.init(this, R.drawable.splash_screen_ss, R.style.BaseAppTheme, R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
-        compositeDisposable.add(this.getEventBus()
+        /*compositeDisposable.add(this.getEventBus()
                 .toObservable().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(exchangeObject -> {
@@ -50,7 +50,7 @@ public class MyApplication extends Collect implements MainApplication {
                             compositeDisposable.dispose();
                         }
                     }
-                }));
+                }));*/
     }
 
     @Override
