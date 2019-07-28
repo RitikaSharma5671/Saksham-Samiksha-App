@@ -6,6 +6,7 @@ import com.psx.ancillaryscreens.AncillaryScreensDriver;
 import com.psx.ancillaryscreens.base.BasePresenter;
 import com.psx.ancillaryscreens.data.network.BackendCallHelper;
 import com.psx.ancillaryscreens.data.network.model.LoginRequest;
+import com.psx.ancillaryscreens.data.network.model.LoginResponse;
 import com.psx.commons.Constants;
 import com.psx.commons.ExchangeObject;
 import com.psx.commons.Modules;
@@ -17,9 +18,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class LoginPresenter<V extends LoginContract.View, I extends LoginContract.Interactor> extends BasePresenter<V, I> implements LoginContract.Presenter<V, I> {
 
@@ -35,12 +40,15 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(loginResponse -> {
-                    if (getMvpView() != null) {
+                    if (LoginPresenter.this.getMvpView() != null) {
                         if (loginResponse.getResponse().isSuccessful())
-                            getMvpView().onLoginSuccess(loginResponse);
+                            LoginPresenter.this.getMvpView().onLoginSuccess(loginResponse);
                         else
-                            getMvpView().onLoginFailed();
+                            LoginPresenter.this.getMvpView().onLoginFailed();
                     }
+                }, t -> {
+                    LoginPresenter.this.getMvpView().onLoginFailed();
+                    Timber.e(t);
                 }));
     }
 

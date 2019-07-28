@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static org.odk.collect.android.utilities.SnackbarUtils.showLongSnackbar;
 
 public class LoginActivity extends BaseActivity implements LoginContract.View {
 
@@ -74,7 +73,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void onLoginFailed() {
         progressBar.setVisibility(View.GONE);
-        showLongSnackbar(findViewById(org.odk.collect.android.R.id.llParent), "Username or Password didn't match. Please try again");
+        SnackbarUtils.showLongSnackbar(content, "Username or Password didn't match. Please try again");
     }
 
     @Override
