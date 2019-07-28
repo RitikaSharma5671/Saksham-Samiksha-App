@@ -135,6 +135,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         return true;
     }
 
+    @OnClick(R2.id.helpline_button)
     @Override
     public void callHelpline() {
         Intent callIntent = new Intent(Intent.ACTION_DIAL);

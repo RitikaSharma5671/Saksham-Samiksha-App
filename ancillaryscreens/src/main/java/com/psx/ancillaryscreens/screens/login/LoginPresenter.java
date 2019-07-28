@@ -6,12 +6,10 @@ import com.psx.ancillaryscreens.AncillaryScreensDriver;
 import com.psx.ancillaryscreens.base.BasePresenter;
 import com.psx.ancillaryscreens.data.network.BackendCallHelper;
 import com.psx.ancillaryscreens.data.network.model.LoginRequest;
-import com.psx.ancillaryscreens.data.network.model.LoginResponse;
 import com.psx.commons.Constants;
 import com.psx.commons.ExchangeObject;
 import com.psx.commons.Modules;
 
-import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.utilities.ResetUtility;
 
 import java.util.ArrayList;
