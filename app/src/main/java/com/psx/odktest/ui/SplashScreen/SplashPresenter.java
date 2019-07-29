@@ -1,9 +1,12 @@
 package com.psx.odktest.ui.SplashScreen;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import com.psx.ancillaryscreens.AncillaryScreensDriver;
 import com.psx.odktest.base.BasePresenter;
+import com.psx.odktest.ui.HomeScreen.HomeActivity;
 
 import org.odk.collect.android.BackgroundRxCalls.RxEvents;
 import org.odk.collect.android.BackgroundRxCalls.UnzipDataTask;
@@ -75,6 +78,18 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                     getMvpView().finishActivity();
             }
         });
+    }
+
+    @Override
+    public void moveToNextScreen() {
+        if (getMvpInteractor().isLoggedIn()) {
+            Timber.e("Moving to Home");
+            Intent intent = new Intent(getMvpView().getActivityContext(), HomeActivity.class);
+            getMvpView().getActivityContext().startActivity(intent);
+        } else {
+            Timber.e("Launching Login");
+            AncillaryScreensDriver.launchLoginScreen(getMvpView().getActivityContext());
+        }
     }
 
     private void init() {

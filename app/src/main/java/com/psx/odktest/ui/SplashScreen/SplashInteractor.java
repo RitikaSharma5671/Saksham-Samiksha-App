@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import com.psx.odktest.base.BaseInteractor;
 import com.psx.odktest.data.prefs.PreferenceHelper;
 
-import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 
 import javax.inject.Inject;
@@ -59,5 +58,10 @@ public class SplashInteractor extends BaseInteractor implements SplashContract.I
     @Override
     public String getSplashPath() {
         return (String) GeneralSharedPreferences.getInstance().get(KEY_SPLASH_PATH);
+    }
+
+    @Override
+    public boolean isLoggedIn() {
+        return getPreferenceHelper().isLoggedIn();
     }
 }

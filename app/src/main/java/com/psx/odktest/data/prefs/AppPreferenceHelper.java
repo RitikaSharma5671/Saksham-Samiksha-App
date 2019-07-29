@@ -59,4 +59,9 @@ public class AppPreferenceHelper implements PreferenceHelper {
         editor.putBoolean(GeneralKeys.KEY_FIRST_RUN, false);
         editor.commit();
     }
+
+    @Override
+    public boolean isLoggedIn() {
+        return defaultPreferences.getBoolean("isLoggedIn", false);
+    }
 }

@@ -15,4 +15,6 @@ public interface PreferenceHelper {
     void updateLastAppVersion(long updatedVersion);
 
     void updateFirstRunFlag(boolean value);
+
+    boolean isLoggedIn();
 }

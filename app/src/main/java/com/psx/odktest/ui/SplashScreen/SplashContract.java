@@ -40,6 +40,8 @@ public interface SplashContract {
         void updateFirstRunFlag(boolean value);
 
         String getSplashPath();
+
+        boolean isLoggedIn();
     }
 
     interface Presenter<V extends View, I extends Interactor> extends MvpPresenter<V, I> {
@@ -48,5 +50,7 @@ public interface SplashContract {
         void startGetFormListCall();
 
         void requestStoragePermissions();
+
+        void moveToNextScreen();
     }
 }

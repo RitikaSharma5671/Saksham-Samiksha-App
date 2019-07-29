@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.psx.ancillaryscreens.AncillaryScreensDriver;
 import com.psx.odktest.R;
 import com.psx.odktest.base.BaseActivity;
 
@@ -43,7 +42,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
     @Override
     public void endSplashScreen() {
-        AncillaryScreensDriver.launchLoginScreen(this);
+        splashPresenter.moveToNextScreen();
         finish();
     }
 
