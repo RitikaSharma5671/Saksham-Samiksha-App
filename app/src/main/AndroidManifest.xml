@@ -25,7 +25,8 @@
             android:name=".ui.HomeScreen.HomeActivity"
             android:theme="@style/BaseAppTheme">
             <intent-filter>
-                <action android:name="odk_filter_home_activity" />
+                <action android:name="com.psx.odk.LAUNCH_HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity

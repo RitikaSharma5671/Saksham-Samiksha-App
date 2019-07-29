@@ -48,24 +48,24 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
     @Override
     public void setCurrentUserDetailsFromLogin(LoginResponse response) {
         SharedPreferences.Editor editor = defaultPreferences.edit();
-        if (response.getUser().has("accountName"))
-            editor.putString("user.accountName", response.getUser().get("accountName").getAsString());
+        if (response.user.has("accountName"))
+            editor.putString("user.accountName", response.user.get("accountName").getAsString());
         else editor.putString("user.accountName", "");
 
-        if (response.getUser().has("email"))
-            editor.putString("user.email", response.getUser().get("email").getAsString());
+        if (response.user.has("email"))
+            editor.putString("user.email", response.user.get("email").getAsString());
         else editor.putString("user.email", "");
 
-        if (response.getUser().has("username"))
-            editor.putString("user.username", response.getUser().get("username").getAsString());
+        if (response.user.has("username"))
+            editor.putString("user.username", response.user.get("username").getAsString());
         else editor.putString("user.username", response.getUserName());
 
-        if (response.getToken() != null)
-            editor.putString("user.token", response.getToken().getAsString());
+        if (response.token != null)
+            editor.putString("user.token", response.token.getAsString());
 
-        if (response.getUser().has("data")) {
-            editor.putString("user.data", response.getUser().get("data").toString());
-            JsonObject data = response.getUser().get("data").getAsJsonObject();
+        if (response.user.has("data")) {
+            editor.putString("user.data", response.user.get("data").toString());
+            JsonObject data = response.user.get("data").getAsJsonObject();
 
             if (data.has("category"))
                 editor.putString("user.category", data.get("category").getAsJsonPrimitive().getAsString());
@@ -81,8 +81,8 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
     @Override
     public void setCurrentUserAdditionalDetailsFromLogin(LoginResponse response) {
         SharedPreferences.Editor editor = defaultPreferences.edit();
-        if (response.getUser().has("registrations")) {
-            JsonArray registrations = response.getUser().get("registrations").getAsJsonArray();
+        if (response.user.has("registrations")) {
+            JsonArray registrations = response.user.get("registrations").getAsJsonArray();
             for (int i = 0; i < registrations.size(); i++) {
                 if (registrations.get(i).getAsJsonObject().has("applicationId")) {
                     String applicationId = registrations.get(i).getAsJsonObject().get("applicationId").getAsString();
@@ -95,17 +95,17 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
             }
         }
 
-        if (response.getUser().has("fullName"))
-            editor.putString("user.fullName", response.getUser().get("fullName").getAsString());
-        else editor.putString("user.fullName", response.getUser().get("username").getAsString());
+        if (response.user.has("fullName"))
+            editor.putString("user.fullName", response.user.get("fullName").getAsString());
+        else editor.putString("user.fullName", response.user.get("username").getAsString());
 
-        editor.putString("user.id", response.getUser().get("id").getAsString());
+        editor.putString("user.id", response.user.get("id").getAsString());
 
-        if (response.getUser().has("mobilePhone"))
-            editor.putString("user.mobilePhone", response.getUser().get("mobilePhone").getAsString());
+        if (response.user.has("mobilePhone"))
+            editor.putString("user.mobilePhone", response.user.get("mobilePhone").getAsString());
         else editor.putString("user.mobilePhone", "");
 
-        editor.putString("user.designation", response.getUser().get("data").getAsJsonObject().get("roleData").getAsJsonObject().get("designation").getAsJsonPrimitive().getAsString());
+        editor.putString("user.designation", response.user.get("data").getAsJsonObject().get("roleData").getAsJsonObject().get("designation").getAsJsonPrimitive().getAsString());
         editor.apply();
     }
 

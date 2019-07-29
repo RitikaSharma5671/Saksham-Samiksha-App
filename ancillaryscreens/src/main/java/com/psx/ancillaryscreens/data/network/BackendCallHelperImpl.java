@@ -1,5 +1,6 @@
 package com.psx.ancillaryscreens.data.network;
 
+import com.google.gson.Gson;
 import com.psx.ancillaryscreens.data.network.model.LoginRequest;
 import com.psx.ancillaryscreens.data.network.model.LoginResponse;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
@@ -26,6 +27,11 @@ public class BackendCallHelperImpl implements BackendCallHelper {
                 .addHeaders("Content-Type", "application/json")
                 .addJSONObjectBody(loginRequest.getLoginRequestJSONObject())
                 .build()
-                .getObjectSingle(LoginResponse.class);
+                .getJSONObjectSingle()
+                .map(jsonObject -> {
+                    LoginResponse loginResponse;
+                    loginResponse = new Gson().fromJson(jsonObject.toString(), LoginResponse.class);
+                    return loginResponse;
+                });
     }
 }

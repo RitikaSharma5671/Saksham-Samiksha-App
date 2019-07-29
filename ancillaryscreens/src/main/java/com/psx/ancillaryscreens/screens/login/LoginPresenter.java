@@ -41,14 +41,15 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(loginResponse -> {
                     if (LoginPresenter.this.getMvpView() != null) {
-                        if (loginResponse.getResponse().isSuccessful())
+                        if (loginResponse.token != null) {
+                            Timber.d("Response is %s ", loginResponse.toString());
                             LoginPresenter.this.getMvpView().onLoginSuccess(loginResponse);
-                        else
+                        } else
                             LoginPresenter.this.getMvpView().onLoginFailed();
                     }
-                }, t -> {
+                }, throwable -> {
                     LoginPresenter.this.getMvpView().onLoginFailed();
-                    Timber.e(t);
+                    Timber.e(throwable);
                 }));
     }
 

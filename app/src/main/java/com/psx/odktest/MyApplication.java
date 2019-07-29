@@ -22,7 +22,9 @@ import org.odk.collect.android.application.Collect;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class MyApplication extends Collect implements MainApplication {
 
@@ -55,7 +57,7 @@ public class MyApplication extends Collect implements MainApplication {
                             compositeDisposable.dispose();
                         }
                     }
-                }));
+                }, Timber::e));
     }
 
     @Override
