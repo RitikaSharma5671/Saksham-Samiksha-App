@@ -1,15 +1,22 @@
 package com.psx.odktest;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.PorterDuff;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.psx.commons.Constants;
 
 import java.util.HashMap;
 
+import io.reactivex.annotations.NonNull;
 import timber.log.Timber;
 
 /**
@@ -49,5 +56,25 @@ public class UtilityFunctions {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
+     * This method provides a snackbar with an indeterminate circular laoding spinner. While using it make sure that
+     * multiple objects of snackbar and not created since this method will always return a new Snackbar.
+     *
+     * @param container - The parent root container for the snackbar (Usually the view with id android.R.id.content
+     * @param context   - The current activity context
+     * @param message   - The String message that needs to be displayed in the snackbar
+     */
+    public static Snackbar getSnackbarWithProgressIndicator(@NonNull View container, @NonNull Context context, String message) {
+        Snackbar bar = Snackbar.make(container, message, Snackbar.LENGTH_INDEFINITE);
+        ViewGroup contentLay = (ViewGroup) bar.getView().findViewById(com.google.android.material.R.id.snackbar_text).getParent();
+        ProgressBar item = new ProgressBar(context);
+        item.setScaleY(0.8f);
+        item.setScaleX(0.8f);
+        item.setInterpolator(new AccelerateInterpolator());
+        item.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
+        contentLay.addView(item);
+        return bar;
     }
 }

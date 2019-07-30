@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -12,8 +11,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.androidnetworking.AndroidNetworking;
 import com.google.android.material.snackbar.Snackbar;
+import com.psx.ancillaryscreens.AncillaryScreensDriver;
+import com.psx.commons.Constants;
+import com.psx.commons.CustomEvents;
+import com.psx.commons.ExchangeObject;
+import com.psx.commons.MainApplication;
+import com.psx.commons.Modules;
 import com.psx.odktest.R;
+import com.psx.odktest.UtilityFunctions;
 import com.psx.odktest.base.BaseActivity;
 
 import org.odk.collect.android.ODKDriver;
@@ -23,6 +30,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnClickListener {
 
@@ -40,6 +51,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
     public LinearLayout viewIssuesLinearLayout;
 
     private PopupMenu popupMenu;
+    private Disposable logoutListener = null;
+    private Snackbar progressSnackbar = null;
 
     private Unbinder unbinder;
 
@@ -112,8 +125,28 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
     }
 
     @Override
+    public void showLoading(String message) {
+        hideLoading();
+        if (progressSnackbar == null) {
+            progressSnackbar = UtilityFunctions.getSnackbarWithProgressIndicator(findViewById(android.R.id.content), getApplicationContext(), message);
+        }
+        progressSnackbar.setText(message);
+        progressSnackbar.show();
+    }
+
+    @Override
+    public void hideLoading() {
+        if (progressSnackbar != null && progressSnackbar.isShownOrQueued())
+            progressSnackbar.dismiss();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (logoutListener != null && !logoutListener.isDisposed()) {
+            AndroidNetworking.cancel(Constants.LOGOUT_CALLS);
+            logoutListener.dispose();
+        }
         homePresenter.onDetach();
         unbinder.unbind();
     }
@@ -163,12 +196,36 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.logout:
-                        Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        if (logoutListener == null)
+                            initializeLogoutListener();
+                        AncillaryScreensDriver.performLogout(this);
                         break;
                 }
                 return true;
             });
         }
         popupMenu.show();
+    }
+
+    private void initializeLogoutListener() {
+        logoutListener = ((MainApplication) (getApplicationContext()))
+                .getEventBus()
+                .toObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(o -> {
+                    Timber.i("Received event Logout");
+                    if (o instanceof ExchangeObject.EventExchangeObject) {
+                        ExchangeObject.EventExchangeObject eventExchangeObject = (ExchangeObject.EventExchangeObject) o;
+                        if (eventExchangeObject.to == Modules.MAIN_APP && eventExchangeObject.from == Modules.ANCILLARY_SCREENS) {
+                            if (eventExchangeObject.customEvents == CustomEvents.LOGOUT_COMPLETED) {
+                                hideLoading();
+                                logoutListener.dispose();
+                            } else if (eventExchangeObject.customEvents == CustomEvents.LOGOUT_INITIATED) {
+                                showLoading("Logging you out...");
+                            }
+                        }
+                    }
+                }, Timber::e);
     }
 }
