@@ -21,13 +21,13 @@ public class ExchangeObject {
         public Intent intentToLaunch;
         public boolean shouldStartAsNewTask = false;
 
-        public SignalExchangeObject(ExchangeObjectTypes type, Modules to, Modules from, Intent intentToLaunch) {
-            super(type, to, from);
+        public SignalExchangeObject(Modules to, Modules from, Intent intentToLaunch) {
+            super(ExchangeObjectTypes.SIGNAL, to, from);
             this.intentToLaunch = intentToLaunch;
         }
 
-        public SignalExchangeObject(ExchangeObjectTypes type, Modules to, Modules from, Intent intentToLaunch, boolean shouldStartAsNewTask) {
-            super(type, to, from);
+        public SignalExchangeObject(Modules to, Modules from, Intent intentToLaunch, boolean shouldStartAsNewTask) {
+            super(ExchangeObjectTypes.SIGNAL, to, from);
             this.intentToLaunch = intentToLaunch;
             this.shouldStartAsNewTask = shouldStartAsNewTask;
         }
@@ -36,14 +36,25 @@ public class ExchangeObject {
     public static class DataExchangeObject<T> extends ExchangeObject {
         public T data;
 
-        private DataExchangeObject(ExchangeObjectTypes type, Modules to, Modules from, T data) {
-            super(type, to, from);
+        private DataExchangeObject(Modules to, Modules from, T data) {
+            super(ExchangeObjectTypes.DATA_EXCHANGE, to, from);
             this.data = data;
+        }
+    }
+
+    public static class EventExchangeObject extends ExchangeObject {
+
+        public CustomEvents customEvents;
+
+        public EventExchangeObject(Modules to, Modules from, CustomEvents customEvents) {
+            super(ExchangeObjectTypes.EVENT, to, from);
+            this.customEvents = customEvents;
         }
     }
 
     public enum ExchangeObjectTypes {
         SIGNAL, // Indicates a signal to start some new Activity through an intent. The class to start is passed in the data field
-        DATA_EXCHANGE; // Indicates Data Exchange between Modules
+        DATA_EXCHANGE, // Indicates Data Exchange between Modules
+        EVENT; // Indicates an event has occurred.
     }
 }
