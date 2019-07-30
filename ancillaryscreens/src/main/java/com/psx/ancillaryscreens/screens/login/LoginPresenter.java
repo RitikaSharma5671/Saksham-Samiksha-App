@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observer;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -50,6 +51,7 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
                 }, throwable -> {
                     LoginPresenter.this.getMvpView().onLoginFailed();
                     Timber.e(throwable);
+                    throwable.printStackTrace();
                 }));
     }
 
@@ -63,7 +65,7 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
     @Override
     public void finishAndMoveToHomeScreen() {
         Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
-        ExchangeObject.SignalExchangeObject signalExchangeObject = new ExchangeObject.SignalExchangeObject(ExchangeObject.ExchangeObjectTypes.SIGNAL, Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, intent, true);
+        ExchangeObject.SignalExchangeObject signalExchangeObject = new ExchangeObject.SignalExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, intent, true);
         AncillaryScreensDriver.mainApplication.getEventBus().send(signalExchangeObject);
         getMvpView().finishActivity();
     }

@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">AncillaryScreens</string>
+    <string name="app_name" translatable="false">AncillaryScreens</string>
+    <string name="fusionauth_api_key" translatable="false">6DgFjRZOE94Wd9tIERk79YWJkWjCqvf5JUyKxIuxUgs</string>
 </resources>
