@@ -105,7 +105,8 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
             editor.putString("user.mobilePhone", response.user.get("mobilePhone").getAsString());
         else editor.putString("user.mobilePhone", "");
 
-        editor.putString("user.designation", response.user.get("data").getAsJsonObject().get("roleData").getAsJsonObject().get("designation").getAsJsonPrimitive().getAsString());
+        //TODO : Confirm this parsing. This field is not present in the current API response
+        //editor.putString("user.designation", response.user.get("data").getAsJsonObject().get("roleData").getAsJsonObject().get("designation").getAsJsonPrimitive().getAsString());
         editor.apply();
     }
 

@@ -207,7 +207,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
         popupMenu.show();
     }
 
-    private void initializeLogoutListener() {
+    @Override
+    public void initializeLogoutListener() {
         logoutListener = ((MainApplication) (getApplicationContext()))
                 .getEventBus()
                 .toObservable()

@@ -34,7 +34,6 @@ public class BackendCallHelperImpl implements BackendCallHelper {
                 .build()
                 .getJSONObjectSingle()
                 .map(jsonObject -> {
-                    Timber.d("HERE %s", jsonObject);
                     LoginResponse loginResponse;
                     loginResponse = new Gson().fromJson(jsonObject.toString(), LoginResponse.class);
                     return loginResponse;

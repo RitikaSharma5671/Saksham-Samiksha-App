@@ -2,6 +2,7 @@ package com.psx.ancillaryscreens.screens.login;
 
 import android.content.Intent;
 
+import com.androidnetworking.error.ANError;
 import com.psx.ancillaryscreens.AncillaryScreensDriver;
 import com.psx.ancillaryscreens.base.BasePresenter;
 import com.psx.ancillaryscreens.data.network.BackendCallHelper;
@@ -49,9 +50,10 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
                             LoginPresenter.this.getMvpView().onLoginFailed();
                     }
                 }, throwable -> {
+                    if (throwable instanceof ANError)
+                        Timber.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", ((ANError) (throwable)).getErrorBody(), ((ANError) (throwable)).getErrorCode(), ((ANError) (throwable)).getErrorDetail());
                     LoginPresenter.this.getMvpView().onLoginFailed();
                     Timber.e(throwable);
-                    throwable.printStackTrace();
                 }));
     }
 

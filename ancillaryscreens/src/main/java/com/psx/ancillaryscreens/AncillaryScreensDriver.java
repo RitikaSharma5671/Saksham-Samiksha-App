@@ -44,6 +44,10 @@ public class AncillaryScreensDriver {
         mainApplication.getEventBus().send(eventExchangeObject);
     }
 
+    /**
+     * Notifies about Logout process being completed, if required,
+     * a success/failure status code may be sent along with the event
+     */
     private static void notifyLogoutCompleted() {
         Timber.i("Logout completed");
         ExchangeObject.EventExchangeObject eventExchangeObject = new ExchangeObject.EventExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, CustomEvents.LOGOUT_COMPLETED);
@@ -85,6 +89,7 @@ public class AncillaryScreensDriver {
 
                     @Override
                     public void onError(Throwable e) {
+                        notifyLogoutCompleted();
                         Timber.e(e);
                         Toast.makeText(context, "Unable to Log you out, Please try again.", Toast.LENGTH_SHORT).show();
                     }
@@ -127,6 +132,7 @@ public class AncillaryScreensDriver {
 
                     @Override
                     public void onError(Throwable e) {
+                        notifyLogoutCompleted();
                         Timber.e(e);
                         Toast.makeText(context, "Unable to Log you out, Some error occurred.", Toast.LENGTH_SHORT).show();
                     }
