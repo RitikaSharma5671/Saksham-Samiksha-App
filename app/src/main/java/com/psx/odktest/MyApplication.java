@@ -6,6 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+
 import com.psx.ancillaryscreens.AncillaryScreensDriver;
 import com.psx.commons.CommonUtilities;
 import com.psx.commons.ExchangeObject;
@@ -26,7 +30,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class MyApplication extends Collect implements MainApplication {
+public class MyApplication extends Collect implements MainApplication, LifecycleObserver {
 
     protected ApplicationComponent applicationComponent;
 
@@ -54,7 +58,6 @@ public class MyApplication extends Collect implements MainApplication {
                                 CommonUtilities.startActivityAsNewTask(signalExchangeObject.intentToLaunch, currentActivity);
                             else
                                 startActivity(signalExchangeObject.intentToLaunch);
-                            compositeDisposable.dispose();
                         }
                     }
                 }, Timber::e));
@@ -138,5 +141,11 @@ public class MyApplication extends Collect implements MainApplication {
 
     private RxBus bus() {
         return eventBus;
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    void onAppBackgrounded() {
+        if (compositeDisposable != null && !compositeDisposable.isDisposed())
+            compositeDisposable.dispose();
     }
 }
