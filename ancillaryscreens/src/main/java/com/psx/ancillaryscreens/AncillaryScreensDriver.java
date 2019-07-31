@@ -30,7 +30,6 @@ public class AncillaryScreensDriver {
 
     public static void init(MainApplication mainApplication) {
         AncillaryScreensDriver.mainApplication = mainApplication;
-        AndroidNetworking.initialize(mainApplication.getCurrentApplication());
     }
 
     public static void launchLoginScreen(Context context) {
