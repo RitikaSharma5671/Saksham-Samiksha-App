@@ -14,11 +14,13 @@ import androidx.appcompat.widget.Toolbar;
 import com.androidnetworking.AndroidNetworking;
 import com.google.android.material.snackbar.Snackbar;
 import com.psx.ancillaryscreens.AncillaryScreensDriver;
+import com.psx.ancillaryscreens.screens.about.AboutBundle;
 import com.psx.commons.Constants;
 import com.psx.commons.CustomEvents;
 import com.psx.commons.ExchangeObject;
 import com.psx.commons.MainApplication;
 import com.psx.commons.Modules;
+import com.psx.odktest.AppConstants;
 import com.psx.odktest.R;
 import com.psx.odktest.UtilityFunctions;
 import com.psx.odktest.base.BaseActivity;
@@ -181,7 +183,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.about_us:
-                        Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        AncillaryScreensDriver.launchAboutActivity(this, provideAboutBundle());
                         break;
                     case R.id.tutorial_video:
                         Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
@@ -205,6 +207,20 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
             });
         }
         popupMenu.show();
+    }
+
+    /**
+     * Provides with a {@link AboutBundle} object that is used to further configure
+     * the UI for {@link com.psx.ancillaryscreens.screens.about.AboutActivity}
+     */
+    private AboutBundle provideAboutBundle() {
+        return new AboutBundle(
+                "About Us",
+                AppConstants.ABOUT_WEBSITE_LINK,
+                AppConstants.ABOOUT_FORUM_LINK,
+                R.drawable.ic_website_24dp,
+                R.string.odk_website,
+                R.string.odk_website_summary);
     }
 
     @Override

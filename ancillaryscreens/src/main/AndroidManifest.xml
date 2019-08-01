@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.psx.ancillaryscreens">
 
@@ -5,12 +6,14 @@
 
     <application>
         <activity
+            android:name=".screens.about.AboutActivity"
+            android:theme="@style/BaseAppTheme" />
+        <activity
             android:name=".screens.login.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="stateVisible|adjustPan" />
-
         <activity
-            android:name="com.psx.ancillaryscreens.screens.splash.SplashActivity"
+            android:name=".screens.splash.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,4 +22,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

@@ -3,14 +3,13 @@ package com.psx.ancillaryscreens.base;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.psx.ancillaryscreens.di.component.ActivityComponent;
 import com.psx.ancillaryscreens.di.component.DaggerActivityComponent;
 import com.psx.ancillaryscreens.di.modules.CommonsActivityModule;
-
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 public abstract class BaseActivity extends AppCompatActivity implements MvpView {
 

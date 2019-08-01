@@ -3,7 +3,6 @@ package com.psx.odktest;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.lifecycle.Lifecycle;
@@ -19,14 +18,12 @@ import com.psx.commons.RxBus;
 import com.psx.odktest.di.component.ApplicationComponent;
 import com.psx.odktest.di.component.DaggerApplicationComponent;
 import com.psx.odktest.di.modules.ApplicationModule;
-import com.psx.odktest.ui.HomeScreen.HomeActivity;
 
 import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.application.Collect;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 

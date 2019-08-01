@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.psx.ancillaryscreens.data.network.BackendCallHelperImpl;
+import com.psx.ancillaryscreens.screens.about.AboutActivity;
+import com.psx.ancillaryscreens.screens.about.AboutBundle;
 import com.psx.ancillaryscreens.screens.login.LoginActivity;
 import com.psx.commons.CommonUtilities;
 import com.psx.commons.CustomEvents;
@@ -25,16 +27,22 @@ import timber.log.Timber;
 
 public class AncillaryScreensDriver {
     public static MainApplication mainApplication = null;
-    public static String BASE_URL;
+    public static String BASE_API_URL;
 
     public static void init(MainApplication mainApplication, String BASE_URL) {
         AncillaryScreensDriver.mainApplication = mainApplication;
-        AncillaryScreensDriver.BASE_URL = BASE_URL;
+        AncillaryScreensDriver.BASE_API_URL = BASE_URL;
     }
 
     public static void launchLoginScreen(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
         CommonUtilities.startActivityAsNewTask(intent, context);
+    }
+
+    public static void launchAboutActivity(Context context, AboutBundle aboutBundle) {
+        Intent intent = new Intent(context, AboutActivity.class);
+        intent.putExtra("config", aboutBundle.aboutExchangeBundle);
+        context.startActivity(intent);
     }
 
     public static void performLogout(Context context) {
