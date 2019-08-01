@@ -56,39 +56,29 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
     @Override
     public void requestStoragePermissions() {
-        new PermissionUtils().requestReadPhoneStatePermission((SplashActivity) getMvpView().getActivityContext(), true, new PermissionListener() {
-            @Override
-            public void granted() {
-                new PermissionUtils().requestStoragePermissions((SplashActivity) getMvpView().getActivityContext(), new PermissionListener() {
-                    @Override
-                    public void granted() {
-                        // must be at the beginning of any activity that can be called from an external intent
-                        try {
-                            Collect.createODKDirs();
-                        } catch (RuntimeException e) {
-                            DialogUtils.showDialog(DialogUtils.createErrorDialog((SplashActivity) getMvpView().getActivityContext(),
-                                    e.getMessage(), EXIT), (SplashActivity) getMvpView().getActivityContext());
-                            return;
-                        }
-
-                        init();
+        PermissionUtils permissionUtils = new PermissionUtils();
+        if (!PermissionUtils.areStoragePermissionsGranted(getMvpView().getActivityContext())) {
+            permissionUtils.requestStoragePermissions((SplashActivity) getMvpView().getActivityContext(), new PermissionListener() {
+                @Override
+                public void granted() {
+                    try {
+                        Collect.createODKDirs();
+                    } catch (RuntimeException e) {
+                        DialogUtils.showDialog(DialogUtils.createErrorDialog((SplashActivity) getMvpView().getActivityContext(),
+                                e.getMessage(), EXIT), (SplashActivity) getMvpView().getActivityContext());
+                        return;
                     }
+                    init();
+                }
 
-                    @Override
-                    public void denied() {
-                        // The activity has to finish because ODK Collect cannot function without these permissions.
-                        if (getMvpView() != null)
-                            getMvpView().finishActivity();
-                    }
-                });
-            }
-
-            @Override
-            public void denied() {
-                if (getMvpView() != null)
+                @Override
+                public void denied() {
                     getMvpView().finishActivity();
-            }
-        });
+                }
+            });
+        } else {
+            init();
+        }
     }
 
     @Override
