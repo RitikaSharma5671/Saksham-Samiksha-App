@@ -1,5 +1,6 @@
 package com.psx.ancillaryscreens.data.prefs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -9,6 +10,8 @@ import com.google.gson.JsonObject;
 import com.psx.ancillaryscreens.data.network.model.LoginResponse;
 import com.psx.ancillaryscreens.di.ApplicationContext;
 import com.psx.ancillaryscreens.di.PreferenceInfo;
+
+import org.odk.collect.android.preferences.GeneralKeys;
 
 import javax.inject.Inject;
 
@@ -113,5 +116,40 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
     @Override
     public boolean isFirstLogin() {
         return defaultPreferences.getBoolean("firstLoginIn", false);
+    }
+
+    @Override
+    public boolean isFirstRun() {
+        return defaultPreferences.getBoolean(GeneralKeys.KEY_FIRST_RUN, true);
+    }
+
+    @Override
+    public boolean isShowSplash() {
+        return defaultPreferences.getBoolean(GeneralKeys.KEY_SHOW_SPLASH, false);
+    }
+
+    @Override
+    public Long getLastAppVersion() {
+        return sharedPreferences.getLong(GeneralKeys.KEY_LAST_VERSION, 0);
+    }
+
+    @Override
+    public void updateLastAppVersion(long updatedVersion) {
+        SharedPreferences.Editor editor = defaultPreferences.edit();
+        editor.putLong(GeneralKeys.KEY_LAST_VERSION, updatedVersion);
+        editor.apply();
+    }
+
+    @SuppressLint("ApplySharedPref")
+    @Override
+    public void updateFirstRunFlag(boolean value) {
+        SharedPreferences.Editor editor = defaultPreferences.edit();
+        editor.putBoolean(GeneralKeys.KEY_FIRST_RUN, false);
+        editor.commit();
+    }
+
+    @Override
+    public boolean isLoggedIn() {
+        return defaultPreferences.getBoolean("isLoggedIn", false);
     }
 }

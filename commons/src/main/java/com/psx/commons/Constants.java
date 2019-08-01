@@ -15,7 +15,7 @@ public class Constants {
     public static final String CUSTOM_TOOLBAR_BACK_NAVICON_CLICK = "back_on_nav_click";
     public static final String CUSTOM_TOOLBAR_TITLE = "title";
 
-    public static final String COMMON_SHARED_PREFS_NAME = "shared_prefs_odk_common";
+    public static final String COMMON_SHARED_PREFS_NAME = "shared_prefs_odk_ancillary_screen";
     public static final String LOGIN_HELPLINE_TELEPHONE = "tel:9673464857";
 
     public static final String INTENT_LAUNCH_HOME_ACTIVITY = "com.psx.odk.LAUNCH_HOME";

@@ -12,4 +12,16 @@ public interface CommonsPreferenceHelper {
     void setCurrentUserAdditionalDetailsFromLogin(LoginResponse response);
 
     boolean isFirstLogin();
+
+    boolean isShowSplash();
+
+    Long getLastAppVersion();
+
+    void updateLastAppVersion(long updatedVersion);
+
+    void updateFirstRunFlag(boolean value);
+
+    boolean isLoggedIn();
+
+    boolean isFirstRun();
 }

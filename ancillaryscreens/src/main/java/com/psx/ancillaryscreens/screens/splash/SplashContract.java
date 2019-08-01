@@ -1,10 +1,10 @@
-package com.psx.odktest.ui.SplashScreen;
+package com.psx.ancillaryscreens.screens.splash;
 
 import android.content.pm.PackageInfo;
 
-import com.psx.odktest.base.MvpInteractor;
-import com.psx.odktest.base.MvpPresenter;
-import com.psx.odktest.base.MvpView;
+import com.psx.ancillaryscreens.base.MvpInteractor;
+import com.psx.ancillaryscreens.base.MvpPresenter;
+import com.psx.ancillaryscreens.base.MvpView;
 
 public interface SplashContract {
     interface View extends MvpView {

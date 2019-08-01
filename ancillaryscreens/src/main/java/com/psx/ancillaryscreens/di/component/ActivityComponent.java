@@ -4,6 +4,7 @@ import com.psx.ancillaryscreens.di.PerActivity;
 import com.psx.ancillaryscreens.di.modules.CommonsActivityAbstractProviders;
 import com.psx.ancillaryscreens.di.modules.CommonsActivityModule;
 import com.psx.ancillaryscreens.screens.login.LoginActivity;
+import com.psx.ancillaryscreens.screens.splash.SplashActivity;
 
 import dagger.Component;
 
@@ -17,4 +18,5 @@ public interface ActivityComponent {
 
     void inject(LoginActivity loginActivity);
 
+    void inject(SplashActivity splashActivity);
 }

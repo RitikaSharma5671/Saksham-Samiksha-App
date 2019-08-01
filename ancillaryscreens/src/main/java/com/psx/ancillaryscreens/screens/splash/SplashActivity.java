@@ -1,4 +1,4 @@
-package com.psx.odktest.ui.SplashScreen;
+package com.psx.ancillaryscreens.screens.splash;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -6,8 +6,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.psx.odktest.R;
-import com.psx.odktest.base.BaseActivity;
+import com.psx.ancillaryscreens.R;
+import com.psx.ancillaryscreens.R2;
+import com.psx.ancillaryscreens.base.BaseActivity;
 
 import org.odk.collect.android.ODKDriver;
 
@@ -21,9 +22,9 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
     private static final int SPLASH_TIMEOUT = 2000; // milliseconds
 
-    @BindView(R.id.splash)
+    @BindView(R2.id.splash)
     public ImageView splashImage;
-    @BindView(R.id.splash_default)
+    @BindView(R2.id.splash_default)
     public LinearLayout splashDefaultLayout;
 
     private Unbinder unbinder;
@@ -66,11 +67,6 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         unbinder = ButterKnife.bind(this);
         splashPresenter.startGetFormListCall();
         splashPresenter.startUnzipTask();
-    }
-
-    @Override
-    public void setupToolbar() {
-        // No toolbar required since full screen activity
     }
 
     @Override

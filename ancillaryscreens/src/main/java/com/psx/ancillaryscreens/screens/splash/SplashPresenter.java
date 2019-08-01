@@ -1,12 +1,15 @@
-package com.psx.odktest.ui.SplashScreen;
+package com.psx.ancillaryscreens.screens.splash;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.psx.ancillaryscreens.AncillaryScreensDriver;
-import com.psx.odktest.base.BasePresenter;
-import com.psx.odktest.ui.HomeScreen.HomeActivity;
+import com.psx.ancillaryscreens.base.BasePresenter;
+import com.psx.ancillaryscreens.data.network.BackendCallHelper;
+import com.psx.commons.Constants;
+import com.psx.commons.ExchangeObject;
+import com.psx.commons.Modules;
 
 import org.odk.collect.android.BackgroundRxCalls.RxEvents;
 import org.odk.collect.android.BackgroundRxCalls.UnzipDataTask;
@@ -18,6 +21,7 @@ import org.odk.collect.android.utilities.PermissionUtils;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
 public class SplashPresenter<V extends SplashContract.View, I extends SplashContract.Interactor> extends BasePresenter<V, I> implements SplashContract.Presenter<V, I> {
@@ -25,9 +29,10 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
     private static final boolean EXIT = true;
 
     @Inject
-    public SplashPresenter(I mvpInteractor) {
-        super(mvpInteractor);
+    public SplashPresenter(I mvpInteractor, BackendCallHelper apiHelper, CompositeDisposable compositeDisposable) {
+        super(mvpInteractor, apiHelper, compositeDisposable);
     }
+
 
     @Override
     public void startUnzipTask() {
@@ -85,8 +90,9 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
     public void moveToNextScreen() {
         if (getMvpInteractor().isLoggedIn()) {
             Timber.e("Moving to Home");
-            Intent intent = new Intent(getMvpView().getActivityContext(), HomeActivity.class);
-            getMvpView().getActivityContext().startActivity(intent);
+            Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
+            ExchangeObject.SignalExchangeObject signalExchangeObject = new ExchangeObject.SignalExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, intent, true);
+            AncillaryScreensDriver.mainApplication.getEventBus().send(signalExchangeObject);
         } else {
             Timber.e("Launching Login");
             AncillaryScreensDriver.launchLoginScreen(getMvpView().getActivityContext());

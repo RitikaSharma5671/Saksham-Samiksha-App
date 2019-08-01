@@ -4,6 +4,9 @@ import com.psx.ancillaryscreens.di.PerActivity;
 import com.psx.ancillaryscreens.screens.login.LoginContract;
 import com.psx.ancillaryscreens.screens.login.LoginInteractor;
 import com.psx.ancillaryscreens.screens.login.LoginPresenter;
+import com.psx.ancillaryscreens.screens.splash.SplashContract;
+import com.psx.ancillaryscreens.screens.splash.SplashInteractor;
+import com.psx.ancillaryscreens.screens.splash.SplashPresenter;
 
 import dagger.Binds;
 import dagger.Module;
@@ -23,5 +26,14 @@ public abstract class CommonsActivityAbstractProviders {
     @Binds
     @PerActivity
     abstract LoginContract.Interactor provideLoginMvpInteractor(LoginInteractor interactor);
+
+    @Binds
+    @PerActivity
+    abstract SplashContract.Presenter<SplashContract.View, SplashContract.Interactor> provideSplashMvpPresenter(
+            SplashPresenter<SplashContract.View, SplashContract.Interactor> presenter);
+
+    @Binds
+    @PerActivity
+    abstract SplashContract.Interactor provideSplashMvpInteractor(SplashInteractor splashInteractor);
 
 }

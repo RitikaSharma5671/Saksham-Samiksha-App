@@ -11,9 +11,6 @@ import com.psx.odktest.ui.SearchActivity.SearchMvpInteractor;
 import com.psx.odktest.ui.SearchActivity.SearchMvpPresenter;
 import com.psx.odktest.ui.SearchActivity.SearchMvpView;
 import com.psx.odktest.ui.SearchActivity.SearchPresenter;
-import com.psx.odktest.ui.SplashScreen.SplashContract;
-import com.psx.odktest.ui.SplashScreen.SplashInteractor;
-import com.psx.odktest.ui.SplashScreen.SplashPresenter;
 import com.psx.odktest.ui.VisitsScreen.MyVisitMvpInteractor;
 import com.psx.odktest.ui.VisitsScreen.MyVisitsInteractor;
 import com.psx.odktest.ui.VisitsScreen.MyVisitsMvpPresenter;
@@ -55,13 +52,4 @@ public abstract class ActivityAbstractProviders {
     @Binds
     @PerActivity
     abstract SearchMvpInteractor provideSearchMvpInteractor(SearchInteractor searchInteractor);
-
-    @Binds
-    @PerActivity
-    abstract SplashContract.Presenter<SplashContract.View, SplashContract.Interactor> provideSplashMvpPresenter(
-            SplashPresenter<SplashContract.View, SplashContract.Interactor> presenter);
-
-    @Binds
-    @PerActivity
-    abstract SplashContract.Interactor provideSplashMvpInteractor(SplashInteractor splashInteractor);
 }

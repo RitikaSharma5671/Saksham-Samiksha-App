@@ -1,9 +1,10 @@
-package com.psx.odktest.ui.SplashScreen;
+package com.psx.ancillaryscreens.screens.splash;
 
 import android.content.pm.PackageInfo;
 
-import com.psx.odktest.base.BaseInteractor;
-import com.psx.odktest.data.prefs.PreferenceHelper;
+
+import com.psx.ancillaryscreens.base.BaseInteractor;
+import com.psx.ancillaryscreens.data.prefs.CommonsPreferenceHelper;
 
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 
@@ -14,7 +15,7 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_SPLASH_PATH;
 public class SplashInteractor extends BaseInteractor implements SplashContract.Interactor {
 
     @Inject
-    public SplashInteractor(PreferenceHelper preferenceHelper) {
+    public SplashInteractor(CommonsPreferenceHelper preferenceHelper) {
         super(preferenceHelper);
     }
 
