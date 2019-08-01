@@ -8,9 +8,7 @@ import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.json.JSONObject;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
-import timber.log.Timber;
 
 public class BackendCallHelperImpl implements BackendCallHelper {
 

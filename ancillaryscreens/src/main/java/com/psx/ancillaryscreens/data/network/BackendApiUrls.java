@@ -1,8 +1,8 @@
 package com.psx.ancillaryscreens.data.network;
 
-public final class BackendApiUrls {
+import com.psx.ancillaryscreens.AncillaryScreensDriver;
 
-    private static final String BASE_API_URL_SHIKSHA_SAATHI = "http://www.auth.samagra.io:9011";
-    static final String AUTH_LOGIN_ENDPOINT = BASE_API_URL_SHIKSHA_SAATHI + "/api/login";
-    static final String USER_DETAILS_ENDPOINT = BASE_API_URL_SHIKSHA_SAATHI + "/api/user/{user_id}/";
+final class BackendApiUrls {
+    static final String AUTH_LOGIN_ENDPOINT = AncillaryScreensDriver.BASE_URL + "/api/login";
+    static final String USER_DETAILS_ENDPOINT = AncillaryScreensDriver.BASE_URL + "/api/user/{user_id}/";
 }

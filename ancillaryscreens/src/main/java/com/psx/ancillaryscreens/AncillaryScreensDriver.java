@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.google.android.gms.common.internal.service.Common;
 import com.psx.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.psx.ancillaryscreens.screens.login.LoginActivity;
 import com.psx.commons.CommonUtilities;
@@ -27,30 +25,16 @@ import timber.log.Timber;
 
 public class AncillaryScreensDriver {
     public static MainApplication mainApplication = null;
+    public static String BASE_URL;
 
-    public static void init(MainApplication mainApplication) {
+    public static void init(MainApplication mainApplication, String BASE_URL) {
         AncillaryScreensDriver.mainApplication = mainApplication;
+        AncillaryScreensDriver.BASE_URL = BASE_URL;
     }
 
     public static void launchLoginScreen(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
         CommonUtilities.startActivityAsNewTask(intent, context);
-    }
-
-    private static void notifyLogoutInitiated() {
-        Timber.i("Logout initiated");
-        ExchangeObject.EventExchangeObject eventExchangeObject = new ExchangeObject.EventExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, CustomEvents.LOGOUT_INITIATED);
-        mainApplication.getEventBus().send(eventExchangeObject);
-    }
-
-    /**
-     * Notifies about Logout process being completed, if required,
-     * a success/failure status code may be sent along with the event
-     */
-    private static void notifyLogoutCompleted() {
-        Timber.i("Logout completed");
-        ExchangeObject.EventExchangeObject eventExchangeObject = new ExchangeObject.EventExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, CustomEvents.LOGOUT_COMPLETED);
-        mainApplication.getEventBus().send(eventExchangeObject);
     }
 
     public static void performLogout(Context context) {
@@ -63,6 +47,11 @@ public class AncillaryScreensDriver {
         else
             Toast.makeText(context, "No Internet Connection. Please connect to internet and try again later", Toast.LENGTH_LONG).show();
     }
+
+
+    /**
+     * The private functions not exposed to classes outside the module
+     */
 
     private static void makeRemoveTokenApiCall(String token, Context context) {
         String apiKey = context.getResources().getString(R.string.fusionauth_api_key);
@@ -146,5 +135,21 @@ public class AncillaryScreensDriver {
         editor.remove("updatedMappingThroughFirebase2");
         editor.remove("formVersion");
         editor.apply();
+    }
+
+    private static void notifyLogoutInitiated() {
+        Timber.i("Logout initiated");
+        ExchangeObject.EventExchangeObject eventExchangeObject = new ExchangeObject.EventExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, CustomEvents.LOGOUT_INITIATED);
+        mainApplication.getEventBus().send(eventExchangeObject);
+    }
+
+    /**
+     * Notifies about Logout process being completed, if required,
+     * a success/failure status code may be sent along with the event
+     */
+    private static void notifyLogoutCompleted() {
+        Timber.i("Logout completed");
+        ExchangeObject.EventExchangeObject eventExchangeObject = new ExchangeObject.EventExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, CustomEvents.LOGOUT_COMPLETED);
+        mainApplication.getEventBus().send(eventExchangeObject);
     }
 }
