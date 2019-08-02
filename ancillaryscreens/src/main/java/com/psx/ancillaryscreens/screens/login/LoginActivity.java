@@ -29,7 +29,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-
+/**
+ * The View Part for the Login Screen, must implement {@link LoginContract.View}
+ *
+ * @author Pranav Sharma
+ */
 public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @BindView(R2.id.login_username)
@@ -63,6 +67,12 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         startActivity(changePassIntent);
     }
 
+    /**
+     * This function should be called to inform the UI that the Login Task has been completed <b>successfully</b>.
+     * The UI update to reflect successful login should be done here.
+     *
+     * @param loginResponse - The response in the form of {@link LoginResponse} sent by the API.
+     */
     @Override
     public void onLoginSuccess(LoginResponse loginResponse) {
         loginPresenter.getMvpInteractor().persistUserData(loginResponse);
@@ -70,6 +80,10 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         loginPresenter.finishAndMoveToHomeScreen();
     }
 
+    /**
+     * This function should be called to inform the UI that the Login Task has been completed <b>unsuccessfully</b>
+     * The UI update to reflect unsuccessful login should be done here.
+     */
     @Override
     public void onLoginFailed() {
         progressBar.setVisibility(View.GONE);

@@ -5,6 +5,13 @@ import org.json.JSONObject;
 
 import timber.log.Timber;
 
+/**
+ * The request object that is used while making a Login attempt. This object is required by {@link com.psx.ancillaryscreens.data.network.BackendCallHelper#performLoginApiCall(LoginRequest)}
+ * and contains the username and password fields which are the only 2 <b>required</b> fields by the fusionAuth API.
+ *
+ * @author Pranav Sharma
+ * @see com.psx.ancillaryscreens.data.network.BackendCallHelper#performLoginApiCall(LoginRequest)
+ */
 public class LoginRequest {
 
     private String username;
@@ -39,7 +46,7 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Timber.i("Making Login call with %s",jsonObject.toString());
+        Timber.i("Making Login call with %s", jsonObject.toString());
         return jsonObject;
     }
 }

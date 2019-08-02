@@ -5,6 +5,12 @@ import androidx.annotation.NonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * The response of the Login API is wrapped in this class prior to use anywhere in code.
+ *
+ * @author Pranav Sharma
+ * @see com.psx.ancillaryscreens.data.network.BackendCallHelperImpl#performLoginApiCall(LoginRequest)
+ */
 public class LoginResponse {
 
     public JsonPrimitive token;

@@ -5,9 +5,16 @@ import android.widget.EditText;
 import com.psx.ancillaryscreens.base.MvpInteractor;
 import com.psx.ancillaryscreens.base.MvpPresenter;
 import com.psx.ancillaryscreens.base.MvpView;
+import com.psx.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.psx.ancillaryscreens.data.network.model.LoginRequest;
 import com.psx.ancillaryscreens.data.network.model.LoginResponse;
 
+/**
+ * The interface contract for Login Screen. This interface contains the methods that the Model, View & Presenter
+ * for Login Screen must implement
+ *
+ * @author Pranav Sharma
+ */
 public interface LoginContract {
     interface View extends MvpView {
 
@@ -26,8 +33,18 @@ public interface LoginContract {
 
         void changePassword();
 
+        /**
+         * This function should be called to inform the UI that the Login Task has been completed <b>successfully</b>.
+         * The UI update to reflect successful login should be done here.
+         *
+         * @param loginResponse - The response in the form of {@link LoginResponse} sent by the API.
+         */
         void onLoginSuccess(LoginResponse loginResponse);
 
+        /**
+         * This function should be called to inform the UI that the Login Task has been completed <b>unsuccessfully</b>
+         * The UI update to reflect unsuccessful login should be done here.
+         */
         void onLoginFailed();
 
         void showProgressDialog();
@@ -39,6 +56,12 @@ public interface LoginContract {
 
     interface Interactor extends MvpInteractor {
 
+        /**
+         * This function persists the user data received through {@link BackendCallHelperImpl#performLoginApiCall(LoginRequest)}
+         * in {@link android.content.SharedPreferences} after parsing it.
+         *
+         * @param loginResponse - The {@link LoginResponse} received from {@link BackendCallHelperImpl#performLoginApiCall(LoginRequest)}
+         */
         void persistUserData(LoginResponse loginResponse);
 
         boolean isFirstLogin();
@@ -47,10 +70,21 @@ public interface LoginContract {
 
     interface Presenter<V extends View, I extends Interactor> extends MvpPresenter<V, I> {
 
+        /**
+         * This function starts the Login process by accepting a {@link LoginRequest} and then executing it.
+         *
+         * @param loginRequest - The {@link LoginRequest} passed to make the API call via {@link BackendCallHelperImpl#performLoginApiCall(LoginRequest)}
+         * @see BackendCallHelperImpl#performLoginApiCall(LoginRequest)
+         */
         void startAuthenticationTask(LoginRequest loginRequest);
 
         void resetSelectedIfRequired();
 
+        /**
+         * This function finishes the {@link LoginActivity} and starts the HomeActivity. The HomeActivity is outside this
+         * module and can be any activity which has {@link com.psx.commons.Constants#INTENT_LAUNCH_HOME_ACTIVITY} defined
+         * as action in its intent-filter tag in AndroidManifest. This activity is started as a new task.
+         */
         void finishAndMoveToHomeScreen();
     }
 }
