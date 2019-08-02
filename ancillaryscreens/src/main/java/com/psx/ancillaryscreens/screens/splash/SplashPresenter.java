@@ -24,6 +24,12 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
+/**
+ * The presenter for the Splash Screen. This class controls the interactions between the View and the data.
+ * Must implement {@link com.psx.ancillaryscreens.screens.splash.SplashContract.Presenter}
+ *
+ * @author Pranav Sharma
+ */
 public class SplashPresenter<V extends SplashContract.View, I extends SplashContract.Interactor> extends BasePresenter<V, I> implements SplashContract.Presenter<V, I> {
 
     private static final boolean EXIT = true;
@@ -40,6 +46,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         unzipDataTask.gunzipIt();
     }
 
+    // Currently this function is not used.
     @Override
     public void startGetFormListCall() {
         WebCalls.GetFormsListCall(getMvpView().getActivityContext(),
@@ -59,6 +66,9 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                 });
     }
 
+    /**
+     * Request the storage permissions which is necessary for ODK to read write data related to forms
+     */
     @Override
     public void requestStoragePermissions() {
         PermissionUtils permissionUtils = new PermissionUtils();
@@ -86,6 +96,14 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         }
     }
 
+    /**
+     * Decides the next screen and moves to the decided screen.
+     * This decision is based on the Login status which is managed by the {@link com.psx.ancillaryscreens.screens.login.LoginActivity}
+     * in this module.
+     *
+     * @see com.psx.ancillaryscreens.screens.login.LoginActivity
+     * @see com.psx.ancillaryscreens.data.prefs.CommonsPrefsHelperImpl
+     */
     @Override
     public void moveToNextScreen() {
         if (getMvpInteractor().isLoggedIn()) {
@@ -99,6 +117,10 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         }
     }
 
+    /**
+     * This function initialises the {@link SplashActivity} by setting up the layout and updating necessary flags in
+     * the {@link android.content.SharedPreferences}.
+     */
     private void init() {
         getMvpView().showActivityLayout();
         PackageInfo packageInfo = null;

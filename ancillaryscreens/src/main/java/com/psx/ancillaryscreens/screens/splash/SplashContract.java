@@ -5,15 +5,32 @@ import android.content.pm.PackageInfo;
 import com.psx.ancillaryscreens.base.MvpInteractor;
 import com.psx.ancillaryscreens.base.MvpPresenter;
 import com.psx.ancillaryscreens.base.MvpView;
+import com.psx.commons.MainApplication;
 
+/**
+ * The interface contract for Splash Screen. This interface contains the methods that the Model, View & Presenter
+ * for Splash Screen must implement
+ *
+ * @author Pranav Sharma
+ */
 public interface SplashContract {
     interface View extends MvpView {
         void endSplashScreen();
 
+        /**
+         * This function configures the Splash Screen through the values provided to the {@link org.odk.collect.android.ODKDriver}
+         * and renders it on screen. This includes the Splash screen image and other UI configurations.
+         *
+         * @see org.odk.collect.android.ODKDriver#init(MainApplication, int, int, int, int)
+         */
         void showSimpleSplash();
 
         void finishActivity();
 
+        /**
+         * This function sets the activity layout and binds the UI Views.
+         * This function should be called after the relevant permissions are granted to the app by the user
+         */
         void showActivityLayout();
     }
 
@@ -49,8 +66,19 @@ public interface SplashContract {
 
         void startGetFormListCall();
 
+        /**
+         * Request the storage permissions which is necessary for ODK to read write data related to forms
+         */
         void requestStoragePermissions();
 
+        /**
+         * Decides the next screen and moves to the decided screen.
+         * This decision is based on the Login status which is managed by the {@link com.psx.ancillaryscreens.screens.login.LoginActivity}
+         * in this module.
+         *
+         * @see com.psx.ancillaryscreens.screens.login.LoginActivity
+         * @see com.psx.ancillaryscreens.data.prefs.CommonsPrefsHelperImpl
+         */
         void moveToNextScreen();
     }
 }

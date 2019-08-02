@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import com.psx.ancillaryscreens.R;
 import com.psx.ancillaryscreens.R2;
 import com.psx.ancillaryscreens.base.BaseActivity;
+import com.psx.commons.MainApplication;
 
 import org.odk.collect.android.ODKDriver;
 
@@ -18,6 +19,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+/**
+ * The View Part for the Splash Screen, must implement {@link SplashContract.View}
+ * This Activity needs to be declared as the launcher activity in the AndroidManifest.xml
+ *
+ * @author Pranav Sharma
+ */
 public class SplashActivity extends BaseActivity implements SplashContract.View {
 
     private static final int SPLASH_TIMEOUT = 2000; // milliseconds
@@ -47,6 +54,12 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         finish();
     }
 
+    /**
+     * This function configures the Splash Screen through the values provided to the {@link org.odk.collect.android.ODKDriver}
+     * and renders it on screen. This includes the Splash screen image and other UI configurations.
+     *
+     * @see org.odk.collect.android.ODKDriver#init(MainApplication, int, int, int, int, long)
+     */
     @Override
     public void showSimpleSplash() {
         splashDefaultLayout.setVisibility(View.GONE);
@@ -61,6 +74,10 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         finish();
     }
 
+    /**
+     * This function sets the activity layout and binds the UI Views.
+     * This function should be called after the relevant permissions are granted to the app by the user
+     */
     @Override
     public void showActivityLayout() {
         setContentView(R.layout.splash_screen);

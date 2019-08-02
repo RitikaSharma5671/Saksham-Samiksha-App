@@ -12,6 +12,14 @@ import javax.inject.Inject;
 
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SPLASH_PATH;
 
+/**
+ * This class interacts with the {@link com.psx.ancillaryscreens.screens.splash.SplashContract.Presenter} and the stored
+ * app data. The class abstracts the source of the originating data - This means {@link com.psx.ancillaryscreens.screens.splash.SplashContract.Presenter}
+ * has no idea if the data provided by the {@link com.psx.ancillaryscreens.screens.splash.SplashContract.Interactor} is
+ * from network, database or SharedPreferences
+ *
+ * @author Pranav Sharma
+ */
 public class SplashInteractor extends BaseInteractor implements SplashContract.Interactor {
 
     @Inject
