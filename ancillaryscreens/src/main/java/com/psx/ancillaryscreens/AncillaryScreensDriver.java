@@ -31,7 +31,7 @@ import timber.log.Timber;
  * The driver class for this module, any screen that needs to be launched from outside this module, should be
  * launched using this class.
  * Note: It is essential that you call the {@link AncillaryScreensDriver#init(MainApplication, String)} to initialise
- * the class prior to using it.
+ * the class prior to using it else an {@link InvalidConfigurationException} will be thrown.
  *
  * @author Pranav Sharma
  */
@@ -39,8 +39,7 @@ public class AncillaryScreensDriver {
     public static MainApplication mainApplication = null;
     public static String BASE_API_URL;
 
-    //TODO : Throw InvalidConfigurationException if this method is not called prior to using anything else.
-    public static void init(MainApplication mainApplication, String BASE_URL) {
+    public static void init(@NonNull MainApplication mainApplication, @NonNull String BASE_URL) {
         AncillaryScreensDriver.mainApplication = mainApplication;
         AncillaryScreensDriver.BASE_API_URL = BASE_URL;
     }
@@ -52,6 +51,7 @@ public class AncillaryScreensDriver {
      * @param context - The current Activity's context.
      */
     public static void launchLoginScreen(@NonNull Context context) {
+        checkValidConfig();
         Intent intent = new Intent(context, LoginActivity.class);
         CommonUtilities.startActivityAsNewTask(intent, context);
     }
@@ -64,6 +64,7 @@ public class AncillaryScreensDriver {
      * @see AboutBundle#AboutBundle(String, String, String, int, int, int)
      */
     public static void launchAboutActivity(@NonNull Context context, @NonNull AboutBundle aboutBundle) {
+        checkValidConfig();
         Intent intent = new Intent(context, AboutActivity.class);
         intent.putExtra("config", aboutBundle.aboutExchangeBundle);
         context.startActivity(intent);
@@ -80,6 +81,7 @@ public class AncillaryScreensDriver {
      */
     public static void performLogout(@NonNull Context context) {
         // TODO : Logout button => Logout from fusionAuth => Update user by removing registration token => Login splash_ss
+        checkValidConfig();
         notifyLogoutInitiated();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String token = sharedPreferences.getString("FCM.token", "");
@@ -90,9 +92,9 @@ public class AncillaryScreensDriver {
     }
 
 
-    /**
-     * The private functions not exposed to classes outside the module. These functions help the public static functions
-     * defined in this file to complete their functionality. These can also be moved to another file for sake of clarity.
+    /*
+      The private functions not exposed to classes outside the module. These functions help the public static functions
+      defined in this file to complete their functionality. These can also be moved to another file for sake of clarity.
      */
 
     /**
@@ -234,5 +236,17 @@ public class AncillaryScreensDriver {
         Timber.i("Logout completed");
         ExchangeObject.EventExchangeObject eventExchangeObject = new ExchangeObject.EventExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, CustomEvents.LOGOUT_COMPLETED);
         mainApplication.getEventBus().send(eventExchangeObject);
+    }
+
+    /**
+     * Function to check if the mainApplication is initialised indicating if {@link AncillaryScreensDriver#init(MainApplication, String)} is called or not.
+     * If not, it throws {@link InvalidConfigurationException}
+     *
+     * @throws InvalidConfigurationException - This Exception means that the module is not configured by the user properly. The exception generates
+     *                                       detailed message depending on the class that throws it.
+     */
+    private static void checkValidConfig() {
+        if (mainApplication == null)
+            throw new InvalidConfigurationException(AncillaryScreensDriver.class);
     }
 }

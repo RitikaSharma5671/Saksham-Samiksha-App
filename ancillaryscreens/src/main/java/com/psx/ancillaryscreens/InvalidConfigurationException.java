@@ -6,6 +6,11 @@ import com.psx.ancillaryscreens.screens.about.AboutActivity;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A {@link RuntimeException} indicating that a component is not configured Properly.
+ *
+ * @author Pranav Sharma
+ */
 public class InvalidConfigurationException extends RuntimeException {
 
     private final String message = "InvalidConfigurationException. Did you forget Configuring this activity ?";
@@ -14,6 +19,7 @@ public class InvalidConfigurationException extends RuntimeException {
 
     public InvalidConfigurationException(@NonNull Class clazz) {
         this.clazz = clazz;
+        assignDetailedMessage();
     }
 
     @NotNull
@@ -22,12 +28,17 @@ public class InvalidConfigurationException extends RuntimeException {
         return message + "\n Detailed Message: " + detailedMessage;
     }
 
-    public String getDetailedMessage() {
+    private void assignDetailedMessage() {
         if (clazz.getCanonicalName().equals(AboutActivity.class.getCanonicalName())) {
-            detailedMessage = "AboutActivity is not initialized. You need to pass AboutBundle to configure AboutActivity";
+            detailedMessage = AboutActivity.class.getSimpleName() + " is not initialized. You need to pass AboutBundle to configure AboutActivity";
+        } else if (clazz.getCanonicalName().equals(AncillaryScreensDriver.class.getCanonicalName())) {
+            detailedMessage = AncillaryScreensDriver.class.getSimpleName() + " is not initialized. You need to call the init method before used any functions from this class.";
         } else {
             detailedMessage = "No further details Available.";
         }
+    }
+
+    public String getDetailedMessage() {
         return detailedMessage;
     }
 }
