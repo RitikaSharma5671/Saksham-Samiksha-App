@@ -18,6 +18,12 @@ import org.odk.collect.android.adapters.AboutListAdapter;
 
 import javax.inject.Inject;
 
+/**
+ * The View Part for the About Screen, must implement {@link AboutContract.View} and {@link org.odk.collect.android.adapters.AboutListAdapter.AboutItemClickListener}.
+ * The activity is adapted from the ODK library and efforts have been made to keep it as similar as possible.
+ *
+ * @author Pranav Sharma
+ */
 public class AboutActivity extends BaseActivity implements AboutContract.View, AboutListAdapter.AboutItemClickListener {
 
     private Uri websiteUri;

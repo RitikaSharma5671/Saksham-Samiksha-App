@@ -3,10 +3,16 @@ package com.psx.ancillaryscreens.utils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.annotation.NonNull;
 
+import com.google.android.material.snackbar.Snackbar;
+
+/**
+ * A utility class that prevents from writing boilerplate code to show various kinds of {@link Snackbar}s
+ * in an activity.
+ *
+ * @author Pranav Sharma
+ */
 public final class SnackbarUtils {
     private static final int DURATION_SHORT = 3500;
     private static final int DURATION_LONG = 5500;
@@ -24,7 +30,7 @@ public final class SnackbarUtils {
     }
 
     /**
-     * Displays snackbar with {@param message}
+     * Displays {@link Snackbar} with {@param message}
      * and multi-line message enabled.
      *
      * @param view    The view to find a parent from.
@@ -42,7 +48,7 @@ public final class SnackbarUtils {
     }
 
     /**
-     * Displays snackbar with {@param message}
+     * Displays {@link Snackbar} with {@param message}
      * and multi-line message enabled.
      *
      * @param view    The view to find a parent from.
@@ -54,7 +60,8 @@ public final class SnackbarUtils {
         }
 
         Snackbar snackbar = Snackbar.make(view, message.trim(), duration)
-                .setAction(dismissText.trim(), v -> {});
+                .setAction(dismissText.trim(), v -> {
+                });
         TextView textView = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
         textView.setSingleLine(false);
         snackbar.show();

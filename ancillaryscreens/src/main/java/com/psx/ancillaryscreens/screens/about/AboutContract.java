@@ -6,6 +6,12 @@ import com.psx.ancillaryscreens.base.MvpInteractor;
 import com.psx.ancillaryscreens.base.MvpPresenter;
 import com.psx.ancillaryscreens.base.MvpView;
 
+/**
+ * The interface Contract for the About Screen. This interface contains the methods that the Model, View & Presenter
+ * for About Screen must implement.
+ *
+ * @author Pranav Sharma
+ */
 public interface AboutContract {
     interface View extends MvpView {
         void initToolbar();
