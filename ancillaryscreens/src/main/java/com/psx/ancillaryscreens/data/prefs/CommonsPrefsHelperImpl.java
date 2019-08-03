@@ -15,6 +15,12 @@ import org.odk.collect.android.preferences.GeneralKeys;
 
 import javax.inject.Inject;
 
+/**
+ * Solid implementation of {@link CommonsPreferenceHelper}, performs the read/write operations on the {@link SharedPreferences}
+ * used by the ancillaryscreens. The class is injected to all activities instead of manually creating an object.
+ *
+ * @author Pranav Sharma
+ */
 public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
 
     private final SharedPreferences sharedPreferences;

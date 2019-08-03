@@ -2,6 +2,13 @@ package com.psx.ancillaryscreens.data.prefs;
 
 import com.psx.ancillaryscreens.data.network.model.LoginResponse;
 
+/**
+ * Interface defining the access point to the SharedPreference used by the ancillaryscreens module.
+ * All access functions to be implemented by a single solid implementation of this interface.
+ *
+ * @author Pranav Sharma
+ * @see CommonsPrefsHelperImpl
+ */
 public interface CommonsPreferenceHelper {
     String getCurrentUserName();
 
