@@ -7,6 +7,13 @@ import org.json.JSONObject;
 
 import io.reactivex.Single;
 
+/**
+ * Interface containing all the API Calls performed by this module.
+ * All calls to be implemented in a single implementation of this interface.
+ *
+ * @author Pranav Sharma
+ * @see BackendCallHelperImpl
+ */
 public interface BackendCallHelper {
 
     Single<LoginResponse> performLoginApiCall(LoginRequest loginRequest);
