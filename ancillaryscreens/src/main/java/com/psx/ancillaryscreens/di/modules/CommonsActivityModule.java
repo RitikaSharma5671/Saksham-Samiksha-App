@@ -20,6 +20,8 @@ import io.reactivex.disposables.CompositeDisposable;
  * Classes marked with @{@link Module} are responsible for providing objects that can be injected.
  * Such classes define methods annotated with @{@link Provides}. The returned objects from such methods are
  * available for DI.
+ *
+ * @author Pranav Sharma
  */
 @Module
 public class CommonsActivityModule {
