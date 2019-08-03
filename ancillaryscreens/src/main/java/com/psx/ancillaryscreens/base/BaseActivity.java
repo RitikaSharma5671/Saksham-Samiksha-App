@@ -11,6 +11,14 @@ import com.psx.ancillaryscreens.di.component.ActivityComponent;
 import com.psx.ancillaryscreens.di.component.DaggerActivityComponent;
 import com.psx.ancillaryscreens.di.modules.CommonsActivityModule;
 
+/**
+ * This abstract class serves as the Base for all other activities used in this module. The class is
+ * designed to support MVP Pattern with Dagger support. Any methods that need to be executed in all
+ * activities, must be mentioned here. App level configuration changes (like theme change, language change, etc)
+ * can be easily made through a BaseActivity. This must implement {@link MvpView}.
+ *
+ * @author Pranav Sharma
+ */
 public abstract class BaseActivity extends AppCompatActivity implements MvpView {
 
     private ActivityComponent activityComponent;
