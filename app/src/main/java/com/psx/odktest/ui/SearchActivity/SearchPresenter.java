@@ -46,6 +46,12 @@ import javax.xml.transform.stream.StreamResult;
 
 import timber.log.Timber;
 
+/**
+ * The Presenter class for Search Screen. This class controls interaction between the View and Data.
+ * This class <b>must</b> implement the {@link SearchMvpPresenter} and <b>must</b> be a type of {@link BasePresenter}.
+ *
+ * @author Pranav Sharma
+ */
 public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInteractor> extends BasePresenter<V, I> implements SearchMvpPresenter<V, I> {
 
     private List<School> schools = new ArrayList<>();

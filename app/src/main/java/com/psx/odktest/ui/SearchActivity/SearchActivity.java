@@ -35,6 +35,12 @@ import butterknife.Unbinder;
 
 import static com.psx.odktest.UtilityFunctions.hideKeyboard;
 
+/**
+ * View part of the Search Screen. This class only handles the UI operations, all the business logic is simply
+ * abstracted from this Activity. It <b>must</b> implement the {@link SearchMvpView} and extend the {@link BaseActivity}.
+ *
+ * @author Pranav Sharma
+ */
 public class SearchActivity extends BaseActivity implements SearchMvpView {
 
     @BindView(R.id.district_spinner)
@@ -322,6 +328,12 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
         });
     }
 
+    /**
+     * This functions simply shifts a {@link Spinner} to its default state; a state that prevents
+     * a user from interacting with the spinner. This is essentially disabling a spinner on the UI.
+     *
+     * @param spinner - The {@link Spinner} widget to disable
+     */
     @Override
     public void makeSpinnerDefault(Spinner spinner) {
         spinner.setEnabled(false);

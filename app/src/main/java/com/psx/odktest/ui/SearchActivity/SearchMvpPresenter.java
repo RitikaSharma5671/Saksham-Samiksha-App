@@ -7,6 +7,15 @@ import com.psx.odktest.helper.KeyboardHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Presenter 'contract' for the SearchScreen. The {@link SearchPresenter} <b>must</b> implement this interface.
+ * This interface exposes presenter methods to the view ({@link SearchActivity}) so that the business logic is defined
+ * in the presenter, but can be called from the view.
+ * This interface should be a type of {@link MvpPresenter}
+ *
+ * @author Pranav Sharma
+ */
+//TODO : Document the functions
 public interface SearchMvpPresenter<V extends SearchMvpView, I extends SearchMvpInteractor> extends MvpPresenter<V, I> {
 
     void loadValuesToMemory();
