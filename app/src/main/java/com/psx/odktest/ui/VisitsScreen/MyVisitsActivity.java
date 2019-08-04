@@ -14,8 +14,9 @@ import org.odk.collect.android.ODKDriver;
 import javax.inject.Inject;
 
 /**
- * View part of the Home Screen. This class only handles the UI operations, all the business logic is simply
- * abstracted from this Activity. It <b>must</b> implement the {@link MyVisitsMvpView} and extend the {@link BaseActivity}.
+ * View part of the MyVisits Screen. This class only handles the UI operations, all the business
+ * logic is simply abstracted from this Activity. It <b>must</b> implement the {@link MyVisitsMvpView}
+ * and extend the {@link BaseActivity}.
  *
  * @author Pranav Sharma
  */

@@ -17,8 +17,9 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import javax.inject.Inject;
 
 /**
- * The Presenter class for Home Screen. This class controls interaction between the View and Data.
- * This class <b>must</b> implement the {@link MyVisitsMvpPresenter} and <b>must</b> be a type of {@link BasePresenter}.
+ * The Presenter class for MyVisits Screen. This class controls interaction between the View and Data.
+ * This class <b>must</b> implement the {@link MyVisitsMvpPresenter} and <b>must</b> be a type of
+ * {@link BasePresenter}.
  *
  * @author Pranav Sharma
  */
