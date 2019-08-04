@@ -2,7 +2,6 @@ package com.psx.odktest.ui.VisitsScreen;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.widget.Toolbar;
@@ -14,6 +13,12 @@ import org.odk.collect.android.ODKDriver;
 
 import javax.inject.Inject;
 
+/**
+ * View part of the Home Screen. This class only handles the UI operations, all the business logic is simply
+ * abstracted from this Activity. It <b>must</b> implement the {@link MyVisitsMvpView} and extend the {@link BaseActivity}.
+ *
+ * @author Pranav Sharma
+ */
 public class MyVisitsActivity extends BaseActivity implements MyVisitsMvpView {
 
     private LinearLayout viewSubmittedFormsLinearLayout;
