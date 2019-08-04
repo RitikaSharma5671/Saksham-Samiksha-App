@@ -27,6 +27,15 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+/**
+ * The {@link Application} class for the app. This extends {@link Collect} because the app module has a dependency on
+ * the odk-collect library. Also, since the app module expresses a dependency on the commons module, the {@link Application}
+ * class for app module must implement the {@link MainApplication}.
+ *
+ * @author Pranav Sharma
+ * @see Collect
+ * @see MainApplication
+ */
 public class MyApplication extends Collect implements MainApplication, LifecycleObserver {
 
     protected ApplicationComponent applicationComponent;
@@ -35,6 +44,14 @@ public class MyApplication extends Collect implements MainApplication, Lifecycle
     private RxBus eventBus = null;
     private static CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    /**
+     * All the external modules must be initialised here. This includes any modules that have an init
+     * function in their drivers. Also, any application level subscribers for the event bus,
+     * in this case {@link RxBus} must be defined here.
+     *
+     * @see AncillaryScreensDriver
+     * @see ODKDriver
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -77,21 +94,37 @@ public class MyApplication extends Collect implements MainApplication, Lifecycle
         return (MyApplication) context.getApplicationContext();
     }
 
+    /**
+     * Must provide a {@link androidx.annotation.NonNull} activity instance of the activity running in foreground.
+     * You can use {@link Application#registerActivityLifecycleCallbacks(Application.ActivityLifecycleCallbacks)} to
+     * get the currently resumed activity (activity in foreground)
+     */
     @Override
     public Activity getCurrentActivity() {
         return currentActivity;
     }
 
+    /**
+     * Must provide a {@link androidx.annotation.NonNull} instance of the current {@link Application}.
+     */
     @Override
     public Application getCurrentApplication() {
         return this;
     }
 
+    /**
+     * Must provide a {@link androidx.annotation.NonNull} instance of {@link RxBus} which acts as an event bus
+     * for the app.
+     */
     @Override
     public RxBus getEventBus() {
         return bus();
     }
 
+    /**
+     * Optional method to teardown a module after its use is complete.
+     * Not all modules require to be teared down.
+     */
     @Override
     public void teardownModule(Modules module) {
 

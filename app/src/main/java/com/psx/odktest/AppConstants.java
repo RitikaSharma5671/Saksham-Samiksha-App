@@ -2,6 +2,12 @@ package com.psx.odktest;
 
 import java.util.HashMap;
 
+/**
+ * These are constants required by the app module. All values declared should be public static and the constants should
+ * preferably be final constants.
+ *
+ * @author Pranav Sharma
+ */
 public class AppConstants {
     public static final String PREF_FILE_NAME = "SAMAGRA_PREFS";
     static final String BASE_API_URL = "http://www.auth.samagra.io:9011";

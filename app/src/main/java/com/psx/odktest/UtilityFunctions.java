@@ -17,11 +17,12 @@ import com.psx.commons.Constants;
 import java.util.HashMap;
 
 import io.reactivex.annotations.NonNull;
-import timber.log.Timber;
 
 /**
  * This class contains Utility function that can be accessed anywhere throughout the module 'app'.
  * All the functions in this class will be public and static.
+ *
+ * @author Pranav Sharma
  */
 public class UtilityFunctions {
 
