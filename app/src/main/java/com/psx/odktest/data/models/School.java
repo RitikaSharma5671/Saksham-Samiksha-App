@@ -4,6 +4,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import static java.lang.Double.parseDouble;
 
+/**
+ * A POJO for representing the a School.
+ */
 public class School {
 
     public String district;
