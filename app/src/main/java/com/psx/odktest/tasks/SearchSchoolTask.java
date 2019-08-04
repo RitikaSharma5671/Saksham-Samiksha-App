@@ -23,6 +23,7 @@ import java.util.Set;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import timber.log.Timber;
 
+// TODO : Add Documentation
 public class SearchSchoolTask extends AsyncTask<String, Void, List<School>> {
 
     String searchString;

@@ -11,6 +11,7 @@ import com.psx.odktest.base.ODKTestActivity;
 import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.preferences.GeneralKeys;
 
+// Placeholder activity
 public class ComingSoon extends NonMvpBaseActivity implements ODKTestActivity {
 
     private String title;

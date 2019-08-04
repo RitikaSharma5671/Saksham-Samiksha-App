@@ -39,7 +39,7 @@ import timber.log.Timber;
 
 /**
  * View part of the Home Screen. This class only handles the UI operations, all the business logic is simply
- * abstracted from this Activity. It <b>must</b> implement the {@link HomeMvpView}
+ * abstracted from this Activity. It <b>must</b> implement the {@link HomeMvpView} and extend the {@link BaseActivity}
  *
  * @author Pranav Sharma
  */
@@ -229,6 +229,13 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                 R.string.odk_website_summary);
     }
 
+    /**
+     * This function subsribe to the {@link com.psx.commons.RxBus} to listen for the Logout related events
+     * and update the UI accordingly. The events being subscribed to are {@link com.psx.commons.CustomEvents#LOGOUT_COMPLETED}
+     * and {@link com.psx.commons.CustomEvents#LOGOUT_INITIATED}
+     *
+     * @see com.psx.commons.CustomEvents
+     */
     @Override
     public void initializeLogoutListener() {
         logoutListener = ((MainApplication) (getApplicationContext()))
