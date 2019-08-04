@@ -37,6 +37,12 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+/**
+ * View part of the Home Screen. This class only handles the UI operations, all the business logic is simply
+ * abstracted from this Activity. It <b>must</b> implement the {@link HomeMvpView}
+ *
+ * @author Pranav Sharma
+ */
 public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnClickListener {
 
     @BindView(R.id.welcome_text)
