@@ -13,6 +13,16 @@ import com.psx.odktest.di.modules.ActivityModule;
 
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
+/**
+ * This abstract class serves as the Base for all other activities used in this module. The class is
+ * designed to support MVP Pattern with Dagger support. Any methods that need to be executed in all
+ * activities, must be mentioned here. App level configuration changes (like theme change, language change, etc)
+ * can be easily made through a BaseActivity. This must implement {@link MvpView}.
+ * Since the app module expresses a dependency on the odk-collect, this base activity must also
+ * extend {@link CollectAbstractActivity}.
+ *
+ * @author Pranav Sharma
+ */
 public abstract class BaseActivity extends CollectAbstractActivity implements MvpView {
 
     private ActivityComponent activityComponent;
