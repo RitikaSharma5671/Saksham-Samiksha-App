@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application>
+        <activity android:name=".screens.profile.ProfileActivity"></activity>
         <activity
             android:name=".screens.about.AboutActivity"
             android:theme="@style/BaseAppTheme" />
