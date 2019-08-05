@@ -28,4 +28,6 @@
         <item name="dividerCompat">@android:drawable/divider_horizontal_bright</item>
         <item name="android:tintMode" tools:targetApi="21">src_in</item>
     </style>
+
+    <style name="AppTheme.ToolBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
