@@ -80,7 +80,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
      */
     @Override
     public void showActivityLayout() {
-        setContentView(R.layout.splash_screen);
+        setContentView(R.layout.activity_splash);
         unbinder = ButterKnife.bind(this);
         splashPresenter.startGetFormListCall();
         splashPresenter.startUnzipTask();
