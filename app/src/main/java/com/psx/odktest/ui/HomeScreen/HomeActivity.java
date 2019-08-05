@@ -195,7 +195,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.profile:
-                        Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        AncillaryScreensDriver.launchProfileActivity(this);
                         break;
                     case R.id.helpline:
                         Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();

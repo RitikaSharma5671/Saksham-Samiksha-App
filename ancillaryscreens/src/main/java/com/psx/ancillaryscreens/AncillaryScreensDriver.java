@@ -12,6 +12,7 @@ import com.psx.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.psx.ancillaryscreens.screens.about.AboutActivity;
 import com.psx.ancillaryscreens.screens.about.AboutBundle;
 import com.psx.ancillaryscreens.screens.login.LoginActivity;
+import com.psx.ancillaryscreens.screens.profile.ProfileActivity;
 import com.psx.commons.CommonUtilities;
 import com.psx.commons.CustomEvents;
 import com.psx.commons.ExchangeObject;
@@ -67,6 +68,12 @@ public class AncillaryScreensDriver {
         checkValidConfig();
         Intent intent = new Intent(context, AboutActivity.class);
         intent.putExtra("config", aboutBundle.aboutExchangeBundle);
+        context.startActivity(intent);
+    }
+
+    public static void launchProfileActivity(@NonNull Context context) {
+        checkValidConfig();
+        Intent intent = new Intent(context, ProfileActivity.class);
         context.startActivity(intent);
     }
 
