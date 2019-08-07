@@ -2,7 +2,9 @@ package com.psx.ancillaryscreens;
 
 import androidx.annotation.NonNull;
 
+import com.psx.ancillaryscreens.models.UserProfileElement;
 import com.psx.ancillaryscreens.screens.about.AboutActivity;
+import com.psx.ancillaryscreens.screens.profile.ProfileActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,9 +32,13 @@ public class InvalidConfigurationException extends RuntimeException {
 
     private void assignDetailedMessage() {
         if (clazz.getCanonicalName().equals(AboutActivity.class.getCanonicalName())) {
-            detailedMessage = AboutActivity.class.getSimpleName() + " is not initialized. You need to pass AboutBundle to configure AboutActivity";
+            detailedMessage = AboutActivity.class.getSimpleName() + " is not initialized. You need to pass AboutBundle to configure AboutActivity.";
         } else if (clazz.getCanonicalName().equals(AncillaryScreensDriver.class.getCanonicalName())) {
             detailedMessage = AncillaryScreensDriver.class.getSimpleName() + " is not initialized. You need to call the init method before used any functions from this class.";
+        } else if (clazz.getCanonicalName().equals(ProfileActivity.class.getCanonicalName())) {
+            detailedMessage = ProfileActivity.class.getSimpleName() + " is not initialized. You need to pass UserProfileElement to configure ProfileActivity.";
+        } else if (clazz.getCanonicalName().equals(UserProfileElement.class.getCanonicalName())) {
+            detailedMessage = UserProfileElement.class.getSimpleName() + " is not initialized properly. For profileContentType 'SPINNER', you must pass a Non-Null and Non-Empty ArrayList<String> containing spinner entries.";
         } else {
             detailedMessage = "No further details Available.";
         }

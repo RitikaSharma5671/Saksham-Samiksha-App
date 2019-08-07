@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.androidnetworking.AndroidNetworking;
 import com.google.android.material.snackbar.Snackbar;
 import com.psx.ancillaryscreens.AncillaryScreensDriver;
+import com.psx.ancillaryscreens.models.UserProfileElement;
 import com.psx.ancillaryscreens.screens.about.AboutBundle;
 import com.psx.commons.Constants;
 import com.psx.commons.CustomEvents;
@@ -26,6 +27,8 @@ import com.psx.odktest.UtilityFunctions;
 import com.psx.odktest.base.BaseActivity;
 
 import org.odk.collect.android.ODKDriver;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -195,7 +198,10 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.profile:
-                        AncillaryScreensDriver.launchProfileActivity(this);
+                        //TODO : Remove this dummy element. Add Valid elements from Firebase
+                        ArrayList<UserProfileElement> userProfileElements = new ArrayList<>();
+                        userProfileElements.add(new UserProfileElement("", "", false, 0, UserProfileElement.ProfileElementContentType.TEXT, null));
+                        AncillaryScreensDriver.launchProfileActivity(this, userProfileElements);
                         break;
                     case R.id.helpline:
                         Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();

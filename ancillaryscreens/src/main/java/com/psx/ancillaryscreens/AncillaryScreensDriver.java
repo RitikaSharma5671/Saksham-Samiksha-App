@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.psx.ancillaryscreens.data.network.BackendCallHelperImpl;
+import com.psx.ancillaryscreens.models.UserProfileElement;
 import com.psx.ancillaryscreens.screens.about.AboutActivity;
 import com.psx.ancillaryscreens.screens.about.AboutBundle;
 import com.psx.ancillaryscreens.screens.login.LoginActivity;
@@ -21,6 +22,8 @@ import com.psx.commons.Modules;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -71,9 +74,17 @@ public class AncillaryScreensDriver {
         context.startActivity(intent);
     }
 
-    public static void launchProfileActivity(@NonNull Context context) {
+    /**
+     * Function to launch the {@link ProfileActivity} which displays the user's profile.
+     *
+     * @param context             - The current Activity's context.
+     * @param userProfileElements - A list of {@link UserProfileElement} that depict an individual
+     *                            aspect about User's profile and are shown on the profile Screen.
+     */
+    public static void launchProfileActivity(@NonNull Context context, ArrayList<UserProfileElement> userProfileElements) {
         checkValidConfig();
         Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putParcelableArrayListExtra("config", userProfileElements);
         context.startActivity(intent);
     }
 
