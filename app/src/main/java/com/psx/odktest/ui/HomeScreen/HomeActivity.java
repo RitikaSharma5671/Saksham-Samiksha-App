@@ -200,7 +200,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                     case R.id.profile:
                         //TODO : Remove this dummy element. Add Valid elements from Firebase
                         ArrayList<UserProfileElement> userProfileElements = new ArrayList<>();
-                        userProfileElements.add(new UserProfileElement("", "", false, 0, UserProfileElement.ProfileElementContentType.TEXT, null));
+                        userProfileElements.add(new UserProfileElement("", "NAME", "TEST", false, 0, UserProfileElement.ProfileElementContentType.TEXT, null));
                         AncillaryScreensDriver.launchProfileActivity(this, userProfileElements);
                         break;
                     case R.id.helpline:

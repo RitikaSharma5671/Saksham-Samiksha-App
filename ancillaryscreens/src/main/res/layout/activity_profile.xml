@@ -52,20 +52,24 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-
     <include
-        android:id="@+id/view_layout"
-        layout="@layout/content_scrolling"
-        android:visibility="visible"
-        app:layout_anchor="@+id/edit_layout"
-        app:layout_anchorGravity="center" />
+        android:id="@+id/content_layout"
+        layout="@layout/dynamic_scroll_layout"
+        android:visibility="visible" />
+    <!--
+        <include
+            android:id="@+id/view_layout"
+            layout="@layout/content_scrolling"
+            android:visibility="visible"
+            app:layout_anchor="@+id/edit_layout"
+            app:layout_anchorGravity="center" />
 
-    <include
-        android:id="@+id/edit_layout"
-        layout="@layout/profile_content_edit"
-        android:visibility="invisible"
-        app:layout_anchor="@+id/view_layout"
-        app:layout_anchorGravity="center" />
+        <include
+            android:id="@+id/edit_layout"
+            layout="@layout/profile_content_edit"
+            android:visibility="invisible"
+            app:layout_anchor="@id/view_layout"
+            app:layout_anchorGravity="center" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
