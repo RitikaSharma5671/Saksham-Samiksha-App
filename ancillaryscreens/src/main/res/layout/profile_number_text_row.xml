@@ -18,39 +18,7 @@
         android:padding="10dp"
         app:tint="@color/colorPrimary"
         tools:ignore="ContentDescription"
-        tools:src="@drawable/ic_people_black_24dp" />
-
-    <!--<com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/number_lines_inp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="4.2"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        app:boxStrokeColor="@color/colorPrimaryDark"
-        app:helperText="Helper Text"
-        app:helperTextEnabled="true"
-        app:hintTextColor="@color/colorAccent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/number_lines_inp_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:hint="SOME VALUE"
-            android:inputType="number"
-            android:maxLines="1"
-            android:padding="8dp"
-            android:text="NAME APPEARS HERE"
-            android:textColorHint="@color/colorAccent"
-            android:textSize="18sp"
-            app:hintEnabled="true" />
-    </com.google.android.material.textfield.TextInputLayout>-->
+        tools:src="@drawable/ic_call_blue_24dp" />
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -68,6 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
+                android:inputType="phone"
                 android:paddingStart="10dp"
                 android:paddingLeft="10dp"
                 android:paddingEnd="10dp"
@@ -75,7 +44,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                tools:text="Pranav Sharma" />
+                tools:text="8376003776" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -100,6 +69,6 @@
             android:paddingRight="10dp"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="13sp"
-            tools:text="ABOUT" />
+            tools:text="PHONE NUMBER" />
     </RelativeLayout>
 </LinearLayout>

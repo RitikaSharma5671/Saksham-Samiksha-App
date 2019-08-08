@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 public class ProfileActivity extends BaseActivity implements ProfileContract.View {
 
@@ -33,6 +34,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     public LinearLayout parentProfileElements;
 
     private ArrayList<UserProfileElement> userProfileElements;
+    private ArrayList<ProfileElementHolder> dynamicHolders;
     private Unbinder unbinder;
 
     @Inject
@@ -47,6 +49,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         profilePresenter.onAttach(this);
         if (getIntent() != null && getIntent().getParcelableArrayListExtra("config") != null) {
             userProfileElements = getIntent().getParcelableArrayListExtra("config");
+            dynamicHolders = new ArrayList<>();
         } else {
             throw new InvalidConfigurationException(ProfileActivity.class);
         }
@@ -91,41 +94,46 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         Collections.sort(userProfileElements, (userProfileElement, t1) -> userProfileElement.getSection() - t1.getSection());
         int currentSection = -1;
         int prevSection = -1;
-        boolean sectionChanged = false;
+        boolean sectionChanged;
         for (UserProfileElement profileElement : userProfileElements) {
-            if (prevSection != -1 && sectionChanged) {
-                // TODO Draw divider;
-                sectionChanged = false;
-            }
-            prevSection = currentSection;
             currentSection = profileElement.getSection();
+            sectionChanged = prevSection != -1 && prevSection != currentSection;
+            if (prevSection != -1 && sectionChanged) {
+                parentProfileElements.addView(LayoutInflater.from(this).inflate(R.layout.profile_divider, parentProfileElements, false));
+            }
             switch (profileElement.getProfileElementContentType()) {
                 case TEXT:
-                    //TODO: Inflate View
-                    View simpleTextView = LayoutInflater.from(this).inflate(R.layout.profile_simple_text_row, parentProfileElements, true);
+                    View simpleTextView = LayoutInflater.from(this).inflate(R.layout.profile_simple_text_row, parentProfileElements, false);
                     SimpleTextViewHolder simpleTextViewHolder = new SimpleTextViewHolder(simpleTextView, profileElement);
+                    dynamicHolders.add(simpleTextViewHolder);
+                    parentProfileElements.addView(simpleTextView);
                     break;
                 case DATE:
-                    //TODO: Inflate View
+                    View dateTextView = LayoutInflater.from(this).inflate(R.layout.profile_date_text_row, parentProfileElements, false);
+                    DateTextViewHolder dateTextViewHolder = new DateTextViewHolder(dateTextView, profileElement);
+                    dynamicHolders.add(dateTextViewHolder);
+                    parentProfileElements.addView(dateTextView);
                     break;
                 case NUMBER:
-                    //TODO: Inflate View
+                    View numberTextView = LayoutInflater.from(this).inflate(R.layout.profile_number_text_row, parentProfileElements, false);
+                    NumberTextViewHolder numberTextViewHolder = new NumberTextViewHolder(numberTextView, profileElement);
+                    dynamicHolders.add(numberTextViewHolder);
+                    parentProfileElements.addView(numberTextView);
                     break;
                 case SPINNER:
                     //TODO: Inflate View
                     break;
             }
-            sectionChanged = prevSection != -1 && prevSection != currentSection;
+            Timber.d("Prev Section - %s, Current Section - %s", prevSection, currentSection);
+            prevSection = currentSection;
         }
-    }
-
-    private void bindValuesToView(UserProfileElement userProfileElement, View view, UserProfileElement.ProfileElementContentType profileElementContentType) {
-
     }
 
     @Override
     public void onProfileEditButtonClicked(ProfileContract.View v) {
-
+        for (ProfileElementHolder elementHolder : dynamicHolders) {
+            elementHolder.toggleHolderEnable(true);
+        }
     }
 
     @Override
@@ -144,8 +152,12 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         unbinder.unbind();
     }
 
+    interface ProfileElementHolder {
+        void toggleHolderEnable(boolean enable);
+    }
 
-    static class SimpleTextViewHolder {
+
+    static class SimpleTextViewHolder implements ProfileElementHolder {
         @BindView(R2.id.icon)
         ImageView itemIcon;
         @BindView(R2.id.item_description)
@@ -153,11 +165,80 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         @BindView(R2.id.text_edit_text)
         TextInputEditText textInputEditText;
 
+        private UserProfileElement userProfileElement;
+
         SimpleTextViewHolder(View view, UserProfileElement userProfileElement) {
             ButterKnife.bind(this, view);
+            this.userProfileElement = userProfileElement;
             textViewItemDesc.setText(userProfileElement.getTitle());
             textInputEditText.setText(userProfileElement.getContent());
             itemIcon.setImageResource(R.drawable.ic_people_black_24dp);
+            toggleHolderEnable(false);
+        }
+
+        @Override
+        public void toggleHolderEnable(boolean enable) {
+            if (userProfileElement.isEditable()) {
+                textInputEditText.setEnabled(enable);
+                textInputEditText.setClickable(enable);
+            }
+        }
+    }
+
+    static class NumberTextViewHolder implements ProfileElementHolder {
+        @BindView(R2.id.icon)
+        ImageView itemIcon;
+        @BindView(R2.id.item_description)
+        AppCompatTextView textViewItemDesc;
+        @BindView(R2.id.text_edit_text)
+        TextInputEditText textInputEditText;
+
+        private UserProfileElement userProfileElement;
+
+        NumberTextViewHolder(View view, UserProfileElement userProfileElement) {
+            ButterKnife.bind(this, view);
+            this.userProfileElement = userProfileElement;
+            textViewItemDesc.setText(userProfileElement.getTitle());
+            textInputEditText.setText(userProfileElement.getContent());
+            itemIcon.setImageResource(R.drawable.ic_call_black_24dp);
+            toggleHolderEnable(false);
+        }
+
+        @Override
+        public void toggleHolderEnable(boolean enable) {
+            if (userProfileElement.isEditable()) {
+                textInputEditText.setEnabled(enable);
+                textInputEditText.setClickable(enable);
+            }
+        }
+    }
+
+    static class DateTextViewHolder implements ProfileElementHolder {
+        @BindView(R2.id.icon)
+        ImageView itemIcon;
+        @BindView(R2.id.item_description)
+        AppCompatTextView textViewItemDesc;
+        @BindView(R2.id.text_date)
+        AppCompatTextView textViewDate;
+
+        private UserProfileElement userProfileElement;
+
+        DateTextViewHolder(View view, UserProfileElement userProfileElement) {
+            ButterKnife.bind(this, view);
+            this.userProfileElement = userProfileElement;
+            textViewItemDesc.setText(userProfileElement.getTitle());
+            textViewDate.setText(userProfileElement.getContent());
+            itemIcon.setImageResource(R.drawable.ic_date_range_black_24dp);
+            toggleHolderEnable(false);
+        }
+
+
+        @Override
+        public void toggleHolderEnable(boolean enable) {
+            if (userProfileElement.isEditable()) {
+                textViewDate.setEnabled(enable);
+                textViewDate.setClickable(enable);
+            }
         }
     }
 }
