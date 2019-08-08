@@ -15,7 +15,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.google.android.material.snackbar.Snackbar;
 import com.psx.ancillaryscreens.AncillaryScreensDriver;
 import com.psx.ancillaryscreens.models.UserProfileElement;
-import com.psx.ancillaryscreens.screens.about.AboutBundle;
+import com.psx.ancillaryscreens.models.AboutBundle;
 import com.psx.commons.Constants;
 import com.psx.commons.CustomEvents;
 import com.psx.commons.ExchangeObject;

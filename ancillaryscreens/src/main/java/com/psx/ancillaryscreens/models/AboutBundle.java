@@ -1,6 +1,8 @@
-package com.psx.ancillaryscreens.screens.about;
+package com.psx.ancillaryscreens.models;
 
 import android.os.Bundle;
+
+import com.psx.ancillaryscreens.screens.about.AboutActivity;
 
 /**
  * This class acts as a configuration object for the {@link AboutActivity}.
@@ -61,7 +63,7 @@ public class AboutBundle {
      * @param bundle - The {@link Bundle} to convert to {@link AboutBundle}
      * @return aboutBundle with values from bundle.
      */
-    static AboutBundle getAboutBundleFromBundle(Bundle bundle) {
+    public static AboutBundle getAboutBundleFromBundle(Bundle bundle) {
         AboutBundle aboutBundle = new AboutBundle();
         aboutBundle.screenTitle = bundle.getString("title");
         aboutBundle.websiteUrl = bundle.getString("websiteUrl");

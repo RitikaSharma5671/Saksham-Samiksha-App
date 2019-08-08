@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.psx.ancillaryscreens.InvalidConfigurationException;
 import com.psx.ancillaryscreens.R;
 import com.psx.ancillaryscreens.base.BaseActivity;
+import com.psx.ancillaryscreens.models.AboutBundle;
 
 import org.odk.collect.android.adapters.AboutListAdapter;
 

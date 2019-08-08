@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import com.psx.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.psx.ancillaryscreens.models.UserProfileElement;
 import com.psx.ancillaryscreens.screens.about.AboutActivity;
-import com.psx.ancillaryscreens.screens.about.AboutBundle;
+import com.psx.ancillaryscreens.models.AboutBundle;
 import com.psx.ancillaryscreens.screens.login.LoginActivity;
 import com.psx.ancillaryscreens.screens.profile.ProfileActivity;
 import com.psx.commons.CommonUtilities;

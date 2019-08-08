@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.psx.ancillaryscreens.base.MvpInteractor;
 import com.psx.ancillaryscreens.base.MvpPresenter;
 import com.psx.ancillaryscreens.base.MvpView;
+import com.psx.ancillaryscreens.models.AboutBundle;
 
 /**
  * The interface Contract for the About Screen. This interface contains the methods that the Model, View & Presenter
