@@ -21,7 +21,7 @@ public class UserProfileElement implements Parcelable {
     private boolean isEditable;
     private int section;
     private ProfileElementContentType profileElementContentType;
-    private ArrayList<String> spinner_extras;
+    private ArrayList<String> spinner_extras = new ArrayList<>();
 
     public UserProfileElement(@NonNull String base64Icon, @NonNull String title, @NonNull String content, boolean isEditable, int section,
                               @NonNull ProfileElementContentType profileElementContentType,
@@ -44,8 +44,7 @@ public class UserProfileElement implements Parcelable {
         this.isEditable = parcel.readInt() == 1;
         this.section = parcel.readInt();
         this.profileElementContentType = ProfileElementContentType.valueOf(parcel.readString());
-        if (this.spinner_extras != null)
-            parcel.readStringList(this.spinner_extras);
+        parcel.readStringList(this.spinner_extras);
     }
 
     public String getTitle() {
@@ -90,8 +89,7 @@ public class UserProfileElement implements Parcelable {
         parcel.writeInt(this.isEditable ? 1 : 0);
         parcel.writeInt(this.section);
         parcel.writeString(this.profileElementContentType.name());
-        if (this.spinner_extras != null)
-            parcel.writeStringList(this.spinner_extras);
+        parcel.writeStringList(this.spinner_extras);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator<UserProfileElement>() {
@@ -112,5 +110,17 @@ public class UserProfileElement implements Parcelable {
         DATE,
         NUMBER,
         SPINNER;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "\nbase64 " + base64Icon + "\n" +
+                "title " + title + "\n" +
+                "content " + content + "\n" +
+                "isEditable " + isEditable + "\n" +
+                "section " + section + "\n" +
+                "profileElementContentType " + profileElementContentType + "\n" +
+                "spinner_extras " + spinner_extras;
     }
 }
