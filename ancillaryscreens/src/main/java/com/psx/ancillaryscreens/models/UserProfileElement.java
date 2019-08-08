@@ -10,9 +10,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.psx.ancillaryscreens.InvalidConfigurationException;
+import com.psx.ancillaryscreens.screens.profile.ProfileActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * An object used to represent a single profile element on the {@link ProfileActivity} screen.
+ * These objects are passed in a 'View Holder' which helps this object to render on screen. The
+ * kind of view holder depends on the {@link ProfileElementContentType} given to this object.
+ * This object <b>must</b> implement either {@link Serializable} or {@link Parcelable}.
+ * Since there are no complex types within the class, {@link Serializable} is much easier to implement,
+ * however {@link Parcelable} gives much better performance.
+ *
+ * @author Pranav Sharma
+ * @see com.psx.ancillaryscreens.screens.profile.ProfileElementViewHolders
+ * @see {https://developer.android.com/reference/android/os/Parcel.html}
+ */
 public class UserProfileElement implements Parcelable {
 
     private String base64Icon;

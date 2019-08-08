@@ -17,13 +17,54 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.psx.ancillaryscreens.models.UserProfileElement.ProfileElementContentType;
+
+/**
+ * This class contains the 'View Holders' for different types of Profile elements. These 'View Holders'
+ * dynamically populate the {@link ProfileActivity} by providing a View for various kinds of properties
+ * a User profile may have. For instance, User name, phone number, email, etc can be profile properties.
+ * These inner classes are placed in a separate class for separation of concerns and to avoid cluttering
+ * the actual activity ({@link ProfileActivity}.
+ * All of the {@link ProfileElementViewHolders}'s inner classes must implement {@link ProfileElementHolder}
+ * interface.
+ *
+ * @author Pranav Sharma
+ * @see ProfileElementContentType
+ * @see UserProfileElement
+ */
 class ProfileElementViewHolders {
 
+    /**
+     * This interface <b>must</b> be implemented by all the inner classes of {@link ProfileElementViewHolders}
+     */
     interface ProfileElementHolder {
+        /**
+         * This method enable/disables the editing of the profile element.
+         * The profile element should be of type {@link ProfileElementContentType}
+         *
+         * @param enable - boolean to indicate if the editing of {@link ProfileElementHolder}
+         *               is allowed.
+         */
         void toggleHolderEnable(boolean enable);
 
+        /**
+         * This function enforces that all the {@link ProfileElementHolder}s are capable of returning
+         * a {@link UserProfileElement} object, which is also a requisite for creation for all
+         * {@link ProfileElementHolder}
+         *
+         * @return an object of type {@link UserProfileElement}
+         * @see UserProfileElement
+         */
         UserProfileElement getUserProfileElement();
 
+        /**
+         * This function returns the updated value of the profile element the {@link ProfileElementHolder}
+         * is representing. For instance, The user name may be displayed using {@link SimpleTextViewHolder}
+         * So to get the updated user name (which may result as a part of user editing this screen),
+         * {@link SimpleTextViewHolder} must be able to return the new updated value of the name.
+         *
+         * @return a {@link String} that represents the updated value for the profile element.
+         */
         String getUpdatedElementValue();
     }
 
