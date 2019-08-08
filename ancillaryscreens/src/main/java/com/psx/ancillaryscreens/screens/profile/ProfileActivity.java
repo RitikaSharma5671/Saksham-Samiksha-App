@@ -4,15 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
 import com.psx.ancillaryscreens.InvalidConfigurationException;
 import com.psx.ancillaryscreens.R;
 import com.psx.ancillaryscreens.R2;
@@ -30,6 +27,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import timber.log.Timber;
+
+import static com.psx.ancillaryscreens.screens.profile.ProfileElementViewHolders.DateTextViewHolder;
+import static com.psx.ancillaryscreens.screens.profile.ProfileElementViewHolders.NumberTextViewHolder;
+import static com.psx.ancillaryscreens.screens.profile.ProfileElementViewHolders.ProfileElementHolder;
+import static com.psx.ancillaryscreens.screens.profile.ProfileElementViewHolders.SimpleTextViewHolder;
+import static com.psx.ancillaryscreens.screens.profile.ProfileElementViewHolders.SpinnerTextViewHolder;
 
 public class ProfileActivity extends BaseActivity implements ProfileContract.View {
 
@@ -101,6 +104,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         int prevSection = -1;
         boolean sectionChanged;
         for (UserProfileElement profileElement : userProfileElements) {
+            Timber.d(userProfileElements.toString());
             currentSection = profileElement.getSection();
             sectionChanged = prevSection != -1 && prevSection != currentSection;
             if (prevSection != -1 && sectionChanged) {
@@ -126,10 +130,12 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
                     parentProfileElements.addView(numberTextView);
                     break;
                 case SPINNER:
-                    //TODO: Inflate View
+                    View spinnerView = LayoutInflater.from(this).inflate(R.layout.profile_spinner_row, parentProfileElements, false);
+                    SpinnerTextViewHolder spinnerTextViewHolder = new SpinnerTextViewHolder(spinnerView, profileElement);
+                    dynamicHolders.add(spinnerTextViewHolder);
+                    parentProfileElements.addView(spinnerView);
                     break;
             }
-            Timber.d("Prev Section - %s, Current Section - %s", prevSection, currentSection);
             prevSection = currentSection;
         }
     }
@@ -167,104 +173,5 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
-    }
-
-    interface ProfileElementHolder {
-        void toggleHolderEnable(boolean enable);
-    }
-
-
-    static class SimpleTextViewHolder implements ProfileElementHolder {
-        @BindView(R2.id.icon)
-        ImageView itemIcon;
-        @BindView(R2.id.item_description)
-        AppCompatTextView textViewItemDesc;
-        @BindView(R2.id.text_edit_text)
-        TextInputEditText textInputEditText;
-
-        private UserProfileElement userProfileElement;
-
-        SimpleTextViewHolder(View view, UserProfileElement userProfileElement) {
-            ButterKnife.bind(this, view);
-            this.userProfileElement = userProfileElement;
-            textViewItemDesc.setText(userProfileElement.getTitle());
-            textInputEditText.setText(userProfileElement.getContent());
-            itemIcon.setImageResource(R.drawable.ic_people_black_24dp);
-            toggleHolderEnable(false);
-        }
-
-        @Override
-        public void toggleHolderEnable(boolean enable) {
-            if (!enable) {
-                textInputEditText.setClickable(false);
-                textInputEditText.setEnabled(false);
-            } else if (userProfileElement.isEditable()) {
-                textInputEditText.setEnabled(true);
-                textInputEditText.setClickable(true);
-            }
-        }
-    }
-
-    static class NumberTextViewHolder implements ProfileElementHolder {
-        @BindView(R2.id.icon)
-        ImageView itemIcon;
-        @BindView(R2.id.item_description)
-        AppCompatTextView textViewItemDesc;
-        @BindView(R2.id.text_edit_text)
-        TextInputEditText textInputEditText;
-
-        private UserProfileElement userProfileElement;
-
-        NumberTextViewHolder(View view, UserProfileElement userProfileElement) {
-            ButterKnife.bind(this, view);
-            this.userProfileElement = userProfileElement;
-            textViewItemDesc.setText(userProfileElement.getTitle());
-            textInputEditText.setText(userProfileElement.getContent());
-            itemIcon.setImageResource(R.drawable.ic_call_black_24dp);
-            toggleHolderEnable(false);
-        }
-
-        @Override
-        public void toggleHolderEnable(boolean enable) {
-            if (!enable) {
-                textInputEditText.setEnabled(false);
-                textInputEditText.setClickable(false);
-            } else if (userProfileElement.isEditable()) {
-                textInputEditText.setEnabled(true);
-                textInputEditText.setClickable(true);
-            }
-        }
-    }
-
-    static class DateTextViewHolder implements ProfileElementHolder {
-        @BindView(R2.id.icon)
-        ImageView itemIcon;
-        @BindView(R2.id.item_description)
-        AppCompatTextView textViewItemDesc;
-        @BindView(R2.id.text_date)
-        AppCompatTextView textViewDate;
-
-        private UserProfileElement userProfileElement;
-
-        DateTextViewHolder(View view, UserProfileElement userProfileElement) {
-            ButterKnife.bind(this, view);
-            this.userProfileElement = userProfileElement;
-            textViewItemDesc.setText(userProfileElement.getTitle());
-            textViewDate.setText(userProfileElement.getContent());
-            itemIcon.setImageResource(R.drawable.ic_date_range_black_24dp);
-            toggleHolderEnable(false);
-        }
-
-
-        @Override
-        public void toggleHolderEnable(boolean enable) {
-            if (!enable) {
-                textViewDate.setClickable(false);
-                textViewDate.setEnabled(false);
-            } else if (userProfileElement.isEditable()) {
-                textViewDate.setEnabled(true);
-                textViewDate.setClickable(true);
-            }
-        }
     }
 }
