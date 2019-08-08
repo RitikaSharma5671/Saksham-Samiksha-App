@@ -6,10 +6,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.psx.ancillaryscreens.InvalidConfigurationException;
 import com.psx.ancillaryscreens.R;
@@ -25,6 +27,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
@@ -36,6 +39,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     private ArrayList<UserProfileElement> userProfileElements;
     private ArrayList<ProfileElementHolder> dynamicHolders;
     private Unbinder unbinder;
+    private boolean isInEditMode;
 
     @Inject
     ProfilePresenter<ProfileContract.View, ProfileContract.Interactor> profilePresenter;
@@ -53,6 +57,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         } else {
             throw new InvalidConfigurationException(ProfileActivity.class);
         }
+        initToolbar();
         initUserDetails(userProfileElements);
     }
 
@@ -129,16 +134,28 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         }
     }
 
+    @OnClick(R2.id.fab)
     @Override
-    public void onProfileEditButtonClicked(ProfileContract.View v) {
+    public void onProfileEditButtonClicked(View v) {
+        // save if already in edit mode prior to click.
+        if (isInEditMode)
+            profilePresenter.updateUserProfile();
+
+        isInEditMode = !isInEditMode; // update the edit mode flag (accounting for the click)
+        if (isInEditMode)
+            ((FloatingActionButton) v).setImageResource(R.drawable.ic_save_icon_color_24dp);
+        else
+            ((FloatingActionButton) v).setImageResource(R.drawable.ic_edit_icon_color_24dp);
         for (ProfileElementHolder elementHolder : dynamicHolders) {
-            elementHolder.toggleHolderEnable(true);
+            elementHolder.toggleHolderEnable(isInEditMode);
         }
     }
 
+    @OnClick(R2.id.fab_edit_password)
     @Override
-    public void onEditPasswordButtonClicked(ProfileContract.View v) {
-
+    public void onEditPasswordButtonClicked(View v) {
+        // TODO : Implement this
+        Toast.makeText(this, " Edit Password Clicked ", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -178,9 +195,12 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
         @Override
         public void toggleHolderEnable(boolean enable) {
-            if (userProfileElement.isEditable()) {
-                textInputEditText.setEnabled(enable);
-                textInputEditText.setClickable(enable);
+            if (!enable) {
+                textInputEditText.setClickable(false);
+                textInputEditText.setEnabled(false);
+            } else if (userProfileElement.isEditable()) {
+                textInputEditText.setEnabled(true);
+                textInputEditText.setClickable(true);
             }
         }
     }
@@ -206,9 +226,12 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
         @Override
         public void toggleHolderEnable(boolean enable) {
-            if (userProfileElement.isEditable()) {
-                textInputEditText.setEnabled(enable);
-                textInputEditText.setClickable(enable);
+            if (!enable) {
+                textInputEditText.setEnabled(false);
+                textInputEditText.setClickable(false);
+            } else if (userProfileElement.isEditable()) {
+                textInputEditText.setEnabled(true);
+                textInputEditText.setClickable(true);
             }
         }
     }
@@ -235,9 +258,12 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
         @Override
         public void toggleHolderEnable(boolean enable) {
-            if (userProfileElement.isEditable()) {
-                textViewDate.setEnabled(enable);
-                textViewDate.setClickable(enable);
+            if (!enable) {
+                textViewDate.setClickable(false);
+                textViewDate.setEnabled(false);
+            } else if (userProfileElement.isEditable()) {
+                textViewDate.setEnabled(true);
+                textViewDate.setClickable(true);
             }
         }
     }

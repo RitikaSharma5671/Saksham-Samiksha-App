@@ -39,4 +39,9 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
     public void startSendOTPTask(@NonNull String userPhone) {
 
     }
+
+    @Override
+    public void updateUserProfile() {
+
+    }
 }

@@ -37,9 +37,9 @@ public interface ProfileContract {
          */
         void initUserDetails(ArrayList<UserProfileElement> userProfileElements);
 
-        void onProfileEditButtonClicked(View v);
+        void onProfileEditButtonClicked(android.view.View v);
 
-        void onEditPasswordButtonClicked(View v);
+        void onEditPasswordButtonClicked(android.view.View v);
 
         boolean validatePhoneNumber(String phoneNumber);
     }
@@ -55,5 +55,7 @@ public interface ProfileContract {
          * @param userPhone - The mobile number of the user on which the OTP needs to be send.
          */
         void startSendOTPTask(@NonNull String userPhone);
+
+        void updateUserProfile();
     }
 }
