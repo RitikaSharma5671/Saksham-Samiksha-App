@@ -31,4 +31,8 @@ public interface CommonsPreferenceHelper {
     boolean isLoggedIn();
 
     boolean isFirstRun();
+
+    void updateProfileKeyValuePair(String key, String value);
+
+    String getProfileContentValueForKey(String key);
 }

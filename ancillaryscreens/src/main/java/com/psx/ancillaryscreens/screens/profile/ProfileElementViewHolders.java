@@ -12,6 +12,8 @@ import com.psx.ancillaryscreens.R;
 import com.psx.ancillaryscreens.R2;
 import com.psx.ancillaryscreens.models.UserProfileElement;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -19,6 +21,10 @@ class ProfileElementViewHolders {
 
     interface ProfileElementHolder {
         void toggleHolderEnable(boolean enable);
+
+        UserProfileElement getUserProfileElement();
+
+        String getUpdatedElementValue();
     }
 
     static class SimpleTextViewHolder implements ProfileElementHolder {
@@ -31,11 +37,11 @@ class ProfileElementViewHolders {
 
         private UserProfileElement userProfileElement;
 
-        SimpleTextViewHolder(View view, UserProfileElement userProfileElement) {
+        SimpleTextViewHolder(View view, UserProfileElement userProfileElement, String contentValue) {
             ButterKnife.bind(this, view);
             this.userProfileElement = userProfileElement;
             textViewItemDesc.setText(userProfileElement.getTitle());
-            textInputEditText.setText(userProfileElement.getContent());
+            textInputEditText.setText(contentValue);
             itemIcon.setImageResource(R.drawable.ic_people_black_24dp);
             toggleHolderEnable(false);
         }
@@ -50,6 +56,16 @@ class ProfileElementViewHolders {
                 textInputEditText.setClickable(true);
             }
         }
+
+        @Override
+        public UserProfileElement getUserProfileElement() {
+            return userProfileElement;
+        }
+
+        @Override
+        public String getUpdatedElementValue() {
+            return Objects.requireNonNull(textInputEditText.getText()).toString();
+        }
     }
 
     static class NumberTextViewHolder implements ProfileElementHolder {
@@ -62,11 +78,11 @@ class ProfileElementViewHolders {
 
         private UserProfileElement userProfileElement;
 
-        NumberTextViewHolder(View view, UserProfileElement userProfileElement) {
+        NumberTextViewHolder(View view, UserProfileElement userProfileElement, String content) {
             ButterKnife.bind(this, view);
             this.userProfileElement = userProfileElement;
             textViewItemDesc.setText(userProfileElement.getTitle());
-            textInputEditText.setText(userProfileElement.getContent());
+            textInputEditText.setText(content);
             itemIcon.setImageResource(R.drawable.ic_call_black_24dp);
             toggleHolderEnable(false);
         }
@@ -81,6 +97,16 @@ class ProfileElementViewHolders {
                 textInputEditText.setClickable(true);
             }
         }
+
+        @Override
+        public UserProfileElement getUserProfileElement() {
+            return userProfileElement;
+        }
+
+        @Override
+        public String getUpdatedElementValue() {
+            return Objects.requireNonNull(textInputEditText.getText()).toString();
+        }
     }
 
     static class DateTextViewHolder implements ProfileElementHolder {
@@ -93,11 +119,11 @@ class ProfileElementViewHolders {
 
         private UserProfileElement userProfileElement;
 
-        DateTextViewHolder(View view, UserProfileElement userProfileElement) {
+        DateTextViewHolder(View view, UserProfileElement userProfileElement, String content) {
             ButterKnife.bind(this, view);
             this.userProfileElement = userProfileElement;
             textViewItemDesc.setText(userProfileElement.getTitle());
-            textViewDate.setText(userProfileElement.getContent());
+            textViewDate.setText(content);
             itemIcon.setImageResource(R.drawable.ic_date_range_black_24dp);
             toggleHolderEnable(false);
         }
@@ -113,6 +139,16 @@ class ProfileElementViewHolders {
                 textViewDate.setClickable(true);
             }
         }
+
+        @Override
+        public UserProfileElement getUserProfileElement() {
+            return userProfileElement;
+        }
+
+        @Override
+        public String getUpdatedElementValue() {
+            return textViewDate.getText().toString();
+        }
     }
 
     static class SpinnerTextViewHolder implements ProfileElementHolder {
@@ -125,20 +161,29 @@ class ProfileElementViewHolders {
 
         private UserProfileElement userProfileElement;
 
-        SpinnerTextViewHolder(View view, UserProfileElement userProfileElement) {
+        SpinnerTextViewHolder(View view, UserProfileElement userProfileElement, String content) {
             ButterKnife.bind(this, view);
             this.userProfileElement = userProfileElement;
             textViewItemDesc.setText(userProfileElement.getTitle());
             itemIcon.setImageResource(R.drawable.ic_people_black_24dp);
-            setupSpinner(view);
+            setupSpinner(view, content);
             toggleHolderEnable(false);
         }
 
-        private void setupSpinner(View view) {
+        private void setupSpinner(View view, String content) {
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(view.getContext(),
                     R.layout.profile_spinner_item, userProfileElement.getSpinner_extras());
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(dataAdapter);
+            spinner.setSelection(findContentPosition(content));
+        }
+
+        private int findContentPosition(String content) {
+            for (int i = 0; i < userProfileElement.getSpinner_extras().size(); i++) {
+                if (userProfileElement.getSpinner_extras().get(i).equalsIgnoreCase(content))
+                    return i;
+            }
+            return 0;
         }
 
         @Override
@@ -150,6 +195,16 @@ class ProfileElementViewHolders {
                 spinner.setEnabled(true);
                 spinner.setClickable(true);
             }
+        }
+
+        @Override
+        public UserProfileElement getUserProfileElement() {
+            return userProfileElement;
+        }
+
+        @Override
+        public String getUpdatedElementValue() {
+            return userProfileElement.getSpinner_extras().get(spinner.getSelectedItemPosition());
         }
     }
 }

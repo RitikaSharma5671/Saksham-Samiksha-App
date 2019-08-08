@@ -11,4 +11,14 @@ public class ProfileInteractor extends BaseInteractor implements ProfileContract
     public ProfileInteractor(CommonsPreferenceHelper preferenceHelper) {
         super(preferenceHelper);
     }
+
+    @Override
+    public void updateContentKeyInSharedPrefs(String key, String value) {
+        getPreferenceHelper().updateProfileKeyValuePair(key, value);
+    }
+
+    @Override
+    public String getActualContentValue(String key) {
+        return getPreferenceHelper().getProfileContentValueForKey(key);
+    }
 }

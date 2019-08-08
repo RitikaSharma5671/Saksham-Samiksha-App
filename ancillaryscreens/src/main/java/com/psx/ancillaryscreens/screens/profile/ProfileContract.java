@@ -11,6 +11,8 @@ import com.psx.ancillaryscreens.models.UserProfileElement;
 
 import java.util.ArrayList;
 
+import static com.psx.ancillaryscreens.screens.profile.ProfileElementViewHolders.ProfileElementHolder;
+
 /**
  * The interface contract for Profile Screen. This interface contains the methods that the Model, View & Presenter
  * for Profile Screen <b>must</b> implement
@@ -41,11 +43,14 @@ public interface ProfileContract {
 
         void onEditPasswordButtonClicked(android.view.View v);
 
-        boolean validatePhoneNumber(String phoneNumber);
+        ArrayList<UserProfileElement> formUpdatedProfileElements();
     }
 
     interface Interactor extends MvpInteractor {
 
+        void updateContentKeyInSharedPrefs(String key, String value);
+
+        String getActualContentValue(String key);
     }
 
     interface Presenter<V extends View, I extends Interactor> extends MvpPresenter<V, I> {
@@ -56,6 +61,12 @@ public interface ProfileContract {
          */
         void startSendOTPTask(@NonNull String userPhone);
 
-        void updateUserProfile();
+        void updateUserProfile(ArrayList<ProfileElementHolder> profileElementHolders);
+
+        boolean validatePhoneNumber(String phoneNumber);
+
+        boolean validateEmailAddress(String emailAddress);
+
+        String getContentValueFromKey(String key);
     }
 }

@@ -26,7 +26,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import timber.log.Timber;
 
 import static com.psx.ancillaryscreens.screens.profile.ProfileElementViewHolders.DateTextViewHolder;
 import static com.psx.ancillaryscreens.screens.profile.ProfileElementViewHolders.NumberTextViewHolder;
@@ -104,7 +103,6 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         int prevSection = -1;
         boolean sectionChanged;
         for (UserProfileElement profileElement : userProfileElements) {
-            Timber.d(userProfileElements.toString());
             currentSection = profileElement.getSection();
             sectionChanged = prevSection != -1 && prevSection != currentSection;
             if (prevSection != -1 && sectionChanged) {
@@ -113,25 +111,25 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             switch (profileElement.getProfileElementContentType()) {
                 case TEXT:
                     View simpleTextView = LayoutInflater.from(this).inflate(R.layout.profile_simple_text_row, parentProfileElements, false);
-                    SimpleTextViewHolder simpleTextViewHolder = new SimpleTextViewHolder(simpleTextView, profileElement);
+                    SimpleTextViewHolder simpleTextViewHolder = new SimpleTextViewHolder(simpleTextView, profileElement, profilePresenter.getContentValueFromKey(profileElement.getContent()));
                     dynamicHolders.add(simpleTextViewHolder);
                     parentProfileElements.addView(simpleTextView);
                     break;
                 case DATE:
                     View dateTextView = LayoutInflater.from(this).inflate(R.layout.profile_date_text_row, parentProfileElements, false);
-                    DateTextViewHolder dateTextViewHolder = new DateTextViewHolder(dateTextView, profileElement);
+                    DateTextViewHolder dateTextViewHolder = new DateTextViewHolder(dateTextView, profileElement, profilePresenter.getContentValueFromKey(profileElement.getContent()));
                     dynamicHolders.add(dateTextViewHolder);
                     parentProfileElements.addView(dateTextView);
                     break;
                 case NUMBER:
                     View numberTextView = LayoutInflater.from(this).inflate(R.layout.profile_number_text_row, parentProfileElements, false);
-                    NumberTextViewHolder numberTextViewHolder = new NumberTextViewHolder(numberTextView, profileElement);
+                    NumberTextViewHolder numberTextViewHolder = new NumberTextViewHolder(numberTextView, profileElement, profilePresenter.getContentValueFromKey(profileElement.getContent()));
                     dynamicHolders.add(numberTextViewHolder);
                     parentProfileElements.addView(numberTextView);
                     break;
                 case SPINNER:
                     View spinnerView = LayoutInflater.from(this).inflate(R.layout.profile_spinner_row, parentProfileElements, false);
-                    SpinnerTextViewHolder spinnerTextViewHolder = new SpinnerTextViewHolder(spinnerView, profileElement);
+                    SpinnerTextViewHolder spinnerTextViewHolder = new SpinnerTextViewHolder(spinnerView, profileElement, profilePresenter.getContentValueFromKey(profileElement.getContent()));
                     dynamicHolders.add(spinnerTextViewHolder);
                     parentProfileElements.addView(spinnerView);
                     break;
@@ -145,7 +143,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     public void onProfileEditButtonClicked(View v) {
         // save if already in edit mode prior to click.
         if (isInEditMode)
-            profilePresenter.updateUserProfile();
+            profilePresenter.updateUserProfile(dynamicHolders);
 
         isInEditMode = !isInEditMode; // update the edit mode flag (accounting for the click)
         if (isInEditMode)
@@ -165,8 +163,9 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     }
 
     @Override
-    public boolean validatePhoneNumber(String phoneNumber) {
-        return false;
+    public ArrayList<UserProfileElement> formUpdatedProfileElements() {
+
+        return null;
     }
 
     @Override

@@ -8,10 +8,15 @@ import com.psx.ancillaryscreens.data.network.BackendCallHelper;
 import com.psx.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.psx.ancillaryscreens.di.modules.CommonsActivityAbstractProviders;
 import com.psx.ancillaryscreens.di.modules.CommonsActivityModule;
+import com.psx.ancillaryscreens.models.UserProfileElement;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+
+import static com.psx.ancillaryscreens.screens.profile.ProfileElementViewHolders.ProfileElementHolder;
 
 public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileContract.Interactor> extends BasePresenter<V, I> implements ProfileContract.Presenter<V, I> {
     /**
@@ -41,7 +46,29 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
     }
 
     @Override
-    public void updateUserProfile() {
-
+    public void updateUserProfile(ArrayList<ProfileElementHolder> profileElementHolders) {
+        UserProfileElement userProfileElement;
+        for (ProfileElementHolder elementHolder : profileElementHolders) {
+            userProfileElement = elementHolder.getUserProfileElement();
+            String contentKey = userProfileElement.getContent();
+            String updatedValue = elementHolder.getUpdatedElementValue();
+            getMvpInteractor().updateContentKeyInSharedPrefs(contentKey, updatedValue);
+        }
     }
+
+    @Override
+    public boolean validatePhoneNumber(String phoneNumber) {
+        return false;
+    }
+
+    @Override
+    public boolean validateEmailAddress(String emailAddress) {
+        return false;
+    }
+
+    @Override
+    public String getContentValueFromKey(String key) {
+        return getMvpInteractor().getActualContentValue(key);
+    }
+
 }

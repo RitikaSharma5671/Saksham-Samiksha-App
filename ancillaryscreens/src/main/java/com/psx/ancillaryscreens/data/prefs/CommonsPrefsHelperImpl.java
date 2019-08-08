@@ -133,6 +133,18 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
     }
 
     @Override
+    public void updateProfileKeyValuePair(String key, String value) {
+        SharedPreferences.Editor editor = defaultPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    @Override
+    public String getProfileContentValueForKey(String key) {
+        return defaultPreferences.getString(key, "");
+    }
+
+    @Override
     public boolean isShowSplash() {
         return defaultPreferences.getBoolean(GeneralKeys.KEY_SHOW_SPLASH, false);
     }
