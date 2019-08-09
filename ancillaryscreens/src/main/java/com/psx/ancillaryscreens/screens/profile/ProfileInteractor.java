@@ -28,4 +28,9 @@ public class ProfileInteractor extends BaseInteractor implements ProfileContract
     public String getActualContentValue(String key) {
         return getPreferenceHelper().getProfileContentValueForKey(key);
     }
+
+    @Override
+    public String getCurrentUserId() {
+        return getPreferenceHelper().getCurrentUserId();
+    }
 }

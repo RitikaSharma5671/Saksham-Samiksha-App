@@ -11,11 +11,13 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.psx.ancillaryscreens.InvalidConfigurationException;
 import com.psx.ancillaryscreens.R;
 import com.psx.ancillaryscreens.R2;
 import com.psx.ancillaryscreens.base.BaseActivity;
 import com.psx.ancillaryscreens.models.UserProfileElement;
+import com.psx.ancillaryscreens.utils.SnackbarUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +45,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     private ArrayList<ProfileElementHolder> dynamicHolders;
     private Unbinder unbinder;
     private boolean isInEditMode;
+    private Snackbar progressSnackbar = null;
 
     @Inject
     ProfilePresenter<ProfileContract.View, ProfileContract.Interactor> profilePresenter;
@@ -144,10 +147,15 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     @Override
     public void onProfileEditButtonClicked(View v) {
         // save if already in edit mode prior to click.
-        if (isInEditMode)
-            profilePresenter.updateUserProfile(dynamicHolders);
+        if (isInEditMode) {
+            if (profilePresenter.validateUdpatedFields(dynamicHolders)) {
+                profilePresenter.updateUserProfileAtRemote(dynamicHolders);
+                isInEditMode = !isInEditMode; // update the edit mode flag (accounting for the click)
+            }
+        } else {
+            isInEditMode = true; // update the edit mode flag (accounting for the click)
+        }
 
-        isInEditMode = !isInEditMode; // update the edit mode flag (accounting for the click)
         if (isInEditMode)
             ((FloatingActionButton) v).setImageResource(R.drawable.ic_save_icon_color_24dp);
         else
@@ -164,21 +172,29 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         Toast.makeText(this, " Edit Password Clicked ", Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * This methods creates an {@link ArrayList<UserProfileElement>} with new updated values that
-     * reflect the changes user has made on the {@link ProfileActivity}.
-     *
-     * @return updated user profile details wrapped in {@link ArrayList<UserProfileElement>}
-     */
     @Override
-    public ArrayList<UserProfileElement> formUpdatedProfileElements() {
+    public void showLoading(String message) {
+        if (progressSnackbar == null) {
+            progressSnackbar = SnackbarUtils.getSnackbarWithProgressIndicator(findViewById(android.R.id.content), this, message);
+            progressSnackbar.show();
+        } else {
+            progressSnackbar.setText(message);
+            progressSnackbar.show();
+        }
+    }
 
-        return null;
+    @Override
+    public void hideLoading() {
+        if (progressSnackbar != null && progressSnackbar.isShownOrQueued()) {
+            progressSnackbar.dismiss();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        profilePresenter.onDestroy();
         unbinder.unbind();
+        profilePresenter.onDetach();
     }
 }

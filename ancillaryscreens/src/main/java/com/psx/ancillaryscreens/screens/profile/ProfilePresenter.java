@@ -1,7 +1,10 @@
 package com.psx.ancillaryscreens.screens.profile;
 
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
+import com.psx.ancillaryscreens.R;
 import com.psx.ancillaryscreens.base.BasePresenter;
 import com.psx.ancillaryscreens.base.MvpInteractor;
 import com.psx.ancillaryscreens.data.network.BackendCallHelper;
@@ -11,10 +14,15 @@ import com.psx.ancillaryscreens.di.modules.CommonsActivityModule;
 import com.psx.ancillaryscreens.models.UserProfileElement;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static com.psx.ancillaryscreens.screens.profile.ProfileElementViewHolders.ProfileElementHolder;
 
@@ -54,7 +62,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
      *                              values of a user profile can be accessed.
      */
     @Override
-    public void updateUserProfile(ArrayList<ProfileElementHolder> profileElementHolders) {
+    public void updateUserProfileLocally(ArrayList<ProfileElementHolder> profileElementHolders) {
         UserProfileElement userProfileElement;
         for (ProfileElementHolder elementHolder : profileElementHolders) {
             userProfileElement = elementHolder.getUserProfileElement();
@@ -64,14 +72,62 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
         }
     }
 
+    /**
+     * Updates the User's profile properties at remote using FusionAuth APIs. The updated properties
+     * are provided through the profileElementHolders parameter. This function first make an API
+     * call to get the User's current details from remote using {@link BackendCallHelper} and then
+     * modify the response to reflect updations and send the updated things back at remote.
+     *
+     * @param profileElementHolders - A list {@link ProfileElementHolder}s through which updated
+     *                              values of a user profile can be accessed.
+     */
+    @Override
+    public void updateUserProfileAtRemote(ArrayList<ProfileElementHolder> profileElementHolders) {
+        String apiKey = getMvpView().getActivityContext().getResources().getString(R.string.fusionauth_api_key);
+        String userId = getMvpInteractor().getCurrentUserId();
+        // TODO : Implement
+        getMvpView().showLoading("Updating User Profile...");
+        getCompositeDisposable().add(getApiHelper()
+                .performGetUserDetailsApiCall(userId, apiKey)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(jsonObject -> {
+                    // TODO : Implement
+                    Timber.d("Suceess API. Response %s", jsonObject);
+                    updateUserProfileLocally(profileElementHolders);
+                    getMvpView().hideLoading();
+                }, t -> {
+                    Timber.e(t);
+                    getMvpView().hideLoading();
+                }));
+    }
+
     @Override
     public boolean validatePhoneNumber(String phoneNumber) {
-        return false;
+        Pattern p = Pattern.compile("[6-9][0-9]{9}");
+        Matcher m = p.matcher(phoneNumber);
+        return (m.find() && m.group().equals(phoneNumber));
     }
 
     @Override
     public boolean validateEmailAddress(String emailAddress) {
-        return false;
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(emailAddress);
+        return m.matches();
+    }
+
+    @Override
+    public boolean validateUdpatedFields(ArrayList<ProfileElementHolder> profileElementHolders) {
+        for (ProfileElementHolder profileElementHolder : profileElementHolders) {
+            if (profileElementHolder.getUserProfileElement().getProfileElementContentType() == UserProfileElement.ProfileElementContentType.NUMBER) {
+                if (!validatePhoneNumber(profileElementHolder.getUpdatedElementValue())) {
+                    Toast.makeText(getMvpView().getActivityContext(), "Invalid Phone Number", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -83,6 +139,12 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
     @Override
     public String getContentValueFromKey(String key) {
         return getMvpInteractor().getActualContentValue(key);
+    }
+
+    @Override
+    public void onDestroy() {
+        getMvpView().hideLoading();
+        getCompositeDisposable().dispose();
     }
 
 }

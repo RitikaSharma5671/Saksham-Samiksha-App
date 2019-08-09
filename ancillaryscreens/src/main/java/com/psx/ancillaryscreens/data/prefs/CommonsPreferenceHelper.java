@@ -12,6 +12,8 @@ import com.psx.ancillaryscreens.data.network.model.LoginResponse;
 public interface CommonsPreferenceHelper {
     String getCurrentUserName();
 
+    String getCurrentUserId();
+
     void setCurrentUserLoginFlags();
 
     void setCurrentUserDetailsFromLogin(LoginResponse response);

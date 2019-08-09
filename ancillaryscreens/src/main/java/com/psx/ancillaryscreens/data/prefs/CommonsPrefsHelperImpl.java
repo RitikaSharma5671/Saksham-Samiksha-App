@@ -38,6 +38,11 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
     }
 
     @Override
+    public String getCurrentUserId() {
+        return defaultPreferences.getString("user.id", "");
+    }
+
+    @Override
     public void setCurrentUserLoginFlags() {
         SharedPreferences.Editor editor = defaultPreferences.edit();
         editor.putBoolean("isLoggedIn", true);

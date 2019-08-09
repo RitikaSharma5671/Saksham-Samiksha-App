@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.psx.ancillaryscreens.base.MvpInteractor;
 import com.psx.ancillaryscreens.base.MvpPresenter;
 import com.psx.ancillaryscreens.base.MvpView;
+import com.psx.ancillaryscreens.data.network.BackendCallHelper;
 import com.psx.ancillaryscreens.models.UserProfileElement;
 
 import java.util.ArrayList;
@@ -45,13 +46,9 @@ public interface ProfileContract {
 
         void onEditPasswordButtonClicked(android.view.View v);
 
-        /**
-         * This methods creates an {@link ArrayList<UserProfileElement>} with new updated values that
-         * reflect the changes user has made on the {@link ProfileActivity}.
-         *
-         * @return updated user profile details wrapped in {@link ArrayList<UserProfileElement>}
-         */
-        ArrayList<UserProfileElement> formUpdatedProfileElements();
+        void showLoading(String message);
+
+        void hideLoading();
     }
 
     interface Interactor extends MvpInteractor {
@@ -66,6 +63,8 @@ public interface ProfileContract {
         void updateContentKeyInSharedPrefs(String key, String value);
 
         String getActualContentValue(String key);
+
+        String getCurrentUserId();
     }
 
     interface Presenter<V extends View, I extends Interactor> extends MvpPresenter<V, I> {
@@ -84,11 +83,24 @@ public interface ProfileContract {
          * @param profileElementHolders - A list {@link ProfileElementHolder}s through which updated
          *                              values of a user profile can be accessed.
          */
-        void updateUserProfile(ArrayList<ProfileElementHolder> profileElementHolders);
+        void updateUserProfileLocally(ArrayList<ProfileElementHolder> profileElementHolders);
+
+        /**
+         * Updates the User's profile properties at remote using FusionAuth APIs. The updated properties
+         * are provided through the profileElementHolders parameter. This function first make an API
+         * call to get the User's current details from remote using {@link BackendCallHelper} and then
+         * modify the response to reflect updations and send the updated things back at remote.
+         *
+         * @param profileElementHolders - A list {@link ProfileElementHolder}s through which updated
+         *                              values of a user profile can be accessed.
+         */
+        void updateUserProfileAtRemote(ArrayList<ProfileElementHolder> profileElementHolders);
 
         boolean validatePhoneNumber(String phoneNumber);
 
         boolean validateEmailAddress(String emailAddress);
+
+        boolean validateUdpatedFields(ArrayList<ProfileElementHolder> profileElementHolders);
 
         /**
          * Fetches the latest value stored against a given key from the {@link android.content.SharedPreferences}.
@@ -97,5 +109,7 @@ public interface ProfileContract {
          * @param key - The key against which the required content value is stored.
          */
         String getContentValueFromKey(String key);
+
+        void onDestroy();
     }
 }
