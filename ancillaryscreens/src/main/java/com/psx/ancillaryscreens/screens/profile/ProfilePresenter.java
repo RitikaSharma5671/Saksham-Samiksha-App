@@ -45,6 +45,14 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
 
     }
 
+    /**
+     * Updates the User's profile properties in {@link android.content.SharedPreferences}. The
+     * updated properties are provided through the profileElementHolders parameter. This function
+     * uses the {@link ProfileContract.Interactor} to access the {@link android.content.SharedPreferences}
+     *
+     * @param profileElementHolders - A list {@link ProfileElementHolder}s through which updated
+     *                              values of a user profile can be accessed.
+     */
     @Override
     public void updateUserProfile(ArrayList<ProfileElementHolder> profileElementHolders) {
         UserProfileElement userProfileElement;
@@ -66,6 +74,12 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
         return false;
     }
 
+    /**
+     * Fetches the latest value stored against a given key from the {@link android.content.SharedPreferences}.
+     * This function uses the {@link ProfileContract.Interactor} to access the data from {@link android.content.SharedPreferences}
+     *
+     * @param key - The key against which the required content value is stored.
+     */
     @Override
     public String getContentValueFromKey(String key) {
         return getMvpInteractor().getActualContentValue(key);

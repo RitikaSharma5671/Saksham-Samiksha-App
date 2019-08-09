@@ -1,5 +1,6 @@
 package com.psx.ancillaryscreens.screens.profile;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -89,12 +90,13 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     }
 
     /**
-     * This method populates the fields displayed on the screen using a {@link UserProfileElement} object
-     * provided to {@link ProfileActivity} during its launch.
+     * This method populates the fields displayed on the screen using multiple {@link UserProfileElement}
+     * objects provided to {@link ProfileActivity} during its launch.
      *
-     * @param userProfileElements - The {@link UserProfileElement} object containing necessary info about the
-     *                            user that has to be displayed on the screen. Any Null fields will be
-     *                            hidden from view.
+     * @param userProfileElements - An {@link ArrayList} of {@link UserProfileElement} objects.
+     *                            These list of objects represent individual elements of a User's
+     *                            Profile.
+     * @see com.psx.ancillaryscreens.AncillaryScreensDriver#launchProfileActivity(Context, ArrayList)
      */
     @Override
     public void initUserDetails(ArrayList<UserProfileElement> userProfileElements) {
@@ -162,6 +164,12 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         Toast.makeText(this, " Edit Password Clicked ", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * This methods creates an {@link ArrayList<UserProfileElement>} with new updated values that
+     * reflect the changes user has made on the {@link ProfileActivity}.
+     *
+     * @return updated user profile details wrapped in {@link ArrayList<UserProfileElement>}
+     */
     @Override
     public ArrayList<UserProfileElement> formUpdatedProfileElements() {
 
