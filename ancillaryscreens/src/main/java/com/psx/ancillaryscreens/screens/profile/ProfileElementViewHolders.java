@@ -1,7 +1,10 @@
 package com.psx.ancillaryscreens.screens.profile;
 
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -12,6 +15,9 @@ import com.psx.ancillaryscreens.R;
 import com.psx.ancillaryscreens.R2;
 import com.psx.ancillaryscreens.models.UserProfileElement;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -150,7 +156,7 @@ class ProfileElementViewHolders {
         }
     }
 
-    static class DateTextViewHolder implements ProfileElementHolder {
+    static class DateTextViewHolder implements ProfileElementHolder, DatePickerDialog.OnDateSetListener {
         @BindView(R2.id.icon)
         ImageView itemIcon;
         @BindView(R2.id.item_description)
@@ -159,6 +165,7 @@ class ProfileElementViewHolders {
         AppCompatTextView textViewDate;
 
         private UserProfileElement userProfileElement;
+        private DatePickerDialog datePickerDialog;
 
         DateTextViewHolder(View view, UserProfileElement userProfileElement, String content) {
             ButterKnife.bind(this, view);
@@ -166,7 +173,17 @@ class ProfileElementViewHolders {
             textViewItemDesc.setText(userProfileElement.getTitle());
             textViewDate.setText(content);
             itemIcon.setImageResource(R.drawable.ic_date_range_black_24dp);
+            setupDatePickerDialog(view.getContext(), this, Calendar.getInstance());
             toggleHolderEnable(false);
+        }
+
+        private void setupDatePickerDialog(Context context, DatePickerDialog.OnDateSetListener listener,
+                                           Calendar todayInstance) {
+            if (datePickerDialog == null) {
+                datePickerDialog = new DatePickerDialog(context, this, todayInstance.get(Calendar.YEAR), todayInstance.get(Calendar.MONTH), todayInstance.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMaxDate(todayInstance.getTime().getTime());
+                textViewDate.setOnClickListener(view -> datePickerDialog.show());
+            }
         }
 
 
@@ -189,6 +206,16 @@ class ProfileElementViewHolders {
         @Override
         public String getUpdatedElementValue() {
             return textViewDate.getText().toString();
+        }
+
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM, yyyy", Locale.ENGLISH);
+            textViewDate.setText(simpleDateFormat.format(calendar.getTime()));
         }
     }
 
