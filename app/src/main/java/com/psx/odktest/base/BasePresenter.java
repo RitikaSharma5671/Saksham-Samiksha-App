@@ -2,6 +2,13 @@ package com.psx.odktest.base;
 
 import javax.inject.Inject;
 
+/**
+ * A class that serves as a base for all the presenters (handles business logic) for the activities (serves as view).
+ * The class uses Java Generics. The V and I stands for View and Interactor respectively. Since View and Interactors
+ * are different for each activity, Java Generics are used. The class must implement {@link MvpPresenter}.
+ *
+ * @author Pranav Sharma
+ */
 public class BasePresenter<V extends MvpView, I extends MvpInteractor> implements MvpPresenter<V, I> {
 
     private V mvpView;

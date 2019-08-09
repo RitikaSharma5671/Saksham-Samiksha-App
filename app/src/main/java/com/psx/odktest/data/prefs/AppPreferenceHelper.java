@@ -10,6 +10,12 @@ import com.psx.odktest.di.PreferenceInfo;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Solid implementation of the {@link PreferenceHelper}, performs the read/write operations on the {@link SharedPreferences}
+ * used by the app module. The class is injected to all the activities instead of manually creating an object.
+ *
+ * @author Pranav Sharma
+ */
 @Singleton
 public class AppPreferenceHelper implements PreferenceHelper {
 
@@ -26,4 +32,5 @@ public class AppPreferenceHelper implements PreferenceHelper {
     public String getCurrentUserName() {
         return defaultPreferences.getString("user.fullName", "");
     }
+
 }

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name" translatable="false">AncillaryScreens</string>
+    <string name="fusionauth_api_key" translatable="false">6DgFjRZOE94Wd9tIERk79YWJkWjCqvf5JUyKxIuxUgs</string>
+    <string name="profile_contact_message" translatable="false">These following fields cannot be updated. In case there is any issue, contact admin.</string>
+    <string-array name="category_of_user_shiksha_sathi">
+        <item>Not Applicable</item>
+        <item>Additional Charge</item>
+        <item>Stopgap Arrangement (BRCCs)</item>
+    </string-array>
+</resources>

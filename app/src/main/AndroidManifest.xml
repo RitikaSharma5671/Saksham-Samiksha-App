@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.psx.odktest">
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -23,12 +25,10 @@
             android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.HomeScreen.HomeActivity"
-            android:theme="@style/BaseAppTheme" />
-        <activity android:name=".MainActivity">
+            android:theme="@style/BaseAppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="com.psx.odk.LAUNCH_HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

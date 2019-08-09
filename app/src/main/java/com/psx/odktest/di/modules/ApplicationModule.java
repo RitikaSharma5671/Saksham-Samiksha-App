@@ -45,4 +45,5 @@ public class ApplicationModule {
     String providePreferenceFileName() {
         return AppConstants.PREF_FILE_NAME;
     }
+
 }

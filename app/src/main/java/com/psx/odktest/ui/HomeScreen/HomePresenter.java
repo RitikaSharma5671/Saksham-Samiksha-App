@@ -43,8 +43,17 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+/**
+ * The Presenter class for Home Screen. This class controls interaction between the View and Data.
+ * This class <b>must</b> implement the {@link HomeMvpPresenter} and <b>must</b> be a type of {@link BasePresenter}.
+ *
+ * @author Pranav Sharma
+ */
 public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> extends BasePresenter<V, I> implements HomeMvpPresenter<V, I> {
 
+    /**
+     * The injected values is provided through {@link com.psx.odktest.di.modules.ActivityAbstractProviders}
+     */
     @Inject
     public HomePresenter(I mvpInteractor) {
         super(mvpInteractor);
