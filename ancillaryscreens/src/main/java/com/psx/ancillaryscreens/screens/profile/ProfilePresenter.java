@@ -120,7 +120,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
     @Override
     public boolean validateUdpatedFields(ArrayList<ProfileElementHolder> profileElementHolders) {
         for (ProfileElementHolder profileElementHolder : profileElementHolders) {
-            if (profileElementHolder.getUserProfileElement().getProfileElementContentType() == UserProfileElement.ProfileElementContentType.NUMBER) {
+            if (profileElementHolder.getUserProfileElement().getProfileElementContentType() == UserProfileElement.ProfileElementContentType.PHONE_NUMBER) {
                 if (!validatePhoneNumber(profileElementHolder.getUpdatedElementValue())) {
                     Toast.makeText(getMvpView().getActivityContext(), "Invalid Phone Number", Toast.LENGTH_SHORT).show();
                     return false;

@@ -203,7 +203,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         userProfileElements.add(new UserProfileElement("", "Name", "TEST", true, 0, UserProfileElement.ProfileElementContentType.TEXT, null));
                         userProfileElements.add(new UserProfileElement("", "Date Joined", "26 January, 2019", false, 1, UserProfileElement.ProfileElementContentType.DATE, null));
                         userProfileElements.add(new UserProfileElement("", "Official", "TEST2@gmail.com", false, 0, UserProfileElement.ProfileElementContentType.TEXT, null));
-                        userProfileElements.add(new UserProfileElement("", "Contact Number - Please note this number will be used for sending OTP for password reset.", "9161986851", true, 0, UserProfileElement.ProfileElementContentType.NUMBER, null));
+                        userProfileElements.add(new UserProfileElement("", "Contact Number - Please note this number will be used for sending OTP for password reset.", "9161986851", true, 0, UserProfileElement.ProfileElementContentType.PHONE_NUMBER, null));
                         ArrayList<String> strings = new ArrayList<>();
                         strings.add("Category one");
                         strings.add("Category two");

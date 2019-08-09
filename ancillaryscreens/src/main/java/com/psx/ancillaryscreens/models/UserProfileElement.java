@@ -122,7 +122,7 @@ public class UserProfileElement implements Parcelable {
     public enum ProfileElementContentType {
         TEXT,
         DATE,
-        NUMBER,
+        PHONE_NUMBER,
         SPINNER;
     }
 

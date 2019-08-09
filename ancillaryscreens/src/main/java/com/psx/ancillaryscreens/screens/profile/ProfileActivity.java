@@ -126,7 +126,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
                     dynamicHolders.add(dateTextViewHolder);
                     parentProfileElements.addView(dateTextView);
                     break;
-                case NUMBER:
+                case PHONE_NUMBER:
                     View numberTextView = LayoutInflater.from(this).inflate(R.layout.profile_number_text_row, parentProfileElements, false);
                     NumberTextViewHolder numberTextViewHolder = new NumberTextViewHolder(numberTextView, profileElement, profilePresenter.getContentValueFromKey(profileElement.getContent()));
                     dynamicHolders.add(numberTextViewHolder);
