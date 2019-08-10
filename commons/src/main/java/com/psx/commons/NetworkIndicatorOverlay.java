@@ -12,8 +12,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import java.lang.ref.WeakReference;
 
-import timber.log.Timber;
-
 class NetworkIndicatorOverlay {
 
     private String message;
@@ -40,13 +38,12 @@ class NetworkIndicatorOverlay {
 
     private void loadAnimations() {
         if (activityWeakReference != null && activityWeakReference.get() != null) {
-            showAnimation = AnimationUtils.loadAnimation(activityWeakReference.get(), R.anim.down_to_top);
-            hideAnimation = AnimationUtils.loadAnimation(activityWeakReference.get(), R.anim.top_to_down);
+            hideAnimation = AnimationUtils.loadAnimation(activityWeakReference.get(), R.anim.down_to_top);
+            showAnimation = AnimationUtils.loadAnimation(activityWeakReference.get(), R.anim.top_to_down);
         }
     }
 
     private void inflateAndAttachView(Activity activity) {
-        Timber.d("Inflating View");
         inflatedView = LayoutInflater.from(activity).inflate(R.layout.network_indicator_overlay,
                 activity.findViewById(android.R.id.content), false);
         ((AppCompatTextView) inflatedView.findViewById(R.id.network_indicator_message)).setText(message);
@@ -55,7 +52,6 @@ class NetworkIndicatorOverlay {
 
     public void show() {
         if (activityWeakReference != null && activityWeakReference.get() != null) {
-            Timber.d("Starting Show");
             inflatedView.startAnimation(showAnimation);
             handler.postDelayed(this::hide, duration);
         }
@@ -63,7 +59,6 @@ class NetworkIndicatorOverlay {
 
     private void hide() {
         if (inflatedView != null && activityWeakReference != null && activityWeakReference.get() != null) {
-            Timber.d("Starting Hide");
             inflatedView.startAnimation(hideAnimation);
         }
     }

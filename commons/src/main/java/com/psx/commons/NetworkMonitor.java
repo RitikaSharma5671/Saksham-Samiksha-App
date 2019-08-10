@@ -2,7 +2,6 @@ package com.psx.commons;
 
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.InternetObservingSettings;
-import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.error.ErrorHandler;
 import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.strategy.SocketInternetObservingStrategy;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -22,13 +21,10 @@ public class NetworkMonitor {
         internetObservingSettings = InternetObservingSettings.builder()
                 .interval(5000)
                 .strategy(new SocketInternetObservingStrategy())
-                .timeout(10000)
-                .errorHandler(new ErrorHandler() {
-                    @Override
-                    public void handleError(Exception exception, String message) {
-                        Timber.e(exception, "Exception in Lib message - %s", message);
-                    }
-                })
+                .host("www.google.com")
+                .httpResponse(200)
+                .timeout(5000)
+                .errorHandler((exception, message) -> Timber.e(exception, "Exception in Lib message - %s", message))
                 .build();
     }
 
@@ -37,7 +33,7 @@ public class NetworkMonitor {
         NetworkMonitor.internetObservingSettings = internetObservingSettings;
     }
 
-    public static void startMonitoringInternet() {
+    public static void startMonitoringInternet() throws InitializationException {
         checkValidConfig();
         Timber.d("Starting Monitoring");
         monitorSubscription = ReactiveNetwork
@@ -47,16 +43,15 @@ public class NetworkMonitor {
                 .subscribe(isConnectedToHost -> {
                     Timber.d("Here, Checking N/W");
                     if (isConnectedToHost != lastConnectedState) {
-                        // TODO : Show Network info overlay
                         Timber.d("Is Connected To Host ? %s", isConnectedToHost);
                         String message = isConnectedToHost ? "Connected To Network" : "Lost Internet Connection";
                         NetworkIndicatorOverlay.make(mainApplication.getCurrentActivity(), message, 5000).show();
                         lastConnectedState = isConnectedToHost;
                     }
-                });
+                }, throwable -> Timber.e(throwable, "Some error occurred %s", throwable.getMessage()));
     }
 
-    public static void stopMonitoringInternet() {
+    public static void stopMonitoringInternet() throws InitializationException {
         checkValidConfig();
         if (!monitorSubscription.isDisposed()) {
             monitorSubscription.dispose();
