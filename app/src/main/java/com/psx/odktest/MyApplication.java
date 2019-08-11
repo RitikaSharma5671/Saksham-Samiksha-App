@@ -74,6 +74,15 @@ public class MyApplication extends Collect implements MainApplication, Lifecycle
                                 CommonUtilities.startActivityAsNewTask(signalExchangeObject.intentToLaunch, currentActivity);
                             else
                                 startActivity(signalExchangeObject.intentToLaunch);
+                        } else if (exchangeObject instanceof ExchangeObject.EventExchangeObject) {
+                            // TODO : Remove this just for test
+                            ExchangeObject.EventExchangeObject eventExchangeObject = (ExchangeObject.EventExchangeObject) exchangeObject;
+                            Timber.d("Event Received %s ", eventExchangeObject.customEvents);
+                            if (eventExchangeObject.to == Modules.MAIN_APP || eventExchangeObject.to == Modules.PROJECT) {
+                                Timber.d("Event Received %s ", eventExchangeObject.customEvents);
+                            }
+                        } else {
+                            Timber.e("Received but not intended");
                         }
                     }
                 }, Timber::e));

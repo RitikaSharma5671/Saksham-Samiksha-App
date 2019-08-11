@@ -45,7 +45,7 @@ public class NetworkMonitor {
                     if (isConnectedToHost != lastConnectedState) {
                         Timber.d("Is Connected To Host ? %s", isConnectedToHost);
                         String message = isConnectedToHost ? "Connected To Network" : "Lost Internet Connection";
-                        NetworkIndicatorOverlay.make(mainApplication.getCurrentActivity(), message, 5000).show();
+                        NetworkIndicatorOverlay.make(mainApplication, message, 5000).show();
                         lastConnectedState = isConnectedToHost;
                     }
                 }, throwable -> Timber.e(throwable, "Some error occurred %s", throwable.getMessage()));

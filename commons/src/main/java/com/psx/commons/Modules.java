@@ -13,5 +13,7 @@ public enum Modules {
     SIMPLE_MATHS,
     LOGGING,
     COLLECT_APP,
-    ANCILLARY_SCREENS;
+    ANCILLARY_SCREENS,
+    COMMONS,
+    PROJECT; // Encompasses all modules
 }
