@@ -3,6 +3,11 @@ package com.psx.commons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A {@link RuntimeException} indicating that a class is not initialised properly.
+ *
+ * @author Pranav Sharma
+ */
 public class InitializationException extends RuntimeException {
 
     private Class clazz;

@@ -9,6 +9,19 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+/**
+ * This class exposes API that enables the app to monitor internet connectivity status.
+ * This class can detect internet connected and disconnected state. Note that internet connectivity
+ * monitoring is different than network connectivity monitoring. The Phone maybe connected to a WiFi
+ * network that is not providing internet access.
+ * This class uses {@link ReactiveNetwork APIs internally.
+ * You can configure the internet monitoring behaviour of this class by providing an InternetObservingSettings}
+ * object.
+ *
+ * @author Pranav Sharma
+ * @see {https://github.com/pwittchen/ReactiveNetwork}
+ * @see InternetObservingSettings
+ */
 public class NetworkMonitor {
 
     private static MainApplication mainApplication = null;
@@ -16,6 +29,14 @@ public class NetworkMonitor {
     private static Disposable monitorSubscription = null;
     private static boolean lastConnectedState = false;
 
+    /**
+     * Initialisation method for the class. Must be called <b>once</b> in the lifetime of the application
+     * prior to using any of the functions from this class. This method initialises the
+     * {@link NetworkMonitor#internetObservingSettings} with the valid default values.
+     *
+     * @param mainApplication - The application instance of the current app.
+     * @see MainApplication
+     */
     public static void init(MainApplication mainApplication) {
         NetworkMonitor.mainApplication = mainApplication;
         internetObservingSettings = InternetObservingSettings.builder()
@@ -28,11 +49,30 @@ public class NetworkMonitor {
                 .build();
     }
 
+    /**
+     * Initialisation method for the class. Must be called <b>once</b> in the lifetime of the application
+     * prior to using any of the functions from this class. This method allows user to provide the
+     * {@link NetworkMonitor#internetObservingSettings} object.
+     *
+     * @param mainApplication - The application instance of the current app.
+     * @see MainApplication
+     * @see InternetObservingSettings
+     */
     public static void init(MainApplication mainApplication, InternetObservingSettings internetObservingSettings) {
         NetworkMonitor.mainApplication = mainApplication;
         NetworkMonitor.internetObservingSettings = internetObservingSettings;
     }
 
+    /**
+     * This function starts monitoring for internet connectivity changes. This method uses Reactive
+     * approach and uses a {@link org.reactivestreams.Subscription} approach. A {@link Disposable}
+     * keeps track of this subscription. Once started, internet monitoring will not be stopped until
+     * an explicit call is made to {@link NetworkMonitor#stopMonitoringInternet()}.
+     *
+     * @throws InitializationException if {@link NetworkMonitor#init(MainApplication)} <b>OR</b>
+     *                                 {@link NetworkMonitor#init(MainApplication, InternetObservingSettings)} is not called prior
+     *                                 to calling this.
+     */
     public static void startMonitoringInternet() throws InitializationException {
         checkValidConfig();
         Timber.d("Starting Monitoring");
@@ -51,6 +91,15 @@ public class NetworkMonitor {
                 }, throwable -> Timber.e(throwable, "Some error occurred %s", throwable.getMessage()));
     }
 
+    /**
+     * This function stops the internet connection monitoring. It is safe to call even if monitoring
+     * is not yet started via {@link NetworkMonitor#startMonitoringInternet()}. However an exception
+     * will be thrown if this call is made without first initialising the class.
+     *
+     * @throws InitializationException if  {@link NetworkMonitor#init(MainApplication)}
+     *                                 <b>OR</b> {@link NetworkMonitor#init(MainApplication, InternetObservingSettings)} is not
+     *                                 called before calling this method.
+     */
     public static void stopMonitoringInternet() throws InitializationException {
         checkValidConfig();
         if (!monitorSubscription.isDisposed()) {
@@ -61,7 +110,13 @@ public class NetworkMonitor {
         }
     }
 
-    private static void checkValidConfig() {
+    /**
+     * This function checks if the class is properly initialised.
+     *
+     * @throws InitializationException if mainApplication is null; this means that {@link NetworkMonitor#init(MainApplication)}
+     *                                 <b>OR</b> {@link NetworkMonitor#init(MainApplication, InternetObservingSettings)} is not called.
+     */
+    private static void checkValidConfig() throws InitializationException {
         if (mainApplication == null) {
             throw new InitializationException(NetworkMonitor.class, "NetworkMonitor not initialised. Please call init method.");
         }
