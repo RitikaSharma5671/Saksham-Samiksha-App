@@ -10,5 +10,5 @@ public enum CustomEvents {
     LOGOUT_INITIATED, // Signals logout is initiated
     INTERNET_DISCONNECTED, // Signals that internet connectivity has lost
     INTERNET_CONNECTED, // Signals that internet connectivity is gained
-    INTERNET_INFO_BANNER_CLICKED; //Signals that a NetworkIndicatorOverlay is clicked
+    INTERNET_INFO_BANNER_CLICKED; //Signals that a InternetIndicatorOverlay is clicked
 }

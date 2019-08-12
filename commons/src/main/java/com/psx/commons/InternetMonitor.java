@@ -22,7 +22,7 @@ import timber.log.Timber;
  * @see {https://github.com/pwittchen/ReactiveNetwork}
  * @see InternetObservingSettings
  */
-public class NetworkMonitor {
+public class InternetMonitor {
 
     private static MainApplication mainApplication = null;
     private static InternetObservingSettings internetObservingSettings = null;
@@ -32,13 +32,13 @@ public class NetworkMonitor {
     /**
      * Initialisation method for the class. Must be called <b>once</b> in the lifetime of the application
      * prior to using any of the functions from this class. This method initialises the
-     * {@link NetworkMonitor#internetObservingSettings} with the valid default values.
+     * {@link InternetMonitor#internetObservingSettings} with the valid default values.
      *
      * @param mainApplication - The application instance of the current app.
      * @see MainApplication
      */
     public static void init(MainApplication mainApplication) {
-        NetworkMonitor.mainApplication = mainApplication;
+        InternetMonitor.mainApplication = mainApplication;
         internetObservingSettings = InternetObservingSettings.builder()
                 .interval(5000)
                 .strategy(new SocketInternetObservingStrategy())
@@ -52,25 +52,25 @@ public class NetworkMonitor {
     /**
      * Initialisation method for the class. Must be called <b>once</b> in the lifetime of the application
      * prior to using any of the functions from this class. This method allows user to provide the
-     * {@link NetworkMonitor#internetObservingSettings} object.
+     * {@link InternetMonitor#internetObservingSettings} object.
      *
      * @param mainApplication - The application instance of the current app.
      * @see MainApplication
      * @see InternetObservingSettings
      */
     public static void init(MainApplication mainApplication, InternetObservingSettings internetObservingSettings) {
-        NetworkMonitor.mainApplication = mainApplication;
-        NetworkMonitor.internetObservingSettings = internetObservingSettings;
+        InternetMonitor.mainApplication = mainApplication;
+        InternetMonitor.internetObservingSettings = internetObservingSettings;
     }
 
     /**
      * This function starts monitoring for internet connectivity changes. This method uses Reactive
      * approach and uses a {@link org.reactivestreams.Subscription} approach. A {@link Disposable}
      * keeps track of this subscription. Once started, internet monitoring will not be stopped until
-     * an explicit call is made to {@link NetworkMonitor#stopMonitoringInternet()}.
+     * an explicit call is made to {@link InternetMonitor#stopMonitoringInternet()}.
      *
-     * @throws InitializationException if {@link NetworkMonitor#init(MainApplication)} <b>OR</b>
-     *                                 {@link NetworkMonitor#init(MainApplication, InternetObservingSettings)} is not called prior
+     * @throws InitializationException if {@link InternetMonitor#init(MainApplication)} <b>OR</b>
+     *                                 {@link InternetMonitor#init(MainApplication, InternetObservingSettings)} is not called prior
      *                                 to calling this.
      */
     public static void startMonitoringInternet() throws InitializationException {
@@ -85,7 +85,7 @@ public class NetworkMonitor {
                     if (isConnectedToHost != lastConnectedState) {
                         Timber.d("Is Connected To Host ? %s", isConnectedToHost);
                         String message = isConnectedToHost ? "Connected To Network" : "Lost Internet Connection";
-                        NetworkIndicatorOverlay.make(mainApplication, message, 5000).show();
+                        InternetIndicatorOverlay.make(mainApplication, message, 5000).show();
                         lastConnectedState = isConnectedToHost;
                     }
                 }, throwable -> Timber.e(throwable, "Some error occurred %s", throwable.getMessage()));
@@ -93,11 +93,11 @@ public class NetworkMonitor {
 
     /**
      * This function stops the internet connection monitoring. It is safe to call even if monitoring
-     * is not yet started via {@link NetworkMonitor#startMonitoringInternet()}. However an exception
+     * is not yet started via {@link InternetMonitor#startMonitoringInternet()}. However an exception
      * will be thrown if this call is made without first initialising the class.
      *
-     * @throws InitializationException if  {@link NetworkMonitor#init(MainApplication)}
-     *                                 <b>OR</b> {@link NetworkMonitor#init(MainApplication, InternetObservingSettings)} is not
+     * @throws InitializationException if  {@link InternetMonitor#init(MainApplication)}
+     *                                 <b>OR</b> {@link InternetMonitor#init(MainApplication, InternetObservingSettings)} is not
      *                                 called before calling this method.
      */
     public static void stopMonitoringInternet() throws InitializationException {
@@ -113,12 +113,12 @@ public class NetworkMonitor {
     /**
      * This function checks if the class is properly initialised.
      *
-     * @throws InitializationException if mainApplication is null; this means that {@link NetworkMonitor#init(MainApplication)}
-     *                                 <b>OR</b> {@link NetworkMonitor#init(MainApplication, InternetObservingSettings)} is not called.
+     * @throws InitializationException if mainApplication is null; this means that {@link InternetMonitor#init(MainApplication)}
+     *                                 <b>OR</b> {@link InternetMonitor#init(MainApplication, InternetObservingSettings)} is not called.
      */
     private static void checkValidConfig() throws InitializationException {
         if (mainApplication == null) {
-            throw new InitializationException(NetworkMonitor.class, "NetworkMonitor not initialised. Please call init method.");
+            throw new InitializationException(InternetMonitor.class, "InternetMonitor not initialised. Please call init method.");
         }
     }
 }

@@ -12,9 +12,9 @@ import androidx.lifecycle.OnLifecycleEvent;
 import com.psx.ancillaryscreens.AncillaryScreensDriver;
 import com.psx.commons.CommonUtilities;
 import com.psx.commons.ExchangeObject;
+import com.psx.commons.InternetMonitor;
 import com.psx.commons.MainApplication;
 import com.psx.commons.Modules;
-import com.psx.commons.NetworkMonitor;
 import com.psx.commons.RxBus;
 import com.psx.odktest.di.component.ApplicationComponent;
 import com.psx.odktest.di.component.DaggerApplicationComponent;
@@ -58,7 +58,7 @@ public class MyApplication extends Collect implements MainApplication, Lifecycle
         super.onCreate();
         eventBus = new RxBus();
         setupActivityLifecycleListeners();
-        NetworkMonitor.init(this);
+        InternetMonitor.init(this);
         AncillaryScreensDriver.init(this, AppConstants.BASE_API_URL);
         ODKDriver.init(this, R.drawable.splash_screen_ss, R.style.BaseAppTheme, R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
         compositeDisposable.add(this.getEventBus()
@@ -186,7 +186,7 @@ public class MyApplication extends Collect implements MainApplication, Lifecycle
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     void onAppBackgrounded() {
-        NetworkMonitor.stopMonitoringInternet();
+        InternetMonitor.stopMonitoringInternet();
         if (compositeDisposable != null && !compositeDisposable.isDisposed())
             compositeDisposable.dispose();
     }

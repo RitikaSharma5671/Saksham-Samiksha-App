@@ -19,9 +19,9 @@ import com.psx.ancillaryscreens.models.UserProfileElement;
 import com.psx.commons.Constants;
 import com.psx.commons.CustomEvents;
 import com.psx.commons.ExchangeObject;
+import com.psx.commons.InternetMonitor;
 import com.psx.commons.MainApplication;
 import com.psx.commons.Modules;
-import com.psx.commons.NetworkMonitor;
 import com.psx.odktest.AppConstants;
 import com.psx.odktest.R;
 import com.psx.odktest.UtilityFunctions;
@@ -84,7 +84,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
         homePresenter.setWelcomeText();
         homePresenter.applySettings();
         homePresenter.downloadForms();
-        NetworkMonitor.startMonitoringInternet();
+        InternetMonitor.startMonitoringInternet();
     }
 
     @Override
