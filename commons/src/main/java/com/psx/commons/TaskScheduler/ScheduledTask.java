@@ -12,4 +12,6 @@ public interface ScheduledTask {
     UUID getScheduledTaskId();
 
     void enqueueTask(Context context);
+
+    void cancelTask(Context context);
 }

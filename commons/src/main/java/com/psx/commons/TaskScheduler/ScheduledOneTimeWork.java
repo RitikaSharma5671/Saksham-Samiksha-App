@@ -4,7 +4,6 @@ import android.content.Context;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
@@ -13,27 +12,28 @@ import androidx.work.Worker;
 
 import java.util.UUID;
 
+import timber.log.Timber;
+
 public class ScheduledOneTimeWork implements ScheduledTask {
 
     private OneTimeWorkRequest oneTimeWorkRequest;
+    private Class clazz;
 
-    public static ScheduledOneTimeWork from(Worker worker) {
+    public static ScheduledOneTimeWork from(Worker worker, Class clazz) {
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(worker.getClass()).build();
-        return new ScheduledOneTimeWork(workRequest);
+        return new ScheduledOneTimeWork(workRequest, clazz);
     }
 
-    public static ScheduledOneTimeWork from(Worker worker, Data inputDataForWorker) {
+    public static ScheduledOneTimeWork from(Worker worker, Class clazz, Data inputDataForWorker) {
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(worker.getClass())
                 .setInputData(inputDataForWorker)
                 .build();
-        return new ScheduledOneTimeWork(workRequest);
+        return new ScheduledOneTimeWork(workRequest, clazz);
     }
 
-    private ScheduledOneTimeWork(OneTimeWorkRequest oneTimeWorkRequest) {
+    private ScheduledOneTimeWork(OneTimeWorkRequest oneTimeWorkRequest, Class clazz) {
         this.oneTimeWorkRequest = oneTimeWorkRequest;
-    }
-
-    private void test() {
+        this.clazz = clazz;
     }
 
     @Override
@@ -46,23 +46,32 @@ public class ScheduledOneTimeWork implements ScheduledTask {
 
     @Override
     public void enqueueTask(Context context) {
+        Timber.d("Enqueuing task");
         WorkManager workManager = WorkManager.getInstance(context);
         LiveData<WorkInfo> status = workManager.getWorkInfoByIdLiveData(oneTimeWorkRequest.getId());
-        status.observe(Manager.getMainApplication(), new Observer<WorkInfo>() {
-            @Override
-            public void onChanged(WorkInfo workInfo) {
-                if (workInfo.getState().equals(WorkInfo.State.ENQUEUED)) {
-                    // TODO :  Save this task, for auto start later
-
-                } else if (workInfo.getState().isFinished()) {
-                    // TODO : Remove from SharedPrefs.
+        status.observe(Manager.getMainApplication(), workInfo -> {
+            if (workInfo.getState().equals(WorkInfo.State.ENQUEUED)) {
+                Timber.i("Task enqueued");
+                if (!Manager.isTaskAlreadyInPrefs(context, workInfo.getId())) {
+                    Manager.SavedTask.createSavedTaskFromWorkInfo(workInfo, clazz).saveTaskInSharedPrefs(context);
                 }
+            } else if (workInfo.getState().isFinished()) {
+                Timber.i("Task finished");
+                Manager.SavedTask.clearSavedTaskFromSharedPrefs(context, workInfo.getId().toString());
             }
         });
         workManager.enqueue(oneTimeWorkRequest);
     }
 
-    private void saveWorkDetailsInSharedPrefs(Context context) {
-
+    @Override
+    public void cancelTask(Context context) {
+        WorkManager workManager = WorkManager.getInstance(context);
+        if (getScheduledTaskId() != null) {
+            Timber.i("Task cancelled");
+            workManager.getWorkInfoById(getScheduledTaskId()).cancel(true);
+        } else {
+            Timber.wtf("Trying to cancel a task that was never scheduled. How did you get this UUID ??!!");
+        }
     }
+
 }
