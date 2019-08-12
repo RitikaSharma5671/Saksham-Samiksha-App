@@ -5,9 +5,11 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.psx.ancillaryscreens.AncillaryScreensDriver;
 import com.psx.commons.CommonUtilities;
@@ -189,5 +191,16 @@ public class MyApplication extends Collect implements MainApplication, Lifecycle
         InternetMonitor.stopMonitoringInternet();
         if (compositeDisposable != null && !compositeDisposable.isDisposed())
             compositeDisposable.dispose();
+    }
+
+    /**
+     * Returns the Lifecycle of the provider.
+     *
+     * @return The lifecycle of the provider.
+     */
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return ProcessLifecycleOwner.get().getLifecycle();
     }
 }

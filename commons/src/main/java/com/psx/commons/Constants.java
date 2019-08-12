@@ -23,4 +23,6 @@ public class Constants {
     public static final String INTENT_LAUNCH_HOME_ACTIVITY = "com.psx.odk.LAUNCH_HOME";
 
     public static final String LOGOUT_CALLS = "logout_calls";
+
+    public static final String WORK_MANAGER_SHARED_PREFS_NAME = "com.taskscheduler.sharedprefname";
 }
