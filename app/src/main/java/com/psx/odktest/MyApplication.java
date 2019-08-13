@@ -18,6 +18,7 @@ import com.psx.commons.InternetMonitor;
 import com.psx.commons.MainApplication;
 import com.psx.commons.Modules;
 import com.psx.commons.RxBus;
+import com.psx.commons.TaskScheduler.Manager;
 import com.psx.odktest.di.component.ApplicationComponent;
 import com.psx.odktest.di.component.DaggerApplicationComponent;
 import com.psx.odktest.di.modules.ApplicationModule;
@@ -61,6 +62,8 @@ public class MyApplication extends Collect implements MainApplication, Lifecycle
         eventBus = new RxBus();
         setupActivityLifecycleListeners();
         InternetMonitor.init(this);
+        Manager.init(this);
+        Manager.enqueueAllIncompleteTasks(this);
         AncillaryScreensDriver.init(this, AppConstants.BASE_API_URL);
         ODKDriver.init(this, R.drawable.splash_screen_ss, R.style.BaseAppTheme, R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
         compositeDisposable.add(this.getEventBus()

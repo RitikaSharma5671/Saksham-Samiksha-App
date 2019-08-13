@@ -49,6 +49,11 @@ public class SampleWorker extends Worker {
         double result = myCrazyMathFunction(x, y, z);
 
         //...set the output, and we're done!
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Data output = new Data.Builder()
                 .putDouble(KEY_RESULT, result)
                 .build();

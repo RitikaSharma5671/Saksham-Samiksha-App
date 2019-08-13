@@ -64,6 +64,8 @@ public class ScheduledOneTimeWork implements ScheduledTask {
                 Timber.i("Task enqueued");
                 if (!Manager.isTaskAlreadyInPrefs(context, workInfo.getId())) {
                     Manager.SavedTask.createSavedTaskFromWorkInfo(workInfo, clazz).saveTaskInSharedPrefs(context);
+                } else {
+                    Timber.i("Task already in Preferences");
                 }
             } else if (workInfo.getState().isFinished()) {
                 Timber.i("Task finished");

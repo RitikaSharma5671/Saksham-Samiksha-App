@@ -17,7 +17,6 @@ import com.psx.commons.InitializationException;
 import com.psx.commons.MainApplication;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -46,20 +45,23 @@ public class Manager {
         return !Objects.requireNonNull(sharedPreferences.getString(uuid.toString(), "null")).equals("null");
     }
 
-    static ArrayList<WorkRequest> enqueueAllIncompleteTasks() {
+    public static void enqueueAllIncompleteTasks(@Nullable Context context) {
+        Timber.d("Enquing All Tasks");
         SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
                 .getApplicationContext().getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
-        ArrayList<WorkRequest> workRequests = new ArrayList<>();
         for (String uuid : incompleteTasksArrayList) {
             String json = sharedPreferences.getString(uuid, "");
             if (json != null && !json.equals("")) {
                 SavedTask savedTask = new Gson().fromJson(json, SavedTask.class);
-                workRequests.add(savedTask.convertToWorkRequest());
+                if (context != null)
+                    savedTask.convertToScheduledOneTimeWork().enqueueTask(context);
+                else
+                    savedTask.convertToScheduledOneTimeWork().enqueueTask(mainApplication.getCurrentApplication().getApplicationContext());
+                Timber.e("Task with id %s enqueued.", savedTask.convertToWorkRequest().getId());
             } else {
                 Timber.wtf("Trying to access unsaved task");
             }
         }
-        return workRequests;
     }
 
     private static void loadIncompleteTasksArrayList(Context context) {
@@ -68,6 +70,7 @@ public class Manager {
     }
 
     private static void updateIncompleteTasksArrayList(Context context) {
+        Timber.d("Adding to incomplete ArrayList");
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putStringSet(INCOMPLETE_TASK_LIST, incompleteTasksArrayList);
@@ -91,6 +94,18 @@ public class Manager {
             this.className = className;
         }
 
+        ScheduledOneTimeWork convertToScheduledOneTimeWork() {
+            try {
+                if (data != null)
+                    return ScheduledOneTimeWork.from(Class.forName(className).asSubclass(Worker.class), data);
+                else
+                    return ScheduledOneTimeWork.from(Class.forName(className).asSubclass(Worker.class));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
         WorkRequest convertToWorkRequest() {
             try {
                 return new OneTimeWorkRequest.Builder(
@@ -104,6 +119,7 @@ public class Manager {
         }
 
         void saveTaskInSharedPrefs(Context context) {
+            Timber.d("Saving Task in SharedPreferences");
             SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             String json = new Gson().toJson(this);
@@ -113,6 +129,7 @@ public class Manager {
         }
 
         static void clearSavedTaskFromSharedPrefs(Context context, String UUID) {
+            Timber.d("Clearing Task with UUID %s from Preferences", UUID);
             SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.remove(UUID);
@@ -121,6 +138,7 @@ public class Manager {
         }
 
         private void addToIncompleteTaskArrayList() {
+            Timber.d("Adding to incomplete ArrayList");
             incompleteTasksArrayList.add(strUUID);
             updateIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
         }
