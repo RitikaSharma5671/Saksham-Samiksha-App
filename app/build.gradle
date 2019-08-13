@@ -29,7 +29,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(":collect_app")
+    implementation(project(":collect_app")) {
+        exclude group: 'android.arch.work'
+    }
     implementation project(":commons")
     implementation project(":ancillaryscreens")
     implementation 'androidx.multidex:multidex:2.0.1'

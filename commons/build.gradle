@@ -69,7 +69,11 @@ dependencies {
     api "com.jakewharton.timber:timber:4.7.1"
 
     //WorkManager
-    api "androidx.work:work-runtime:2.1.0"
+    api "com.google.guava:guava:26.0-android"
+    //WorkManager
+    api("androidx.work:work-runtime:2.1.0") {
+        exclude group: 'com.google.guava', module: 'listenablefuture'
+    }
     api "androidx.work:work-rxjava2:2.1.0"
 
     //Android architecture components - Lifecycle

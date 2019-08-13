@@ -32,7 +32,9 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":commons")
-    implementation project(":collect_app")
+    implementation(project(":collect_app")) {
+        exclude group: 'android.arch.work'
+    }
 
     //Dependency Injection (Cant be shared across modules)
     implementation 'androidx.appcompat:appcompat:1.0.2'
