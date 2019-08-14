@@ -13,6 +13,7 @@ import androidx.work.Worker;
 import com.psx.commons.InitializationException;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import timber.log.Timber;
 
@@ -60,16 +61,19 @@ public class ScheduledOneTimeWork implements ScheduledTask {
         WorkManager workManager = WorkManager.getInstance(context);
         LiveData<WorkInfo> status = workManager.getWorkInfoByIdLiveData(oneTimeWorkRequest.getId());
         status.observe(Manager.getMainApplication(), workInfo -> {
-            if (workInfo.getState().equals(WorkInfo.State.ENQUEUED)) {
+            AtomicBoolean nqd = new AtomicBoolean(false);
+            Timber.d("Work info current state is %s", workInfo.getState());
+            if ((workInfo.getState() == WorkInfo.State.ENQUEUED || workInfo.getState() == WorkInfo.State.RUNNING) && !nqd.get()) {
                 Timber.i("Task enqueued");
-                if (!Manager.isTaskAlreadyInPrefs(context, workInfo.getId())) {
-                    Manager.SavedTask.createSavedTaskFromWorkInfo(workInfo, clazz).saveTaskInSharedPrefs(context);
+                nqd.set(true);
+                if (!Manager.isTaskAlreadyInPrefs(workInfo.getId())) {
+                    Manager.SavedTask.createSavedTaskFromWorkInfo(workInfo, clazz).saveTaskInSharedPrefs();
                 } else {
                     Timber.i("Task already in Preferences");
                 }
             } else if (workInfo.getState().isFinished()) {
-                Timber.i("Task finished");
-                Manager.SavedTask.clearSavedTaskFromSharedPrefs(context, workInfo.getId().toString());
+                Timber.i("Task finished %s ", workInfo.getId());
+                Manager.SavedTask.clearSavedTaskFromSharedPrefs(workInfo.getId().toString());
             }
         });
         workManager.enqueue(oneTimeWorkRequest);

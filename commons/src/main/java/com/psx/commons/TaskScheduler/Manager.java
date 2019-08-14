@@ -1,5 +1,6 @@
 package com.psx.commons.TaskScheduler;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -34,27 +35,18 @@ public class Manager {
         loadIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
     }
 
-    static MainApplication getMainApplication() {
-        if (mainApplication == null)
-            throw new InitializationException(Manager.class, Manager.class.getCanonicalName() + " not initialised.\nPlease call init method.");
-        return mainApplication;
-    }
-
-    static boolean isTaskAlreadyInPrefs(Context context, UUID uuid) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
-        return !Objects.requireNonNull(sharedPreferences.getString(uuid.toString(), "null")).equals("null");
-    }
-
     public static void enqueueAllIncompleteTasks(@Nullable Context context) {
-        Timber.d("Enquing All Tasks");
+        Timber.d("Enqueuing All Tasks");
         SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
                 .getApplicationContext().getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         for (String uuid : incompleteTasksArrayList) {
             String json = sharedPreferences.getString(uuid, "");
             if (json != null && !json.equals("")) {
                 SavedTask savedTask = new Gson().fromJson(json, SavedTask.class);
+                ScheduledOneTimeWork scheduledOneTimeWork = savedTask.convertToScheduledOneTimeWork();
+                updateTaskUuidInSharedPrefs(savedTask, Objects.requireNonNull(scheduledOneTimeWork.getScheduledTaskId()).toString());
                 if (context != null)
-                    savedTask.convertToScheduledOneTimeWork().enqueueTask(context);
+                    scheduledOneTimeWork.enqueueTask(context);
                 else
                     savedTask.convertToScheduledOneTimeWork().enqueueTask(mainApplication.getCurrentApplication().getApplicationContext());
                 Timber.e("Task with id %s enqueued.", savedTask.convertToWorkRequest().getId());
@@ -62,19 +54,51 @@ public class Manager {
                 Timber.wtf("Trying to access unsaved task");
             }
         }
+        Timber.i("All Tasks enqueued");
+    }
+
+    static MainApplication getMainApplication() {
+        if (mainApplication == null)
+            throw new InitializationException(Manager.class, Manager.class.getCanonicalName() + " not initialised.\nPlease call init method.");
+        return mainApplication;
+    }
+
+    static boolean isTaskAlreadyInPrefs(UUID uuid) {
+        SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
+                .getApplicationContext()
+                .getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        return !Objects.requireNonNull(sharedPreferences.getString(uuid.toString(), "null")).equals("null");
+    }
+
+    private static void updateTaskUuidInSharedPrefs(SavedTask oldTask, String newUUID) {
+        if (incompleteTasksArrayList.contains(oldTask.strUUID)) {
+            incompleteTasksArrayList.remove(oldTask.strUUID);
+            incompleteTasksArrayList.add(newUUID);
+            updateIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
+            SavedTask.clearSavedTaskFromSharedPrefs(oldTask.strUUID);
+            oldTask.strUUID = newUUID;
+            oldTask.saveTaskInSharedPrefs();
+        } else {
+            Timber.wtf("incompleteTasksArrayList does not contain the UUID you are trying to update");
+        }
     }
 
     private static void loadIncompleteTasksArrayList(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         incompleteTasksArrayList = sharedPreferences.getStringSet(INCOMPLETE_TASK_LIST, new ArraySet<>());
+        System.out.println("Updated List is " + incompleteTasksArrayList);
     }
 
+    @SuppressLint("ApplySharedPref")
     private static void updateIncompleteTasksArrayList(Context context) {
-        Timber.d("Adding to incomplete ArrayList");
+        Timber.d("Updating incomplete ArrayList");
+        System.out.println("ARRAY LIST IS " + incompleteTasksArrayList.toString());
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(INCOMPLETE_TASK_LIST);
+        editor.commit();
         editor.putStringSet(INCOMPLETE_TASK_LIST, incompleteTasksArrayList);
-        editor.apply();
+        editor.commit();
         loadIncompleteTasksArrayList(context);
     }
 
@@ -118,9 +142,11 @@ public class Manager {
             }
         }
 
-        void saveTaskInSharedPrefs(Context context) {
+        void saveTaskInSharedPrefs() {
             Timber.d("Saving Task in SharedPreferences");
-            SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
+                    .getApplicationContext()
+                    .getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             String json = new Gson().toJson(this);
             editor.putString(this.strUUID, json);
@@ -128,9 +154,11 @@ public class Manager {
             addToIncompleteTaskArrayList();
         }
 
-        static void clearSavedTaskFromSharedPrefs(Context context, String UUID) {
+        static void clearSavedTaskFromSharedPrefs(String UUID) {
             Timber.d("Clearing Task with UUID %s from Preferences", UUID);
-            SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
+                    .getApplicationContext()
+                    .getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.remove(UUID);
             editor.apply();
@@ -138,14 +166,20 @@ public class Manager {
         }
 
         private void addToIncompleteTaskArrayList() {
-            Timber.d("Adding to incomplete ArrayList");
-            incompleteTasksArrayList.add(strUUID);
-            updateIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
+            if (!incompleteTasksArrayList.contains(strUUID)) {
+                Timber.d("Adding to incomplete ArrayList");
+                incompleteTasksArrayList.add(strUUID);
+                updateIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
+            }
         }
 
         private static void removeFromIncompleteTaskArrayList(String UUID) {
-            incompleteTasksArrayList.remove(UUID);
-            updateIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
+            if (incompleteTasksArrayList.contains(UUID)) {
+                incompleteTasksArrayList.remove(UUID);
+                updateIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
+            } else {
+                Timber.wtf("incompleteTasksArrayList does not contain UUID %s", UUID);
+            }
         }
     }
 }
