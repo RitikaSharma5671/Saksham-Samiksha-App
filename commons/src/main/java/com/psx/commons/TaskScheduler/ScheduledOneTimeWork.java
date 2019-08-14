@@ -17,11 +17,31 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import timber.log.Timber;
 
+/**
+ * A custom wrapper around the {@link OneTimeWorkRequest} class that allows additional functionality
+ * defined in the {@link ScheduledTask} interface and also allows storing the work requests in
+ * {@link android.content.SharedPreferences}. This wrapper uses Android's {@link WorkManager} APIs.
+ * The {@link Manager} can keep a track of unfinished/cancelled {@link ScheduledOneTimeWork} requests
+ * and provides the user with an API to restart these tasks.
+ * This is useful in cases where some Chinese OEMs override default implementation of {@link WorkManager}
+ * to prevent running the background operations to increase battery life.
+ *
+ * @author Pranav Sharma
+ * @apiNote This class API can be extended to allow the user to pass "Constraints" like the one used by
+ * Android's WorkManager ({@link androidx.work.Constraints}). If {@link androidx.work.Constraints}
+ * class is not serializable, Constraints would have to be serialized manually.
+ */
 public class ScheduledOneTimeWork implements ScheduledTask {
 
     private OneTimeWorkRequest oneTimeWorkRequest;
     private Class clazz;
 
+    /**
+     * This function attempts to initialize a {@link ScheduledOneTimeWork} from a {@link Worker} class.
+     *
+     * @param clazz - The Worker class where you define the work that needs to be done in background.
+     * @throws InitializationException if the clazz parameter is not an instance of {@link Worker}.
+     */
     public static ScheduledOneTimeWork from(Class clazz) {
         if (Worker.class.isAssignableFrom(clazz)) {
             OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(clazz).build();
@@ -31,6 +51,17 @@ public class ScheduledOneTimeWork implements ScheduledTask {
         }
     }
 
+    /**
+     * This function attempts to initialize a {@link ScheduledOneTimeWork} from a {@link Worker} class.
+     *
+     * @param clazz              - The Worker class where you define the work that needs to be done in background.
+     * @param inputDataForWorker - Additional input parameters that may be required by the {@link Worker}
+     * @throws InitializationException if the clazz parameter is not an instance of {@link Worker}.
+     * @apiNote the inputDataForWorker is of type {@link Data} which is serializable, however, object
+     * size greater than 10KB would not be able to serialize, hence keep size of this param to a
+     * minimum.
+     * @see {https://developer.android.com/reference/androidx/work/Data.html}
+     */
     public static ScheduledOneTimeWork from(Class clazz, Data inputDataForWorker) {
         if (Worker.class.isAssignableFrom(clazz)) {
             OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(clazz)

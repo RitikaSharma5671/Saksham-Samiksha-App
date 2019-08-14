@@ -24,18 +24,38 @@ import java.util.UUID;
 
 import timber.log.Timber;
 
+/**
+ * A Manager class for managing {@link ScheduledOneTimeWork} requests.
+ *
+ * @author Pranav Sharma
+ */
 public class Manager {
 
     private static MainApplication mainApplication = null;
     private static Set<String> incompleteTasksArrayList = new ArraySet<>();
     private static final String INCOMPLETE_TASK_LIST = "incomplete_work";
 
+    /**
+     * The init method for the Manager. This method <b>must</b> be called prior to using any
+     * {@link ScheduledOneTimeWork} requests.
+     *
+     * @param mainApplication - The Application instance for the main app.
+     */
     public static void init(MainApplication mainApplication) {
         Manager.mainApplication = mainApplication;
         loadIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
     }
 
+    /**
+     * This method enqueues all the incomplete {@link ScheduledOneTimeWork} requests for running.
+     *
+     * @param context - The current activity/application context.
+     * @throws InitializationException if the init method is not called prior to using this.
+     * @apiNote Take extra caution while using activity context for this as it may cause memory leaks.
+     * If there is no activity level use of the Work (like updating UI) you can safely pass in applicationContext.
+     */
     public static void enqueueAllIncompleteTasks(@Nullable Context context) {
+        checkInit();
         Timber.d("Enqueuing All Tasks");
         SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
                 .getApplicationContext().getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
@@ -63,6 +83,12 @@ public class Manager {
         return mainApplication;
     }
 
+    /**
+     * This function checks if a task with give uuid is already saved in {@link SharedPreferences}
+     *
+     * @param uuid - The {@link UUID} of the task to be checked.
+     * @return {@code true} if the task is present in {@link SharedPreferences} {@code false} otherwise.
+     */
     static boolean isTaskAlreadyInPrefs(UUID uuid) {
         SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
                 .getApplicationContext()
@@ -70,6 +96,20 @@ public class Manager {
         return !Objects.requireNonNull(sharedPreferences.getString(uuid.toString(), "null")).equals("null");
     }
 
+    /**
+     * This function updates a previously {@link SavedTask} with a new UUID. Updating this requires
+     * updating the incompleteTasksArrayList (which is also persisted in SharedPreferences) as well as
+     * the {@link SavedTask} object saved in {@link SharedPreferences}.
+     *
+     * <p>The UUID for a given SavedTask needs to be updated because this is essentially a version of
+     * {@link ScheduledOneTimeWork} that can be saved in {@link SharedPreferences} and while recreating a
+     * {@link OneTimeWorkRequest} from a {@link ScheduledOneTimeWork}, the UUID of the work request
+     * changes, thus it is required to be updated in the local storage.</p>
+     *
+     * @param oldTask - The old {@link SavedTask} that was stored in SharedPreferences.
+     * @param newUUID - The UUID of the {@link OneTimeWorkRequest} created using {@link ScheduledOneTimeWork}
+     *                generated from {@link SavedTask#convertToScheduledOneTimeWork()}
+     */
     private static void updateTaskUuidInSharedPrefs(SavedTask oldTask, String newUUID) {
         if (incompleteTasksArrayList.contains(oldTask.strUUID)) {
             incompleteTasksArrayList.remove(oldTask.strUUID);
@@ -83,12 +123,26 @@ public class Manager {
         }
     }
 
+    /**
+     * This function updates the {@code Manager.incompleteTasksArrayList} with the latest values from
+     * the {@link SharedPreferences}
+     *
+     * @param context - The context used to access the {@link SharedPreferences}. Should ideally be
+     *                applicationContext to prevent memory leaks.
+     */
     private static void loadIncompleteTasksArrayList(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         incompleteTasksArrayList = sharedPreferences.getStringSet(INCOMPLETE_TASK_LIST, new ArraySet<>());
         System.out.println("Updated List is " + incompleteTasksArrayList);
     }
 
+    /**
+     * This function updates the incompleteTasksArrayList stored in the {@link SharedPreferences} from
+     * the values in {@code Manager.incompleteTasksArrayList}.
+     *
+     * @param context - The context used to access the SharedPreferences. Should ideally be applicationContext
+     *                in order to prevent memory leaks.
+     */
     @SuppressLint("ApplySharedPref")
     private static void updateIncompleteTasksArrayList(Context context) {
         Timber.d("Updating incomplete ArrayList");
@@ -102,12 +156,37 @@ public class Manager {
         loadIncompleteTasksArrayList(context);
     }
 
+    /**
+     * Function to check if the initialization of this class has been done.
+     *
+     * @throws InitializationException if class is not initialized prior to calling.
+     */
+    private static void checkInit() {
+        if (mainApplication == null)
+            throw new InitializationException(Manager.class, Manager.class.getCanonicalName() + " not initialised.\nPlease call init method.");
+    }
+
+
+    /**
+     * A class that converts a {@link OneTimeWorkRequest} in a form that can be saved in the
+     * {@link SharedPreferences}. This conversion is done using the {@link WorkInfo} of a {@link OneTimeWorkRequest}.
+     *
+     * @author Pranav Sharma
+     * @apiNote This class can be structured in a way that it works for all {@link ScheduledTask}
+     * instead of only {@link OneTimeWorkRequest}
+     */
     static class SavedTask implements Serializable {
 
         private Data data;
         private String strUUID;
         private String className;
 
+        /**
+         * Creates a {@link SavedTask} that can be saved in the {@link SharedPreferences}.
+         *
+         * @param workInfo - The {@link WorkInfo} of the {@link OneTimeWorkRequest}.
+         * @param clazz    - The {@link Worker} class used to create the {@link OneTimeWorkRequest}
+         */
         static SavedTask createSavedTaskFromWorkInfo(WorkInfo workInfo, Class clazz) {
             return new SavedTask(workInfo.getOutputData(), workInfo.getId().toString(), clazz.getCanonicalName());
         }
@@ -118,6 +197,11 @@ public class Manager {
             this.className = className;
         }
 
+        /**
+         * Converts the {@link SavedTask} to {@link ScheduledOneTimeWork}.
+         *
+         * @return ScheduledOneTimeWork equivalent of the current object.
+         */
         ScheduledOneTimeWork convertToScheduledOneTimeWork() {
             try {
                 if (data != null)
@@ -130,6 +214,11 @@ public class Manager {
             return null;
         }
 
+        /**
+         * Converts the {@link SavedTask} to Android's {@link WorkRequest}
+         *
+         * @return WorkRequest equivalent of this object.
+         */
         WorkRequest convertToWorkRequest() {
             try {
                 return new OneTimeWorkRequest.Builder(
@@ -142,6 +231,11 @@ public class Manager {
             }
         }
 
+        /**
+         * Saves the current object in the SharedPreferences. This function does not check if the
+         * task was already present in the Local storage, hence check should manually be made prior
+         * to calling this method.
+         */
         void saveTaskInSharedPrefs() {
             Timber.d("Saving Task in SharedPreferences");
             SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
@@ -154,6 +248,10 @@ public class Manager {
             addToIncompleteTaskArrayList();
         }
 
+        /**
+         * Clears a {@link SavedTask} with a given UUID from the SharedPreferences.
+         * This method also updates the {@code Manager.incompleteTasksArrayList} to reflect the changes.
+         */
         static void clearSavedTaskFromSharedPrefs(String UUID) {
             Timber.d("Clearing Task with UUID %s from Preferences", UUID);
             SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
@@ -165,6 +263,11 @@ public class Manager {
             removeFromIncompleteTaskArrayList(UUID);
         }
 
+        /**
+         * This method adds the current object's {@code strUUID} to the {@code Manager.incompleteTasksArrayList}
+         * and calls upon {@link Manager#updateIncompleteTasksArrayList(Context)} to persist the
+         * changes made to the object.
+         */
         private void addToIncompleteTaskArrayList() {
             if (!incompleteTasksArrayList.contains(strUUID)) {
                 Timber.d("Adding to incomplete ArrayList");
@@ -173,6 +276,11 @@ public class Manager {
             }
         }
 
+        /**
+         * This method removes the current object's {@code strUUID} from the {@code Manager.incompleteTasksArrayList}
+         * and calls upon {@link Manager#updateIncompleteTasksArrayList(Context)} to persist the
+         * changes made to the object.
+         */
         private static void removeFromIncompleteTaskArrayList(String UUID) {
             if (incompleteTasksArrayList.contains(UUID)) {
                 incompleteTasksArrayList.remove(UUID);
