@@ -1,6 +1,11 @@
 package org.odk.collect.android;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.psx.commons.MainApplication;
+
+import org.odk.collect.android.activities.InstanceUploaderListActivity;
 
 public class ODKDriver {
     public static final String LAUNCH_INTENT_ACTION = "com.psx.odk.START_ODK_APP";
@@ -30,6 +35,11 @@ public class ODKDriver {
         init(applicationInstance, splashScreenImageRes, customThemeId, customThemeId_FormEntry, customThemeId_Settings);
         modifyToolbarIcon = true;
         ODKDriver.toolbarIconResId = toolbarIconResId;
+    }
+
+    public static void launchInstanceUploaderListActivity(Context context) {
+        Intent intent = new Intent(context, InstanceUploaderListActivity.class);
+        context.startActivity(intent);
     }
 
     public static int getSplashScreenImageRes() {
