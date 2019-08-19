@@ -22,7 +22,7 @@ import com.samagra.customworkmanager.impl.WorkManagerImpl;
 
 /**
  * A {@link Runnable} that can start work on the
- * {@link androidx.work.impl.Processor}.
+ * {@link com.samagra.customworkmanager.impl.Processor}.
  * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

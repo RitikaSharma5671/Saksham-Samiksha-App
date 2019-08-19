@@ -39,7 +39,7 @@ import com.samagra.customworkmanager.impl.utils.taskexecutor.TaskExecutor;
 public class ConstraintProxyUpdateReceiver extends BroadcastReceiver {
     // Synthetic access
     static final String TAG = Logger.tagWithPrefix("ConstrntProxyUpdtRecvr");
-    static final String ACTION = "androidx.work.impl.background.systemalarm.UpdateProxies";
+    static final String ACTION = "com.samagra.customworkmanager.impl.background.systemalarm.UpdateProxies";
 
     static final String KEY_BATTERY_NOT_LOW_PROXY_ENABLED = "KEY_BATTERY_NOT_LOW_PROXY_ENABLED";
     static final String KEY_BATTERY_CHARGING_PROXY_ENABLED = "KEY_BATTERY_CHARGING_PROXY_ENABLED";

@@ -54,7 +54,7 @@ public class OperationImpl implements Operation {
     }
 
     /**
-     * Updates the {@link androidx.work.Operation.State} of the {@link Operation}.
+     * Updates the {@link com.samagra.customworkmanager.Operation.State} of the {@link Operation}.
      *
      * @param state The current {@link Operation.State}
      */

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.work;
+package com.samagra.customworkmanager;
 
 import androidx.test.core.app.ApplicationProvider;
 import com.samagra.customworkmanager.impl.WorkDatabase;

@@ -221,7 +221,7 @@ public class WorkContinuationImpl extends WorkContinuation {
 
     /**
      * @param continuation The {@link WorkContinuationImpl} instance.
-     * @param visited      The {@link Set} of {@link androidx.work.impl.model.WorkSpec} ids
+     * @param visited      The {@link Set} of {@link com.samagra.customworkmanager.impl.model.WorkSpec} ids
      *                     marked as visited.
      * @return {@code true} if the {@link WorkContinuationImpl} has a cycle.
      * @hide

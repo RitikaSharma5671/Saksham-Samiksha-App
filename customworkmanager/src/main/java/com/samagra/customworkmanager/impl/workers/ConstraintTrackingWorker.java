@@ -55,7 +55,7 @@ public class ConstraintTrackingWorker extends ListenableWorker implements WorkCo
      * The {@code className} of the {@link Worker} to delegate to.
      */
     public static final String ARGUMENT_CLASS_NAME =
-            "androidx.work.impl.workers.ConstraintTrackingWorker.ARGUMENT_CLASS_NAME";
+            "com.samagra.customworkmanager.impl.workers.ConstraintTrackingWorker.ARGUMENT_CLASS_NAME";
 
     private WorkerParameters mWorkerParameters;
 

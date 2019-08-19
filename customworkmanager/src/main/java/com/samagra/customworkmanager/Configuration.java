@@ -403,7 +403,7 @@ public final class Configuration {
      * A class that can provide the {@link Configuration} for WorkManager and allow for on-demand
      * initialization of WorkManager.  To do this:
      * <p><ul>
-     *   <li>Disable {@code androidx.work.impl.WorkManagerInitializer} in your manifest</li>
+     *   <li>Disable {@code com.samagra.customworkmanager.impl.WorkManagerInitializer} in your manifest</li>
      *   <li>Implement the {@link Provider} interface on your
      *   {@link android.app.Application} class</li>
      *   <li>Use {@link WorkManager#getInstance(Context)} when accessing WorkManger (NOT

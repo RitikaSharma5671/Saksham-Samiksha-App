@@ -28,7 +28,7 @@ import com.samagra.customworkmanager.impl.model.WorkTypeConverters;
 import com.samagra.customworkmanager.impl.utils.Preferences;
 
 /**
- * Migration helpers for {@link androidx.work.impl.WorkDatabase}.
+ * Migration helpers for {@link com.samagra.customworkmanager.impl.WorkDatabase}.
  *
  * @hide
  */
@@ -137,7 +137,7 @@ public class WorkDatabaseMigrations {
     };
 
     /**
-     * Adds {@link androidx.work.impl.model.WorkProgress}.
+     * Adds {@link com.samagra.customworkmanager.impl.model.WorkProgress}.
      */
     @NonNull
     public static Migration MIGRATION_6_7 = new Migration(VERSION_6, VERSION_7) {

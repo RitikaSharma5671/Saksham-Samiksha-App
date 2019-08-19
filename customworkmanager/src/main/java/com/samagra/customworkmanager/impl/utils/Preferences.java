@@ -35,7 +35,7 @@ import androidx.lifecycle.MutableLiveData;
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class Preferences {
 
-    private static final String PREFERENCES_FILE_NAME = "androidx.work.util.preferences";
+    private static final String PREFERENCES_FILE_NAME = "com.samagra.customworkmanager.util.preferences";
 
     private static final String KEY_LAST_CANCEL_ALL_TIME_MS = "last_cancel_all_time_ms";
     private static final String KEY_RESCHEDULE_NEEDED = "reschedule_needed";

@@ -68,7 +68,7 @@ public class WakeLocks {
 
     /**
      * Checks to see if there are any {@link PowerManager.WakeLock}s that
-     * {@link androidx.work.impl.background.systemalarm.SystemAlarmService} holds when all the
+     * {@link com.samagra.customworkmanager.impl.background.systemalarm.SystemAlarmService} holds when all the
      * pending commands have been drained in the command queue.
      */
     public static void checkWakeLocks() {

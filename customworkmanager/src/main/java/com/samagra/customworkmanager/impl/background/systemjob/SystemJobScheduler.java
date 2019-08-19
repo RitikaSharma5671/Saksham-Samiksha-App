@@ -234,7 +234,7 @@ public class SystemJobScheduler implements Scheduler {
     }
 
     /**
-     * Cancels all the jobs owned by {@link androidx.work.WorkManager} in {@link JobScheduler}.
+     * Cancels all the jobs owned by {@link com.samagra.customworkmanager.WorkManager} in {@link JobScheduler}.
      *
      * @param context The {@link Context} for the {@link JobScheduler}
      */

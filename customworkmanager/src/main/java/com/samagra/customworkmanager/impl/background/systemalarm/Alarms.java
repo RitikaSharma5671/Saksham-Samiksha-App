@@ -48,7 +48,7 @@ class Alarms {
      *
      * @param context         The application {@link Context}.
      * @param workManager     The instance of {@link WorkManagerImpl}.
-     * @param workSpecId      The {@link androidx.work.impl.model.WorkSpec} identifier.
+     * @param workSpecId      The {@link com.samagra.customworkmanager.impl.model.WorkSpec} identifier.
      * @param triggerAtMillis Determines when to trigger the Alarm.
      */
     public static void setAlarm(
@@ -77,7 +77,7 @@ class Alarms {
      *
      * @param context     The application {@link Context}.
      * @param workManager The instance of {@link WorkManagerImpl}.
-     * @param workSpecId  The {@link androidx.work.impl.model.WorkSpec} identifier.
+     * @param workSpecId  The {@link com.samagra.customworkmanager.impl.model.WorkSpec} identifier.
      */
     public static void cancelAlarm(
             @NonNull Context context,

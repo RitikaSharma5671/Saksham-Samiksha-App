@@ -72,7 +72,7 @@ import static com.samagra.customworkmanager.impl.model.WorkTypeConverters.StateI
 public abstract class WorkDatabase extends RoomDatabase {
 
     @VisibleForTesting
-    public static final String DB_NAME = "androidx.work.workdb";
+    public static final String DB_NAME = "com.samagra.customworkmanager.workdb";
     // Delete rows in the workspec table that...
     private static final String PRUNE_SQL_FORMAT_PREFIX = "DELETE FROM workspec WHERE "
             // are completed...

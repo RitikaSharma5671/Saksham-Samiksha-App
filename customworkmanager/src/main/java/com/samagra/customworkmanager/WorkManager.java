@@ -124,7 +124,7 @@ import java.util.concurrent.TimeUnit;
  * WorkManager singleton to be setup before your code can run in most cases.  This is suitable for
  * most developers.  However, you can provide a custom {@link Configuration} by using
  * {@link Configuration.Provider} or
- * {@link WorkManager#initialize(Context, androidx.work.Configuration)}.
+ * {@link WorkManager#initialize(Context, com.samagra.customworkmanager.Configuration)}.
  * <p>
  * <a name="worker_class_names"></a>
  * <b>Renaming and Removing ListenableWorker Classes</b>
@@ -185,7 +185,7 @@ public abstract class WorkManager {
      * {@link Configuration}.  By default, this method should not be called because WorkManager is
      * automatically initialized.  To initialize WorkManager yourself, please follow these steps:
      * <p><ul>
-     * <li>Disable {@code androidx.work.impl.WorkManagerInitializer} in your manifest.
+     * <li>Disable {@code com.samagra.customworkmanager.impl.WorkManagerInitializer} in your manifest.
      * <li>Invoke this method in {@code Application#onCreate} or a {@code ContentProvider}. Note
      * that this method <b>must</b> be invoked in one of these two places or you risk getting a
      * {@code NullPointerException} in {@link #getInstance(Context)}.

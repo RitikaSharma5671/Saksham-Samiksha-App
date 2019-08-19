@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-package androidx.work;
-
-import static com.samagra.customworkmanager.WorkInfo.State.BLOCKED;
-import static com.samagra.customworkmanager.WorkInfo.State.FAILED;
-import static com.samagra.customworkmanager.WorkInfo.State.SUCCEEDED;
-import static com.samagra.customworkmanager.impl.Scheduler.MAX_SCHEDULER_LIMIT;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+package com.samagra.customworkmanager;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+
 import com.samagra.customworkmanager.impl.model.WorkSpec;
 import com.samagra.customworkmanager.impl.model.WorkSpecDao;
 import com.samagra.customworkmanager.worker.TestWorker;
@@ -38,6 +28,16 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static com.samagra.customworkmanager.WorkInfo.State.BLOCKED;
+import static com.samagra.customworkmanager.WorkInfo.State.FAILED;
+import static com.samagra.customworkmanager.WorkInfo.State.SUCCEEDED;
+import static com.samagra.customworkmanager.impl.Scheduler.MAX_SCHEDULER_LIMIT;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 
 @RunWith(AndroidJUnit4.class)
 public class WorkSpecDaoTest extends DatabaseTest {

@@ -25,7 +25,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import java.util.UUID;
 
 /**
- * Updates progress for a {@link androidx.work.ListenableWorker}.
+ * Updates progress for a {@link com.samagra.customworkmanager.ListenableWorker}.
  */
 public interface ProgressUpdater {
 

@@ -34,7 +34,7 @@ public class IdGenerator {
     /** The initial id used for JobInfos and Alarms. */
     public static final int INITIAL_ID = 0;
 
-    static final String PREFERENCE_FILE_KEY = "androidx.work.util.id";
+    static final String PREFERENCE_FILE_KEY = "com.samagra.customworkmanager.util.id";
     static final String NEXT_JOB_SCHEDULER_ID_KEY = "next_job_scheduler_id";
     static final String NEXT_ALARM_MANAGER_ID_KEY = "next_alarm_manager_id";
 

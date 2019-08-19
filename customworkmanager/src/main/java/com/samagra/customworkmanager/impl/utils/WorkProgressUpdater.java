@@ -34,7 +34,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import java.util.UUID;
 
 /**
- * Persists {@link androidx.work.ListenableWorker} progress in a {@link WorkDatabase}.
+ * Persists {@link com.samagra.customworkmanager.ListenableWorker} progress in a {@link WorkDatabase}.
  *
  * @hide
  */

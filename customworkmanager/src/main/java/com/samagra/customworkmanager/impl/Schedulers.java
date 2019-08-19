@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * Helper methods for {@link Scheduler}s.
  *
- * Helps schedule {@link androidx.work.impl.model.WorkSpec}s while enforcing
+ * Helps schedule {@link com.samagra.customworkmanager.impl.model.WorkSpec}s while enforcing
  * {@link Scheduler#MAX_SCHEDULER_LIMIT}s.
  *
  * @hide
@@ -46,7 +46,7 @@ import java.util.List;
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class Schedulers {
 
-    public static final String GCM_SCHEDULER = "androidx.work.impl.background.gcm.GcmScheduler";
+    public static final String GCM_SCHEDULER = "com.samagra.customworkmanager.impl.background.gcm.GcmScheduler";
     private static final String TAG = Logger.tagWithPrefix("Schedulers");
 
     /**

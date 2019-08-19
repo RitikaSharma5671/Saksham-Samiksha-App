@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.work;
+package com.samagra.customworkmanager;
 
 import static android.database.sqlite.SQLiteDatabase.CONFLICT_FAIL;
 

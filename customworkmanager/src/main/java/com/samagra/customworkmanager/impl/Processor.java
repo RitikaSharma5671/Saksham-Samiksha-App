@@ -185,7 +185,7 @@ public class Processor implements ExecutionListener {
     }
 
     /**
-     * @param workSpecId The {@link androidx.work.impl.model.WorkSpec} id
+     * @param workSpecId The {@link com.samagra.customworkmanager.impl.model.WorkSpec} id
      * @return {@code true} if the id was enqueued in the processor.
      */
     public boolean isEnqueued(@NonNull String workSpecId) {

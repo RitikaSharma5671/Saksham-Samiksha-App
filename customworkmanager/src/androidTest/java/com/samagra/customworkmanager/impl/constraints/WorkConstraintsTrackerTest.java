@@ -19,8 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
-import com.samagra.customworkmanager.impl.constraints.WorkConstraintsCallback;
-import com.samagra.customworkmanager.impl.constraints.WorkConstraintsTracker;
 import com.samagra.customworkmanager.impl.constraints.controllers.ConstraintController;
 import com.samagra.customworkmanager.impl.model.WorkSpec;
 
@@ -38,16 +36,13 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
 
 @SmallTest
 @RunWith(AndroidJUnit4.class)
 public class WorkConstraintsTrackerTest {
     private static final List<String> TEST_WORKSPEC_IDS = new ArrayList<>();
+
     static {
         TEST_WORKSPEC_IDS.add("A");
         TEST_WORKSPEC_IDS.add("B");
@@ -73,7 +68,7 @@ public class WorkConstraintsTrackerTest {
 
     @Before
     public void setUp() {
-        ConstraintController[] controllers = new ConstraintController[] {mMockController};
+        ConstraintController[] controllers = new ConstraintController[]{mMockController};
         mWorkConstraintsTracker = new WorkConstraintsTracker(mCallback, controllers);
     }
 
@@ -84,8 +79,7 @@ public class WorkConstraintsTrackerTest {
         ArgumentCaptor<ConstraintController.OnConstraintUpdatedCallback> captor =
                 ArgumentCaptor.forClass(ConstraintController.OnConstraintUpdatedCallback.class);
 
-        mWorkConstraintsTracker.replace(emptyList);
-        verify(mMockController).replace(emptyList);
+        mWorkConstraintsTracker.replace(emptyList);(mMockController).replace(emptyList);
         verify(mMockController, times(2)).setCallback(captor.capture());
         assertThat(captor.getAllValues().size(), is(2));
         assertThat(captor.getAllValues().get(0), is(nullValue()));
