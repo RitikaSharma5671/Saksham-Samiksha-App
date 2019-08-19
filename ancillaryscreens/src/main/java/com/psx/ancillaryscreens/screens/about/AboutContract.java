@@ -33,7 +33,7 @@ public interface AboutContract {
     }
 
     interface Presenter<V extends View, I extends Interactor> extends MvpPresenter<V, I> {
-
+        void test(int x, int y, float z);
     }
 }
 

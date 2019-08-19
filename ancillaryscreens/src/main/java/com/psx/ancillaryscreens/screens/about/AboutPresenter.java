@@ -1,7 +1,10 @@
 package com.psx.ancillaryscreens.screens.about;
 
+import com.samagra.customworkmanager.Data;
+
 import com.psx.ancillaryscreens.base.BasePresenter;
 import com.psx.ancillaryscreens.data.network.BackendCallHelper;
+import com.psx.commons.TaskScheduler.ScheduledOneTimeWork;
 
 import javax.inject.Inject;
 
@@ -18,5 +21,16 @@ public class AboutPresenter<V extends AboutContract.View, I extends AboutContrac
     @Inject
     public AboutPresenter(I mvpInteractor, BackendCallHelper apiHelper, CompositeDisposable compositeDisposable) {
         super(mvpInteractor, apiHelper, compositeDisposable);
+    }
+
+
+    @Override
+    public void test(int x, int y, float z) {
+        Data data = new Data.Builder()
+                .putInt("X", x)
+                .putInt("Y", y)
+                .putFloat("Z", z)
+                .build();
+        ScheduledOneTimeWork.from(SampleWorker.class, data).enqueueTask(getMvpView().getActivityContext());
     }
 }

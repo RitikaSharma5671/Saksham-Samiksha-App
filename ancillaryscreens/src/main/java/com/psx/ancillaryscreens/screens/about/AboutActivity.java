@@ -48,6 +48,7 @@ public class AboutActivity extends BaseActivity implements AboutContract.View, A
             configureActivityFromBundle(getIntent().getBundleExtra("config"));
         initToolbar();
         setupRecyclerView();
+        aboutPresenter.test(0, 1000, 0.0001f);
     }
 
     @Override

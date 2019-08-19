@@ -200,7 +200,9 @@ dependencies {
     // named "nbi-stubs", which causes there to be at least one .so library
     // present for every ABI (armeabi, armeabi-v7a, arm64-v8a, x86, x86_64).
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    implementation project(":commons")
+    implementation(project(":commons")) {
+        exclude group: "com.samagra.customworkmanager"
+    }
 
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.browser:browser:1.0.0'
@@ -317,10 +319,12 @@ dependencies {
     // WorkManager for specifying deferrable, asynchronous tasks
     implementation("android.arch.work:work-runtime:${rootProject.workManagerVersion}") {
         exclude group: 'com.google.guava', module: 'listenablefuture'
+        force true
     }
     // Optional JobDispatcher support so devices with Play Services do better than AlarmManager
     implementation("android.arch.work:work-firebase:${rootProject.workManagerVersion}") {
         exclude group: 'com.google.guava', module: 'listenablefuture'
+        force true
     }
 
     // Makes binding to Views easy:

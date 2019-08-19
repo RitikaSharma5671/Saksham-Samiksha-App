@@ -14,7 +14,7 @@ import com.psx.odktest.base.BasePresenter;
 import com.psx.odktest.ui.SearchActivity.SearchActivity;
 import com.psx.odktest.ui.VisitsScreen.MyVisitsActivity;
 
-import org.odk.collect.android.activities.InstanceUploaderListActivity;
+import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.activities.WebViewActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.ActionListener;
@@ -71,7 +71,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void onSubmitFormClicked(View v) {
-        launchActivity(InstanceUploaderListActivity.class);
+        ODKDriver.launchInstanceUploaderListActivity(getMvpView().getActivityContext());
     }
 
     @Override

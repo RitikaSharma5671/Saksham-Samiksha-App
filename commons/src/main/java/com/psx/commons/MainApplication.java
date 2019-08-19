@@ -3,13 +3,15 @@ package com.psx.commons;
 import android.app.Activity;
 import android.app.Application;
 
+import androidx.lifecycle.LifecycleOwner;
+
 /**
  * The Application class must implement this interface. This makes sure that the application class of the app
  * implements certain functionality required by the commons module.
  *
  * @author Pranav Sharma
  */
-public interface MainApplication {
+public interface MainApplication extends LifecycleOwner {
 
     /**
      * Must provide a {@link androidx.annotation.NonNull} activity instance of the activity running in foreground.
