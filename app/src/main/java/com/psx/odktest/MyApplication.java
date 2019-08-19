@@ -63,7 +63,6 @@ public class MyApplication extends Collect implements MainApplication, Lifecycle
         setupActivityLifecycleListeners();
         InternetMonitor.init(this);
         Manager.init(this);
-        Manager.enqueueAllIncompleteTasks(this);
         AncillaryScreensDriver.init(this, AppConstants.BASE_API_URL);
         ODKDriver.init(this, R.drawable.splash_screen_ss, R.style.BaseAppTheme, R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
         compositeDisposable.add(this.getEventBus()

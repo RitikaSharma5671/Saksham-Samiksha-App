@@ -1,21 +1,24 @@
 package com.psx.commons.TaskScheduler;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkInfo;
-import androidx.work.WorkRequest;
-import androidx.work.Worker;
 
 import com.google.gson.Gson;
 import com.psx.commons.Constants;
 import com.psx.commons.InitializationException;
 import com.psx.commons.MainApplication;
+import com.samagra.customworkmanager.Configuration;
+import com.samagra.customworkmanager.Data;
+import com.samagra.customworkmanager.OneTimeWorkRequest;
+import com.samagra.customworkmanager.WorkInfo;
+import com.samagra.customworkmanager.WorkManager;
+import com.samagra.customworkmanager.WorkRequest;
+import com.samagra.customworkmanager.Worker;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -36,13 +39,17 @@ public class Manager {
     private static final String INCOMPLETE_TASK_LIST = "incomplete_work";
 
     /**
-     * The init method for the Manager. This method <b>must</b> be called prior to using any
-     * {@link ScheduledOneTimeWork} requests.
+     * The init method for the Manager. This method <b>must</b> be called in {@link Application#onCreate()},
+     * prior to using any {@link ScheduledOneTimeWork} requests.
      *
      * @param mainApplication - The Application instance for the main app.
      */
     public static void init(MainApplication mainApplication) {
         Manager.mainApplication = mainApplication;
+        Configuration myConfig = new Configuration.Builder()
+                .setMinimumLoggingLevel(android.util.Log.INFO)
+                .build();
+        WorkManager.initialize(mainApplication.getCurrentApplication().getApplicationContext(), myConfig);
         loadIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
     }
 

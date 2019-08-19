@@ -22,6 +22,7 @@ import com.psx.commons.ExchangeObject;
 import com.psx.commons.InternetMonitor;
 import com.psx.commons.MainApplication;
 import com.psx.commons.Modules;
+import com.psx.commons.TaskScheduler.Manager;
 import com.psx.odktest.AppConstants;
 import com.psx.odktest.R;
 import com.psx.odktest.UtilityFunctions;
@@ -84,6 +85,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
         homePresenter.setWelcomeText();
         homePresenter.applySettings();
         homePresenter.downloadForms();
+        Manager.enqueueAllIncompleteTasks(this);
         InternetMonitor.startMonitoringInternet();
     }
 

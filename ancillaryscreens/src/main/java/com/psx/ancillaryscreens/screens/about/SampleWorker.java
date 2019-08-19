@@ -3,9 +3,11 @@ package com.psx.ancillaryscreens.screens.about;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.work.Data;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
+
+import com.samagra.customworkmanager.Data;
+import com.samagra.customworkmanager.Worker;
+import com.samagra.customworkmanager.WorkerParameters;
+
 
 public class SampleWorker extends Worker {
 

@@ -1,6 +1,6 @@
 package com.psx.ancillaryscreens.screens.about;
 
-import androidx.work.Data;
+import com.samagra.customworkmanager.Data;
 
 import com.psx.ancillaryscreens.base.BasePresenter;
 import com.psx.ancillaryscreens.data.network.BackendCallHelper;
