@@ -53,6 +53,7 @@ public class LoginPresenterTest {
 
     private LoginPresenter<LoginContract.View, LoginContract.Interactor> loginPresenter;
 
+    // TODO: Refactor this to an activity rule and use it everywhere instead of adding it to every test.
     @BeforeClass
     public static void setUpRxSchedulers() {
         Scheduler immediate = new Scheduler() {
