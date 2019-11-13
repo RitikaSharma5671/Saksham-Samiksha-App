@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">ODK Test</string>
+    <string name="app_name" translatable="false">Saksham Samiksha</string>
     <string name="view_issues" translatable="false">View Issues</string>
     <string name="submit_form" translatable="false">Submit Form</string>
     <string name="inspect_school" translatable="false">Inspect School</string>

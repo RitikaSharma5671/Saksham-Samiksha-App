@@ -3,9 +3,11 @@ package org.odk.collect.android;
 import android.content.Context;
 import android.content.Intent;
 
-import com.psx.commons.MainApplication;
+import com.samagra.commons.MainApplication;
 
 import org.odk.collect.android.activities.InstanceUploaderListActivity;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.utilities.DownloadFormListUtils;
 
 public class ODKDriver {
     public static final String LAUNCH_INTENT_ACTION = "com.psx.odk.START_ODK_APP";
@@ -69,4 +71,6 @@ public class ODKDriver {
     public static boolean isModifyToolbarIcon() {
         return modifyToolbarIcon;
     }
+
+    public static DownloadFormListUtils getDownloadFormListUtils() {return Collect.getInstance().getComponent().downloadFormListUtils();}
 }

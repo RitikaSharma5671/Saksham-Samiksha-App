@@ -1,1 +1,1 @@
-include ':app', ':collect_app', ':commons', ':ancillaryscreens', ':customworkmanager'
+include ':app', ':collect_app', ':commons', ':ancillaryscreens', ':customworkmanager', ':grove'

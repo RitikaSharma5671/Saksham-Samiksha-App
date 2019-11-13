@@ -31,9 +31,20 @@ public class UnzipDataTask {
 
     private WeakReference<Context> contextWeakReference;
     private File outputFile = new File(Collect.ODK_ROOT + "/data.json");
+    private InputStream inputStream = null;
 
     public UnzipDataTask(Context context) {
+        int resID = R.raw.school_data_json;
         contextWeakReference = new WeakReference<>(context);
+        this.inputStream =  context
+                .getApplicationContext()
+                .getResources()
+                .openRawResource(resID);
+    }
+
+    public UnzipDataTask(Context context, InputStream inputStream){
+        this.contextWeakReference = new WeakReference<Context>(context);
+        this.inputStream = inputStream;
     }
 
     /**
@@ -86,14 +97,6 @@ public class UnzipDataTask {
             byte[] buffer = new byte[1024];
 
             try {
-                int resID = R.raw.school_data_json;
-                if (BuildConfig.FLAVOR.equals("adaptArmy")) resID = R.raw.gp_data_json;
-                if (BuildConfig.FLAVOR.equals("ams")) resID = R.raw.saksham_data_json;
-                InputStream inputStream = context
-                        .getApplicationContext()
-                        .getResources()
-                        .openRawResource(resID);
-
                 GZIPInputStream gzis = new GZIPInputStream(inputStream);
                 FileOutputStream out = new FileOutputStream(outputFile);
 

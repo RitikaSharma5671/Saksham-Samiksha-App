@@ -29,8 +29,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.psx.commons.ExchangeObject;
-import com.psx.commons.Modules;
+import com.samagra.commons.ExchangeObject;
+import com.samagra.commons.Modules;
 
 import org.odk.collect.android.BackgroundRxCalls.RxEvents;
 import org.odk.collect.android.BackgroundRxCalls.UnzipDataTask;
