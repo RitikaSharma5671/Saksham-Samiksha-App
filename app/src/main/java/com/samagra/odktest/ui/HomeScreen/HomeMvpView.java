@@ -1,5 +1,7 @@
 package com.samagra.odktest.ui.HomeScreen;
 
+import android.content.Intent;
+
 import com.samagra.odktest.base.MvpView;
 
 /**
@@ -28,4 +30,6 @@ public interface HomeMvpView extends MvpView {
     void initializeLogoutListener();
 
     void showFormsStillDownloading();
+
+    void goToForms(Intent i);
 }

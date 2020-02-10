@@ -18,23 +18,13 @@ import java.util.List;
 //TODO : Document the functions
 public interface SearchMvpPresenter<V extends SearchMvpView, I extends SearchMvpInteractor> extends MvpPresenter<V, I> {
 
-    void loadValuesToMemory();
+    void loadValuesToMemory(int selectedFormID);
 
     void updateStarterFile(String formName, School selectedSchool);
 
     void addKeyboardListeners(KeyboardHandler keyboardHandler);
 
     boolean isUDISEValid(String udise, String previousUdise);
-
-    ArrayList<String> getDistrictValues();
-
-    ArrayList<String> getBlockValuesForSelectedDistrict(String district);
-
-    ArrayList<String> getClusterValuesForSelectedBlock(String selectedBlock);
-
-    ArrayList<String> getSchoolValuesForSelectedCluster(String selectedCluster);
-
-    School getSchoolObject(String selectedDistrict, String selectedBlock, String selectedCluster, String selectedSchoolName);
 
     List<School> getSchoolList();
 }

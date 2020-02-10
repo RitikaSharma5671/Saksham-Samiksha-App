@@ -58,6 +58,7 @@ public class FormChooserList extends FormListActivity implements
 
     private static final boolean EXIT = true;
     private DiskSyncTask diskSyncTask;
+    Intent intentPrevious;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class FormChooserList extends FormListActivity implements
         setContentView(R.layout.form_chooser_list);
 
         setTitle(getString(R.string.enter_data));
+        intentPrevious = this.getIntent();
 
         new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
@@ -119,22 +121,15 @@ public class FormChooserList extends FormListActivity implements
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Bundle bundle = intentPrevious.getExtras();
         if (Collect.allowClick(getClass().getName())) {
             // get uri to form
             long idFormsTable = listView.getAdapter().getItemId(position);
-            Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI, idFormsTable);
+            bundle.putLong("selectedFormID", idFormsTable);
 
-            String action = getIntent().getAction();
-            if (Intent.ACTION_PICK.equals(action)) {
-                // caller is waiting on a picked form
-                setResult(RESULT_OK, new Intent().setData(formUri));
-            } else {
-                // caller wants to view/edit a form, so launch formentryactivity
-                Intent intent = new Intent(Intent.ACTION_EDIT, formUri);
-                intent.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
-                startActivity(intent);
-            }
-            
+            Intent intent = new Intent();
+            intent.putExtras(bundle);
+            setResult(RESULT_OK, intent);
             finish();
         }
     }

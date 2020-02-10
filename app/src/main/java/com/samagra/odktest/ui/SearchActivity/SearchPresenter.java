@@ -1,7 +1,10 @@
 package com.samagra.odktest.ui.SearchActivity;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
@@ -19,6 +22,11 @@ import com.samagra.odktest.tasks.SearchSchoolTask;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.helpers.ContentResolverHelper;
+import org.odk.collect.android.dto.Form;
+import org.odk.collect.android.logic.FormInfo;
+import org.odk.collect.android.provider.FormsProviderAPI;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -63,7 +71,17 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
 
     //TODO : Make Asynchronous for less delay in loading
     @Override
-    public void loadValuesToMemory() {
+    public void loadValuesToMemory(int selectedFormID) {
+        Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, selectedFormID);
+        String formPath = ContentResolverHelper.getFormPath(formUri);
+        List<Form> allForms = getFormsFromDatabase();
+        String formID = "";
+        for(Form form: allForms){
+            if(form.getFormFilePath().equals(formPath)){
+                formID = form.getJrFormId();
+            }
+        }
+        Timber.e(formID);
         File dataFile = new File(Collect.ODK_ROOT + "/data.json");
         try {
             JsonReader jsonReader = new JsonReader(new FileReader(dataFile));
@@ -154,7 +172,7 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
 
 
     private void addDummySchoolAtTheStart() {
-        School dummy = new School(" Select District", " Select Block", " Select Cluster", "", " Select School");
+        School dummy = new School(" Select District", " Select Block", " Select School");
         schools.add(0, dummy);
     }
 
@@ -176,7 +194,6 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
             return testString.matches();
     }
 
-    @Override
     public ArrayList<String> getDistrictValues() {
         ArrayList<String> districtValues = new ArrayList<>();
         for (int i = 0; i < schools.size(); i++) {
@@ -185,7 +202,6 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
         return SearchSchoolTask.makeUnique(districtValues);
     }
 
-    @Override
     public ArrayList<String> getBlockValuesForSelectedDistrict(String district) {
         ArrayList<String> blockValues = new ArrayList<>();
         for (int i = 0; i < schools.size(); i++) {
@@ -197,34 +213,20 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
 
     }
 
-    @Override
-    public ArrayList<String> getClusterValuesForSelectedBlock(String selectedBlock) {
-        ArrayList<String> blockValues = new ArrayList<>();
-        for (int i = 0; i < schools.size(); i++) {
-            if (schools.get(i).block.equals(selectedBlock)) {
-                blockValues.add(schools.get(i).cluster);
+    ArrayList<String> getSchoolValuesForSelectedBlock(String selectedBlock, String selectedDistrict) {
+        ArrayList<String> schoolValues = new ArrayList<>();
+        for (int i=0; i<schools.size(); i++){
+            if(schools.get(i).block.equals(selectedBlock) && schools.get(i).district.equals(selectedDistrict)){
+                schoolValues.add(schools.get(i).schoolName);
             }
         }
-        return SearchSchoolTask.makeUnique(blockValues);
+        return SearchSchoolTask.makeUnique(schoolValues);
     }
 
-    @Override
-    public ArrayList<String> getSchoolValuesForSelectedCluster(String selectedCluster) {
-        ArrayList<String> blockValues = new ArrayList<>();
-        for (int i = 0; i < schools.size(); i++) {
-            if (schools.get(i).cluster.equals(selectedCluster)) {
-                blockValues.add(schools.get(i).schoolName);
-            }
-        }
-        return SearchSchoolTask.makeUnique(blockValues);
-    }
-
-    @Override
-    public School getSchoolObject(String selectedDistrict, String selectedBlock, String selectedCluster, String selectedSchoolName) {
+    public School getSchoolObject(String selectedDistrict, String selectedBlock, String selectedSchoolName) {
         for (School school : schools) {
             if (school.district.equals(selectedDistrict)
                     && school.block.equals(selectedBlock)
-                    && school.cluster.equals(selectedCluster)
                     && school.schoolName.equals(selectedSchoolName)
             ) return school;
         }
@@ -235,5 +237,11 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
     @NonNull
     public List<School> getSchoolList() {
         return schools;
+    }
+
+    public List<Form> getFormsFromDatabase() {
+        FormsDao fd = new FormsDao();
+        Cursor cursor = fd.getFormsCursor();
+        return fd.getFormsFromCursor(cursor);
     }
 }

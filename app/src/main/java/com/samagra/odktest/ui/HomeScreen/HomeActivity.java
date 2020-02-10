@@ -68,6 +68,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
     private Snackbar progressSnackbar = null;
 
     private Unbinder unbinder;
+    int requestCodeInit = 123;
 
     @Inject
     HomePresenter<HomeMvpView, HomeMvpInteractor> homePresenter;
@@ -278,8 +279,25 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                 }, Timber::e);
     }
 
+
+
     @Override
     public void showFormsStillDownloading() {
         showSnackbar("Forms are downloading, please wait..", Snackbar.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == requestCodeInit) {
+            if (resultCode == RESULT_OK) {
+               Bundle searchBundle = data.getExtras();
+               homePresenter.goToSearch(searchBundle);
+            }
+        }
+    }
+
+    public void goToForms(Intent i){
+        this.startActivityForResult(i, requestCodeInit);
     }
 }

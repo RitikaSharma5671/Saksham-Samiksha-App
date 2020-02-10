@@ -1,7 +1,10 @@
 package com.samagra.odktest.ui.SearchActivity;
 
 import android.annotation.SuppressLint;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,11 +26,17 @@ import com.samagra.odktest.helper.KeyboardHandler;
 
 import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.activities.FormChooserList;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dto.Form;
+import org.odk.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.SnackbarUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -43,6 +52,7 @@ import static com.samagra.odktest.UtilityFunctions.hideKeyboard;
  * abstracted from this Activity. It <b>must</b> implement the {@link SearchMvpView} and extend the {@link BaseActivity}.
  *
  * @author Pranav Sharma
+ * @author Chakshu Gautam
  */
 public class SearchActivity extends BaseActivity implements SearchMvpView {
 
@@ -50,23 +60,20 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
     public Spinner districtSpinner;
     @BindView(R.id.block_spinner)
     public Spinner blockSpinner;
-    @BindView(R.id.cluster_spinner)
-    public Spinner clusterSpinner;
     @BindView(R.id.school_spinner)
     public Spinner schoolSpinner;
     @BindView(R.id.next_button)
     public Button nextButton;
-    @BindView(R.id.search_bar)
-    public EditText udiseTextBox;
     @BindView(android.R.id.content)
     public FrameLayout rootView;
 
-    private String selectedDistrict, selectedBlock, selectedCluster, selectedSchoolName;
+    private String selectedDistrict, selectedBlock, selectedSchoolName;
     School selectedSchool;
-    private String previousUDISE;
     private KeyboardHandler keyboardHandler;
     public boolean isChangedFromEditText = false;
     private Intent intent;
+
+    int selectedFormID;
 
     @Inject
     SearchPresenter<SearchMvpView, SearchMvpInteractor> searchPresenter;
@@ -84,9 +91,9 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
         setupToolbar();
         initializeKeyboardHandler();
         searchPresenter.addKeyboardListeners(keyboardHandler);
-        searchPresenter.loadValuesToMemory();
+        selectedFormID = (int) intent.getExtras().getLong("selectedFormID");
+        searchPresenter.loadValuesToMemory(selectedFormID);
         initSpinners();
-        initUDISEBox();
         initNextButton();
     }
 
@@ -133,94 +140,35 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
     @SuppressWarnings("unchecked")
     private void initSpinners() {
         nextButton.setEnabled(false);
-        blockSpinner.setEnabled(false);
-        clusterSpinner.setEnabled(false);
-        schoolSpinner.setEnabled(false);
+        makeSpinnerDefault(blockSpinner);
+        makeSpinnerDefault(schoolSpinner);
 
         ArrayAdapter<String> districtSpinnerAdapter = addValuesToSpinner(districtSpinner, searchPresenter.getDistrictValues());
         setListenerOnDistrictSpinner();
         setListenerOnBlockSpinner();
-        setListenerOnClusterSpinner();
         setListenerOnSchoolSpinner();
-    }
-
-    private void initUDISEBox() {
-        udiseTextBox.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Update spinners
-                boolean found = false;
-                if (searchPresenter.isUDISEValid(s.toString(), previousUDISE)) {
-                    for (School school : searchPresenter.getSchoolList()) {
-                        if (school.udise.equals(s.toString())) {
-                            hideKeyboard(SearchActivity.this);
-                            selectedSchool = school;
-                            found = true;
-                            isChangedFromEditText = true;
-
-                            ArrayList<String> districtValues = searchPresenter.getDistrictValues();
-                            addValuesToSpinner(districtSpinner, districtValues);
-                            selectedDistrict = school.district;
-                            districtSpinner.setSelection(districtValues.indexOf(school.district));
-
-                            ArrayList<String> blockValues = searchPresenter.getBlockValuesForSelectedDistrict(school.district);
-                            addValuesToSpinner(blockSpinner, blockValues);
-                            selectedBlock = school.block;
-                            blockSpinner.setSelection(blockValues.indexOf(school.block));
-
-                            ArrayList<String> clusterValues = searchPresenter.getClusterValuesForSelectedBlock(school.block);
-                            addValuesToSpinner(clusterSpinner, clusterValues);
-                            selectedCluster = school.cluster;
-                            clusterSpinner.setSelection(clusterValues.indexOf(school.cluster));
-
-                            ArrayList<String> schoolValues = searchPresenter.getSchoolValuesForSelectedCluster(school.cluster);
-                            addValuesToSpinner(schoolSpinner, schoolValues);
-                            selectedSchoolName = school.schoolName;
-                            schoolSpinner.setSelection(schoolValues.indexOf(school.schoolName));
-
-                            previousUDISE = s.toString();
-
-                        }
-                    }
-                    if (!found) {
-                        hideKeyboard(SearchActivity.this);
-                        SnackbarUtils.showLongSnackbar(rootView, "It seems you have entered a UDISE number not in the database. Please check");
-                    }
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
     private void setListenerOnDistrictSpinner() {
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!isChangedFromEditText) {
-                    selectedDistrict = parent.getItemAtPosition(position).toString();
-                    blockSpinner.setEnabled(true);
-                    blockSpinner.setClickable(true);
-                    keyboardHandler.spinner = null;
-                    ArrayAdapter<String> blockSpinnerAdapter = addValuesToSpinner(
-                            blockSpinner,
-                            searchPresenter.getBlockValuesForSelectedDistrict(selectedDistrict)
-                    );
+                selectedDistrict = parent.getItemAtPosition(position).toString();
+                keyboardHandler.spinner = null;
+                ArrayAdapter<String> blockSpinnerAdapter = addValuesToSpinner(
+                        blockSpinner,
+                        searchPresenter.getBlockValuesForSelectedDistrict(selectedDistrict)
+                );
+                if(!selectedDistrict.equals(" Select District")) makeSpinnerLive(blockSpinner);
+                else {
+                    makeSpinnerDefault(blockSpinner);
+                    makeSpinnerDefault(schoolSpinner);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 makeSpinnerDefault(blockSpinner);
-                makeSpinnerDefault(clusterSpinner);
                 makeSpinnerDefault(schoolSpinner);
             }
         });
@@ -232,37 +180,15 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!isChangedFromEditText) {
                     selectedBlock = parent.getItemAtPosition(position).toString();
-                    clusterSpinner.setEnabled(true);
-                    clusterSpinner.setClickable(true);
                     keyboardHandler.spinner = null;
                     ArrayAdapter<String> clusterSpinnerAdapter = addValuesToSpinner(
-                            clusterSpinner,
-                            searchPresenter.getClusterValuesForSelectedBlock(selectedBlock)
-                    );
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                makeSpinnerDefault(clusterSpinner);
-                makeSpinnerDefault(schoolSpinner);
-            }
-        });
-    }
-
-    private void setListenerOnClusterSpinner() {
-        clusterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!isChangedFromEditText) {
-                    selectedCluster = parent.getItemAtPosition(position).toString();
-                    schoolSpinner.setEnabled(true);
-                    schoolSpinner.setClickable(true);
-                    keyboardHandler.spinner = null;
-                    ArrayAdapter<String> schoolSpinnerAdapter = addValuesToSpinner(
                             schoolSpinner,
-                            searchPresenter.getSchoolValuesForSelectedCluster(selectedCluster)
+                            searchPresenter.getSchoolValuesForSelectedBlock(selectedBlock, selectedDistrict)
                     );
+                    if(!selectedBlock.equals(" Select Block")) makeSpinnerLive(schoolSpinner);
+                    else{
+                        makeSpinnerDefault(schoolSpinner);
+                    }
                 }
             }
 
@@ -278,17 +204,16 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 keyboardHandler.spinner = null;
-                if (!isChangedFromEditText) {
-                    selectedSchoolName = parent.getItemAtPosition(position).toString();
-                    selectedSchool = searchPresenter.getSchoolObject(selectedDistrict, selectedBlock, selectedCluster, selectedSchoolName);
-                }
-                if (selectedSchool != null && !isChangedFromEditText && previousUDISE != selectedSchool.udise) {
-                    previousUDISE = selectedSchool.udise;
-                    udiseTextBox.setText(selectedSchool.udise);
-                }
+                selectedSchoolName = parent.getItemAtPosition(position).toString();
+                selectedSchool = searchPresenter.getSchoolObject(selectedDistrict, selectedBlock, selectedSchoolName);
                 isChangedFromEditText = false;
                 // Enable the next button
-                nextButton.setEnabled(true);
+                if(!selectedSchoolName.equals(" Select School")){
+                    nextButton.setEnabled(true);
+                }else{
+                    nextButton.setEnabled(true);
+                }
+
             }
 
             @Override
@@ -311,7 +236,6 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
         spinner.setOnTouchListener((v, event) -> {
             keyboardHandler.spinner = spinner;
             keyboardHandler.isDropDownOpen = true;
-            if (keyboardHandler.isUDISEKeyboardShowing) keyboardHandler.closeUDISEKeyboard();
             return false;
         });
         return spinnerAdapter;
@@ -319,9 +243,10 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
 
     private void initNextButton() {
         nextButton.setOnClickListener(v -> {
-            if (selectedSchool.district.equals("Select District")) {
-                SnackbarUtils.showLongSnackbar(rootView, "Please select a school using the dropdown or enter UDISE number.");
+            if (selectedSchool.district.equals(" Select District")) {
+                SnackbarUtils.showLongSnackbar(rootView, "Please select a school using the dropdown.");
             } else {
+
                 Bundle bundle = intent.getExtras();
                 HashMap<String, String> forms = (HashMap<String, String>)bundle.getSerializable("forms");
 
@@ -331,10 +256,22 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
                     searchPresenter.updateStarterFile((String) pair.getValue(), selectedSchool);
                     it.remove();
                 }
-                Intent i = new Intent(getApplicationContext(),
-                        FormChooserList.class);
-                startActivity(i);
-                finish();
+                if (Collect.allowClick(getClass().getName())) {
+                    // get uri to form
+                    Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, selectedFormID);
+                    String action = getIntent().getAction();
+                    if (Intent.ACTION_PICK.equals(action)) {
+                        // caller is waiting on a picked form
+                        setResult(RESULT_OK, new Intent().setData(formUri));
+                    } else {
+                        // caller wants to view/edit a form, so launch FormEntryActivity
+                        Intent intent = new Intent(Intent.ACTION_EDIT, formUri);
+                        intent.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+                        startActivity(intent);
+                    }
+
+                    finish();
+                }
             }
         });
     }
@@ -349,6 +286,11 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
     public void makeSpinnerDefault(Spinner spinner) {
         spinner.setEnabled(false);
         spinner.setClickable(false);
+    }
+
+    public void makeSpinnerLive(Spinner spinner){
+        spinner.setEnabled(true);
+        spinner.setClickable(true);
     }
 
     @Override

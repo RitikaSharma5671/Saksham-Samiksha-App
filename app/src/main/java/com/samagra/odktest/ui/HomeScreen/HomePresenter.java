@@ -36,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.ODKDriver;
+import org.odk.collect.android.activities.FormChooserList;
 import org.odk.collect.android.activities.WebViewActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
@@ -78,6 +79,8 @@ import timber.log.Timber;
  */
 public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> extends BasePresenter<V, I> implements HomeMvpPresenter<V, I> {
 
+
+
     // Used to maintain the state of Form download.
     enum Status {
         SUCCESS,
@@ -88,6 +91,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     private HashMap<String, String> formsToBeDownloaded = new HashMap<>();
     List<Form> formsFromDB;
     boolean updateStarted = false;
+    private Intent intent;
 
     /**
      * The injected values is provided through {@link com.samagra.odktest.di.modules.ActivityAbstractProviders}
@@ -106,8 +110,12 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void onInspectSchoolClicked(View v) {
+
         if (formsDownloadStatus.equals(Status.SUCCESS)) {
-            startSearchActivity(SearchActivity.class);
+            Intent i = new Intent(getMvpView().getActivityContext().getApplicationContext(),
+                    FormChooserList.class);
+            i.putExtras(getSearchBundle());
+            getMvpView().goToForms(i);
         }else{
             getMvpView().showFormsStillDownloading();
         }
@@ -236,6 +244,12 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         });
     }
 
+    public void goToSearch(Bundle searchBundle) {
+        Intent intent = new Intent(getMvpView().getActivityContext(), SearchActivity.class);
+        intent.putExtras(searchBundle);
+        launchActivity(SearchActivity.class, intent);
+    }
+
     @Override
     public boolean isNetworkConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getMvpView()
@@ -280,6 +294,17 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         bundle.putSerializable("forms", formsToBeAutoFilled);
         intent.putExtras(bundle);
         launchActivity(cls, intent);
+    }
+
+    private Bundle getSearchBundle(){
+        Bundle bundle = new Bundle();
+        List<Form> formsFromDB = getFormsFromDatabase();
+        HashMap<String, String> formsToBeAutoFilled = new HashMap<>();
+        for (Form form : formsFromDB) {
+            formsToBeAutoFilled.put(form.getJrFormId(), form.getFormFilePath());
+        }
+        bundle.putSerializable("forms", formsToBeAutoFilled);
+        return bundle;
     }
 
     public HashMap<String, String> downloadFormList(String role) {

@@ -62,9 +62,6 @@ public class SearchSchoolTask extends AsyncTask<String, Void, List<School>> {
             for (int i = 0; i < data.size(); i++) {
                 districts.add(data.get(i).district);
                 blocks.add(data.get(i).block);
-                clusters.add(data.get(i).cluster);
-                villages.add(data.get(i).village);
-                udises.add(data.get(i).udise);
                 schoolNames.add(data.get(i).schoolName);
             }
 
@@ -92,10 +89,10 @@ public class SearchSchoolTask extends AsyncTask<String, Void, List<School>> {
             double[] ratios = new double[data.size()];
             ArrayList<Double> ratiosFiltered = new ArrayList<Double>();
 
-            for (int i = 0; i < data.size(); i++) {
-                int ratio = FuzzySearch.tokenSetPartialRatio(searchString, data.get(i).getStringForSearch());
-                ratios[i] = ratio;
-            }
+//            for (int i = 0; i < data.size(); i++) {
+//                int ratio = FuzzySearch.tokenSetPartialRatio(searchString, data.get(i).getStringForSearch());
+//                ratios[i] = ratio;
+//            }
             Timber.e("Ratios Calculated");
         } catch (Exception e) {
             Timber.e(e);

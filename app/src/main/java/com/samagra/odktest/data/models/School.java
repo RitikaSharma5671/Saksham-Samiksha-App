@@ -11,57 +11,162 @@ public class School {
 
     public String district;
     public String block;
-    public String cluster;
-    public String village;
-    public String udise;
     public String schoolName;
-    public String gp;
-    String schoolType;
-    String ruralOrUrban;
-    String academicCycle;
-    String pinCode;
-    String latDeg;
-    String latMin;
-    String latSec;
-    String lonDeg;
-    String lonMin;
-    String lonSec;
+    public String schoolCode;
+    public String schoolType;
+    public String isPrimary;
+    public String isElementary;
+    public String elemMentor;
+    public String elemMonitor;
+    public String SAT;
+    public String secMentor;
+    public String secMonitor;
+    public String elemSsa;
+    public String eecSsa;
+    public String sampark;
 
-    public String getStringForSearch() {
-        return this.district + " "
-                + this.block + " "
-                + this.cluster + " "
-                + this.village + " "
-                + this.udise + " "
-                + this.schoolName;
+    public School(String district, String block, String schoolName, String schoolCode, String schoolType, String isPrimary, String isElementary, String elemMentor, String elemMonitor, String SAT, String secMentor, String secMonitor, String elemSsa, String eecSsa, String sampark) {
+        this.district = district;
+        this.block = block;
+        this.schoolName = schoolName;
+        this.schoolCode = schoolCode;
+        this.schoolType = schoolType;
+        this.isPrimary = isPrimary;
+        this.isElementary = isElementary;
+        this.elemMentor = elemMentor;
+        this.elemMonitor = elemMonitor;
+        this.SAT = SAT;
+        this.secMentor = secMentor;
+        this.secMonitor = secMonitor;
+        this.elemSsa = elemSsa;
+        this.eecSsa = eecSsa;
+        this.sampark = sampark;
     }
 
-    public School(String district, String block, String cluster, String udise, String schoolName) {
-        this.schoolName = schoolName;
-        this.cluster = cluster;
+    public School(String district, String block, String schoolName) {
+        this.district = district;
         this.block = block;
-        this.udise = udise;
+        this.schoolName = schoolName;
+    }
+
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
         this.district = district;
     }
 
-    public School(String district, String block, String cluster, String udise, String schoolName, String gp) {
-        this.schoolName = schoolName;
-        this.cluster = cluster;
+    public String getBlock() {
+        return block;
+    }
+
+    public void setBlock(String block) {
         this.block = block;
-        this.udise = udise;
-        this.district = district;
-        this.gp = gp;
     }
 
-    LatLng getLatLon() {
-        return new LatLng(getLatDegree(), getLonDegree());
+    public String getSchoolName() {
+        return schoolName;
     }
 
-    Double getLatDegree() {
-        return parseDouble(this.latDeg) + parseDouble(this.latMin) / 60.0 + parseDouble(this.latSec) / 3600.0;
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 
-    Double getLonDegree() {
-        return parseDouble(this.lonDeg) + parseDouble(this.lonMin) / 60.0 + parseDouble(this.lonSec) / 3600.0;
+    public String getSchoolCode() {
+        return schoolCode;
+    }
+
+    public void setSchoolCode(String schoolCode) {
+        this.schoolCode = schoolCode;
+    }
+
+    public String getSchoolType() {
+        return schoolType;
+    }
+
+    public void setSchoolType(String schoolType) {
+        this.schoolType = schoolType;
+    }
+
+    public String getIsPrimary() {
+        return isPrimary;
+    }
+
+    public void setIsPrimary(String isPrimary) {
+        this.isPrimary = isPrimary;
+    }
+
+    public String getIsElementary() {
+        return isElementary;
+    }
+
+    public void setIsElementary(String isElementary) {
+        this.isElementary = isElementary;
+    }
+
+    public String getElemMentor() {
+        return elemMentor;
+    }
+
+    public void setElemMentor(String elemMentor) {
+        this.elemMentor = elemMentor;
+    }
+
+    public String getElemMonitor() {
+        return elemMonitor;
+    }
+
+    public void setElemMonitor(String elemMonitor) {
+        this.elemMonitor = elemMonitor;
+    }
+
+    public String getSAT() {
+        return SAT;
+    }
+
+    public void setSAT(String SAT) {
+        this.SAT = SAT;
+    }
+
+    public String getSecMentor() {
+        return secMentor;
+    }
+
+    public void setSecMentor(String secMentor) {
+        this.secMentor = secMentor;
+    }
+
+    public String getSecMonitor() {
+        return secMonitor;
+    }
+
+    public void setSecMonitor(String secMonitor) {
+        this.secMonitor = secMonitor;
+    }
+
+    public String getElemSsa() {
+        return elemSsa;
+    }
+
+    public void setElemSsa(String elemSsa) {
+        this.elemSsa = elemSsa;
+    }
+
+    public String getEecSsa() {
+        return eecSsa;
+    }
+
+    public void setEecSsa(String eecSsa) {
+        this.eecSsa = eecSsa;
+    }
+
+    public String getSampark() {
+        return sampark;
+    }
+
+    public void setSampark(String sampark) {
+        this.sampark = sampark;
     }
 }
