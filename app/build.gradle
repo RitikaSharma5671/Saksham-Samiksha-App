@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 /*apply plugin: 'io.fabric'*/
 
 android {
@@ -69,6 +71,20 @@ dependencies {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0-beta01'
+    androidTestUtil 'com.android.support.test:orchestrator:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
+
     compile project(path: ':grove')
     compile project(path: ':grove')
+
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.0') {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+    }
+
+    compile "androidx.core:core-ktx:+"
+    compile "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

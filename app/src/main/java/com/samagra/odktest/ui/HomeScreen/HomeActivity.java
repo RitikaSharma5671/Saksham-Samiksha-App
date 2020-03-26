@@ -27,8 +27,10 @@ import com.samagra.odktest.AppConstants;
 import com.samagra.odktest.R;
 import com.samagra.odktest.UtilityFunctions;
 import com.samagra.odktest.base.BaseActivity;
+import com.samagra.odktest.ui.settings.ChangeLanguageActivity;
 
 import org.odk.collect.android.ODKDriver;
+import org.odk.collect.android.preferences.GeneralKeys;
 
 import java.util.ArrayList;
 
@@ -227,6 +229,11 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         if (logoutListener == null)
                             initializeLogoutListener();
                         AncillaryScreensDriver.performLogout(this);
+                        break;
+                    case R.id.change_app_language:
+                        Intent intent = new Intent(this, ChangeLanguageActivity.class);
+                        intent.putExtra(GeneralKeys.TITLE, getResources().getString(R.string.settings));
+                        getActivityContext().startActivity(intent);
                         break;
                 }
                 return true;

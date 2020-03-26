@@ -7,4 +7,16 @@
         <item>Additional Charge</item>
         <item>Stopgap Arrangement (BRCCs)</item>
     </string-array>
+
+    <!--Login Page-->
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="submit">Submit</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="helpline">HELPLINE</string>
+
+    <string name="reset_password">Reset Password</string>
+
+
 </resources>

@@ -68,7 +68,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="Login"
+                    android:text="@string/login"
                     android:textAlignment="center"
                     android:textSize="25sp" />
 
@@ -90,7 +90,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:hint="Username"
+                        android:hint="@string/username"
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         android:maxLines="1"
@@ -121,7 +121,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:hint="Password"
+                        android:hint="@string/password"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:paddingLeft="16dp"
@@ -137,7 +137,7 @@
                     android:layout_height="0dp"
                     android:layout_gravity="center"
                     android:layout_weight="3"
-                    android:text="Submit" />
+                    android:text="@string/submit" />
 
                 <TextView
                     android:id="@+id/forgot_password"
@@ -145,7 +145,7 @@
                     android:gravity="center"
                     android:layout_gravity="center_vertical"
                     android:textAlignment="center"
-                    android:text="Forgot Password?"
+                    android:text="@string/forgot_password"
                     android:layout_weight="2"
                     android:layout_width="match_parent"
                     android:layout_height="0dp" />
@@ -161,7 +161,7 @@
                     android:gravity="center_vertical"
                     android:layout_gravity="center"
                     android:textAlignment="center"
-                    android:text="HELPLINE"
+                    android:text="@string/helpline"
                     android:layout_weight="2.1"
                     android:layout_width="150dp"
                     android:layout_height="0dp">

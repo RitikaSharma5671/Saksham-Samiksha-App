@@ -88,7 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start|end"
         android:backgroundTint="@color/colorPrimary"
-        android:text="Reset Password"
+        android:text="@string/reset_password"
         android:textColor="@color/white"
         app:backgroundTint="@color/appBlue"
         app:layout_anchor="@id/fab"

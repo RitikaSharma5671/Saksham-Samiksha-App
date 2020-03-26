@@ -37,6 +37,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.samagra.odktest.ui.settings.ChangeLanguageActivity"
+            android:theme="@style/BaseAppTheme" />
     </application>
 
 </manifest>
