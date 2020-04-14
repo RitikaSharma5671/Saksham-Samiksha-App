@@ -37,6 +37,8 @@ dependencies {
     implementation project(":collect_app")
     implementation project(":commons")
     implementation project(":ancillaryscreens")
+    implementation project(path: ':update_module')
+
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Firebase

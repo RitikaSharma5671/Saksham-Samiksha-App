@@ -28,6 +28,7 @@ import com.samagra.odktest.R;
 import com.samagra.odktest.UtilityFunctions;
 import com.samagra.odktest.base.BaseActivity;
 import com.samagra.odktest.ui.settings.ChangeLanguageActivity;
+import com.samagra.update.UpdateApp;
 
 import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.preferences.GeneralKeys;
@@ -74,6 +75,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
 
     @Inject
     HomePresenter<HomeMvpView, HomeMvpInteractor> homePresenter;
+    UpdateApp mUpdateApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,9 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
         homePresenter.applySettings();
         Manager.enqueueAllIncompleteTasks(this);
         InternetMonitor.startMonitoringInternet();
+
+        mUpdateApp = UpdateApp.Builder(this);
+        mUpdateApp = new UpdateApp(this);
     }
 
     @Override

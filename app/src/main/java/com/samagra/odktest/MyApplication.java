@@ -28,6 +28,7 @@ import com.samagra.grove.LoggableApplication;
 import com.samagra.odktest.di.component.ApplicationComponent;
 import com.samagra.odktest.di.component.DaggerApplicationComponent;
 import com.samagra.odktest.di.modules.ApplicationModule;
+import com.samagra.update.UpdateDriver;
 
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.ODKDriver;
@@ -71,6 +72,7 @@ public class MyApplication extends Collect implements MainApplication, Lifecycle
         setupRemoteConfig();
         setupActivityLifecycleListeners();
         InternetMonitor.init(this);
+        UpdateDriver.init(this);
         Grove.init(this);
         Manager.init(this);
         AncillaryScreensDriver.init(this, AppConstants.BASE_API_URL);

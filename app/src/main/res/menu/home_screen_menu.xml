@@ -12,6 +12,9 @@
     <item
         android:id="@+id/profile"
         android:title="Profile" />
+    <item
+        android:id="@+id/change_app_language"
+        android:title="@string/change_app_language" />
 
     <item
         android:id="@+id/helpline"
