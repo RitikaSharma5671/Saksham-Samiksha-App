@@ -22,6 +22,7 @@ import com.samagra.odktest.tasks.SearchSchoolTask;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.helpers.ContentResolverHelper;
 import org.odk.collect.android.dto.Form;
@@ -65,8 +66,8 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
     private List<School> schools = new ArrayList<>();
 
     @Inject
-    public SearchPresenter(I mvpInteractor) {
-        super(mvpInteractor);
+    public SearchPresenter(I mvpInteractor, IFormManagementContract iFormManagementContract) {
+        super(mvpInteractor, iFormManagementContract);
     }
 
     //TODO : Make Asynchronous for less delay in loading

@@ -35,5 +35,10 @@
     <string name="error_in_change_pass">The server responded with an error. Please retry again</string>
     <string name="error_sending_otp">Error sending OTP. Please contact admin</string>
     <string name="pass_did_not_match">Passwords didn\'t match.</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="submit">SUBMIT</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="login">LOGIN</string>
 
 </resources>

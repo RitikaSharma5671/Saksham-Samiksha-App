@@ -2,6 +2,8 @@ package com.samagra.ancillaryscreens.base;
 
 import com.samagra.ancillaryscreens.data.network.BackendCallHelper;
 
+import org.odk.collect.android.contracts.IFormManagementContract;
+
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -23,6 +25,7 @@ public interface MvpPresenter<V extends MvpView, I extends MvpInteractor> {
     void onAttach(V mvpView);
 
     void onDetach();
+    IFormManagementContract getIFormManagementContract();
 
     boolean isViewAttached();
 }

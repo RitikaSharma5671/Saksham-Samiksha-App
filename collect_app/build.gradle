@@ -71,7 +71,7 @@ android {
 
     defaultConfig {
         /*applicationId('org.odk.collect.android')*/
-        minSdkVersion(16)
+        minSdkVersion(19)
         targetSdkVersion(26)
         versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
         versionName getVersionName()

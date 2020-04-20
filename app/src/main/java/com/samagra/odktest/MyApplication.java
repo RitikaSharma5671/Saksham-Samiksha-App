@@ -25,6 +25,7 @@ import com.samagra.commons.RxBus;
 import com.samagra.commons.TaskScheduler.Manager;
 import com.samagra.grove.Grove;
 import com.samagra.grove.LoggableApplication;
+import com.samagra.ancillaryscreens.di.FormManagementCommunicator;
 import com.samagra.odktest.di.component.ApplicationComponent;
 import com.samagra.odktest.di.component.DaggerApplicationComponent;
 import com.samagra.odktest.di.modules.ApplicationModule;
@@ -32,6 +33,8 @@ import com.samagra.odktest.di.modules.ApplicationModule;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.contracts.FormsComponentManager;
+import org.odk.collect.android.contracts.FormManagementSectionInteractor;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -74,10 +77,17 @@ public class MyApplication extends Collect implements MainApplication, Lifecycle
         Grove.init(this);
         Manager.init(this);
         AncillaryScreensDriver.init(this, AppConstants.BASE_API_URL, "", "", "");
-        ODKDriver.init(this, R.drawable.splash_screen, R.style.BaseAppTheme, R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
-        initBus();
+        initializeFormManagementPackage();
+         initBus();
     }
 
+
+ private void initializeFormManagementPackage() {
+        FormsComponentManager.registerFormManagementPackage(this, AppConstants.BASE_API_URL,new FormManagementSectionInteractor());
+        FormManagementCommunicator.setContract(FormsComponentManager.iFormManagementContract);
+        FormsComponentManager.iFormManagementContract.setODKModuleStyle(this, R.drawable.splash_screen, R.style.BaseAppTheme,
+                R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
+    }
     private void initBus() {
         compositeDisposable.add(this.getEventBus()
                 .toObservable().subscribeOn(Schedulers.io())

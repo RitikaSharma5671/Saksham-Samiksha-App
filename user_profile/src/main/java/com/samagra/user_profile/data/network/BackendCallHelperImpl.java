@@ -81,7 +81,7 @@ public class BackendCallHelperImpl implements BackendCallHelper {
 
     @Override
     public Single<JSONObject> performSearchUserByPhoneCall(String phone, String apiKey){
-        String json = "{\"search\":{\"queryString\":\"(registrations.applicationId: e35c5e36-c8da-460e-b1f0-f6ecaf20aebb) AND (data.phone: " + phone + ")\",\"sortFields\":[{\"name\":\"email\"}]}}";
+        String json = "{\"search\":{\"queryString\":\"(registrations.applicationId: 1ae074db-32f3-4714-a150-cc8a370eafd1) AND (data.phone: " + phone + ")\",\"sortFields\":[{\"name\":\"email\"}]}}";
         JSONObject body = new JSONObject();
         try {
             body = new JSONObject(json);
@@ -100,7 +100,7 @@ public class BackendCallHelperImpl implements BackendCallHelper {
 
     @Override
     public Single<JSONObject> performSearchUserByEmailCall(String email, String apiKey){
-        String json = "{\"search\":{\"queryString\":\"(registrations.applicationId: e35c5e36-c8da-460e-b1f0-f6ecaf20aebb) AND (email: " + email + ")\",\"sortFields\":[{\"name\":\"email\"}]}}";
+        String json = "{\"search\":{\"queryString\":\"(registrations.applicationId: 1ae074db-32f3-4714-a150-cc8a370eafd1) AND (email: " + email + ")\",\"sortFields\":[{\"name\":\"email\"}]}}";
         JSONObject body = new JSONObject();
         try {
             body = new JSONObject(json);

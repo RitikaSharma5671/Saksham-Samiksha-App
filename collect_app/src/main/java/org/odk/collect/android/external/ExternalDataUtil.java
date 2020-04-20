@@ -217,7 +217,7 @@ public final class ExternalDataUtil {
      *
      * @param valueColumn    single string to appear first.
      * @param displayColumns comma-separated string
-     * @return A {@link java.util.LinkedHashMap} that contains the SQL columns as keys, and the CSV
+     * @return A {@link LinkedHashMap} that contains the SQL columns as keys, and the CSV
      * columns as values
      */
     public static LinkedHashMap<String, String> createMapWithDisplayingColumns(String valueColumn,

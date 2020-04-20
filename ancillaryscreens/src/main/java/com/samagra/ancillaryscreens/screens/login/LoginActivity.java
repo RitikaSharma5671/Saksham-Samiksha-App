@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -56,7 +57,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @BindView(R2.id.pwdLayout)
     public TextInputLayout pwdLayout;
     @BindView(R2.id.loginParentlayout)
-    public RelativeLayout loginParentLayout;
+    public ConstraintLayout loginParentLayout;
 
     private Unbinder unbinder;
 

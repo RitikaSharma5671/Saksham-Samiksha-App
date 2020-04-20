@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -62,6 +62,9 @@ dependencies {
     api "io.reactivex.rxjava2:rxandroid:2.1.1"
     api "io.reactivex.rxjava2:rxjava:2.2.10"
 
+    implementation 'androidx.browser:browser:1.2.0'
+
+
     // Dependency Injection
     api "com.google.dagger:dagger:2.19"
     api 'javax.inject:javax.inject:1'
@@ -78,6 +81,8 @@ dependencies {
     //api "androidx.work:work-rxjava2:2.2.0"
 
     //Android architecture components - Lifecycle
+    implementation "com.karumi:dexter:6.0.1"
+
     api "androidx.lifecycle:lifecycle-runtime:2.0.0"
     api "androidx.lifecycle:lifecycle-extensions:2.0.0"
 }

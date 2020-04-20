@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
@@ -57,8 +58,8 @@ public class SubmissionsPresenter<V extends SubmissionsMvpView, I extends Submis
         extends BasePresenter<V, I> implements SubmissionsMvpPresenter<V, I> {
 
     @Inject
-    public SubmissionsPresenter(I mvpInteractor) {
-        super(mvpInteractor);
+    public SubmissionsPresenter(I mvpInteractor, IFormManagementContract iFormManagementContract) {
+        super(mvpInteractor, iFormManagementContract);
     }
 
 

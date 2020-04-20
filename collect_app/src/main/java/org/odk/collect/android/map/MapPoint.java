@@ -80,7 +80,7 @@ public class MapPoint implements Parcelable {
 
     // Implementation of the Parcelable interface.
 
-    public static final Parcelable.Creator<MapPoint> CREATOR = new Parcelable.Creator<MapPoint>() {
+    public static final Creator<MapPoint> CREATOR = new Creator<MapPoint>() {
         public MapPoint createFromParcel(Parcel parcel) {
             return new MapPoint(parcel);
         }

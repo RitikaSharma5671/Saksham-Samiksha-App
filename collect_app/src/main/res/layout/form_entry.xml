@@ -72,6 +72,7 @@ the License.
                 android:textStyle="bold"
                 android:padding="10dp"
                 android:visibility="gone"
+                android:textColor="@color/mapPointFill"
                 android:drawableLeft="@drawable/ic_navigate_back_wrapped"
                 android:drawableStart="@drawable/ic_navigate_back_wrapped" />
 
@@ -93,6 +94,7 @@ the License.
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:textStyle="bold"
                 android:padding="10dp"
+                android:textColor="@color/mapPointFill"
                 android:visibility="gone"
                 android:drawableRight="@drawable/ic_navigate_forward_wrapped"
                 android:drawableEnd="@drawable/ic_navigate_forward_wrapped" />

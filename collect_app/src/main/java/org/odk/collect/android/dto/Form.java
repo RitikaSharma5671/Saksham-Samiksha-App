@@ -41,7 +41,7 @@ public class Form {
     private final String autoDelete;
     private final String lastDetectedFormVersionHash;
 
-    private Form(Form.Builder builder) {
+    private Form(Builder builder) {
         id = builder.id;
         displayName = builder.displayName;
         description = builder.description;

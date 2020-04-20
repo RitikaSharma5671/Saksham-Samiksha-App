@@ -129,8 +129,8 @@ public class DriveListItem implements Comparable<DriveListItem>, Parcelable {
         type = pc.readInt();
     }
 
-    public static final Parcelable.Creator<DriveListItem> CREATOR =
-            new Parcelable.Creator<DriveListItem>() {
+    public static final Creator<DriveListItem> CREATOR =
+            new Creator<DriveListItem>() {
 
                 public DriveListItem createFromParcel(Parcel pc) {
                     return new DriveListItem(pc);

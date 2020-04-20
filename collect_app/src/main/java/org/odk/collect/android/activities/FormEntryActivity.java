@@ -25,6 +25,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -54,6 +56,18 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.common.collect.ImmutableList;
@@ -202,6 +216,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     public static final String LOCATION_RESULT = "LOCATION_RESULT";
     public static final String BEARING_RESULT = "BEARING_RESULT";
     public static final String GEOSHAPE_RESULTS = "GEOSHAPE_RESULTS";
+    public static final String GEOTRACE_RESULTS = "GEOTRACE_RESULTS";
     public static final String ANSWER_KEY = "ANSWER_KEY";
 
     public static final String KEY_INSTANCES = "instances";
@@ -715,7 +730,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
 
         if (resultCode == RESULT_CANCELED) {
-            if (getCurrentViewIfODKView() != null) {
+            // request was canceled...
+            if (requestCode != RequestCodes.HIERARCHY_ACTIVITY && getCurrentViewIfODKView() != null) {
                 getCurrentViewIfODKView().cancelWaitingForBinaryData();
             }
             return;
@@ -723,7 +739,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         // intent is needed for all requestCodes except of DRAW_IMAGE, ANNOTATE_IMAGE, SIGNATURE_CAPTURE, IMAGE_CAPTURE and HIERARCHY_ACTIVITY
         if (intent == null && requestCode != RequestCodes.DRAW_IMAGE && requestCode != RequestCodes.ANNOTATE_IMAGE
-                && requestCode != RequestCodes.SIGNATURE_CAPTURE && requestCode != RequestCodes.IMAGE_CAPTURE) {
+                && requestCode != RequestCodes.SIGNATURE_CAPTURE && requestCode != RequestCodes.IMAGE_CAPTURE
+                && requestCode != RequestCodes.HIERARCHY_ACTIVITY) {
             Timber.w("The intent has a null value for requestCode: " + requestCode);
             ToastUtils.showLongToast(getString(R.string.null_intent_value));
             return;
@@ -744,6 +761,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(sb);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
+                refreshCurrentView();
                 return;
             }
         }
@@ -754,6 +773,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(osmFileName);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.EX_STRING_CAPTURE:
             case RequestCodes.EX_INT_CAPTURE:
@@ -765,6 +785,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     if (getCurrentViewIfODKView() != null) {
                         getCurrentViewIfODKView().setBinaryData(externalValue);
                     }
+                    saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 }
                 break;
             case RequestCodes.EX_GROUP_CAPTURE:
@@ -808,6 +829,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(nf);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.ALIGNED_IMAGE:
                 /*
@@ -831,6 +853,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(nf);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.ARBITRARY_FILE_CHOOSER:
             case RequestCodes.AUDIO_CHOOSER:
@@ -897,26 +920,36 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(sl);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.GEOSHAPE_CAPTURE:
-                String gshr = intent.getStringExtra(ANSWER_KEY);
+                String gshr = intent.getStringExtra(GEOSHAPE_RESULTS);
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(gshr);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.GEOTRACE_CAPTURE:
-                String traceExtra = intent.getStringExtra(ANSWER_KEY);
+                String traceExtra = intent.getStringExtra(GEOTRACE_RESULTS);
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(traceExtra);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.BEARING_CAPTURE:
                 String bearing = intent.getStringExtra(BEARING_RESULT);
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(bearing);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
+            case RequestCodes.HIERARCHY_ACTIVITY:
+                // We may have jumped to a new index in hierarchy activity, so
+                // refresh
+                break;
+
         }
+        refreshCurrentView();
     }
 
     public QuestionWidget getWidgetWaitingForBinaryData() {
@@ -975,8 +1008,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_JUMP_TO);
 
-        menu.findItem(R.id.menu_goto).setVisible(useability)
-                .setEnabled(useability);
+        menu.findItem(R.id.menu_goto).setVisible(false)
+                .setEnabled(false);
 
         FormController formController = getFormController();
 
@@ -990,8 +1023,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
 
-        menu.findItem(R.id.menu_preferences).setVisible(useability)
-                .setEnabled(useability);
+        menu.findItem(R.id.menu_preferences).setVisible(false)
+                .setEnabled(false);
+
 
         if (shouldLocationCoordinatesBeCollected(getFormController()) && LocationClients.areGooglePlayServicesAvailable(this)) {
             MenuItem backgroundLocation = menu.findItem(R.id.track_location);
@@ -1000,6 +1034,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
 
         return true;
+    }
+
+    private boolean getActualUsability(boolean useability, boolean isShikshaSathi) {
+        return !isShikshaSathi && useability;
     }
 
     @Override
@@ -1477,6 +1515,14 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
     }
 
+    //Check Interrnet Method
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     /**
      * If moving backwards is allowed, displays the view for the previous question or field list.
      * Steps the global {@link FormController} to the previous question and saves answers to the
@@ -1868,7 +1914,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             items = ImmutableList.of(new IconMenuItem(R.drawable.ic_save, R.string.keep_changes),
                     new IconMenuItem(R.drawable.ic_delete, R.string.do_not_save));
         } else {
-            items = ImmutableList.of(new IconMenuItem(R.drawable.ic_delete, R.string.do_not_save));
+            items = ImmutableList.of(new IconMenuItem(R.drawable.ic_delete_black_24dp, R.string.do_not_save));
         }
 
         ListView listView = DialogUtils.createActionListView(this);
@@ -2151,7 +2197,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     @Override
     protected void onResume() {
         super.onResume();
-
+        initToolbar();
         if (!areStoragePermissionsGranted(this)) {
             onResumeWasCalledWithoutPermissions = true;
             return;
@@ -2174,6 +2220,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 return;
             }
         }
+
+
+
 
         FormController formController = getFormController();
 
@@ -2272,9 +2321,11 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             saveToDiskTask.setFormSavedListener(null);
             // We have to call cancel to terminate the thread, otherwise it
             // lives on and retains the FEC in memory.
-            if (saveToDiskTask.getStatus() == AsyncTask.Status.FINISHED) {
-                saveToDiskTask.cancel(true);
-                saveToDiskTask = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
+                if (saveToDiskTask.getStatus() == AsyncTask.Status.FINISHED) {
+                    saveToDiskTask.cancel(true);
+                    saveToDiskTask = null;
+                }
             }
         }
         releaseOdkView();
@@ -2482,7 +2533,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (isBackgroundLocationEnabled()) {
                     locationTrackingEnabled(formController, true);
                 } else {
-                    if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                         SnackbarUtils.showLongSnackbar(findViewById(R.id.llParent), String.format(getString(R.string.background_location_disabled), "").replace("  ", " "));
                     } else {
                         SnackbarUtils.showLongSnackbar(findViewById(R.id.llParent), String.format(getString(R.string.background_location_disabled), "⋮"));
@@ -2509,7 +2560,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (googleLocationClient.isLocationAvailable()) {
                     if (calledJustAfterFormStart) {
                         formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.LOCATION_PROVIDERS_ENABLED, false);
-                        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                             SnackbarUtils.showLongSnackbar(findViewById(R.id.llParent), String.format(getString(R.string.background_location_enabled), "").replace("  ", " "));
                         } else {
                             SnackbarUtils.showLongSnackbar(findViewById(R.id.llParent), String.format(getString(R.string.background_location_enabled), "⋮"));
@@ -3003,4 +3054,3 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
     }
 }
-

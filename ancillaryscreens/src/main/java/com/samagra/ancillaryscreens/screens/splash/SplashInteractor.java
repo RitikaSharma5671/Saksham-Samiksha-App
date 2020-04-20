@@ -5,7 +5,11 @@ import android.content.pm.PackageInfo;
 import com.samagra.ancillaryscreens.base.BaseInteractor;
 import com.samagra.ancillaryscreens.data.prefs.CommonsPreferenceHelper;
 
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
+
 import javax.inject.Inject;
+
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SPLASH_PATH;
 
 
 /**
@@ -58,6 +62,11 @@ public class SplashInteractor extends BaseInteractor implements SplashContract.I
     @Override
     public void updateFirstRunFlag(boolean value) {
         getPreferenceHelper().updateFirstRunFlag(value);
+    }
+
+    @Override
+    public String getSplashPath() {
+        return (String) GeneralSharedPreferences.getInstance().get(KEY_SPLASH_PATH);
     }
 
     @Override

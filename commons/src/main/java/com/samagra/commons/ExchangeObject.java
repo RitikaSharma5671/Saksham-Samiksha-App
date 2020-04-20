@@ -88,6 +88,29 @@ public class ExchangeObject {
         }
     }
 
+
+    /**
+     * This type of {@link ExchangeObject} is used to exchange Object values through the {@link RxBus}.
+     * This class uses Java generics. This means the Object to exchange can be of any type.
+     */
+    public static class NotificationExchangeObject extends ExchangeObject {
+        public PushNotification data;
+
+        /**
+         * Public Constructor used to create a {@link DataExchangeObject}
+         *
+         * @param to   - Indicates the {@link Modules} to which this {@link ExchangeObject} is sent.
+         * @param from - Indicates the {@link Modules} from whic this {@link ExchangeObject} originated.
+         * @param data - A generic type indicating the value to exchange.
+         */
+        public NotificationExchangeObject(Modules to, Modules from, PushNotification data) {
+            super(ExchangeObjectTypes.DATA_EXCHANGE, to, from);
+            this.data = data;
+        }
+
+    }
+
+
     /**
      * An {@link ExchangeObject} that notifies the {@link RxBus} about an event being triggered. This
      * event should be declared in the {@link CustomEvents}. Based on the type of event received by the {@link RxBus},

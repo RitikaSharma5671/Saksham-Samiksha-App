@@ -86,7 +86,7 @@ public class InstanceChooserList extends InstanceListActivity implements
                     R.string.sort_by_name_asc, R.string.sort_by_name_desc,
                     R.string.sort_by_date_asc, R.string.sort_by_date_desc
             };
-            ((TextView) findViewById(android.R.id.empty)).setText(R.string.no_items_display_sent_forms);
+            ((TextView) findViewById(android.R.id.empty)).setText("No search Result.");
         }
 
         new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {

@@ -78,7 +78,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
             JSONObject sortFieldsBody = new JSONObject();
             sortFieldsBody.put("name", "email");
             sortFields.put(sortFieldsBody);
-            search.put("queryString", "(data.phone: " + phone + ") AND (registrations.applicationId: 3c219e58-ed0e-4b18-ad48-f4f92793ae32)");
+            search.put("queryString", "(data.phone: " + phone + ") AND (registrations.applicationId: 1ae074db-32f3-4714-a150-cc8a370eafd1)");
             search.put("sortFields", sortFields);
             bodyObject.put("search", search);
         } catch (JSONException e) {

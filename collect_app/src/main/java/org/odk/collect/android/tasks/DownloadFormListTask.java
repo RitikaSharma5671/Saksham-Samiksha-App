@@ -58,6 +58,7 @@ public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String
         }
     }
 
+
     public void setDownloaderListener(FormListDownloaderListener sl) {
         synchronized (this) {
             stateListener = sl;

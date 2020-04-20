@@ -251,10 +251,10 @@ public class AudioWidget extends QuestionWidget implements FileWidget {
 
     private void captureAudio() {
         Intent i = new Intent(
-                android.provider.MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+                Audio.Media.RECORD_SOUND_ACTION);
         i.putExtra(
                 android.provider.MediaStore.EXTRA_OUTPUT,
-                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                Audio.Media.EXTERNAL_CONTENT_URI
                         .toString());
         try {
             waitForData();

@@ -1,5 +1,7 @@
 package com.samagra.odktest.base;
 
+import org.odk.collect.android.contracts.IFormManagementContract;
+
 import javax.inject.Inject;
 
 /**
@@ -13,10 +15,12 @@ public class BasePresenter<V extends MvpView, I extends MvpInteractor> implement
 
     private V mvpView;
     private I mvpInteractor;
+    private IFormManagementContract iFormManagementContract;
 
     @Inject
-    public BasePresenter(I mvpInteractor) {
+    public BasePresenter(I mvpInteractor, IFormManagementContract iFormManagementContract) {
         this.mvpInteractor = mvpInteractor;
+        this.iFormManagementContract = iFormManagementContract;
     }
 
     @Override
@@ -42,5 +46,10 @@ public class BasePresenter<V extends MvpView, I extends MvpInteractor> implement
     @Override
     public boolean isViewAttached() {
         return this.mvpView != null;
+    }
+
+    @Override
+    public IFormManagementContract getIFormManagementContract() {
+        return iFormManagementContract;
     }
 }

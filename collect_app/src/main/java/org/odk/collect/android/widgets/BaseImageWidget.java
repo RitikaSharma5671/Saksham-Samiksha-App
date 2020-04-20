@@ -164,7 +164,7 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
             }
 
             imageView = getAnswerImageView(bmp);
-            imageView.setOnClickListener(new View.OnClickListener() {
+            imageView.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {

@@ -332,7 +332,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
 
         if (transport.equals(Transport.Sms) || buttonId == R.id.sms_upload_button) {
             // https://issuetracker.google.com/issues/66979952
-            if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
                 permissionUtils.requestSendSMSAndReadPhoneStatePermissions(this, new PermissionListener() {
                     @Override
                     public void granted() {
@@ -407,6 +407,14 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.menu_preferences).setVisible(false).setEnabled(false);
+        menu.findItem(R.id.menu_change_view).setVisible(false).setEnabled(false);
+        return true;
     }
 
     private void createPreferencesMenu() {

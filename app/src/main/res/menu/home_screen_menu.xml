@@ -6,10 +6,6 @@
         android:title="About Us" />
 
     <item
-        android:id="@+id/tutorial_video"
-        android:title="Tutorial Videos" />
-
-    <item
         android:id="@+id/profile"
         android:title="Profile" />
 

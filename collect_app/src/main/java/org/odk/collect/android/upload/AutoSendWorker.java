@@ -15,6 +15,7 @@
 package org.odk.collect.android.upload;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,11 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.samagra.commons.ExchangeObject;
+import com.samagra.commons.Modules;
+import com.samagra.commons.PushNotification;
+
+import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.NotificationActivity;
 import org.odk.collect.android.application.Collect;
@@ -297,12 +303,14 @@ public class AutoSendWorker extends Worker {
         PendingIntent pendingNotify = PendingIntent.getActivity(Collect.getInstance(), FORMS_UPLOADED_NOTIFICATION,
                 notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationUtils.showNotification(
-                pendingNotify,
-                AUTO_SEND_RESULT_NOTIFICATION_ID,
-                R.string.odk_auto_note,
-                anyFailure ? Collect.getInstance().getString(R.string.failures)
-                        : Collect.getInstance().getString(R.string.success));
+        String body = anyFailure ? Collect.getInstance().getString(R.string.failures)
+                : Collect.getInstance().getString(R.string.success);
+
+        PushNotification pushNotification = new PushNotification(pendingNotify, AUTO_SEND_RESULT_NOTIFICATION_ID, R.string.odk_auto_note, body);
+        ExchangeObject exchangeObject = new ExchangeObject.NotificationExchangeObject(Modules.MAIN_APP, Modules.COLLECT_APP, pushNotification);
+        ODKDriver.applicationInstance.getEventBus().send(exchangeObject);
+
+
 
     }
 }

@@ -107,7 +107,7 @@ public class MediaUtils {
 
             String[] projection = {Images.ImageColumns._ID};
             imageCursor = cr
-                    .query(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    .query(Images.Media.EXTERNAL_CONTENT_URI,
                             projection, select, selectArgs, null);
             if (imageCursor.getCount() > 0) {
                 imageCursor.moveToFirst();
@@ -118,7 +118,7 @@ public class MediaUtils {
 
                     imagesToDelete
                             .add(Uri.withAppendedPath(
-                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                    Images.Media.EXTERNAL_CONTENT_URI,
                                     id));
                 } while (imageCursor.moveToNext());
 
@@ -152,7 +152,7 @@ public class MediaUtils {
 
             String[] projection = {Images.ImageColumns._ID};
             imageCursor = cr
-                    .query(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    .query(Images.Media.EXTERNAL_CONTENT_URI,
                             projection, select, selectArgs, null);
             if (imageCursor.getCount() > 0) {
                 imageCursor.moveToFirst();
@@ -163,7 +163,7 @@ public class MediaUtils {
 
                     imagesToDelete
                             .add(Uri.withAppendedPath(
-                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                    Images.Media.EXTERNAL_CONTENT_URI,
                                     id));
                 } while (imageCursor.moveToNext());
 
@@ -191,7 +191,7 @@ public class MediaUtils {
             c = Collect
                     .getInstance()
                     .getContentResolver()
-                    .query(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    .query(Audio.Media.EXTERNAL_CONTENT_URI,
                             projection, selection, selectArgs, null);
             if (c.getCount() > 0) {
                 c.moveToFirst();
@@ -200,7 +200,7 @@ public class MediaUtils {
 
                 return Uri
                         .withAppendedPath(
-                                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                Audio.Media.EXTERNAL_CONTENT_URI,
                                 id);
             }
             return null;
@@ -222,7 +222,7 @@ public class MediaUtils {
 
             String[] projection = {Audio.AudioColumns._ID};
             audioCursor = cr
-                    .query(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    .query(Audio.Media.EXTERNAL_CONTENT_URI,
                             projection, select, selectArgs, null);
             if (audioCursor.getCount() > 0) {
                 audioCursor.moveToFirst();
@@ -233,7 +233,7 @@ public class MediaUtils {
 
                     audioToDelete
                             .add(Uri.withAppendedPath(
-                                    android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                    Audio.Media.EXTERNAL_CONTENT_URI,
                                     id));
                 } while (audioCursor.moveToNext());
 
@@ -267,7 +267,7 @@ public class MediaUtils {
 
             String[] projection = {Audio.AudioColumns._ID};
             audioCursor = cr
-                    .query(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    .query(Audio.Media.EXTERNAL_CONTENT_URI,
                             projection, select, selectArgs, null);
             if (audioCursor.getCount() > 0) {
                 audioCursor.moveToFirst();
@@ -278,7 +278,7 @@ public class MediaUtils {
 
                     audioToDelete
                             .add(Uri.withAppendedPath(
-                                    android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                    Audio.Media.EXTERNAL_CONTENT_URI,
                                     id));
                 } while (audioCursor.moveToNext());
 
@@ -306,7 +306,7 @@ public class MediaUtils {
             c = Collect
                     .getInstance()
                     .getContentResolver()
-                    .query(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    .query(Video.Media.EXTERNAL_CONTENT_URI,
                             projection, selection, selectArgs, null);
             if (c.getCount() > 0) {
                 c.moveToFirst();
@@ -315,7 +315,7 @@ public class MediaUtils {
 
                 return Uri
                         .withAppendedPath(
-                                android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                                Video.Media.EXTERNAL_CONTENT_URI,
                                 id);
             }
             return null;
@@ -337,7 +337,7 @@ public class MediaUtils {
 
             String[] projection = {Video.VideoColumns._ID};
             videoCursor = cr
-                    .query(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    .query(Video.Media.EXTERNAL_CONTENT_URI,
                             projection, select, selectArgs, null);
             if (videoCursor.getCount() > 0) {
                 videoCursor.moveToFirst();
@@ -348,7 +348,7 @@ public class MediaUtils {
 
                     videoToDelete
                             .add(Uri.withAppendedPath(
-                                    android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                                    Video.Media.EXTERNAL_CONTENT_URI,
                                     id));
                 } while (videoCursor.moveToNext());
 
@@ -382,7 +382,7 @@ public class MediaUtils {
 
             String[] projection = {Video.VideoColumns._ID};
             videoCursor = cr
-                    .query(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    .query(Video.Media.EXTERNAL_CONTENT_URI,
                             projection, select, selectArgs, null);
             if (videoCursor.getCount() > 0) {
                 videoCursor.moveToFirst();
@@ -393,7 +393,7 @@ public class MediaUtils {
 
                     videoToDelete
                             .add(Uri.withAppendedPath(
-                                    android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                                    Video.Media.EXTERNAL_CONTENT_URI,
                                     id));
                 } while (videoCursor.moveToNext());
 
@@ -526,11 +526,11 @@ public class MediaUtils {
 
                 Uri contentUri = null;
                 if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                    contentUri = Images.Media.EXTERNAL_CONTENT_URI;
                 } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                    contentUri = Video.Media.EXTERNAL_CONTENT_URI;
                 } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                    contentUri = Audio.Media.EXTERNAL_CONTENT_URI;
                 }
 
                 final String selection = "_id=?";

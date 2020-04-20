@@ -53,7 +53,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
 
         versionCode  getMasterCommitCount()
@@ -93,6 +93,7 @@ dependencies {
 
     //Butterknife annotation processor cannot be shared across modules
     annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
+    implementation "com.jakewharton:butterknife:10.1.0"
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
     // dependencies for local unit testing
@@ -106,6 +107,7 @@ dependencies {
     implementation "androidx.core:core-ktx:+"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compile project(path: ':collect_app')
 }
 repositories {
     mavenCentral()

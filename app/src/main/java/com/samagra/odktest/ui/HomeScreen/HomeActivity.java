@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +17,6 @@ import com.androidnetworking.AndroidNetworking;
 import com.google.android.material.snackbar.Snackbar;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.models.AboutBundle;
-import com.samagra.ancillaryscreens.models.UserProfileElement;
 import com.samagra.commons.Constants;
 import com.samagra.commons.CustomEvents;
 import com.samagra.commons.ExchangeObject;
@@ -27,6 +28,8 @@ import com.samagra.odktest.AppConstants;
 import com.samagra.odktest.R;
 import com.samagra.odktest.UtilityFunctions;
 import com.samagra.odktest.base.BaseActivity;
+import com.samagra.user_profile.ProfileSectionDriver;
+import com.samagra.user_profile.models.UserProfileElement;
 
 import org.odk.collect.android.ODKDriver;
 
@@ -50,6 +53,10 @@ import timber.log.Timber;
  */
 public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnClickListener {
 
+    @BindView(R.id.circularProgressBar)
+    public ProgressBar circularProgressBar;
+    @BindView(R.id.parent)
+    public LinearLayout parentLayout;
     @BindView(R.id.welcome_text)
     public TextView welcomeTextView;
     @BindView(R.id.helpline_button)
@@ -151,6 +158,20 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
     }
 
     @Override
+    public void renderLayoutVisible() {
+        parentLayout.setVisibility(View.VISIBLE);
+        circularProgressBar.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void renderLayoutInvisible() {
+        parentLayout.setVisibility(View.GONE);
+        circularProgressBar.setVisibility(View.VISIBLE);
+    }
+
+
+    @Override
     public void hideLoading() {
         if (progressSnackbar != null && progressSnackbar.isShownOrQueued())
             progressSnackbar.dismiss();
@@ -200,9 +221,6 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                     case R.id.about_us:
                         AncillaryScreensDriver.launchAboutActivity(this, provideAboutBundle());
                         break;
-                    case R.id.tutorial_video:
-                        Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                        break;
                     case R.id.profile:
                         //TODO : Remove this dummy element. Add Valid elements from Firebase
                         ArrayList<UserProfileElement> userProfileElements = new ArrayList<>();
@@ -215,7 +233,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         strings.add("Category two");
                         strings.add("Category three");
                         userProfileElements.add(new UserProfileElement("", "Category", "CATEGORY 1", true, 1, UserProfileElement.ProfileElementContentType.SPINNER, strings));
-                        AncillaryScreensDriver.launchProfileActivity(this, homePresenter.getProfileConfig());
+                        ProfileSectionDriver.launchProfileActivity(this, homePresenter.getProfileConfig(), "");
                         break;
                     case R.id.helpline:
                         Toast.makeText(HomeActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();

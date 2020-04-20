@@ -42,7 +42,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         super.onCreate(savedInstanceState);
         getActivityComponent().inject(this);
         splashPresenter.onAttach(this);
-        splashPresenter.init();
+        splashPresenter.requestStoragePermissions();
     }
 
 
@@ -79,6 +79,8 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     public void showActivityLayout() {
         setContentView(R.layout.activity_splash);
         unbinder = ButterKnife.bind(this);
+        splashPresenter.startGetFormListCall();
+        splashPresenter.startUnzipTask();
     }
 
     @Override

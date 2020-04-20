@@ -34,7 +34,6 @@ public interface HomeMvpPresenter<V extends HomeMvpView, I extends HomeMvpIntera
      */
     void setWelcomeText();
 
-    void downloadForms(HashMap<String, String> formsToBeDownloaded);
 
     //TODO : Write Documentation
     void applySettings();

@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import com.samagra.ancillaryscreens.models.AboutBundle;
 import com.samagra.ancillaryscreens.screens.about.AboutActivity;
 import com.samagra.ancillaryscreens.screens.login.LoginActivity;
-import com.samagra.ancillaryscreens.screens.tutorials.TutorialActivity;
 import com.samagra.commons.CommonUtilities;
 import com.samagra.commons.CustomEvents;
 import com.samagra.commons.ExchangeObject;
@@ -75,20 +74,6 @@ public class AncillaryScreensDriver {
         checkValidConfig();
         Intent intent = new Intent(context, AboutActivity.class);
         intent.putExtra("config", aboutBundle.aboutExchangeBundle);
-        context.startActivity(intent);
-    }
-
-    /**
-     * Function to launch the about activity from this module.
-     *
-     * @param context     - The current Activity's context.
-     * @param videoDetailsBundle - A Java object containing values to configure {@link AboutActivity}'s appearance.
-     * @see AboutBundle#AboutBundle(String, String, String, int, int, int)
-     */
-    public static void launchTutorialActivity(@NonNull Context context, @NonNull Bundle videoDetailsBundle) {
-        checkValidConfig();
-        Intent intent = new Intent(context, TutorialActivity.class);
-        intent.putExtra("video_details_bundle", videoDetailsBundle);
         context.startActivity(intent);
     }
 
@@ -156,13 +141,6 @@ public class AncillaryScreensDriver {
         mainApplication.getEventBus().send(eventExchangeObject);
     }
 
-    /**
-     * Function to check if the mainApplication is initialised indicating if {@link AncillaryScreensDriver#init(MainApplication, String)} is called or not.
-     * If not, it throws {@link InvalidConfigurationException}
-     *
-     * @throws InvalidConfigurationException - This Exception means that the module is not configured by the user properly. The exception generates
-     *                                       detailed message depending on the class that throws it.
-     */
     private static void checkValidConfig() {
         if (mainApplication == null)
             throw new InvalidConfigurationException(AncillaryScreensDriver.class);

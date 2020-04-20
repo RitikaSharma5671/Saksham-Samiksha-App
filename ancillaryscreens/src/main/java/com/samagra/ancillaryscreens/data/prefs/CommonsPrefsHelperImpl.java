@@ -109,7 +109,7 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
             for (int i = 0; i < registrations.size(); i++) {
                 if (registrations.get(i).getAsJsonObject().has("applicationId")) {
                     String applicationId = registrations.get(i).getAsJsonObject().get("applicationId").getAsString();
-                    if (applicationId.equals("e35c5e36-c8da-460e-b1f0-f6ecaf20aebb")) {
+                    if (applicationId.equals("1ae074db-32f3-4714-a150-cc8a370eafd1")) {
                         // This is applicationId for Shiksha Saathi
                         editor.putString("user.role", registrations.get(i).getAsJsonObject().get("roles").getAsJsonArray().get(0).getAsJsonPrimitive().getAsString());
                     }

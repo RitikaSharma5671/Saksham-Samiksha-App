@@ -12,6 +12,8 @@ import com.samagra.commons.Constants;
 import com.samagra.commons.ExchangeObject;
 import com.samagra.commons.Modules;
 
+import org.odk.collect.android.contracts.IFormManagementContract;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +33,10 @@ import timber.log.Timber;
 public class LoginPresenter<V extends LoginContract.View, I extends LoginContract.Interactor> extends BasePresenter<V, I> implements LoginContract.Presenter<V, I> {
 
     @Inject
-    public LoginPresenter(I mvpInteractor, BackendCallHelper apiHelper, CompositeDisposable compositeDisposable) {
-        super(mvpInteractor, apiHelper, compositeDisposable);
+    public LoginPresenter(I mvpInteractor, BackendCallHelper apiHelper, CompositeDisposable compositeDisposable, IFormManagementContract iFormManagementContract) {
+        super(mvpInteractor, apiHelper, compositeDisposable, iFormManagementContract);
     }
+
 
     /**
      * This function starts the Login process by accepting a {@link LoginRequest} and then executing it.
@@ -66,7 +69,7 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
     @Override
     public void resetSelectedIfRequired() {
         if (getMvpInteractor().isFirstLogin()) {
-            resetSelected();
+            getIFormManagementContract().resetODKForms(getMvpView().getActivityContext());
         }
     }
 
@@ -84,15 +87,5 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
         getMvpView().finishActivity();
     }
 
-    /**
-     */
-    private void resetSelected() {
-//        final List<Integer> resetActions = new ArrayList<>();
-//        resetActions.add(ResetUtility.ResetAction.RESET_FORMS);
-//        if (!resetActions.isEmpty()) {
-//            Runnable runnable = () -> new ResetUtility().reset(getMvpView().getActivityContext(), resetActions);
-//            new Thread(runnable).start();
-//        }
-    }
 
 }

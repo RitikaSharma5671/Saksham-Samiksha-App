@@ -195,14 +195,14 @@ public class ListMultiWidget extends ItemsWidget implements MultiChoiceWidget {
 
                 // answer layout holds the label text/image on top and the radio button on bottom
                 RelativeLayout answer = new RelativeLayout(getContext());
-                RelativeLayout.LayoutParams headerParams =
-                        new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams headerParams =
+                        new LayoutParams(LayoutParams.WRAP_CONTENT,
                                 LayoutParams.WRAP_CONTENT);
                 headerParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 headerParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
-                RelativeLayout.LayoutParams buttonParams =
-                        new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams buttonParams =
+                        new LayoutParams(LayoutParams.WRAP_CONTENT,
                                 LayoutParams.WRAP_CONTENT);
                 buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
@@ -240,7 +240,7 @@ public class ListMultiWidget extends ItemsWidget implements MultiChoiceWidget {
         // Align the buttons so that they appear horizonally and are right justified
         buttonLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+        LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.RIGHT_OF, center.getId());
         addView(buttonLayout, params);
@@ -294,12 +294,12 @@ public class ListMultiWidget extends ItemsWidget implements MultiChoiceWidget {
     @Override
     protected void addQuestionMediaLayout(View v) {
         center = new View(getContext());
-        RelativeLayout.LayoutParams centerParams = new RelativeLayout.LayoutParams(0, 0);
+        LayoutParams centerParams = new LayoutParams(0, 0);
         centerParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         center.setId(ViewIds.generateViewId());
         addView(center, centerParams);
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+        LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.LEFT_OF, center.getId());
         addView(v, params);

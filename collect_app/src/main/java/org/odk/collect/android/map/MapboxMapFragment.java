@@ -73,9 +73,8 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.rasterOpacity;
 
 public class MapboxMapFragment extends MapFragment implements org.odk.collect.android.map.MapFragment,
-    OnMapReadyCallback, MapboxMap.OnMapClickListener, MapboxMap.OnMapLongClickListener,
-    LocationEngineCallback<LocationEngineResult> {
-
+        OnMapReadyCallback, MapboxMap.OnMapClickListener, MapboxMap.OnMapLongClickListener,
+        LocationEngineCallback<LocationEngineResult> {
     public static final LatLng INITIAL_CENTER = new LatLng(0, -30);
     public static final float INITIAL_ZOOM = 2;
     public static final float POINT_ZOOM = 16;
@@ -100,11 +99,11 @@ public class MapboxMapFragment extends MapFragment implements org.odk.collect.an
     protected static final String DEFAULT_STYLE_URL = Style.MAPBOX_STREETS;
 
     protected MapboxMap map;
-    protected List<ReadyListener> gpsLocationReadyListeners = new ArrayList<>();
-    protected PointListener gpsLocationListener;
-    protected PointListener clickListener;
-    protected PointListener longPressListener;
-    protected FeatureListener dragEndListener;
+    protected List<org.odk.collect.android.map.MapFragment.ReadyListener> gpsLocationReadyListeners = new ArrayList<>();
+    protected org.odk.collect.android.map.MapFragment.PointListener gpsLocationListener;
+    protected org.odk.collect.android.map.MapFragment.PointListener clickListener;
+    protected org.odk.collect.android.map.MapFragment.PointListener longPressListener;
+    protected org.odk.collect.android.map.MapFragment.FeatureListener dragEndListener;
 
     protected LocationComponent locationComponent;
     protected boolean locationEnabled;
@@ -123,7 +122,7 @@ public class MapboxMapFragment extends MapFragment implements org.odk.collect.an
     @SuppressFBWarnings(value = "MS_SHOULD_BE_FINAL", justification = "This flag is exposed for Robolectric tests to set")
     @VisibleForTesting public static boolean testMode;
 
-    @Override public void addTo(@NonNull FragmentActivity activity, int containerId, @Nullable ReadyListener listener) {
+    @Override public void addTo(@NonNull FragmentActivity activity, int containerId, @Nullable org.odk.collect.android.map.MapFragment.ReadyListener listener) {
         if (MapboxUtils.initMapbox() == null) {
             MapboxUtils.warnMapboxUnsupported(Collect.getInstance());
             if (listener != null) {

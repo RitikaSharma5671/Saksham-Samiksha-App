@@ -416,7 +416,7 @@ public abstract class QuestionWidget
         }
 
         // default for helptext
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+        LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
         params.addRule(RelativeLayout.BELOW, getQuestionMediaLayout().getId());

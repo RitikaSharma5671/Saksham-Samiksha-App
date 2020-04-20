@@ -213,8 +213,8 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
                         }
                     }
                 };
-        locationDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.save_point),
-                geoPointButtonListener);
+//        locationDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.save_point),
+//                geoPointButtonListener);
         locationDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
                 getString(R.string.cancel_location),
                 geoPointButtonListener);

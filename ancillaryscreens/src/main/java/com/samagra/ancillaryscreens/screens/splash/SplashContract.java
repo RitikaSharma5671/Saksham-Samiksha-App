@@ -37,6 +37,8 @@ public interface SplashContract {
         boolean isFirstRun();
 
         boolean isShowSplash();
+        String getSplashPath();
+
 
         /**
          * This function updates the version number and sets firstRun flag to true.
@@ -68,6 +70,11 @@ public interface SplashContract {
          * @see com.samagra.ancillaryscreens.data.prefs.CommonsPrefsHelperImpl
          */
         void moveToNextScreen();
+
+        void startUnzipTask();
+        void startGetFormListCall();
+
+        void requestStoragePermissions();
 
         void init();
     }

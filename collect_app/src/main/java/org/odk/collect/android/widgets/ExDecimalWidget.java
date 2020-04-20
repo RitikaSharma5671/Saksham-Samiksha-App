@@ -41,7 +41,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  * Launch an external app to supply a decimal value. If the app
  * does not launch, enable the text area for regular data entry.
  * <p>
- * See {@link org.odk.collect.android.widgets.ExStringWidget} for usage.
+ * See {@link ExStringWidget} for usage.
  *
  * @author mitchellsundt@gmail.com
  */

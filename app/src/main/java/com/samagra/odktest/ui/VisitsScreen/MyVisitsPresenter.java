@@ -11,6 +11,7 @@ import com.samagra.odktest.ui.ComingSoon.ComingSoon;
 
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
@@ -27,8 +28,8 @@ public class MyVisitsPresenter<V extends MyVisitsMvpView, I extends MyVisitMvpIn
         extends BasePresenter<V, I> implements MyVisitsMvpPresenter<V, I> {
 
     @Inject
-    public MyVisitsPresenter(I mvpInteractor) {
-        super(mvpInteractor);
+    public MyVisitsPresenter(I mvpInteractor, IFormManagementContract iFormManagementContract) {
+        super(mvpInteractor, iFormManagementContract);
     }
 
     @Override
