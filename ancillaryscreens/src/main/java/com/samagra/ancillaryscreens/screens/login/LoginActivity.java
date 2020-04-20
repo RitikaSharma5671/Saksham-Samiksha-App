@@ -1,24 +1,27 @@
 package com.samagra.ancillaryscreens.screens.login;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.R2;
 import com.samagra.ancillaryscreens.base.BaseActivity;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
+import com.samagra.ancillaryscreens.screens.change_password.ChangePasswordActivity;
 import com.samagra.ancillaryscreens.utils.SnackbarUtils;
 import com.samagra.commons.CommonUtilities;
-import com.samagra.commons.Constants;
 
 import java.util.Objects;
 
@@ -27,6 +30,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 
 /**
@@ -45,6 +49,15 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @BindView(android.R.id.content)
     public FrameLayout content;
 
+    @BindView(R2.id.login_submit)
+    public Button submitButton;
+    @BindView(R2.id.userLayout)
+    public TextInputLayout userLayout;
+    @BindView(R2.id.pwdLayout)
+    public TextInputLayout pwdLayout;
+    @BindView(R2.id.loginParentlayout)
+    public RelativeLayout loginParentLayout;
+
     private Unbinder unbinder;
 
     @Inject
@@ -57,13 +70,16 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         getActivityComponent().inject(this);
         unbinder = ButterKnife.bind(this);
         loginPresenter.onAttach(this);
+        if(getIntent().getBooleanExtra("loggedOut", false)){
+            SnackbarUtils.showShortSnackbar(loginParentLayout, "You have successfully logged out.");
+        }
     }
 
 
     @Override
-    @OnClick(R2.id.forgot_password)
+    //@OnClick(R2.id.forgot_password)
     public void changePassword() {
-        Intent changePassIntent = new Intent(LoginActivity.this, LoginActivity.class /*TODO: Change to ChangePasswordActivity.claass*/);
+        Intent changePassIntent = new Intent(LoginActivity.this, ChangePasswordActivity.class);
         startActivity(changePassIntent);
     }
 
@@ -114,6 +130,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                 String password = Objects.requireNonNull(editTextPassword.getText()).toString().trim();
                 progressBar.setVisibility(View.VISIBLE);
                 loginPresenter.startAuthenticationTask(new LoginRequest(username, password));
+            }else{
+                styleDisabledButton();
             }
         } else {
             SnackbarUtils.showLongSnackbar(content, "It seems you are not connected to the Internet. Please switch on your Mobile Data to login.");
@@ -148,18 +166,64 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         return true;
     }
 
-    @OnClick(R2.id.helpline_button)
-    @Override
-    public void callHelpline() {
-        Intent callIntent = new Intent(Intent.ACTION_DIAL);
-        callIntent.setData(Uri.parse(Constants.LOGIN_HELPLINE_TELEPHONE));
-        startActivity(callIntent);
+
+    public boolean validateInputs1(EditText editTextUsername, EditText editTextPassword) {
+        if (TextUtils.isEmpty(editTextUsername.getText())) {
+
+            return false;
+        }
+        if (TextUtils.getTrimmedLength(editTextUsername.getText()) < 3) {
+            return false;
+        }
+        if (TextUtils.isEmpty(editTextPassword.getText())) {
+            return false;
+        }
+        if (TextUtils.getTrimmedLength(editTextPassword.getText()) < 8) {
+            return false;
+        }
+        return true;
     }
+
+    @OnTextChanged(R2.id.login_username)
+    public void onUsernameChanged(CharSequence text){
+        editTextUsername.setError(null);
+        styleLiveButton();
+//        if (validateInputs1(editTextUsername, editTextPassword)) {
+//
+//            styleLiveButton();
+//        }else{
+//            styleDisabledButton();
+//        }
+    }
+
+    @OnTextChanged(R2.id.login_password)
+    public void onPasswordChanged(CharSequence text){
+        editTextPassword.setError(null);
+        styleLiveButton();
+//        styleLiveButton();
+//        if (validateInputs1(editTextUsername, editTextPassword)) {
+//            styleLiveButton();
+//        }else{
+//            styleDisabledButton();
+//        }
+    }
+
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
         loginPresenter.onDetach();
+    }
+
+    public void styleLiveButton(){
+        submitButton.setBackgroundColor(getResources().getColor(R.color.button_colors));
+        submitButton.setTextColor(getResources().getColor(R.color.white));
+    }
+
+    public void styleDisabledButton(){
+        submitButton.setBackgroundColor(0xFFDDDDDD);
+        submitButton.setTextColor(getResources().getColor(R.color.white));
     }
 }

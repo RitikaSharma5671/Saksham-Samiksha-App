@@ -12,8 +12,6 @@ import com.samagra.commons.Constants;
 import com.samagra.commons.ExchangeObject;
 import com.samagra.commons.Modules;
 
-import org.odk.collect.android.utilities.ResetUtility;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,15 +85,14 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
     }
 
     /**
-     * Resets ODK form using {@link ResetUtility}. This action is required in some apps during the first time login.
      */
     private void resetSelected() {
-        final List<Integer> resetActions = new ArrayList<>();
-        resetActions.add(ResetUtility.ResetAction.RESET_FORMS);
-        if (!resetActions.isEmpty()) {
-            Runnable runnable = () -> new ResetUtility().reset(getMvpView().getActivityContext(), resetActions);
-            new Thread(runnable).start();
-        }
+//        final List<Integer> resetActions = new ArrayList<>();
+//        resetActions.add(ResetUtility.ResetAction.RESET_FORMS);
+//        if (!resetActions.isEmpty()) {
+//            Runnable runnable = () -> new ResetUtility().reset(getMvpView().getActivityContext(), resetActions);
+//            new Thread(runnable).start();
+//        }
     }
 
 }

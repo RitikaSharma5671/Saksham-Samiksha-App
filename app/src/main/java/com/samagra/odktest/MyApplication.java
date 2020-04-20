@@ -73,7 +73,7 @@ public class MyApplication extends Collect implements MainApplication, Lifecycle
         InternetMonitor.init(this);
         Grove.init(this);
         Manager.init(this);
-        AncillaryScreensDriver.init(this, AppConstants.BASE_API_URL);
+        AncillaryScreensDriver.init(this, AppConstants.BASE_API_URL, "", "", "");
         ODKDriver.init(this, R.drawable.splash_screen, R.style.BaseAppTheme, R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
         initBus();
     }

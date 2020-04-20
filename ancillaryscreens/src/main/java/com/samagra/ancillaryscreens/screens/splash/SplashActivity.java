@@ -11,8 +11,6 @@ import com.samagra.ancillaryscreens.R2;
 import com.samagra.ancillaryscreens.base.BaseActivity;
 import com.samagra.commons.MainApplication;
 
-import org.odk.collect.android.ODKDriver;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -44,7 +42,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         super.onCreate(savedInstanceState);
         getActivityComponent().inject(this);
         splashPresenter.onAttach(this);
-        splashPresenter.requestStoragePermissions();
+        splashPresenter.init();
     }
 
 
@@ -55,15 +53,14 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     }
 
     /**
-     * This function configures the Splash Screen through the values provided to the {@link org.odk.collect.android.ODKDriver}
+     * This function configures the Splash Screen
      * and renders it on screen. This includes the Splash screen image and other UI configurations.
      *
-     * @see org.odk.collect.android.ODKDriver#init(MainApplication, int, int, int, int, long)
      */
     @Override
     public void showSimpleSplash() {
         splashDefaultLayout.setVisibility(View.GONE);
-        splashImage.setImageResource(ODKDriver.getSplashScreenImageRes());
+        splashImage.setImageResource(R.drawable.login_bg);
         splashImage.setVisibility(View.VISIBLE);
         Handler handler = new Handler();
         handler.postDelayed(this::endSplashScreen, SPLASH_TIMEOUT);
@@ -82,14 +79,13 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     public void showActivityLayout() {
         setContentView(R.layout.activity_splash);
         unbinder = ButterKnife.bind(this);
-        splashPresenter.startGetFormListCall();
-        splashPresenter.startUnzipTask();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbinder.unbind();
+        if (unbinder != null)
+            unbinder.unbind();
         splashPresenter.onDetach();
     }
 }

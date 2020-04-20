@@ -3,49 +3,53 @@ package com.samagra.ancillaryscreens;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.samagra.ancillaryscreens.data.network.BackendCallHelperImpl;
-import com.samagra.ancillaryscreens.models.UserProfileElement;
-import com.samagra.ancillaryscreens.screens.about.AboutActivity;
 import com.samagra.ancillaryscreens.models.AboutBundle;
+import com.samagra.ancillaryscreens.screens.about.AboutActivity;
 import com.samagra.ancillaryscreens.screens.login.LoginActivity;
-import com.samagra.ancillaryscreens.screens.profile.ProfileActivity;
+import com.samagra.ancillaryscreens.screens.tutorials.TutorialActivity;
 import com.samagra.commons.CommonUtilities;
 import com.samagra.commons.CustomEvents;
 import com.samagra.commons.ExchangeObject;
 import com.samagra.commons.MainApplication;
 import com.samagra.commons.Modules;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
  * The driver class for this module, any screen that needs to be launched from outside this module, should be
  * launched using this class.
- * Note: It is essential that you call the {@link AncillaryScreensDriver#init(MainApplication, String)} to initialise
+ * Note: It is essential that you call the {@link AncillaryScreensDriver#init(MainApplication, String, String, String, String)} to initialise
  * the class prior to using it else an {@link InvalidConfigurationException} will be thrown.
  *
  * @author Pranav Sharma
  */
 public class AncillaryScreensDriver {
+    public static String UPDATE_PASSWORD_URL;
     public static MainApplication mainApplication = null;
     public static String BASE_API_URL;
+    public static String SEND_OTP_URL;
+    public static String APPLICATION_ID;
 
-    public static void init(@NonNull MainApplication mainApplication, @NonNull String BASE_URL) {
+    /**
+     *
+     * @param mainApplication
+     * @param BASE_URL
+     * @param SEND_OTP_URL
+     * @param UPDATE_PASSWORD_URL
+     * @param APPLICATION_ID
+     */
+    public static void init(@NonNull MainApplication mainApplication, @NonNull String BASE_URL, @NonNull String SEND_OTP_URL,
+                            @NonNull String UPDATE_PASSWORD_URL, @NonNull String APPLICATION_ID) {
         AncillaryScreensDriver.mainApplication = mainApplication;
         AncillaryScreensDriver.BASE_API_URL = BASE_URL;
+        AncillaryScreensDriver.SEND_OTP_URL = SEND_OTP_URL;
+        AncillaryScreensDriver.UPDATE_PASSWORD_URL = UPDATE_PASSWORD_URL;
+        AncillaryScreensDriver.APPLICATION_ID = APPLICATION_ID;
     }
 
     /**
@@ -75,18 +79,19 @@ public class AncillaryScreensDriver {
     }
 
     /**
-     * Function to launch the {@link ProfileActivity} which displays the user's profile.
+     * Function to launch the about activity from this module.
      *
-     * @param context             - The current Activity's context.
-     * @param userProfileElements - A list of {@link UserProfileElement} that depict an individual
-     *                            aspect about User's profile and are shown on the profile Screen.
+     * @param context     - The current Activity's context.
+     * @param videoDetailsBundle - A Java object containing values to configure {@link AboutActivity}'s appearance.
+     * @see AboutBundle#AboutBundle(String, String, String, int, int, int)
      */
-    public static void launchProfileActivity(@NonNull Context context, ArrayList<UserProfileElement> userProfileElements) {
+    public static void launchTutorialActivity(@NonNull Context context, @NonNull Bundle videoDetailsBundle) {
         checkValidConfig();
-        Intent intent = new Intent(context, ProfileActivity.class);
-        intent.putParcelableArrayListExtra("config", userProfileElements);
+        Intent intent = new Intent(context, TutorialActivity.class);
+        intent.putExtra("video_details_bundle", videoDetailsBundle);
         context.startActivity(intent);
     }
+
 
     /**
      * Function to perform the logout operations. This function uses the updates the flags and other data set by the
@@ -101,116 +106,11 @@ public class AncillaryScreensDriver {
         // TODO : Logout button => Logout from fusionAuth => Update user by removing registration token => Login splash_ss
         checkValidConfig();
         notifyLogoutInitiated();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String token = sharedPreferences.getString("FCM.token", "");
-        if (CommonUtilities.isNetworkAvailable(context))
-            makeRemoveTokenApiCall(token, context);
-        else
-            Toast.makeText(context, "No Internet Connection. Please connect to internet and try again later", Toast.LENGTH_LONG).show();
-    }
-
-
-    /*
-      The private functions not exposed to classes outside the module. These functions help the public static functions
-      defined in this file to complete their functionality. These can also be moved to another file for sake of clarity.
-     */
-
-    /**
-     * This function makes an API call to get the current User Object stored at the backend. This function is the first part
-     * of a 2-step process to logout the user. The object retrieved by this API call is then edited to remove
-     * the FCMToken from it. This is done to prevent logged out users from receiving notifications.
-     *
-     * @param token   - The API token for the fusionAuth API.
-     * @param context - The current Activity Context.
-     * @see AncillaryScreensDriver#removeFCMTokenFromObject(JSONObject) - This edits the JSONObject retrieved by removing the FCM token.
-     * @see AncillaryScreensDriver#putUpdatedUserDetailsObject(JSONObject, Context, String, String)  - This uploads the new JSON Object as User data Object (with no FCM Token).
-     */
-    private static void makeRemoveTokenApiCall(@NonNull String token, @NonNull Context context) {
-        String apiKey = context.getResources().getString(R.string.fusionauth_api_key);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String userId = sharedPreferences.getString("user.id", "");
-        BackendCallHelperImpl.getInstance()
-                .performGetUserDetailsApiCall(userId, apiKey)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<JSONObject>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Timber.d("OnSubscribe make Remove token api call");
-                    }
-
-                    @Override
-                    public void onSuccess(JSONObject jsonObject) {
-                        Timber.d("OnSuccess make Remove token api call %s", jsonObject);
-                        JSONObject removedFCMTokenObject = removeFCMTokenFromObject(jsonObject);
-                        Timber.d("Removed FCM Token, new Object is %s", removedFCMTokenObject);
-                        putUpdatedUserDetailsObject(removedFCMTokenObject, context, userId, apiKey);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        notifyLogoutCompleted();
-                        Timber.e(e);
-                        Toast.makeText(context, "Unable to Log you out, Please try again.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    /**
-     * This function receives the User Object as {@link JSONObject} and removes the FCM Token from it.
-     *
-     * @param jsonObject - The user JSON Object from the backend APIs.
-     * @return user object as {@link JSONObject} with empty FCM Token.
-     */
-    private static JSONObject removeFCMTokenFromObject(JSONObject jsonObject) {
-        Timber.d("Removing FCM Token from %s", jsonObject.toString());
-        try {
-            JSONObject user = jsonObject.getJSONObject("user");
-            JSONObject data = user.getJSONObject("data");
-            data.put("FCM.token", "");
-            user.put("data", data);
-            jsonObject.put("user", user);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
-    /**
-     * This function makes an API call to post the updated User data as {@link JSONObject} returned by {@link AncillaryScreensDriver#removeFCMTokenFromObject(JSONObject)}.
-     *
-     * @param jsonObjectToPut - The user {@link JSONObject} without FCM Token.
-     * @param context         - The current Activity Context.
-     * @param userId          - String userId for the current User.
-     * @param apiKey          - The FusionAuth ApiKey.
-     */
-    private static void putUpdatedUserDetailsObject(JSONObject jsonObjectToPut, Context context, String userId, String apiKey) {
-        BackendCallHelperImpl.getInstance()
-                .performPutUserDetailsApiCall(userId, apiKey, jsonObjectToPut)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<JSONObject>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Timber.d("On Subscribe Put updated objects ");
-                    }
-
-                    @Override
-                    public void onSuccess(JSONObject jsonObject) {
-                        Timber.d("Successfully removed FCM TOKEN, %s", jsonObject);
-                        notifyLogoutCompleted();
-                        logoutUserLocally(context);
-                        Intent intent = new Intent(context, LoginActivity.class);
-                        CommonUtilities.startActivityAsNewTask(intent, context);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        notifyLogoutCompleted();
-                        Timber.e(e);
-                        Toast.makeText(context, "Unable to Log you out, Some error occurred.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        notifyLogoutCompleted();
+        logoutUserLocally(context);
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.putExtra("loggedOut", true);
+        CommonUtilities.startActivityAsNewTask(intent, context);
     }
 
     /**

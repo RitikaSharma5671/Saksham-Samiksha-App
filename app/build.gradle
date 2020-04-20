@@ -34,7 +34,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":collect_app")
     implementation project(":commons")
-    implementation project(":ancillaryscreens")
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Firebase
@@ -71,4 +70,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     compile project(path: ':grove')
     compile project(path: ':grove')
+    implementation project(path: ':ancillaryscreens')
 }

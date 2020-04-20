@@ -27,7 +27,6 @@ public interface LoginContract {
          */
         boolean validateInputs(EditText editTextUsername, EditText editTextPassword);
 
-        void callHelpline();
 
         void performLogin();
 

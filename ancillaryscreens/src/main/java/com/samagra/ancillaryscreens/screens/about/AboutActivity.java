@@ -3,6 +3,8 @@ package com.samagra.ancillaryscreens.screens.about;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -15,17 +17,16 @@ import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.base.BaseActivity;
 import com.samagra.ancillaryscreens.models.AboutBundle;
 
-import org.odk.collect.android.adapters.AboutListAdapter;
 
 import javax.inject.Inject;
 
 /**
- * The View Part for the About Screen, must implement {@link AboutContract.View} and {@link org.odk.collect.android.adapters.AboutListAdapter.AboutItemClickListener}.
+ * The View Part for the About Screen, must implement {@link AboutContract.View} and {@link AboutAdapter.AboutItemClickListener}.
  * The activity is adapted from the ODK library and efforts have been made to keep it as similar as possible.
  *
  * @author Pranav Sharma
  */
-public class AboutActivity extends BaseActivity implements AboutContract.View, AboutListAdapter.AboutItemClickListener {
+public class AboutActivity extends BaseActivity implements AboutContract.View, AboutAdapter.AboutItemClickListener {
 
     private Uri websiteUri;
     private Uri forumUri;
@@ -78,10 +79,10 @@ public class AboutActivity extends BaseActivity implements AboutContract.View, A
         int[][] items = {
                 {websiteResIcon, websiteLinkTextResId, websiteSummaryDescResId},
         };
-        RecyclerView recyclerView = findViewById(org.odk.collect.android.R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new AboutListAdapter(items, this, this));
+        recyclerView.setAdapter(new AboutAdapter(items, this, this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 

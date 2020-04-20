@@ -11,7 +11,7 @@ import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.ancillaryscreens.di.ApplicationContext;
 import com.samagra.ancillaryscreens.di.PreferenceInfo;
 
-import org.odk.collect.android.preferences.GeneralKeys;
+import com.samagra.commons.PreferenceKeys;
 
 import javax.inject.Inject;
 
@@ -109,10 +109,9 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
             for (int i = 0; i < registrations.size(); i++) {
                 if (registrations.get(i).getAsJsonObject().has("applicationId")) {
                     String applicationId = registrations.get(i).getAsJsonObject().get("applicationId").getAsString();
-                    if (applicationId.equals("1ae074db-32f3-4714-a150-cc8a370eafd1")) {
+                    if (applicationId.equals("e35c5e36-c8da-460e-b1f0-f6ecaf20aebb")) {
                         // This is applicationId for Shiksha Saathi
                         editor.putString("user.role", registrations.get(i).getAsJsonObject().get("roles").getAsJsonArray().get(0).getAsJsonPrimitive().getAsString());
-                        editor.putString("user.roleData", registrations.get(i).getAsJsonObject().get("roles").getAsJsonArray().toString());
                     }
                 }
             }
@@ -128,11 +127,12 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
             editor.putString("user.mobilePhone", response.user.get("mobilePhone").getAsString());
         else editor.putString("user.mobilePhone", "");
 
-        JsonObject userData = response.user.get("data").getAsJsonObject();
-        if (userData.has("roleData")) {
-            if (userData.get("roleData").getAsJsonObject().has("designation"))
-                editor.putString("user.designation", response.user.get("data").getAsJsonObject().get("roleData").getAsJsonObject().get("designation").getAsJsonPrimitive().getAsString());
-        }
+        if(response.user.has("data") && response.user.get("data")!= null){
+            JsonObject userData = response.user.get("data").getAsJsonObject();
+            if (userData.has("roleData")) {
+                if (userData.get("roleData").getAsJsonObject().has("designation"))
+                    editor.putString("user.designation", response.user.get("data").getAsJsonObject().get("roleData").getAsJsonObject().get("designation").getAsJsonPrimitive().getAsString());
+            }}
         editor.apply();
     }
 
@@ -143,7 +143,7 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
 
     @Override
     public boolean isFirstRun() {
-        return defaultPreferences.getBoolean(GeneralKeys.KEY_FIRST_RUN, true);
+        return defaultPreferences.getBoolean(PreferenceKeys.KEY_FIRST_RUN, true);
     }
 
     @Override
@@ -160,18 +160,18 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
 
     @Override
     public boolean isShowSplash() {
-        return defaultPreferences.getBoolean(GeneralKeys.KEY_SHOW_SPLASH, false);
+        return defaultPreferences.getBoolean(PreferenceKeys.KEY_SHOW_SPLASH, false);
     }
 
     @Override
     public Long getLastAppVersion() {
-        return sharedPreferences.getLong(GeneralKeys.KEY_LAST_VERSION, 0);
+        return sharedPreferences.getLong(PreferenceKeys.KEY_LAST_VERSION, 0);
     }
 
     @Override
     public void updateLastAppVersion(long updatedVersion) {
         SharedPreferences.Editor editor = defaultPreferences.edit();
-        editor.putLong(GeneralKeys.KEY_LAST_VERSION, updatedVersion);
+        editor.putLong(PreferenceKeys.KEY_LAST_VERSION, updatedVersion);
         editor.apply();
     }
 
@@ -179,7 +179,7 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
     @Override
     public void updateFirstRunFlag(boolean value) {
         SharedPreferences.Editor editor = defaultPreferences.edit();
-        editor.putBoolean(GeneralKeys.KEY_FIRST_RUN, false);
+        editor.putBoolean(PreferenceKeys.KEY_FIRST_RUN, false);
         editor.commit();
     }
 

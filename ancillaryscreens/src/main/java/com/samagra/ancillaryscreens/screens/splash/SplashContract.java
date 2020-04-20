@@ -18,10 +18,9 @@ public interface SplashContract {
         void endSplashScreen();
 
         /**
-         * This function configures the Splash Screen through the values provided to the {@link org.odk.collect.android.ODKDriver}
+         * This function configures the Splash Screen
          * and renders it on screen. This includes the Splash screen image and other UI configurations.
          *
-         * @see org.odk.collect.android.ODKDriver#init(MainApplication, int, int, int, int)
          */
         void showSimpleSplash();
 
@@ -56,21 +55,10 @@ public interface SplashContract {
          */
         void updateFirstRunFlag(boolean value);
 
-        String getSplashPath();
-
         boolean isLoggedIn();
     }
 
     interface Presenter<V extends View, I extends Interactor> extends MvpPresenter<V, I> {
-        void startUnzipTask();
-
-        void startGetFormListCall();
-
-        /**
-         * Request the storage permissions which is necessary for ODK to read write data related to forms
-         */
-        void requestStoragePermissions();
-
         /**
          * Decides the next screen and moves to the decided screen.
          * This decision is based on the Login status which is managed by the {@link com.samagra.ancillaryscreens.screens.login.LoginActivity}
@@ -80,5 +68,7 @@ public interface SplashContract {
          * @see com.samagra.ancillaryscreens.data.prefs.CommonsPrefsHelperImpl
          */
         void moveToNextScreen();
+
+        void init();
     }
 }

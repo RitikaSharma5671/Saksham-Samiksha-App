@@ -4,15 +4,29 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.OkHttpResponseAndStringRequestListener;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.commons.Constants;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 import io.reactivex.Single;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import timber.log.Timber;
 
 /**
  * Solid implementation  of {@link BackendCallHelper} interface, constructs and executes the API calls
@@ -107,4 +121,43 @@ public class BackendCallHelperImpl implements BackendCallHelper {
                 .build()
                 .getJSONObjectSingle();
     }
+
+    @Override
+    public Single<JSONObject> performSearchUserByPhoneCall(String phone, String apiKey, String applicationID){
+        String json = "{\"search\":{\"queryString\":\"(registrations.applicationId: " + applicationID + ") AND (data.phone: " + phone + ")\",\"sortFields\":[{\"name\":\"email\"}]}}";
+        JSONObject body = new JSONObject();
+        try {
+            body = new JSONObject(json);
+        } catch (Throwable t) {
+            Timber.e("Could not parse malformed JSON");
+        }
+        return Rx2AndroidNetworking.post(BackendApiUrls.USER_SEARCH_ENDPOINT)
+                .addHeaders("Authorization", apiKey)
+                .addHeaders("Content-Type", "application/json")
+                .setTag(Constants.LOGOUT_CALLS)
+                .addJSONObjectBody(body)
+                .build()
+                .getJSONObjectSingle();
+
+    }
+
+    @Override
+    public Single<JSONObject> performSearchUserByEmailCall(String email, String apiKey, String applicationID){
+        String json = "{\"search\":{\"queryString\":\"(registrations.applicationId: " + applicationID + ") AND (email: " + email + ")\",\"sortFields\":[{\"name\":\"email\"}]}}";
+        JSONObject body = new JSONObject();
+        try {
+            body = new JSONObject(json);
+        } catch (Throwable t) {
+            Timber.e("Could not parse malformed JSON");
+        }
+        return Rx2AndroidNetworking.post(BackendApiUrls.USER_SEARCH_ENDPOINT)
+                .addHeaders("Authorization", apiKey)
+                .addHeaders("Content-Type", "application/json")
+                .setTag(Constants.LOGOUT_CALLS)
+                .addJSONObjectBody(body)
+                .build()
+                .getJSONObjectSingle();
+
+    }
+
 }
