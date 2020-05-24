@@ -102,7 +102,7 @@
     </style>
 
     <style name="AlertDialogTheme.Light" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/lightAccentColor</item>
+        <item name="colorAccent">@color/colorSecondary</item>
     </style>
 
     <style name="PermissionAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
