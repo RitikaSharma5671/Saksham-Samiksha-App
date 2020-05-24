@@ -5,10 +5,12 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.rx2androidnetworking.Rx2AndroidNetworking;
+import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.commons.Constants;
-import com.rx2androidnetworking.Rx2AndroidNetworking;
+import com.samagra.grove.logging.Grove;
 
 import org.json.JSONObject;
 
@@ -41,6 +43,34 @@ public class BackendCallHelperImpl implements BackendCallHelper {
         return backendCallHelper;
     }
 
+    @Override
+    public Single<JSONObject> refreshToken(String apiKey, String refreshToken) {
+        JSONObject body = new JSONObject();
+        try {
+            body.put("refreshToken", refreshToken);
+        } catch (Throwable t) {
+            Grove.e("Could not parse malformed JSON");
+        }
+        return Rx2AndroidNetworking.post(BackendApiUrls.REFRESH_JWT_ENDPOINT)
+                .addHeaders("Authorization", apiKey)
+                .addHeaders("Content-Type", "application/json")
+                .setTag(Constants.LOGOUT_CALLS)
+                .addJSONObjectBody(body)
+                .build()
+                .getJSONObjectSingle();
+
+    }
+
+    @Override
+    public Single<JSONObject> validateToken(String jwt){
+        return Rx2AndroidNetworking.get(BackendApiUrls.VALIDATE_ENDPOINT)
+                .addHeaders("Authorization", "JWT " + jwt)
+                .addHeaders("Content-Type", "application/json")
+                .setTag(Constants.LOGOUT_CALLS)
+                .build()
+                .getJSONObjectSingle();
+    }
+
     /**
      * This function executes the login api call using a {@link LoginRequest}. The API returns a {@link JSONObject}
      * which is first converted to a {@link LoginResponse} object and then used. Using the {@link JSONObject} directly
@@ -54,8 +84,14 @@ public class BackendCallHelperImpl implements BackendCallHelper {
      */
     @Override
     public Single<LoginResponse> performLoginApiCall(LoginRequest loginRequest) {
+//        OkHttpClient.Builder okhttpClientBuilder = new OkHttpClient.Builder();
+//        okhttpClientBuilder.connectTimeout(30, TimeUnit.SECONDS);
+//        okhttpClientBuilder.readTimeout(30, TimeUnit.SECONDS);
+//        okhttpClientBuilder.writeTimeout(30, TimeUnit.SECONDS);
+//        AndroidNetworking.initialize(applicationContext ,okhttpClientBuilder.build());
         return Rx2AndroidNetworking.post(BackendApiUrls.AUTH_LOGIN_ENDPOINT)
                 .addHeaders("Content-Type", "application/json")
+                .addHeaders("Authorization", AncillaryScreensDriver.API_KEY)
                 .addJSONObjectBody(loginRequest.getLoginRequestJSONObject())
                 .build()
                 .getJSONObjectSingle()
@@ -73,7 +109,7 @@ public class BackendCallHelperImpl implements BackendCallHelper {
      * @param apiKey - The API key is used as authorization and passed in the headers.
      * @param userId - The unique id used to identify a user.
      * @return a {@link Single} object which receives the result of the API response and can be observed.
-     * @see com.samagra.ancillaryscreens.AncillaryScreensDriver#performLogout(Context)
+     * @see com.samagra.ancillaryscreens.AncillaryScreensDriver#performLogout(Context, String)
      * @see {https://fusionauth.io/docs/v1/tech/apis/users#retrieve-a-user}
      */
     @Override
@@ -94,7 +130,7 @@ public class BackendCallHelperImpl implements BackendCallHelper {
      * @param apiKey     - The API key is used as authorization and passed in the headers.
      * @param jsonObject - The updated user object that replaces the user with id userId at the backend.
      * @return a {@link Single} object which receives the result of the API response and can be observed.
-     * @see com.samagra.ancillaryscreens.AncillaryScreensDriver#performLogout(Context)
+     * @see com.samagra.ancillaryscreens.AncillaryScreensDriver#performLogout(Context, String)
      * @see {https://fusionauth.io/docs/v1/tech/apis/users#update-a-user}
      */
     @Override
@@ -107,4 +143,8 @@ public class BackendCallHelperImpl implements BackendCallHelper {
                 .build()
                 .getJSONObjectSingle();
     }
+
+
+
+
 }

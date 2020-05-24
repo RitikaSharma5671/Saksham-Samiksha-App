@@ -1,9 +1,11 @@
 package com.samagra.ancillaryscreens.data.network.model;
 
+import com.samagra.ancillaryscreens.AncillaryScreensDriver;
+import com.samagra.grove.logging.Grove;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import timber.log.Timber;
 
 /**
  * The request object that is used while making a Login attempt. This object is required by {@link com.samagra.ancillaryscreens.data.network.BackendCallHelper#performLoginApiCall(LoginRequest)}
@@ -42,11 +44,12 @@ public class LoginRequest {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("loginId", username);
+            jsonObject.put("applicationId", AncillaryScreensDriver.APPLICATION_ID);
             jsonObject.put("password", password);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Timber.i("Making Login call with %s", jsonObject.toString());
+        Grove.d("Sending Login request for the user");
         return jsonObject;
     }
 }

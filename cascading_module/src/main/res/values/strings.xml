@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">cascading_module</string>
+    <string name="dummy_district">Select the District Name</string>
+    <string name="dummy_block">Select the Block Name</string>
+    <string name="dummy_gram_panchayat">Select the School Name</string>
+    <string name="dummy_hospital">Select the Institution Name</string>
+    <string name="error_message_search">\u0020\u0020Please fill in all the relevant details of the student.</string>
+    <string name="please_fill_the_details_below">Please fill the details below:</string>
+    <string name="next">NEXT</string>
+    <string name="search_screen_title">School Details Selection</string>
+    <string name="please_select_forms">Choose Forms</string>
+
+
+</resources>

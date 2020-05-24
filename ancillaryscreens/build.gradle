@@ -1,16 +1,63 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.jakewharton.butterknife'
+
+
+
+
+def getMasterCommitCount = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            switch (ant.properties.os) {
+                case 'windows':
+                    commandLine 'cmd', '/c', 'git', 'rev-list', '--first-parent', '--count', 'master'
+                    break
+                case 'unix':
+                    commandLine 'git', 'rev-list', '--first-parent', '--count', 'master'
+                    break
+            }
+            standardOutput = stdout
+        }
+        return Integer.parseInt(stdout.toString().trim())
+    } catch (ignored) {
+        return -1
+    }
+}
+
+def getVersionName = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            switch (ant.properties.os) {
+                case 'windows':
+                    commandLine 'cmd', '/c', 'git', 'describe', '--tags', '--dirty', '--always'
+                    break
+                case 'unix':
+                    commandLine 'git', 'describe', '--tags', '--dirty', '--always'
+                    break
+            }
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    } catch (ignored) {
+        return null
+    }
+}
+
+
 
 android {
     compileSdkVersion 28
 
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
 
+        versionCode  getMasterCommitCount()
+        versionName getVersionName()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
@@ -28,12 +75,26 @@ android {
         targetCompatibility 1.8
     }
 
+    dexOptions {
+        javaMaxHeapSize '2048M'
+    }
+
     testOptions {
-        unitTests.returnDefaultValues = true
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+            all {
+                // https://discuss.circleci.com/t/11207/24
+                // it seems any number works, but 1024 - 2048 seem reasonable
+                maxHeapSize = "2048M"
+            }
+        }
     }
 }
 
 dependencies {
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":commons")
     implementation project(":collect_app")
@@ -48,11 +109,27 @@ dependencies {
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
     // dependencies for local unit testing
+    implementation "com.squareup.retrofit2:retrofit:2.5.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.5.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.5.0"
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:2.23.4"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.14.2"
     testImplementation 'org.mockito:mockito-inline:2.13.0' // for mocking final classes
 
     // dependecies for Android testing/UI Testing/ Integration Tests
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation("com.android.support.test.espresso:espresso-intents:3.0.1") {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    }
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compile project(path: ':notification_module')
+    implementation project(path: ':grove')
+}
+repositories {
+    mavenCentral()
 }

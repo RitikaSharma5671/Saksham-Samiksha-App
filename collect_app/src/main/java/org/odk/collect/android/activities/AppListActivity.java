@@ -23,6 +23,9 @@ import android.preference.PreferenceManager;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -133,7 +136,12 @@ abstract class AppListActivity extends CollectAbstractActivity {
             listView.setDivider(getResources().getDrawable(R.drawable.list_item_divider, getTheme()));
             listView.setDividerHeight(1);
         }
-
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setTitle(R.string.app_name);
+//        setSupportActionBar(toolbar);
+//        setSupportActionBar(toolbar);
+//        toolbar.setNavigationIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_arrow_back_white_24dp));
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
         setSupportActionBar(findViewById(R.id.toolbar));
     }
 
@@ -174,6 +182,7 @@ abstract class AppListActivity extends CollectAbstractActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.list_menu, menu);
+
         final MenuItem sortItem = menu.findItem(R.id.menu_sort);
         final MenuItem searchItem = menu.findItem(R.id.menu_filter);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
@@ -227,6 +236,15 @@ abstract class AppListActivity extends CollectAbstractActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.menu_sort).setVisible(true).setEnabled(true);
+        menu.findItem(R.id.menu_filter).setVisible(true).setEnabled(true);
+        return true;
+    }
+
     private void performSelectedSearch(int position) {
         saveSelectedSortingOrder(position);
         updateAdapter();
@@ -266,7 +284,7 @@ abstract class AppListActivity extends CollectAbstractActivity {
 
     private void saveSelectedSortingOrder(int selectedStringOrder) {
         selectedSortingOrder = selectedStringOrder;
-        PreferenceManager.getDefaultSharedPreferences(Collect.getInstance())
+        PreferenceManager.getDefaultSharedPreferences(Collect.getInstance().getAppContext())
                 .edit()
                 .putInt(getSortingOrderKey(), selectedStringOrder)
                 .apply();
@@ -274,7 +292,7 @@ abstract class AppListActivity extends CollectAbstractActivity {
 
     protected void restoreSelectedSortingOrder() {
         selectedSortingOrder = PreferenceManager
-                .getDefaultSharedPreferences(Collect.getInstance())
+                .getDefaultSharedPreferences(Collect.getInstance().getAppContext())
                 .getInt(getSortingOrderKey(), BY_NAME_ASC);
     }
 

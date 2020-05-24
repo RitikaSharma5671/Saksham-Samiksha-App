@@ -72,6 +72,10 @@ public class PermissionUtils {
         return isPermissionGranted(context, Manifest.permission.READ_PHONE_STATE);
     }
 
+    public static boolean isReadSMSPermissionGranted(Context context) {
+        return isPermissionGranted(context, Manifest.permission.READ_SMS);
+    }
+
     /**
      * Returns true only if all of the requested permissions are granted to Collect, otherwise false
      */

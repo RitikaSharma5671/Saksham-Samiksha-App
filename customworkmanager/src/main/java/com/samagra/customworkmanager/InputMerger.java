@@ -50,19 +50,19 @@ public abstract class InputMerger {
     /**
      * Instantiates an {@link InputMerger} from its class name.
      *
-     * @param className The name of the {@link InputMerger} class
+     * @param name The name of the {@link InputMerger} class
      * @return The instantiated {@link InputMerger}, or {@code null} if it could not be instantiated
      *
      * @hide
      */
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     @SuppressWarnings("ClassNewInstance")
-    public static InputMerger fromClassName(String className) {
+    public static InputMerger fromname(String name) {
         try {
-            Class<?> clazz = Class.forName(className);
+            Class<?> clazz = Class.forName(name);
             return (InputMerger) clazz.newInstance();
         } catch (Exception e) {
-            Logger.get().error(TAG, "Trouble instantiating + " + className, e);
+            Logger.get().error(TAG, "Trouble instantiating + " + name, e);
         }
         return null;
     }

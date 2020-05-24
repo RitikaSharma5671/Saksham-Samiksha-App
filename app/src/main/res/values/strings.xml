@@ -1,8 +1,94 @@
 <resources>
     <string name="app_name" translatable="false">Saksham Samiksha</string>
-    <string name="view_issues" translatable="false">View Issues</string>
-    <string name="submit_form" translatable="false">Submit Form</string>
-    <string name="inspect_school" translatable="false">Inspect School</string>
-    <string name="on_internet_saving_complete" translatable="false">Thanks for filling the inspection report. Your report has been submitted</string>
-    <string name="no_internet_saving_complete" translatable="false">Thank you for filling the inspection report for. Since you have filled the report in offline mode, please manually submit the form when connected to the internet from the "Submit form" option</string>
+    <string name="view_issues" translatable="false">View Forms</string>
+    <string name="submit_form">Submit Form</string>
+    <string name="inspect_school" >Inspect School</string>
+    <string name="my_visits">My Visits</string>
+    <string name="on_internet_saving_complete" translatable="false">Data has been captured. SMS will be sent within 48 hours.</string>
+    <string name="no_internet_saving_complete" translatable="false">Data has been captured. SMS will be sent after syncing with the internet. </string>
+    <string name="server_2_base_url_local"  translatable="false">http://192.168.1.14:8080</string>
+    <string name="coming_soon">Coming Soon...</string>
+    <string name="welcome" translatable="true">Welcome,</string>
+    <string name="track_sms_delivery">Track SMS \nDelivery</string>
+    <string name="fill_assessment_data">Fill Assessment \nData</string>
+    <string name="support">Support</string>
+    <string name="visit_status">Visit Status</string>
+    <string name="submitted_forms">Submitted Forms</string>
+    <string name="no_sms_to_track">No SMS has been sent so far, therefore, no tracking report available for your account.</string>
+    <string name="about_us">About Us</string>
+    <string name="tutorial">Tutorial</string>
+    <string name="profile">Profile</string>
+    <string name="logout">Logout</string>
+    <string name="pta_meeting">PTA Meeting</string>
+    <string name="success">Success</string>
+    <string name="pending">Pending</string>
+    <string name="failed">Failed</string>
+    <string name="base_url_relay_server">http://142.93.208.135:8080</string>
+    <string name="offline_text_1">It seems you are offline. Logout cannot happen in offline conditions.</string>
+    <string name="logging_out">Logging you out...</string>
+    <string name="forms_downloading">Forms are downloading, please wait..</string>
+    <string name="student_address_book">Parent\'s Mobile \nNumbers</string>
+    <string name="send_sms">Send \nSMS</string>
+    <string name="no_student">There are no student in the list. Please add students in the Student Address Book</string>
+    <string name="data_still_downloading">Data is still downloading, please wait</string>
+    <string name="setting_up_credentials">Setting up credentials on the forms</string>
+    <string name="no_internet_2">Failed to fetch data. Please check internet</string>
+    <string name="helpline">Helpline</string>
+    <string name="successfully_loaded_settings">Successfully loaded settings</string>
+    <string name="failed_to_load_settings">Failed to load settings</string>
+    <string name="track_SMS">Track SMS</string>
+    <string name="no_assessments">No SMS sent. Please send SMS and then return to this section.</string>
+    <string name="loading_data_home_screen">Loading Data ...</string>
+    <string name="student_addressbook">Parent\'s Mobile Numbers</string>
+    <string name="no_internet_home_screen">Please connect to the internet to proceed to selection of assessments.</string>
+    <string name="assessment_track_sms">आकलन (Assessment)</string>
+    <string name="assessment_announcement_track_sms">आकलन की घोषणा (Assessment Announcement)</string>
+    <string name="attendence_track_filter">उपस्थिति (Attendance)</string>
+    <string name="homework_track_filter">गृहकार्य (Homework)</string>
+    <string name="holiday_track_filter">छुट्टियां (Holiday)</string>
+    <string name="smc_track_filter">मीटिंग (Meetings)</string>
+    <string name="all_track_filter">All</string>
+    <string name="check_out_the_documentation_here">Check out the documentation here.</string>
+    <string name="downloading">Downloading data from Server</string>
+    <string name="no_internet">Failed to get data. Please check your internet connection</string>
+    <string name="server_error">Failed to get data. Please check your internet connection.</string>
+    <string name="track_sms_title">Track SMS</string>
+    <string name="please_update_the_password_and_details_of_the_school_in_charge">Please update the password and details of the school in-charge.</string>
+    <string name="update_details">Update details</string>
+    <string name="update_cancel_1">To update the language on the app, select the language and click on Update. Please restart the phone to update the language.</string>
+    <string name="update">UPDATE</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_form">Select form</string>
+    <string name="no_internet_retry">Please connect to internet and retry</string>
+    <string name="retry">Retry</string>
+    <string name="change_language">Change Language</string>
+    <string name="hindi">हिंदी</string>
+    <string name="settings">Settings</string>
+    <string name="no_internet_45">Please connect to internet to update data.</string>
+    <string name="gender">लिंग</string>
+    <string name="category">वर्ग</string>
+    <string name="download_complete">Download Complete</string>
+    <string name="english">English</string>
+    <string name="fill_forms">Fill Forms</string>
+    <string name="about_us_summary" translatable="false">Saksham Samiksha application is a product of the Department of School Education, Haryana Government.  The application will be used to record observations of academic and non-academic nature from school visits across the state.</string>
+    <string name="need_help">Need Help?</string>
+    <string name="select_language_english">Please select your language</string>
+    <string name="product_image">back</string>
+    <string name="select_language_hindi">कृपया अपनी भाषा चुनें</string>
+    <string name="please_select_forms">Choose Forms</string>
+    <string name="submit_saved_forms">Submit Saved forms</string>
+    <string name="click_on_the_pdf_icon_to_download_the_pdf_report">Click on the PDF Icon to download the PDF Report</string>
+    <string name="pdf_not_generated_error">The PDF report has not been generated yet. Please check again after some time.</string>
+    <string name="file_download_start">File will start downloading now.</string>
+    <string name="hundred_percent">100%</string>
+    <string name="form_download_error">There has been an error in downloading the forms from Server.\nPlease check if URL is valid or not and ODK configs are alright.</string>
+    <string name="form_download_error_no_internet_connection">Please check your internet connection. Could not refresh the forms.</string>
+    <string name="form_list_download_error">There has been an error in downloading the forms.</string>
+    <string name="error_submission_api">There has been error in fetching data of your submissions. Hence showing the last fetched data.</string>
+    <string name="internet_error_submission_screen">Seems like you are not connected to internet, please try to connect to wifi/ switch on your mobile data connection and try again by clicking on the button below.</string>
+    <string name="samagra_shiksha">Saksham Samiksha</string>
+    <string name="form_submitted_online">Thanks for filling the inspection report. Your report has been submitted.</string>
+    <string name="form_submitted_offline">Thank you for filling the inspection report.\nSince you have filled the report in offline mode, the report is save under \'Un-submitted Forms\'.\n Please submit your forms manually by going to the \'Un-submitted Forms\' section when connected to internet.</string>
+    <string name="view_submissions">View Submissions in Offline Mode</string>
+    <string name="logging_out_message">Logging you out…Please wait.</string>
 </resources>

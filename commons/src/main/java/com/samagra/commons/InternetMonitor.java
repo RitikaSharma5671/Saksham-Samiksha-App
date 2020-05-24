@@ -1,13 +1,17 @@
 package com.samagra.commons;
 
+import android.content.Context;
+
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.InternetObservingSettings;
 import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.strategy.SocketInternetObservingStrategy;
+import com.samagra.grove.logging.Grove;
+
+import java.util.Date;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 /**
  * This class exposes API that enables the app to monitor internet connectivity status.
@@ -45,7 +49,7 @@ public class InternetMonitor {
                 .host("www.google.com")
                 .httpResponse(200)
                 .timeout(5000)
-                .errorHandler((exception, message) -> Timber.e(exception, "Exception in Lib message - %s", message))
+                .errorHandler((exception, message) -> Grove.e(exception, "Exception in Lib message - %s", message))
                 .build();
     }
 
@@ -72,28 +76,32 @@ public class InternetMonitor {
      * @throws InitializationException if {@link InternetMonitor#init(MainApplication)} <b>OR</b>
      *                                 {@link InternetMonitor#init(MainApplication, InternetObservingSettings)} is not called prior
      *                                 to calling this.
+     * @param applicationContext
      */
-    public static void startMonitoringInternet() throws InitializationException {
+    public static void startMonitoringInternet(MainApplication applicationContext) throws InitializationException {
         checkValidConfig();
-        Timber.d("Starting Monitoring");
+        Grove.d("Starting Monitoring");
         monitorSubscription = ReactiveNetwork
                 .observeInternetConnectivity(internetObservingSettings)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isConnectedToHost -> {
-                    Timber.d("Here, Checking N/W");
+                    Grove.d("Here, Checking N/W");
                     if (isConnectedToHost != lastConnectedState) {
-                        Timber.d("Is Connected To Host ? %s", isConnectedToHost);
+                        Grove.d("Is Connected To Host ? %s", isConnectedToHost);
                         String message = isConnectedToHost ? "Connected To Network" : "Lost Internet Connection";
-                        InternetIndicatorOverlay.make(mainApplication, message, 5000).show();
+                        InternetIndicatorOverlay.make(applicationContext, message, 5000).show();
                         lastConnectedState = isConnectedToHost;
+                        InternetStatus status = new InternetStatus(isConnectedToHost, new Date());
+                        mainApplication.getEventBus().send(new ExchangeObject.DataExchangeObject<InternetStatus>(Modules.MAIN_APP, Modules.COMMONS, status));
+
                     }
-                }, throwable -> Timber.e(throwable, "Some error occurred %s", throwable.getMessage()));
+                }, throwable -> Grove.e(throwable, "Some error occurred %s", throwable.getMessage()));
     }
 
     /**
      * This function stops the internet connection monitoring. It is safe to call even if monitoring
-     * is not yet started via {@link InternetMonitor#startMonitoringInternet()}. However an exception
+     * is not yet started via {@link InternetMonitor#startMonitoringInternet(MainApplication)}. However an exception
      * will be thrown if this call is made without first initialising the class.
      *
      * @throws InitializationException if  {@link InternetMonitor#init(MainApplication)}
@@ -104,9 +112,9 @@ public class InternetMonitor {
         checkValidConfig();
         if (!monitorSubscription.isDisposed()) {
             monitorSubscription.dispose();
-            Timber.d("Monitor Disposed.");
+            Grove.d("Monitor Disposed.");
         } else {
-            Timber.w("Monitor Subscription already disposed.");
+            Grove.w("Monitor Subscription already disposed.");
         }
     }
 

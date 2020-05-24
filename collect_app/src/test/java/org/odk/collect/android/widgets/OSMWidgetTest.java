@@ -76,7 +76,7 @@ public class OSMWidgetTest extends BinaryWidgetTest<OSMWidget, StringData> {
         when(mediaFolder.getName()).thenReturn("test-media");
 
         when(formEntryPrompt.getQuestion()).thenReturn(questionDef);
-        when(questionDef.getOsmTags()).thenReturn(ImmutableList.<OSMTag>of());
+        when(questionDef.getOsmTags()).thenReturn(ImmutableList.of());
 
         fileName = RandomString.make();
     }

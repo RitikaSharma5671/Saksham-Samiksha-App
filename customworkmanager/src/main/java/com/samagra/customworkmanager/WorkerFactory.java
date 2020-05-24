@@ -43,51 +43,51 @@ public abstract class WorkerFactory {
      * is unable to create an instance of the {@link ListenableWorker}, it should return {@code
      * null} so it can delegate to the default {@link WorkerFactory}.
      * <p></p>
-     * Returns a new instance of the specified {@code workerClassName} given the arguments.  The
+     * Returns a new instance of the specified {@code workername} given the arguments.  The
      * returned worker should be a newly-created instance and must not have been previously returned
      * or used by WorkManager.
      *
      * @param appContext The application context
-     * @param workerClassName The class name of the worker to create
+     * @param workername The class name of the worker to create
      * @param workerParameters Parameters for worker initialization
-     * @return A new {@link ListenableWorker} instance of type {@code workerClassName}, or
+     * @return A new {@link ListenableWorker} instance of type {@code workername}, or
      *         {@code null} if the worker could not be created
      */
     public abstract @Nullable ListenableWorker createWorker(
             @NonNull Context appContext,
-            @NonNull String workerClassName,
+            @NonNull String workername,
             @NonNull WorkerParameters workerParameters);
 
     /**
-     * Returns a new instance of the specified {@code workerClassName} given the arguments.  If no
+     * Returns a new instance of the specified {@code workername} given the arguments.  If no
      * worker is found, default reflection-based code will be used to instantiate the worker with
      * the current ClassLoader.  The returned worker should be a newly-created instance and must not
      * have been previously returned or used by WorkManager.
      *
      * @param appContext The application context
-     * @param workerClassName The class name of the worker to create
+     * @param workername The class name of the worker to create
      * @param workerParameters Parameters for worker initialization
-     * @return A new {@link ListenableWorker} instance of type {@code workerClassName}, or
+     * @return A new {@link ListenableWorker} instance of type {@code workername}, or
      *         {@code null} if the worker could not be created
      * @hide
      */
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     public final @Nullable ListenableWorker createWorkerWithDefaultFallback(
             @NonNull Context appContext,
-            @NonNull String workerClassName,
+            @NonNull String workername,
             @NonNull WorkerParameters workerParameters) {
 
         ListenableWorker worker;
-        worker = createWorker(appContext, workerClassName, workerParameters);
+        worker = createWorker(appContext, workername, workerParameters);
         if (worker != null) {
             return worker;
         }
 
         Class<? extends ListenableWorker> clazz;
         try {
-            clazz = Class.forName(workerClassName).asSubclass(ListenableWorker.class);
+            clazz = Class.forName(workername).asSubclass(ListenableWorker.class);
         } catch (ClassNotFoundException e) {
-            Logger.get().error(TAG, "Class not found: " + workerClassName);
+            Logger.get().error(TAG, "Class not found: " + workername);
             return null;
         }
 
@@ -99,7 +99,7 @@ public abstract class WorkerFactory {
                     workerParameters);
             return worker;
         } catch (Exception e) {
-            Logger.get().error(TAG, "Could not instantiate " + workerClassName, e);
+            Logger.get().error(TAG, "Could not instantiate " + workername, e);
         }
         return null;
     }
@@ -115,7 +115,7 @@ public abstract class WorkerFactory {
             @Override
             public @Nullable ListenableWorker createWorker(
                     @NonNull Context appContext,
-                    @NonNull String workerClassName,
+                    @NonNull String workername,
                     @NonNull WorkerParameters workerParameters) {
                 return null;
             }

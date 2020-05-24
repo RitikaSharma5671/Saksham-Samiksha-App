@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">cascading_module</string>
+    <string name="dummy_district">जिला का नाम चुनें</string>
+    <string name="dummy_block">ब्लॉक का नाम चुनें</string>
+    <string name="dummy_gram_panchayat">स्कूल का नाम चुनें</string>
+    <string name="dummy_hospital">संस्था का नाम चुनें</string>
+    <string name="error_message_search">\u0020\u0020कृपया छात्र के सभी प्रासंगिक विवरण भरें.</string>
+    <string name="please_fill_the_details_below">कृपया नीचे विवरण भरें:</string>
+    <string name="next">आगे बढ़ें</string>
+    <string name="search_screen_title">स्कूल विवरण चयन</string>
+    <string name="please_select_forms">फार्म चुनें</string>
+</resources>

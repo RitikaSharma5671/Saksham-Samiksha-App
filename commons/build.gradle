@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -69,8 +69,10 @@ dependencies {
     // Butterknife
     api "com.jakewharton:butterknife:10.1.0"
 
-    //Timber
-    api "com.jakewharton.timber:timber:4.7.1"
+    // Locale Changer
+    api "com.github.YarikSOffice:lingver:1.2.0"
+
+    api 'com.hypertrack:hyperlog:0.0.10'
 
     /*api("androidx.work:work-runtime:2.1.0") {
         exclude group: 'com.google.guava', module: 'listenablefuture'
@@ -80,4 +82,27 @@ dependencies {
     //Android architecture components - Lifecycle
     api "androidx.lifecycle:lifecycle-runtime:2.0.0"
     api "androidx.lifecycle:lifecycle-extensions:2.0.0"
+
+    api 'com.google.firebase:firebase-messaging:20.1.0'
+    implementation 'androidx.browser:browser:1.0.0'
+    // Better "Subjects" for Rx:
+    implementation "com.jakewharton.rxrelay2:rxrelay:2.0.0"
+
+
+    // Porgress snackbar
+    api 'com.github.tingyik90:snackprogressbar:6.2.0'
+
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+    implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    implementation 'com.google.firebase:firebase-database:19.1.0'
+    implementation "com.google.firebase:firebase-auth:19.1.0"
+    implementation "com.google.firebase:firebase-storage:19.1.0"
+    implementation 'com.google.firebase:firebase-config:19.0.2'
+
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.2'
+    api 'androidx.test.espresso:espresso-idling-resource:3.2.0'
+    implementation project(path: ':grove')
 }

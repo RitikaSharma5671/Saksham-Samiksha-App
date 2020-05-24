@@ -27,10 +27,12 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toolbar;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.helpers.ContentResolverHelper;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
@@ -43,6 +45,7 @@ import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
 
 import timber.log.Timber;
 
+import static com.samagra.commons.Constants.KEY_CUSTOMIZE_TOOLBAR;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
 /**
@@ -58,7 +61,6 @@ public class FormChooserList extends FormListActivity implements
 
     private static final boolean EXIT = true;
     private DiskSyncTask diskSyncTask;
-    Intent intentPrevious;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,6 @@ public class FormChooserList extends FormListActivity implements
         setContentView(R.layout.form_chooser_list);
 
         setTitle(getString(R.string.enter_data));
-        intentPrevious = this.getIntent();
 
         new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
@@ -121,15 +122,30 @@ public class FormChooserList extends FormListActivity implements
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Bundle bundle = intentPrevious.getExtras();
         if (Collect.allowClick(getClass().getName())) {
             // get uri to form
             long idFormsTable = listView.getAdapter().getItemId(position);
-            bundle.putLong("selectedFormID", idFormsTable);
+            Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI, idFormsTable);
 
-            Intent intent = new Intent();
-            intent.putExtras(bundle);
-            setResult(RESULT_OK, intent);
+            String action = getIntent().getAction();
+            if (Intent.ACTION_PICK.equals(action)) {
+                // caller is waiting on a picked form
+                setResult(RESULT_OK, new Intent().setData(formUri));
+            } else {
+                ///storage/emulated/0/odk/forms/Attendance Tracker.xml";
+                // caller wants to view/edit a form, so launch formentryactivity
+                String formPath = ContentResolverHelper.getFormPath(formUri);
+                String[] arrOfStr = formPath.split("/");
+                String formTitle = arrOfStr[arrOfStr.length-1];
+                formTitle = formTitle.replace(".xml", "");
+
+
+            Intent intent = new Intent(Intent.ACTION_EDIT, formUri);
+                intent.putExtra("formTitle", formTitle);
+                intent.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+                startActivity(intent);
+            }
+            
             finish();
         }
     }

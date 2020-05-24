@@ -1,7 +1,12 @@
 package com.samagra.ancillaryscreens.base;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +15,14 @@ import com.google.android.material.snackbar.Snackbar;
 import com.samagra.ancillaryscreens.di.component.ActivityComponent;
 import com.samagra.ancillaryscreens.di.component.DaggerActivityComponent;
 import com.samagra.ancillaryscreens.di.modules.CommonsActivityModule;
+import com.samagra.commons.Constants;
+import com.samagra.commons.LocaleManager;
+
+import org.odk.collect.android.utilities.LocaleHelper;
+
+import java.util.Locale;
+
+import static android.content.pm.PackageManager.GET_META_DATA;
 
 /**
  * This abstract class serves as the Base for all other activities used in this module. The class is
@@ -26,6 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        resetTitles();
     }
 
     public ActivityComponent getActivityComponent() {
@@ -36,6 +50,32 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         }
         return activityComponent;
     }
+
+
+    @Override
+    public String fetchString(int stringID) {
+       return getActivityContext().getResources().getString(stringID);
+    }
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(new LocaleHelper().updateLocale(base, PreferenceManager.getDefaultSharedPreferences(base).getString(Constants.APP_LANGUAGE_KEY, "en")));
+    }
+
+
+
+    protected void resetTitles() {
+        try {
+            ActivityInfo info = getPackageManager().getActivityInfo(getComponentName(), GET_META_DATA);
+            if (info.labelRes != 0) {
+                setTitle(info.labelRes);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public Context getActivityContext() {

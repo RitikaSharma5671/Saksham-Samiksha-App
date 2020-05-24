@@ -25,6 +25,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -55,10 +57,25 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import com.google.android.gms.location.LocationListener;
 import com.google.common.collect.ImmutableList;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.samagra.commons.FormFilledEvent;
+import com.samagra.grove.logging.Grove;
+import com.samagra.grove.logging.Grove;
 
 import org.apache.commons.io.IOUtils;
 import org.javarosa.core.model.FormDef;
@@ -150,17 +167,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.work.Constraints;
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -202,6 +208,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     public static final String LOCATION_RESULT = "LOCATION_RESULT";
     public static final String BEARING_RESULT = "BEARING_RESULT";
     public static final String GEOSHAPE_RESULTS = "GEOSHAPE_RESULTS";
+    public static final String GEOTRACE_RESULTS = "GEOTRACE_RESULTS";
     public static final String ANSWER_KEY = "ANSWER_KEY";
 
     public static final String KEY_INSTANCES = "instances";
@@ -305,6 +312,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     @Inject
     RxEventBus eventBus;
 
+    String formTitle = "";
+
     private final LocationProvidersReceiver locationProvidersReceiver = new LocationProvidersReceiver();
 
     /**
@@ -316,16 +325,19 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         setContentView(R.layout.form_entry);
 
+        if (getIntent() != null)
+            formTitle = getIntent().getStringExtra("formTitle");
+
         Collect.getInstance().getComponent().inject(this);
 
         compositeDisposable
                 .add(eventBus
-                .register(ReadPhoneStatePermissionRxEvent.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> {
-                    readPhoneStatePermissionRequestNeeded = true;
-                }));
+                        .register(ReadPhoneStatePermissionRxEvent.class)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(event -> {
+                            readPhoneStatePermissionRequestNeeded = true;
+                        }));
 
         errorMessage = null;
 
@@ -597,7 +609,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle(getString(R.string.loading_form));
+        if (formTitle != "")
+            toolbar.setTitle(formTitle);
+        else
+            toolbar.setTitle("Fill Form");
     }
 
     private void setUpLocationClient(AuditConfig auditConfig) {
@@ -715,7 +730,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
 
         if (resultCode == RESULT_CANCELED) {
-            if (getCurrentViewIfODKView() != null) {
+            // request was canceled...
+            if (requestCode != RequestCodes.HIERARCHY_ACTIVITY && getCurrentViewIfODKView() != null) {
                 getCurrentViewIfODKView().cancelWaitingForBinaryData();
             }
             return;
@@ -723,7 +739,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         // intent is needed for all requestCodes except of DRAW_IMAGE, ANNOTATE_IMAGE, SIGNATURE_CAPTURE, IMAGE_CAPTURE and HIERARCHY_ACTIVITY
         if (intent == null && requestCode != RequestCodes.DRAW_IMAGE && requestCode != RequestCodes.ANNOTATE_IMAGE
-                && requestCode != RequestCodes.SIGNATURE_CAPTURE && requestCode != RequestCodes.IMAGE_CAPTURE) {
+                && requestCode != RequestCodes.SIGNATURE_CAPTURE && requestCode != RequestCodes.IMAGE_CAPTURE
+                && requestCode != RequestCodes.HIERARCHY_ACTIVITY) {
             Timber.w("The intent has a null value for requestCode: " + requestCode);
             ToastUtils.showLongToast(getString(R.string.null_intent_value));
             return;
@@ -744,6 +761,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(sb);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
+                refreshCurrentView();
                 return;
             }
         }
@@ -754,6 +773,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(osmFileName);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.EX_STRING_CAPTURE:
             case RequestCodes.EX_INT_CAPTURE:
@@ -765,6 +785,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     if (getCurrentViewIfODKView() != null) {
                         getCurrentViewIfODKView().setBinaryData(externalValue);
                     }
+                    saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 }
                 break;
             case RequestCodes.EX_GROUP_CAPTURE:
@@ -808,6 +829,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(nf);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.ALIGNED_IMAGE:
                 /*
@@ -831,6 +853,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(nf);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.ARBITRARY_FILE_CHOOSER:
             case RequestCodes.AUDIO_CHOOSER:
@@ -897,26 +920,36 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(sl);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.GEOSHAPE_CAPTURE:
-                String gshr = intent.getStringExtra(ANSWER_KEY);
+                String gshr = intent.getStringExtra(GEOSHAPE_RESULTS);
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(gshr);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.GEOTRACE_CAPTURE:
-                String traceExtra = intent.getStringExtra(ANSWER_KEY);
+                String traceExtra = intent.getStringExtra(GEOTRACE_RESULTS);
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(traceExtra);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.BEARING_CAPTURE:
                 String bearing = intent.getStringExtra(BEARING_RESULT);
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(bearing);
                 }
+                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
+            case RequestCodes.HIERARCHY_ACTIVITY:
+                // We may have jumped to a new index in hierarchy activity, so
+                // refresh
+                break;
+
         }
+        refreshCurrentView();
     }
 
     public QuestionWidget getWidgetWaitingForBinaryData() {
@@ -975,8 +1008,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_JUMP_TO);
 
-        menu.findItem(R.id.menu_goto).setVisible(useability)
-                .setEnabled(useability);
+        menu.findItem(R.id.menu_goto).setVisible(false)
+                .setEnabled(false);
 
         FormController formController = getFormController();
 
@@ -990,8 +1023,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
 
-        menu.findItem(R.id.menu_preferences).setVisible(useability)
-                .setEnabled(useability);
+        menu.findItem(R.id.menu_preferences).setVisible(false)
+                .setEnabled(false);
+
 
         if (shouldLocationCoordinatesBeCollected(getFormController()) && LocationClients.areGooglePlayServicesAvailable(this)) {
             MenuItem backgroundLocation = menu.findItem(R.id.track_location);
@@ -1000,6 +1034,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
 
         return true;
+    }
+
+    private boolean getActualUsability(boolean useability, boolean isShikshaSathi) {
+        return !isShikshaSathi && useability;
     }
 
     @Override
@@ -1391,7 +1429,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         if (showNavigationButtons) {
             updateNavigationButtonVisibility();
         }
-
+        endView.findViewById(R.id.save_name).setVisibility(View.VISIBLE);
         return endView;
     }
 
@@ -1475,6 +1513,14 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             Timber.d(e);
             createErrorDialog(e.getCause().getMessage(), DO_NOT_EXIT);
         }
+    }
+
+    //Check Interrnet Method
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     /**
@@ -1849,6 +1895,51 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         return true;
     }
 
+
+    private void createQuitDialogShikshaSathi() {
+        String title;
+        {
+            FormController formController = getFormController();
+            title = (formController == null) ? null : formController.getFormTitle();
+            if (title == null) {
+                title = getString(R.string.no_form_loaded);
+            }
+        }
+
+        int padding_in_dp = 16;  // 6 dps
+        final float scale = getResources().getDisplayMetrics().density;
+        int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
+
+        TextView textView = new TextView(this);
+        textView.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px/2);
+        textView.setText(getString(R.string.quit_application, title));
+        textView.setTextSize(22);
+        textView.setTextColor(getResources().getColor(R.color.darkRankItemColor));
+//        textView.setTypeface(null, Typeface.BOLD);
+        alertDialog = new AlertDialog.Builder(this, R.style.AlertDialogTheme_Light)
+                .setCustomTitle(textView)
+                .setPositiveButton(getString(R.string.confirm),
+                        (dialog, id) -> {
+                            ExternalDataManager manager = Collect.getInstance().getExternalDataManager();
+                            if (manager != null) {
+                                manager.close();
+                            }
+
+                            FormController formController = getFormController();
+                            if (formController != null) {
+                                formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_EXIT, true);
+                            }
+                            removeTempInstance();
+                            MediaManager.INSTANCE.revertChanges();
+                            finishReturnInstance();
+                            alertDialog.dismiss();
+                        })
+                .setNegativeButton(getString(R.string.do_not_exit),
+                        (dialog, id) -> dialog.cancel())
+                .setMessage(R.string.quit_dialog_label).create();
+        alertDialog.show();
+    }
+
     /**
      * Create a dialog with options to save and exit or quit without
      * saving
@@ -1868,7 +1959,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             items = ImmutableList.of(new IconMenuItem(R.drawable.ic_save, R.string.keep_changes),
                     new IconMenuItem(R.drawable.ic_delete, R.string.do_not_save));
         } else {
-            items = ImmutableList.of(new IconMenuItem(R.drawable.ic_delete, R.string.do_not_save));
+            items = ImmutableList.of(new IconMenuItem(R.drawable.ic_delete_black_24dp, R.string.do_not_save));
         }
 
         ListView listView = DialogUtils.createActionListView(this);
@@ -2081,7 +2172,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * - we are at the first question in the form so the back button is hidden
      * - we are at the end screen so the next button is hidden
      * - settings prevent backwards navigation of the form so the back button is hidden
-     *
+     * <p>
      * The visibility of the container for these buttons is determined once {@link #onResume()}.
      */
     private void updateNavigationButtonVisibility() {
@@ -2151,7 +2242,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     @Override
     protected void onResume() {
         super.onResume();
-
+        initToolbar();
         if (!areStoragePermissionsGranted(this)) {
             onResumeWasCalledWithoutPermissions = true;
             return;
@@ -2174,6 +2265,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 return;
             }
         }
+
 
         FormController formController = getFormController();
 
@@ -2234,7 +2326,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                createQuitDialog();
+                createQuitDialogShikshaSathi();
                 return true;
             case KeyEvent.KEYCODE_DPAD_RIGHT:
                 if (event.isAltPressed() && !beenSwiped) {
@@ -2272,9 +2364,11 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             saveToDiskTask.setFormSavedListener(null);
             // We have to call cancel to terminate the thread, otherwise it
             // lives on and retains the FEC in memory.
-            if (saveToDiskTask.getStatus() == AsyncTask.Status.FINISHED) {
-                saveToDiskTask.cancel(true);
-                saveToDiskTask = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
+                if (saveToDiskTask.getStatus() == AsyncTask.Status.FINISHED) {
+                    saveToDiskTask.cancel(true);
+                    saveToDiskTask = null;
+                }
             }
         }
         releaseOdkView();
@@ -2334,7 +2428,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * existing instance, shows that instance to the user. Either launches {@link FormHierarchyActivity}
      * if an existing instance is being edited or builds the view for the current question(s) if a
      * new instance is being created.
-     *
+     * <p>
      * May do some or all of these depending on current state:
      * - Ensures phone state permissions are given if this form needs them
      * - Cleans up {@link #formLoaderTask}
@@ -2553,11 +2647,11 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         FormController formController = getFormController();
         switch (saveStatus) {
             case SaveToDiskTask.SAVED:
-                ToastUtils.showShortToast(R.string.data_saved_ok);
+                Grove.d(Collect.getInstance().getAppContext().getResources().getString(R.string.data_saved_ok));
                 formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_SAVE, false);
                 break;
             case SaveToDiskTask.SAVED_AND_EXIT:
-                ToastUtils.showShortToast(R.string.data_saved_ok);
+                Grove.d(Collect.getInstance().getAppContext().getResources().getString(R.string.data_saved_ok));
                 formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_SAVE, false);
                 if (saveResult.isComplete()) {
                     formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_EXIT, false);
@@ -2574,6 +2668,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     // Force writing of audit since we are exiting
                     formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_EXIT, true);
                 }
+                Collect.getInstance().getApplicationInterface().eventBusInstance().post(new FormFilledEvent());
 
                 finishReturnInstance();
                 break;
@@ -2640,7 +2735,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     /**
      * Requests that unsent finalized forms be auto-sent. If no network connection is available,
      * the work will be performed when a connection becomes available.
-     *
+     * <p>
      * TODO: if the user changes auto-send settings, should an auto-send job immediately be enqueued?
      */
     private void requestAutoSend() {
@@ -2943,7 +3038,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * - adds widgets corresponding to questions that are newly-relevant
      * - removes and rebuilds widgets corresponding to questions that have changed in some way. For
      * example, the question text or hint may have updated due to a value they refer to changing.
-     *
+     * <p>
      * The widget corresponding to the {@param lastChangedIndex} is never changed.
      */
     private void updateFieldListQuestions(FormIndex lastChangedIndex) {
@@ -3003,4 +3098,3 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
     }
 }
-

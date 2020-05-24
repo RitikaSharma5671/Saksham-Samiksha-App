@@ -19,6 +19,7 @@ package org.odk.collect.android.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -125,7 +126,7 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(new LocaleHelper().updateLocale(base));
+        super.attachBaseContext(new LocaleHelper().updateLocale(base, PreferenceManager.getDefaultSharedPreferences(base).getString(Constants.APP_LANGUAGE_KEY, "en")));
     }
 
     /**

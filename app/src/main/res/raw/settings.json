@@ -21,7 +21,7 @@
     "change_navigation": false,
     "change_constraint_behavior": false,
     "change_font_size": false,
-    "change_app_language": false,
+    "change_app_language": true,
     "instance_form_sync": true,
     "default_to_finalized": true,
     "delete_after_send": false,

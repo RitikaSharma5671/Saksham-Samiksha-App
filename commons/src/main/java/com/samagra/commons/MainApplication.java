@@ -5,6 +5,8 @@ import android.app.Application;
 
 import androidx.lifecycle.LifecycleOwner;
 
+import okhttp3.OkHttpClient;
+
 /**
  * The Application class must implement this interface. This makes sure that the application class of the app
  * implements certain functionality required by the commons module.
@@ -12,6 +14,12 @@ import androidx.lifecycle.LifecycleOwner;
  * @author Pranav Sharma
  */
 public interface MainApplication extends LifecycleOwner {
+
+    void updateInternetStatus(Boolean status);
+
+    boolean isOnline();
+
+    OkHttpClient provideOkHttpClient();
 
     /**
      * Must provide a {@link androidx.annotation.NonNull} activity instance of the activity running in foreground.
@@ -36,4 +44,6 @@ public interface MainApplication extends LifecycleOwner {
      * Not all modules require to be teared down.
      */
     void teardownModule(Modules module);
+
+    EventBus eventBusInstance();
 }

@@ -71,12 +71,12 @@ public class PackageManagerHelper {
      * Checks if a manifest-defined component is explicitly enabled
      *
      * @param context {@link Context}
-     * @param className {@link Class#getName()} name of component
+     * @param name {@link Class#getName()} name of component
      * @return {@code true} if component is explicitly enabled
      */
-    public static boolean isComponentExplicitlyEnabled(Context context, String className) {
+    public static boolean isComponentExplicitlyEnabled(Context context, String name) {
         PackageManager packageManager = context.getPackageManager();
-        ComponentName componentName = new ComponentName(context, className);
+        ComponentName componentName = new ComponentName(context, name);
         int state = packageManager.getComponentEnabledSetting(componentName);
         return state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
     }

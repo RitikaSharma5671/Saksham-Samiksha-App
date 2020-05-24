@@ -1,7 +1,9 @@
 package com.samagra.commons;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import androidx.annotation.Nullable;
+
+import com.google.firebase.database.annotations.NotNull;
+
 
 /**
  * A {@link RuntimeException} indicating that a class is not initialised properly.

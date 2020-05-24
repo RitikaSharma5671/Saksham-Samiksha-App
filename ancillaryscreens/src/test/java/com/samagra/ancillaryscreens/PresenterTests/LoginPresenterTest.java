@@ -1,5 +1,7 @@
 package com.samagra.ancillaryscreens.PresenterTests;
 
+import android.content.Context;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelper;
@@ -7,7 +9,9 @@ import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.ancillaryscreens.screens.login.LoginContract;
 import com.samagra.ancillaryscreens.screens.login.LoginPresenter;
+import com.samagra.commons.MainApplication;
 
+import org.json.JSONArray;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -16,7 +20,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.odk.collect.android.contracts.CSVBuildStatusListener;
+import org.odk.collect.android.contracts.DataFormDownloadResultCallback;
+import org.odk.collect.android.contracts.FormListDownloadResultCallback;
+import org.odk.collect.android.contracts.IFormManagementContract;
+import org.odk.collect.android.dto.Form;
+import org.odk.collect.android.logic.FormDetails;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Scheduler;
@@ -80,7 +93,112 @@ public class LoginPresenterTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        loginPresenter = new LoginPresenter<>(loginMvpInteractor, apiHelper, new CompositeDisposable());
+        loginPresenter = new LoginPresenter<>(loginMvpInteractor, apiHelper, new CompositeDisposable(), new IFormManagementContract() {
+            @Override
+            public void setODKModuleStyle(MainApplication mainApplication, int splashScreenDrawableID, int baseAppThemeStyleID, int formActivityThemeID, int customThemeId_Settings, long toolbarIconResId) {
+
+            }
+
+            @Override
+            public void resetPreviousODKForms() {
+
+            }
+
+            @Override
+            public void resetEverythingODK() {
+
+            }
+
+            @Override
+            public void createODKDirectories() {
+
+            }
+
+            @Override
+            public void resetODKForms(Context context) {
+
+            }
+
+            @Override
+            public boolean checkIfODKFormsMatch(String formsString) {
+                return false;
+            }
+
+            @Override
+            public void startDownloadODKFormListTask(FormListDownloadResultCallback formListDownloadResultCallback) {
+
+            }
+
+            @Override
+            public HashMap<String, FormDetails> downloadNewFormsBasedOnDownloadedFormList(HashMap<String, String> userRoleBasedForms, HashMap<String, FormDetails> latestFormListFromServer) {
+                return null;
+            }
+
+            @Override
+            public void downloadODKForms(DataFormDownloadResultCallback dataFormDownloadResultCallback, HashMap<String, FormDetails> formsToBeDownloaded) {
+
+            }
+
+            @Override
+            public HashMap<String, String> downloadFormList(String formsString) {
+                return null;
+            }
+
+            @Override
+            public void initialiseODKProps() {
+
+            }
+
+            @Override
+            public void applyODKCollectSettings(Context context, int resId) {
+
+            }
+
+            @Override
+            public void launchSpecificDataForm(Context context, String formIdentifier) {
+
+            }
+
+            @Override
+            public int fetchSpecificFormID(String formIdentifier) {
+                return 0;
+            }
+
+            @Override
+            public void launchViewUnsubmittedFormView(Context context, String className, HashMap<String, Object> toolbarModificationObject) {
+
+            }
+
+            @Override
+            public void launchViewSubmittedFormsView(Context context, HashMap<String, Object> toolbarModificationObject) {
+
+            }
+
+            @Override
+            public void launchFormChooserView(Context context, HashMap<String, Object> toolbarModificationObject) {
+
+            }
+
+            @Override
+            public void updateFormBasedOnIdentifier(String formIdentifier, String tag, String tagValue) {
+
+            }
+
+            @Override
+            public ArrayList<String> fetchMediaDirs(String referenceFileName) {
+                return null;
+            }
+
+            @Override
+            public void buildCSV(CSVBuildStatusListener csvBuildStatusListener, ArrayList<String> mediaDirectoriesNames, JSONArray inputData, String mediaFileName) {
+
+            }
+
+            @Override
+            public List<Form> getDownloadedFormsNamesFromDatabase() {
+                return null;
+            }
+        });
         loginPresenter.onAttach(loginMvpView);
         testScheduler = new TestScheduler();
     }

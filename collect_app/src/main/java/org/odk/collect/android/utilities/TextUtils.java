@@ -120,7 +120,7 @@ public class TextUtils {
     public static String ellipsizeBeginning(String text) {
         return text.length() <= 100
                 ? text
-                : "..." + text.substring(text.length() - 97, text.length());
+                : "..." + text.substring(text.length() - 97);
     }
 }
 

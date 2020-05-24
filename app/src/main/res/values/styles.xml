@@ -28,14 +28,15 @@
         <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
         <item name="android:fadeScrollbars">false</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:fontFamily">@string/font_family_regular</item>
         <item name="android:panelBackground">@android:color/white</item>
-        <item name="alertDialogTheme">@style/AlertDialogTheme.Light</item>
-        <item name="searchViewStyle">@style/SearchViewTheme.Light</item>
         <item name="iconColor">@color/icons</item>
         <item name="dividerColor">@color/divider</item>
         <item name="rankItemColor">@color/lightRankItemColor</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
+        <item name="android:windowExitTransition" tools:targetApi="lollipop">@transition/main_exit</item>
+        <item name="android:windowReenterTransition" tools:targetApi="lollipop">@transition/main_reenter</item>
+        <item name="android:windowEnterTransition" tools:targetApi="lollipop">@transition/main_enter</item>
+        <item name="android:windowAllowEnterTransitionOverlap" tools:targetApi="lollipop">true</item>
         <item name="warningColor">@color/red_500</item>
         <item name="dividerCompat">@android:drawable/divider_horizontal_bright</item>
         <item name="android:tintMode" tools:targetApi="21">src_in</item>

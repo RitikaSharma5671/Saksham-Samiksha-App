@@ -14,4 +14,6 @@ public interface MvpView {
     Context getActivityContext();
 
     void showSnackbar(String message, int duration);
+
+    String fetchString(int stringID);
 }

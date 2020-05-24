@@ -57,7 +57,7 @@ class InputMergerFactoryTest {
     @Test
     fun testInputMergerFactory2() {
         factory = object : InputMergerFactory() {
-            override fun createInputMerger(className: String): InputMerger? {
+            override fun createInputMerger(name: String): InputMerger? {
                 return OverwritingInputMerger()
             }
         }

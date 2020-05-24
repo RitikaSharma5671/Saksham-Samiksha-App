@@ -77,7 +77,7 @@ public final class OneTimeWorkRequest extends WorkRequest {
          */
         public Builder(@NonNull Class<? extends ListenableWorker> workerClass) {
             super(workerClass);
-            mWorkSpec.inputMergerClassName = OverwritingInputMerger.class.getName();
+            mWorkSpec.inputMergername = OverwritingInputMerger.class.getName();
         }
 
         /**
@@ -95,7 +95,7 @@ public final class OneTimeWorkRequest extends WorkRequest {
          * @return The current {@link Builder}
          */
         public @NonNull Builder setInputMerger(@NonNull Class<? extends InputMerger> inputMerger) {
-            mWorkSpec.inputMergerClassName = inputMerger.getName();
+            mWorkSpec.inputMergername = inputMerger.getName();
             return this;
         }
 

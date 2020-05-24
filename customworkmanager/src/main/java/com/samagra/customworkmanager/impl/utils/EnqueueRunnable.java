@@ -331,26 +331,26 @@ public class EnqueueRunnable implements Runnable {
         // Delegate to ConstraintTrackingWorker between API 23-25.
         Constraints constraints = workSpec.constraints;
         if (constraints.requiresBatteryNotLow() || constraints.requiresStorageNotLow()) {
-            String workerClassName = workSpec.workerClassName;
+            String workername = workSpec.workername;
             Data.Builder builder = new Data.Builder();
             // Copy all arguments
             builder.putAll(workSpec.input)
-                    .putString(ARGUMENT_CLASS_NAME, workerClassName);
-            workSpec.workerClassName = ConstraintTrackingWorker.class.getName();
+                    .putString(ARGUMENT_CLASS_NAME, workername);
+            workSpec.workername = ConstraintTrackingWorker.class.getName();
             workSpec.input = builder.build();
         }
     }
 
     /**
-     * @param className The fully qualified class name of the {@link Scheduler}
+     * @param name The fully qualified class name of the {@link Scheduler}
      * @return {@code true} if the {@link Scheduler} class is being used by WorkManager.
      */
     private static boolean usesScheduler(
             @NonNull WorkManagerImpl workManager,
-            @NonNull String className) {
+            @NonNull String name) {
 
         try {
-            Class<?> klass = Class.forName(className);
+            Class<?> klass = Class.forName(name);
             for (Scheduler scheduler : workManager.getSchedulers()) {
                 if (klass.isAssignableFrom(scheduler.getClass())) {
                     return true;

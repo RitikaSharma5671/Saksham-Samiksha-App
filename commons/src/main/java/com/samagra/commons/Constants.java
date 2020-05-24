@@ -17,6 +17,9 @@ public class Constants {
     public static final String CUSTOM_TOOLBAR_BACK_NAVICON_CLICK = "back_on_nav_click";
     public static final String CUSTOM_TOOLBAR_TITLE = "title";
 
+    public static final String CUSTOM_TOOLBAR_SHOW_SEARCH = "show_search";
+    public static final String CUSTOM_TOOLBAR_SHOW_FILTER = "show_filter";
+
     public static final String COMMON_SHARED_PREFS_NAME = "shared_prefs_odk_ancillary_screen";
     public static final String LOGIN_HELPLINE_TELEPHONE = "tel:9673464857";
 
@@ -25,4 +28,6 @@ public class Constants {
     public static final String LOGOUT_CALLS = "logout_calls";
 
     public static final String WORK_MANAGER_SHARED_PREFS_NAME = "com.taskscheduler.sharedprefname";
+
+    public static final String APP_LANGUAGE_KEY = "applicationLanguage";
 }

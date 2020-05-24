@@ -27,7 +27,6 @@ public interface LoginContract {
          */
         boolean validateInputs(EditText editTextUsername, EditText editTextPassword);
 
-        void callHelpline();
 
         void performLogin();
 
@@ -78,7 +77,6 @@ public interface LoginContract {
          */
         void startAuthenticationTask(LoginRequest loginRequest);
 
-        void resetSelectedIfRequired();
 
         /**
          * This function finishes the {@link LoginActivity} and starts the HomeActivity. The HomeActivity is outside this

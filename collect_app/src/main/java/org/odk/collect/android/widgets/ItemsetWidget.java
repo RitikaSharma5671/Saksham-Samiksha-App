@@ -142,7 +142,7 @@ public class ItemsetWidget extends AbstractSelectOneWidget {
                                     .trim());
                 }
                 // move string forward to after " and "
-                queryString = queryString.substring(andIndex + 5, queryString.length());
+                queryString = queryString.substring(andIndex + 5);
             } else {
                 String subString = queryString.substring(0, orIndex);
                 String[] pair = subString.split("=");
@@ -156,7 +156,7 @@ public class ItemsetWidget extends AbstractSelectOneWidget {
                     arguments.add(pair[1].trim());
                 }
                 // move string forward to after " or "
-                queryString = queryString.substring(orIndex + 4, queryString.length());
+                queryString = queryString.substring(orIndex + 4);
                 orIndex = -1;
             }
         }

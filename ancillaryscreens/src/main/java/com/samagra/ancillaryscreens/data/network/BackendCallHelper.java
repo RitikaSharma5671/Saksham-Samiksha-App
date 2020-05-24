@@ -16,7 +16,11 @@ import io.reactivex.Single;
  */
 public interface BackendCallHelper {
 
+    Single<JSONObject> refreshToken(String apiKey, String refreshToken);
+
     Single<LoginResponse> performLoginApiCall(LoginRequest loginRequest);
+
+    Single<JSONObject> validateToken(String jwt);
 
     Single<JSONObject> performGetUserDetailsApiCall(String userId, String apiKey);
 

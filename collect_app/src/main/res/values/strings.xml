@@ -104,7 +104,7 @@
     <string name="no_items_display">Nothing available to display.</string>
     <string name="no_items_display_forms">Nothing available to display.\n\nTry getting and filling out a blank form.</string>
     <string name="no_items_display_sent_forms">Nothing available to display.\n\nTry sending finalized forms before viewing.</string>
-    <string name="no_items_display_instances">Nothing available to display.\n\nTry finalizing saved forms before sending.</string>
+    <string name="no_items_display_instances">No search results.</string>
     <string name="ok">OK</string>
     <string name="parse_error">Sorry, unable to parse form.</string>
     <string name="parse_legacy_formlist_failed">The server has not provided an available-forms document compatible with Aggregate 0.9.x. : %s</string>
@@ -131,7 +131,7 @@
     <string name="send_selected_data">Send Selected</string>
     <string name="send_selected_data_internet">Send (Internet)</string>
     <string name="send_selected_data_sms">Send (SMS)</string>
-    <string name="view_sent_forms">View Sent Form</string>
+    <string name="view_sent_forms">View Sent Forms</string>
     <string name="view_sent_forms_button">View Sent Form (%s)</string>
     <string name="server_auth_credentials">Invalid username or password for server: %s</string>
     <string name="server_requires_auth">Server Requires Authentication</string>
@@ -415,8 +415,9 @@
     <string name="selected_answer">Selected: %s</string>
     <string name="version_number">Version: %s</string>
     <string name="id_number">ID: %s</string>
-    <string name="odk_website">Visit the ODK website</string>
-    <string name="odk_website_summary">Open Data Kit (ODK) is used to collect data for social good in challenging environments.</string>
+    <string name="odk_website">SAFAL\n(System Application for \nFisheries And Livestock Officers</string>
+    <string name="odk_website_summary">This App has been developed by Fisheries &amp; Animal Resources Development Department for digitally monitoring the on-ground activities
+        conducted by Department officials. The data recorded in the application is analyzed and relevant decisions are taken to ensure smooth functioning in the department.</string>
     <string name="odk_forum">Join the ODK forum</string>
     <string name="odk_forum_summary">Join the forum to get support, request features, contribute code/translations! </string>
     <string name="all_open_source_licenses">Open source libraries/licenses</string>
@@ -714,4 +715,7 @@
     <string name="qr_code_not_found">QR Code not found in the selected image</string>
     <string name="not_granted_permission">The activity you are trying to start requires a permission which is not granted.</string>
     <string name="mapbox_unsupported_warning">Mapbox is not supported on this device (%s).  Please choose another mapping SDK in General Settings &gt; User interface.</string>
+    <string name="please_check_your_data_before_submitting_the_form">Please check your data before submitting the Form</string>
+    <string name="quit_dialog_label">Do you want to exit? The data filled so far will be lost.</string>
+    <string name="confirm">CONFIRM</string>
 </resources>

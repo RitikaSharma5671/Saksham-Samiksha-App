@@ -213,7 +213,7 @@ public class DataManagerList extends InstanceListFragment
     }
 
     private void deleteSmsSubmissions(Long[] ids) {
-        List<Long> list = Arrays.asList(ids);
+        Long[] list = ids;
 
         for (Long id : list) {
             smsSubmissionManager.forgetSubmission(String.valueOf(id));

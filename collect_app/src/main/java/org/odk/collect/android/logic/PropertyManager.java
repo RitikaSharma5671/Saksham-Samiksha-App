@@ -14,6 +14,7 @@
 
 package org.odk.collect.android.logic;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
@@ -22,11 +23,14 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 
+import com.samagra.grove.logging.Grove;
+
 import org.javarosa.core.services.IPropertyManager;
 import org.javarosa.core.services.properties.IPropertyRules;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.events.ReadPhoneStatePermissionRxEvent;
 import org.odk.collect.android.events.RxEventBus;
+import org.odk.collect.android.utilities.PermissionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -92,11 +96,46 @@ public class PropertyManager implements IPropertyManager {
         try {
             // Device-defined properties
             TelephonyManager telMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            IdAndPrefix idp = findDeviceId(context, telMgr);
+            DeviceDetailsProvider deviceDetailsProvider = new DeviceDetailsProvider() {
+
+                @SuppressLint("HardwareIds")
+                @Override
+                public String getDeviceId() {
+                    if(PermissionUtils.isReadPhoneStatePermissionGranted(Collect.getInstance().getAppContext()))
+                    return telMgr.getDeviceId();
+                    else
+                        return null;
+                }
+
+                @Override
+                @SuppressLint({"HardwareIds"})
+                public String getLine1Number() {
+                    if(PermissionUtils.isReadPhoneStatePermissionGranted(Collect.getInstance().getAppContext()) || PermissionUtils.isReadSMSPermissionGranted(Collect.getInstance().getAppContext()))
+                        return telMgr.getLine1Number();
+                    else
+                        return null;
+                }
+
+                @Override
+                @SuppressLint({"HardwareIds"})
+                public String getSubscriberId() {
+                    if(PermissionUtils.isReadPhoneStatePermissionGranted(Collect.getInstance().getAppContext()))
+                        return telMgr.getSubscriberId();
+                    else
+                        return null;
+                }
+
+                @Override
+                @SuppressLint({ "HardwareIds"})
+                public String getSimSerialNumber() {
+                    return telMgr.getSimSerialNumber();
+                }
+            };
+            IdAndPrefix idp = findDeviceId(context, deviceDetailsProvider);
             putProperty(PROPMGR_DEVICE_ID,     idp.prefix,          idp.id);
-            putProperty(PROPMGR_PHONE_NUMBER,  SCHEME_TEL,          telMgr.getLine1Number());
-            putProperty(PROPMGR_SUBSCRIBER_ID, SCHEME_IMSI,         telMgr.getSubscriberId());
-            putProperty(PROPMGR_SIM_SERIAL,    SCHEME_SIMSERIAL,    telMgr.getSimSerialNumber());
+            putProperty(PROPMGR_PHONE_NUMBER,  SCHEME_TEL,          deviceDetailsProvider.getLine1Number());
+            putProperty(PROPMGR_SUBSCRIBER_ID, SCHEME_IMSI,         deviceDetailsProvider.getSubscriberId());
+            putProperty(PROPMGR_SIM_SERIAL,    SCHEME_SIMSERIAL,    deviceDetailsProvider.getSimSerialNumber());
         } catch (SecurityException e) {
             Timber.e(e);
         }
@@ -109,9 +148,14 @@ public class PropertyManager implements IPropertyManager {
     }
 
     // telephonyManager.getDeviceId() requires permission READ_PHONE_STATE (ISSUE #2506). Permission should be handled or exception caught.
-    private IdAndPrefix findDeviceId(Context context, TelephonyManager telephonyManager) throws SecurityException {
+    private IdAndPrefix findDeviceId(Context context, DeviceDetailsProvider deviceDetailsProvider) {
         final String androidIdName = Settings.Secure.ANDROID_ID;
-        String deviceId = telephonyManager.getDeviceId();
+        String deviceId = null;
+        try{
+            deviceId = deviceDetailsProvider.getDeviceId();
+        }catch (SecurityException e){
+            Grove.e("Cannot access Device Id.");
+        }
         String scheme = null;
 
         if (deviceId != null) {
@@ -171,7 +215,7 @@ public class PropertyManager implements IPropertyManager {
 
     @Override
     public String getSingularProperty(String propertyName) {
-        if (!isReadPhoneStatePermissionGranted(Collect.getInstance()) && isPropertyDangerous(propertyName)) {
+        if (!isReadPhoneStatePermissionGranted(Collect.getInstance().getAppContext()) && isPropertyDangerous(propertyName)) {
             eventBus.post(new ReadPhoneStatePermissionRxEvent());
         }
 

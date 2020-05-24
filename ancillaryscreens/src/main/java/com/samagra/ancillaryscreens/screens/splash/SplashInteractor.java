@@ -2,15 +2,11 @@ package com.samagra.ancillaryscreens.screens.splash;
 
 import android.content.pm.PackageInfo;
 
-
 import com.samagra.ancillaryscreens.base.BaseInteractor;
 import com.samagra.ancillaryscreens.data.prefs.CommonsPreferenceHelper;
 
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
-
 import javax.inject.Inject;
 
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_SPLASH_PATH;
 
 /**
  * This class interacts with the {@link com.samagra.ancillaryscreens.screens.splash.SplashContract.Presenter} and the stored
@@ -35,6 +31,11 @@ public class SplashInteractor extends BaseInteractor implements SplashContract.I
     @Override
     public boolean isShowSplash() {
         return getPreferenceHelper().isShowSplash();
+    }
+
+    @Override
+    public String getRefreshToken() {
+        return getPreferenceHelper().getRefreshToken();
     }
 
     /**
@@ -65,12 +66,12 @@ public class SplashInteractor extends BaseInteractor implements SplashContract.I
     }
 
     @Override
-    public String getSplashPath() {
-        return (String) GeneralSharedPreferences.getInstance().get(KEY_SPLASH_PATH);
+    public boolean isLoggedIn() {
+        return getPreferenceHelper().isLoggedIn();
     }
 
     @Override
-    public boolean isLoggedIn() {
-        return getPreferenceHelper().isLoggedIn();
+    public void updateToken(String token) {
+        getPreferenceHelper().updateToken(token);
     }
 }

@@ -88,13 +88,13 @@
             "notNull": true
           },
           {
-            "fieldPath": "workerClassName",
+            "fieldPath": "workername",
             "columnName": "worker_class_name",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "inputMergerClassName",
+            "fieldPath": "inputMergername",
             "columnName": "input_merger_class_name",
             "affinity": "TEXT",
             "notNull": false

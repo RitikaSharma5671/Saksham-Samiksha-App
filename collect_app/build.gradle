@@ -70,7 +70,6 @@ android {
     compileSdkVersion(28)
 
     defaultConfig {
-        /*applicationId('org.odk.collect.android')*/
         minSdkVersion(16)
         targetSdkVersion(26)
         versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
@@ -365,6 +364,8 @@ dependencies {
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${rootProject.okhttp3Version}"
 
     androidTestImplementation "android.arch.work:work-testing:${rootProject.workManagerVersion}"
+    implementation project(path: ':notification_module')
+    implementation project(path: ':grove')
 }
 
 // Must be at bottom to prevent dependency collisions

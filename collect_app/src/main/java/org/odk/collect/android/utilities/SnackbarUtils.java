@@ -19,6 +19,8 @@ import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
+import org.odk.collect.android.R;
+
 public final class SnackbarUtils {
     private static final int DURATION_SHORT = 3500;
     private static final int DURATION_LONG = 5500;
@@ -47,9 +49,16 @@ public final class SnackbarUtils {
             return;
         }
 
-        Snackbar snackbar = Snackbar.make(view, message.trim(), duration);
+        Snackbar snackbar = Snackbar.make(view, message.trim(), duration)
+                .setAction(R.string.ok, v -> {
+                    onClickOk();
+                });
         TextView textView = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
         textView.setSingleLine(false);
         snackbar.show();
+    }
+
+    private static void onClickOk() {
+
     }
 }

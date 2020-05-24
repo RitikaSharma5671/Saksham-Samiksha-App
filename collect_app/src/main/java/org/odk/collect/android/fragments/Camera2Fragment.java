@@ -809,10 +809,12 @@ public class Camera2Fragment extends Fragment
             previewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                     CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
             setAutoFlash(previewRequestBuilder);
+            if(captureSession != null)
             captureSession.capture(previewRequestBuilder.build(), captureCallback,
                     backgroundHandler);
             // After this, the camera will go back to the normal state of preview.
             state = STATE_PREVIEW;
+            if(captureSession != null)
             captureSession.setRepeatingRequest(previewRequest, captureCallback,
                     backgroundHandler);
         } catch (CameraAccessException e) {
@@ -854,7 +856,7 @@ public class Camera2Fragment extends Fragment
             ByteBuffer buffer = image.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
-
+//            CameraUtils.savePhoto(new StoragePathProvider().getTmpFilePath(), bytes);
             CameraUtils.savePhoto(Collect.TMPFILE_PATH, bytes);
         }
     }

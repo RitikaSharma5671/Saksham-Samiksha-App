@@ -38,27 +38,27 @@ public abstract class InputMergerFactory {
      * {@link InputMergerFactory} is unable to create an instance of a {@link InputMerger}, it
      * should return {@code null} so it can delegate to the default {@link InputMergerFactory}.
      *
-     * @param className The fully qualified class name for the {@link InputMerger}
+     * @param name The fully qualified class name for the {@link InputMerger}
      * @return an instance of {@link InputMerger}
      */
     @Nullable
-    public abstract InputMerger createInputMerger(@NonNull String className);
+    public abstract InputMerger createInputMerger(@NonNull String name);
 
     /**
      * Creates an instance of a {@link InputMerger} given its fully
      * qualified class name with the correct fallback behavior.
      *
-     * @param className The fully qualified class name for the {@link InputMerger}
+     * @param name The fully qualified class name for the {@link InputMerger}
      * @return an instance of {@link InputMerger}
      *
      * @hide
      */
     @Nullable
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    public final InputMerger createInputMergerWithDefaultFallback(@NonNull String className) {
-        InputMerger inputMerger = createInputMerger(className);
+    public final InputMerger createInputMergerWithDefaultFallback(@NonNull String name) {
+        InputMerger inputMerger = createInputMerger(name);
         if (inputMerger == null) {
-            inputMerger = InputMerger.fromClassName(className);
+            inputMerger = InputMerger.fromname(name);
         }
         return inputMerger;
     }
@@ -74,7 +74,7 @@ public abstract class InputMergerFactory {
         return new InputMergerFactory() {
             @Nullable
             @Override
-            public InputMerger createInputMerger(@NonNull String className) {
+            public InputMerger createInputMerger(@NonNull String name) {
                 return null;
             }
         };

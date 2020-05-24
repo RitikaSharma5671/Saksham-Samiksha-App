@@ -166,9 +166,9 @@ public class WorkerWrapperTest extends DatabaseTest {
 
     @Test
     @SmallTest
-    public void testInvalidWorkerClassName() {
+    public void testInvalidWorkername() {
         OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(TestWorker.class).build();
-        work.getWorkSpec().workerClassName = "dummy";
+        work.getWorkSpec().workername = "dummy";
         insertWork(work);
         WorkerWrapper workerWrapper = createBuilder(work.getStringId())
                 .withSchedulers(Collections.singletonList(mMockScheduler))
@@ -239,7 +239,7 @@ public class WorkerWrapperTest extends DatabaseTest {
     @SmallTest
     public void testPermanentErrorWithInvalidWorkerClass() {
         OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(TestWorker.class).build();
-        getWorkSpec(work).workerClassName = "INVALID_CLASS_NAME";
+        getWorkSpec(work).workername = "INVALID_CLASS_NAME";
         insertWork(work);
         WorkerWrapper workerWrapper = createBuilder(work.getStringId()).build();
         FutureListener listener = createAndAddFutureListener(workerWrapper);
@@ -252,7 +252,7 @@ public class WorkerWrapperTest extends DatabaseTest {
     @SmallTest
     public void testPermanentErrorWithInvalidInputMergerClass() {
         OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(TestWorker.class).build();
-        getWorkSpec(work).inputMergerClassName = "INVALID_CLASS_NAME";
+        getWorkSpec(work).inputMergername = "INVALID_CLASS_NAME";
         insertWork(work);
         WorkerWrapper workerWrapper = createBuilder(work.getStringId())
                 .withSchedulers(Collections.singletonList(mMockScheduler))

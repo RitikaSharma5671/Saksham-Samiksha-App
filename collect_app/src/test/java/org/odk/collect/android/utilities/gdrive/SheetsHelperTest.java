@@ -99,6 +99,6 @@ public class SheetsHelperTest {
     }
 
     private void assertBatchUpdateCalled(int timesInvocations) throws IOException {
-        verify(sheetsService, times(timesInvocations)).batchUpdate(anyString(), ArgumentMatchers.<Request>anyList());
+        verify(sheetsService, times(timesInvocations)).batchUpdate(anyString(), ArgumentMatchers.anyList());
     }
 }

@@ -14,6 +14,8 @@ public enum Modules {
     LOGGING,
     COLLECT_APP,
     ANCILLARY_SCREENS,
+    CASCADING_SEARCH,
     COMMONS,
-    PROJECT; // Encompasses all modules
+    PROFILE,
+    PROJECT // Encompasses all modules
 }

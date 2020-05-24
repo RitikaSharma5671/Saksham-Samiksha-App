@@ -11,11 +11,11 @@ import com.samagra.customworkmanager.WorkManager;
 import com.samagra.customworkmanager.Worker;
 
 import com.samagra.commons.InitializationException;
+import com.samagra.grove.logging.Grove;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import timber.log.Timber;
 
 /**
  * A custom wrapper around the {@link OneTimeWorkRequest} class that allows additional functionality
@@ -88,22 +88,22 @@ public class ScheduledOneTimeWork implements ScheduledTask {
 
     @Override
     public void enqueueTask(Context context) {
-        Timber.d("Enqueuing task");
+        Grove.d("Enqueuing task");
         WorkManager workManager = WorkManager.getInstance(context);
         LiveData<WorkInfo> status = workManager.getWorkInfoByIdLiveData(oneTimeWorkRequest.getId());
         status.observe(Manager.getMainApplication(), workInfo -> {
             AtomicBoolean nqd = new AtomicBoolean(false);
-            Timber.d("Work info current state is %s", workInfo.getState());
+            Grove.d("Work info current state is %s", workInfo.getState());
             if ((workInfo.getState() == WorkInfo.State.ENQUEUED || workInfo.getState() == WorkInfo.State.RUNNING) && !nqd.get()) {
-                Timber.i("Task enqueued");
+                Grove.i("Task enqueued");
                 nqd.set(true);
                 if (!Manager.isTaskAlreadyInPrefs(workInfo.getId())) {
                     Manager.SavedTask.createSavedTaskFromWorkInfo(workInfo, clazz).saveTaskInSharedPrefs();
                 } else {
-                    Timber.i("Task already in Preferences");
+                    Grove.i("Task already in Preferences");
                 }
             } else if (workInfo.getState().isFinished()) {
-                Timber.i("Task finished %s ", workInfo.getId());
+                Grove.i("Task finished %s ", workInfo.getId());
                 Manager.SavedTask.clearSavedTaskFromSharedPrefs(workInfo.getId().toString());
             }
         });
@@ -114,10 +114,10 @@ public class ScheduledOneTimeWork implements ScheduledTask {
     public void cancelTask(Context context) {
         WorkManager workManager = WorkManager.getInstance(context);
         if (getScheduledTaskId() != null) {
-            Timber.i("Task cancelled");
+            Grove.i("Task cancelled");
             workManager.getWorkInfoById(getScheduledTaskId()).cancel(true);
         } else {
-            Timber.wtf("Trying to cancel a task that was never scheduled. How did you get this UUID ??!!");
+            Grove.w("Trying to cancel a task that was never scheduled. How did you get this UUID ??!!");
         }
     }
 

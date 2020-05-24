@@ -14,6 +14,7 @@ import com.google.gson.JsonPrimitive;
 public class LoginResponse {
 
     public JsonPrimitive token;
+    public JsonPrimitive refreshToken;
     public JsonObject user;
 
     public String getUserName() {

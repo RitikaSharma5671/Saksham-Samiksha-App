@@ -181,8 +181,13 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
 
     @Override
     public void onClientStop() {
-
+        locationClient.stopLocationUpdates();
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (locationManager != null) {
+            locationManager.removeGpsStatusListener(this);
+        }
     }
+
 
     /**
      * Sets up the look and actions for the progress dialog while the GPS is searching.
@@ -213,8 +218,8 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
                         }
                     }
                 };
-        locationDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.save_point),
-                geoPointButtonListener);
+//        locationDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.save_point),
+//                geoPointButtonListener);
         locationDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
                 getString(R.string.cancel_location),
                 geoPointButtonListener);

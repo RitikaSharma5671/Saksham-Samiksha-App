@@ -18,6 +18,7 @@
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_large">24sp</dimen>
     <dimen name="text_size_extra_large">28sp</dimen>
+    <dimen name="text_size_app_name">40sp</dimen>
 
     <!-- elevation -->
     <dimen name="elevation_switch">1dp</dimen>

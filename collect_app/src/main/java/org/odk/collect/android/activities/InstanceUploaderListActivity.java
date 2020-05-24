@@ -15,6 +15,9 @@
 package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -163,6 +166,12 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
                 finishAllActivities(InstanceUploaderListActivity.this);
             }
         });
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setTitle(R.string.app_name);
+//        setSupportActionBar(toolbar);
+//        setSupportActionBar(toolbar);
+//        toolbar.setNavigationIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_arrow_back_white_24dp));
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     /**
@@ -407,6 +416,14 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.menu_preferences).setVisible(false).setEnabled(false);
+        menu.findItem(R.id.menu_change_view).setVisible(false).setEnabled(false);
+        return true;
     }
 
     private void createPreferencesMenu() {

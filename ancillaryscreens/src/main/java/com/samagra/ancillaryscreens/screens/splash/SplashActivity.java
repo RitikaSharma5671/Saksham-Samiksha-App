@@ -1,17 +1,19 @@
 package com.samagra.ancillaryscreens.screens.splash;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
+import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.R2;
 import com.samagra.ancillaryscreens.base.BaseActivity;
-import com.samagra.commons.MainApplication;
-
-import org.odk.collect.android.ODKDriver;
+import com.samagra.commons.Constants;
+import com.samagra.commons.ExchangeObject;
+import com.samagra.commons.Modules;
+import com.samagra.grove.logging.Grove;
 
 import javax.inject.Inject;
 
@@ -31,8 +33,6 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
     @BindView(R2.id.splash)
     public ImageView splashImage;
-    @BindView(R2.id.splash_default)
-    public LinearLayout splashDefaultLayout;
 
     private Unbinder unbinder;
 
@@ -42,6 +42,8 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+        unbinder = ButterKnife.bind(this);
         getActivityComponent().inject(this);
         splashPresenter.onAttach(this);
         splashPresenter.requestStoragePermissions();
@@ -51,19 +53,16 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     @Override
     public void endSplashScreen() {
         splashPresenter.moveToNextScreen();
-        finish();
     }
 
     /**
-     * This function configures the Splash Screen through the values provided to the {@link org.odk.collect.android.ODKDriver}
+     * This function configures the Splash Screen
      * and renders it on screen. This includes the Splash screen image and other UI configurations.
      *
-     * @see org.odk.collect.android.ODKDriver#init(MainApplication, int, int, int, int, long)
      */
     @Override
     public void showSimpleSplash() {
-        splashDefaultLayout.setVisibility(View.GONE);
-        splashImage.setImageResource(ODKDriver.getSplashScreenImageRes());
+        splashImage.setImageResource(R.drawable.login_bg);
         splashImage.setVisibility(View.VISIBLE);
         Handler handler = new Handler();
         handler.postDelayed(this::endSplashScreen, SPLASH_TIMEOUT);
@@ -82,14 +81,27 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     public void showActivityLayout() {
         setContentView(R.layout.activity_splash);
         unbinder = ButterKnife.bind(this);
-        splashPresenter.startGetFormListCall();
-        splashPresenter.startUnzipTask();
+    }
+
+    @Override
+    public void redirectToHomeScreen() {
+        Grove.d("Redirecting to Home screen from Splash screen >>> ");
+        Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+//        ExchangeObject.SignalExchangeObject signalExchangeObject = new ExchangeObject.SignalExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, intent, true);
+//        AncillaryScreensDriver.mainApplication.getEventBus().send(signalExchangeObject);
+        Grove.d("Closing Splash Screen");
+        finishActivity();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbinder.unbind();
+        if (unbinder != null)
+            unbinder.unbind();
         splashPresenter.onDetach();
     }
 }

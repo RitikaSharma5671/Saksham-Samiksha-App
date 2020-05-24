@@ -11,9 +11,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.samagra.grove.logging.Grove;
+
 import java.lang.ref.WeakReference;
 
-import timber.log.Timber;
 
 /**
  * This class is responsible for showing a view like the Android {@link com.google.android.material.snackbar.Snackbar}
@@ -126,7 +127,7 @@ class InternetIndicatorOverlay {
             inflatedView.startAnimation(hideAnimation);
             inflatedView = null;
         } else {
-            Timber.e("Trying to call hide() on a null view InternetIndicatorOverlay.");
+            Grove.e("Trying to call hide() on a null view InternetIndicatorOverlay.");
         }
     }
 }

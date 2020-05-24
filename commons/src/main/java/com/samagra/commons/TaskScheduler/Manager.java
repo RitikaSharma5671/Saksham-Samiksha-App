@@ -19,13 +19,13 @@ import com.samagra.customworkmanager.WorkInfo;
 import com.samagra.customworkmanager.WorkManager;
 import com.samagra.customworkmanager.WorkRequest;
 import com.samagra.customworkmanager.Worker;
+import com.samagra.grove.logging.Grove;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import timber.log.Timber;
 
 /**
  * A Manager class for managing {@link ScheduledOneTimeWork} requests.
@@ -63,7 +63,7 @@ public class Manager {
      */
     public static void enqueueAllIncompleteTasks(@Nullable Context context) {
         checkInit();
-        Timber.d("Enqueuing All Tasks");
+        Grove.d("Enqueuing All Tasks");
         SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
                 .getApplicationContext().getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         for (String uuid : incompleteTasksArrayList) {
@@ -76,12 +76,12 @@ public class Manager {
                     scheduledOneTimeWork.enqueueTask(context);
                 else
                     savedTask.convertToScheduledOneTimeWork().enqueueTask(mainApplication.getCurrentApplication().getApplicationContext());
-                Timber.e("Task with id %s enqueued.", savedTask.convertToWorkRequest().getId());
+                Grove.e("Task with id %s enqueued.", savedTask.convertToWorkRequest().getId());
             } else {
-                Timber.wtf("Trying to access unsaved task");
+                Grove.w("Trying to access unsaved task");
             }
         }
-        Timber.i("All Tasks enqueued");
+        Grove.i("All Tasks enqueued");
     }
 
     static MainApplication getMainApplication() {
@@ -126,7 +126,7 @@ public class Manager {
             oldTask.strUUID = newUUID;
             oldTask.saveTaskInSharedPrefs();
         } else {
-            Timber.wtf("incompleteTasksArrayList does not contain the UUID you are trying to update");
+            Grove.w("incompleteTasksArrayList does not contain the UUID you are trying to update");
         }
     }
 
@@ -152,7 +152,7 @@ public class Manager {
      */
     @SuppressLint("ApplySharedPref")
     private static void updateIncompleteTasksArrayList(Context context) {
-        Timber.d("Updating incomplete ArrayList");
+        Grove.d("Updating incomplete ArrayList");
         System.out.println("ARRAY LIST IS " + incompleteTasksArrayList.toString());
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -186,7 +186,7 @@ public class Manager {
 
         private Data data;
         private String strUUID;
-        private String className;
+        private String name;
 
         /**
          * Creates a {@link SavedTask} that can be saved in the {@link SharedPreferences}.
@@ -198,10 +198,10 @@ public class Manager {
             return new SavedTask(workInfo.getOutputData(), workInfo.getId().toString(), clazz.getCanonicalName());
         }
 
-        private SavedTask(@Nullable Data data, String strUUID, String className) {
+        private SavedTask(@Nullable Data data, String strUUID, String name) {
             this.data = data; // Doubtful if this will serialize
             this.strUUID = strUUID;
-            this.className = className;
+            this.name = name;
         }
 
         /**
@@ -212,9 +212,9 @@ public class Manager {
         ScheduledOneTimeWork convertToScheduledOneTimeWork() {
             try {
                 if (data != null)
-                    return ScheduledOneTimeWork.from(Class.forName(className).asSubclass(Worker.class), data);
+                    return ScheduledOneTimeWork.from(Class.forName(name).asSubclass(Worker.class), data);
                 else
-                    return ScheduledOneTimeWork.from(Class.forName(className).asSubclass(Worker.class));
+                    return ScheduledOneTimeWork.from(Class.forName(name).asSubclass(Worker.class));
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -229,7 +229,7 @@ public class Manager {
         WorkRequest convertToWorkRequest() {
             try {
                 return new OneTimeWorkRequest.Builder(
-                        Class.forName(className).asSubclass(Worker.class))
+                        Class.forName(name).asSubclass(Worker.class))
                         .setInputData(data)
                         .build();
             } catch (ClassNotFoundException e) {
@@ -244,7 +244,7 @@ public class Manager {
          * to calling this method.
          */
         void saveTaskInSharedPrefs() {
-            Timber.d("Saving Task in SharedPreferences");
+            Grove.d("Saving Task in SharedPreferences");
             SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
                     .getApplicationContext()
                     .getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
@@ -260,7 +260,7 @@ public class Manager {
          * This method also updates the {@code Manager.incompleteTasksArrayList} to reflect the changes.
          */
         static void clearSavedTaskFromSharedPrefs(String UUID) {
-            Timber.d("Clearing Task with UUID %s from Preferences", UUID);
+            Grove.d("Clearing Task with UUID %s from Preferences", UUID);
             SharedPreferences sharedPreferences = mainApplication.getCurrentApplication()
                     .getApplicationContext()
                     .getSharedPreferences(Constants.WORK_MANAGER_SHARED_PREFS_NAME, Context.MODE_PRIVATE);
@@ -277,7 +277,7 @@ public class Manager {
          */
         private void addToIncompleteTaskArrayList() {
             if (!incompleteTasksArrayList.contains(strUUID)) {
-                Timber.d("Adding to incomplete ArrayList");
+                Grove.d("Adding to incomplete ArrayList");
                 incompleteTasksArrayList.add(strUUID);
                 updateIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
             }
@@ -293,7 +293,7 @@ public class Manager {
                 incompleteTasksArrayList.remove(UUID);
                 updateIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
             } else {
-                Timber.wtf("incompleteTasksArrayList does not contain UUID %s", UUID);
+                Grove.w("incompleteTasksArrayList does not contain UUID %s", UUID);
             }
         }
     }

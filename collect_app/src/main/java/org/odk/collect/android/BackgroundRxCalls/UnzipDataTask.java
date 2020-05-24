@@ -34,7 +34,7 @@ public class UnzipDataTask {
     private InputStream inputStream = null;
 
     public UnzipDataTask(Context context) {
-        int resID = R.raw.stf_mapping_json;
+        int resID = R.raw.institutions;
         contextWeakReference = new WeakReference<>(context);
         this.inputStream =  context
                 .getApplicationContext()

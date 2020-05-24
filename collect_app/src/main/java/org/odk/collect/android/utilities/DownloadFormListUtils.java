@@ -238,7 +238,7 @@ public class DownloadFormListUtils {
                 }
                 if (formId == null || downloadUrl == null || formName == null) {
                     String error =
-                            "Forms list entry " + Integer.toString(i)
+                            "Forms list entry " + i
                                     + " has missing or empty tags: formID, name, or downloadUrl";
                     Timber.e("Parsing OpenRosa reply -- %s", error);
                     formList.clear();
@@ -299,7 +299,7 @@ public class DownloadFormListUtils {
                     }
                     if (formName == null) {
                         String error =
-                                "Forms list entry " + Integer.toString(i)
+                                "Forms list entry " + i
                                         + " is missing form name or url attribute";
                         Timber.e("Parsing OpenRosa reply -- %s", error);
                         formList.clear();
@@ -452,9 +452,7 @@ public class DownloadFormListUtils {
                         return true;
                     }
                 }
-            } else if (!newMediaFiles.isEmpty()) {
-                return true;
-            }
+            } else return !newMediaFiles.isEmpty();
         }
 
         return false;
@@ -467,7 +465,7 @@ public class DownloadFormListUtils {
         }
 
         String mediaFileHash = newMediaFile.getHash();
-        mediaFileHash = mediaFileHash.substring(4, mediaFileHash.length());
+        mediaFileHash = mediaFileHash.substring(4);
         for (File localMediaFile : localMediaFiles) {
             if (mediaFileHash.equals(FileUtils.getMd5Hash(localMediaFile))) {
                 return true;

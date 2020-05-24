@@ -7,11 +7,13 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.ancillaryscreens.di.ApplicationContext;
 import com.samagra.ancillaryscreens.di.PreferenceInfo;
 
-import org.odk.collect.android.preferences.GeneralKeys;
+import com.samagra.commons.PreferenceKeys;
+import com.samagra.grove.logging.Grove;
 
 import javax.inject.Inject;
 
@@ -19,7 +21,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Solid implementation of {@link CommonsPreferenceHelper}, performs the read/write operations on the {@link SharedPreferences}
- * used by the ancillaryscreens. The class is injected to all activities instead of manually creating an object.
+ * used by the ancillary screens. The class is injected to all activities instead of manually creating an object.
  *
  * @author Pranav Sharma
  */
@@ -53,24 +55,30 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
 
     @Override
     public void setCurrentUserLoginFlags() {
-        SharedPreferences.Editor editor = defaultPreferences.edit();
-        editor.putBoolean("isLoggedIn", true);
-        editor.putBoolean("justLoggedIn", true);
+        defaultPreferences.edit().putBoolean("isLoggedIn", true).apply();
+        defaultPreferences.edit().putBoolean("justLoggedIn", true).apply();
 
         boolean firstLogIn = sharedPreferences.getBoolean("firstLoginIn", false);
-        if (firstLogIn) editor.putBoolean("firstLoginIn", false);
-        else editor.putBoolean("firstLoginIn", true);
+        if (firstLogIn) defaultPreferences.edit().putBoolean("firstLoginIn", false).apply();
+        else defaultPreferences.edit().putBoolean("firstLoginIn", true).apply();
 
         boolean firstLogIn2 = sharedPreferences.getBoolean("firstLoginIn2", false);
-        if (!firstLogIn2) editor.putBoolean("firstLoginIn2", true);
-        else editor.putBoolean("firstLoginIn2", false);
-
-        editor.apply();
+        if (!firstLogIn2) defaultPreferences.edit().putBoolean("firstLoginIn2", true).apply();
+        else defaultPreferences.edit().putBoolean("firstLoginIn2", false).apply();
     }
+
+    /**
+     * token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjVkMmJmNDIxMiJ9.eyJleHAiOjE1ODgwOTY3MzMsImlhdCI6MTU4ODA5MzEzMywiaXNzIjoiYWNtZS5jb20iLCJzdWIiOiIyZmY2YWQ1YS1lODFlLTQ0YzMtOTIzMC1kNGRmZGFmOTBkZGMiLCJhdXRoZW50aWNhdGlvblR5cGUiOiJQQVNTV09SRCIsImVtYWlsIjoidGVzdEBzYW1hZ3JhZ292ZXJuYW5jZS5pbiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJ0ZXN0VXNlciJ9.S6byWXDHU59Mu4rtK_KLWW5rxftXnIbykGVvKllNMMU" user {"active":true,"data":{"phone":"7837833100"},"email":"test@samagragovernance.in","firstName":"Test","fullName":"Test User","id":"2ff6ad5a-e81e-44c3-9230-d4dfdaf90ddc","insertInstant":1587980169852,"lastLoginInstant":1588093133588,"lastName":"User","mobilePhone":"7837833100","passwordChangeRequired":false,"passwordLastUpdateInstant":1588072252435,"registrations":[{"applicationId":"4b49c1c8-f90e-41e9-99ab-16d4af9eb269","id":"0fa913aa-7d54-473a-b7ed-8a808b95b86d","insertInstant":1587980483928,"lastLoginInstant":1587980483931,"usernameStatus":"ACTIVE","verified":true}],"tenantId":"6196acf3-3353-9224-bfbc-6271dbbdb673","twoFactorDelivery":"None","twoFactorEnabled":false,"username":"testUser","usernameStatus":"ACTIVE","verified":true}
+     * @param response
+     */
 
     @Override
     public void setCurrentUserDetailsFromLogin(LoginResponse response) {
         SharedPreferences.Editor editor = defaultPreferences.edit();
+        Grove.d("Refresh Token is " + response.refreshToken);
+        editor.putString("refreshToken", response.refreshToken.getAsString());
+        editor.putString("token", response.token.getAsString());
+
         if (response.user.has("accountName"))
             editor.putString("user.accountName", response.user.get("accountName").getAsString());
         else editor.putString("user.accountName", "");
@@ -81,7 +89,8 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
 
         if (response.user.has("username"))
             editor.putString("user.username", response.user.get("username").getAsString());
-        else editor.putString("user.username", response.getUserName());
+        else
+            editor.putString("user.username", response.getUserName());
 
         if (response.token != null)
             editor.putString("user.token", response.token.getAsString());
@@ -108,11 +117,11 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
             JsonArray registrations = response.user.get("registrations").getAsJsonArray();
             for (int i = 0; i < registrations.size(); i++) {
                 if (registrations.get(i).getAsJsonObject().has("applicationId")) {
+
                     String applicationId = registrations.get(i).getAsJsonObject().get("applicationId").getAsString();
-                    if (applicationId.equals("1ae074db-32f3-4714-a150-cc8a370eafd1")) {
+                    if (applicationId.equals(AncillaryScreensDriver.APPLICATION_ID)) {
                         // This is applicationId for Shiksha Saathi
                         editor.putString("user.role", registrations.get(i).getAsJsonObject().get("roles").getAsJsonArray().get(0).getAsJsonPrimitive().getAsString());
-                        editor.putString("user.roleData", registrations.get(i).getAsJsonObject().get("roles").getAsJsonArray().toString());
                     }
                 }
             }
@@ -121,18 +130,22 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
         if (response.user.has("fullName"))
             editor.putString("user.fullName", response.user.get("fullName").getAsString());
         else editor.putString("user.fullName", response.user.get("username").getAsString());
+        if (defaultPreferences.getString("user.username", "").isEmpty()) {
+            editor.putString("user.username", response.user.get("fullName").getAsString());
 
+        }
         editor.putString("user.id", response.user.get("id").getAsString());
 
         if (response.user.has("mobilePhone"))
             editor.putString("user.mobilePhone", response.user.get("mobilePhone").getAsString());
         else editor.putString("user.mobilePhone", "");
 
-        JsonObject userData = response.user.get("data").getAsJsonObject();
-        if (userData.has("roleData")) {
-            if (userData.get("roleData").getAsJsonObject().has("designation"))
-                editor.putString("user.designation", response.user.get("data").getAsJsonObject().get("roleData").getAsJsonObject().get("designation").getAsJsonPrimitive().getAsString());
-        }
+        if(response.user.has("data") && response.user.get("data")!= null){
+            JsonObject userData = response.user.get("data").getAsJsonObject();
+            if (userData.has("roleData")) {
+                if (userData.get("roleData").getAsJsonObject().has("designation"))
+                    editor.putString("user.designation", response.user.get("data").getAsJsonObject().get("roleData").getAsJsonObject().get("designation").getAsJsonPrimitive().getAsString());
+            }}
         editor.apply();
     }
 
@@ -143,7 +156,7 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
 
     @Override
     public boolean isFirstRun() {
-        return defaultPreferences.getBoolean(GeneralKeys.KEY_FIRST_RUN, true);
+        return defaultPreferences.getBoolean(PreferenceKeys.KEY_FIRST_RUN, true);
     }
 
     @Override
@@ -160,26 +173,31 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
 
     @Override
     public boolean isShowSplash() {
-        return defaultPreferences.getBoolean(GeneralKeys.KEY_SHOW_SPLASH, false);
+        return defaultPreferences.getBoolean(PreferenceKeys.KEY_SHOW_SPLASH, false);
     }
 
     @Override
     public Long getLastAppVersion() {
-        return sharedPreferences.getLong(GeneralKeys.KEY_LAST_VERSION, 0);
+        return sharedPreferences.getLong(PreferenceKeys.KEY_LAST_VERSION, 0);
     }
 
     @Override
     public void updateLastAppVersion(long updatedVersion) {
         SharedPreferences.Editor editor = defaultPreferences.edit();
-        editor.putLong(GeneralKeys.KEY_LAST_VERSION, updatedVersion);
+        editor.putLong(PreferenceKeys.KEY_LAST_VERSION, updatedVersion);
         editor.apply();
+    }
+
+    @Override
+    public String getToken() {
+        return defaultPreferences.getString("token", "");
     }
 
     @SuppressLint("ApplySharedPref")
     @Override
     public void updateFirstRunFlag(boolean value) {
         SharedPreferences.Editor editor = defaultPreferences.edit();
-        editor.putBoolean(GeneralKeys.KEY_FIRST_RUN, false);
+        editor.putBoolean(PreferenceKeys.KEY_FIRST_RUN, false);
         editor.commit();
     }
 
@@ -194,11 +212,23 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
     }
 
     @Override
+    public String getRefreshToken() {
+        return defaultPreferences.getString("refreshToken", "");
+    }
+
+    @Override
     public void updateAppVersion(int currentVersion) {
         SharedPreferences.Editor editor = context.getSharedPreferences("VersionPref", MODE_PRIVATE).edit();
         editor.putInt("appVersionCode", currentVersion);
         editor.putBoolean("isAppJustUpdated", true);
-        editor.commit();
+        editor.apply();
+    }
+
+    @Override
+    public void updateToken(String token) {
+        SharedPreferences.Editor editor = defaultPreferences.edit();
+        editor.putString("token", token);
+        editor.apply();
     }
 
 }

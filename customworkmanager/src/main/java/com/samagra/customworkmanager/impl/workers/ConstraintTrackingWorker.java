@@ -52,7 +52,7 @@ public class ConstraintTrackingWorker extends ListenableWorker implements WorkCo
     private static final String TAG = Logger.tagWithPrefix("ConstraintTrkngWrkr");
 
     /**
-     * The {@code className} of the {@link Worker} to delegate to.
+     * The {@code name} of the {@link Worker} to delegate to.
      */
     public static final String ARGUMENT_CLASS_NAME =
             "com.samagra.customworkmanager.impl.workers.ConstraintTrackingWorker.ARGUMENT_CLASS_NAME";
@@ -90,8 +90,8 @@ public class ConstraintTrackingWorker extends ListenableWorker implements WorkCo
 
     // Package-private to avoid synthetic accessor.
     void setupAndRunConstraintTrackingWork() {
-        String className = getInputData().getString(ARGUMENT_CLASS_NAME);
-        if (TextUtils.isEmpty(className)) {
+        String name = getInputData().getString(ARGUMENT_CLASS_NAME);
+        if (TextUtils.isEmpty(name)) {
             Logger.get().error(TAG, "No worker to delegate to.");
             setFutureFailed();
             return;
@@ -99,7 +99,7 @@ public class ConstraintTrackingWorker extends ListenableWorker implements WorkCo
 
         mDelegate = getWorkerFactory().createWorkerWithDefaultFallback(
                 getApplicationContext(),
-                className,
+                name,
                 mWorkerParameters);
 
         if (mDelegate == null) {
@@ -123,7 +123,7 @@ public class ConstraintTrackingWorker extends ListenableWorker implements WorkCo
         workConstraintsTracker.replace(Collections.singletonList(workSpec));
 
         if (workConstraintsTracker.areAllConstraintsMet(getId().toString())) {
-            Logger.get().debug(TAG, String.format("Constraints met for delegate %s", className));
+            Logger.get().debug(TAG, String.format("Constraints met for delegate %s", name));
 
             // Wrapping the call to mDelegate#doWork() in a try catch, because
             // changes in constraints can cause the worker to throw RuntimeExceptions, and
@@ -144,7 +144,7 @@ public class ConstraintTrackingWorker extends ListenableWorker implements WorkCo
                 }, getBackgroundExecutor());
             } catch (Throwable exception) {
                 Logger.get().debug(TAG, String.format(
-                        "Delegated worker %s threw exception in startWork.", className),
+                        "Delegated worker %s threw exception in startWork.", name),
                         exception);
                 synchronized (mLock) {
                     if (mAreConstraintsUnmet) {
@@ -157,7 +157,7 @@ public class ConstraintTrackingWorker extends ListenableWorker implements WorkCo
             }
         } else {
             Logger.get().debug(TAG, String.format(
-                    "Constraints not met for delegate %s. Requesting retry.", className));
+                    "Constraints not met for delegate %s. Requesting retry.", name));
             setFutureRetry();
         }
 

@@ -1381,7 +1381,7 @@ public class WorkManagerImplTest {
     @LargeTest
     public void testCancelAllWork_updatesLastCancelAllTime() {
         Preferences preferences = new Preferences(
-                (Context) ApplicationProvider.getApplicationContext());
+                ApplicationProvider.getApplicationContext());
         preferences.setLastCancelAllTimeMillis(0L);
 
         OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(TestWorker.class).build();
@@ -1613,7 +1613,7 @@ public class WorkManagerImplTest {
         mWorkManagerImpl.beginWith(work).enqueue().getResult().get();
 
         WorkSpec workSpec = mDatabase.workSpecDao().getWorkSpec(work.getStringId());
-        assertThat(workSpec.workerClassName, is(TestWorker.class.getName()));
+        assertThat(workSpec.workername, is(TestWorker.class.getName()));
     }
 
     @Test
@@ -1630,7 +1630,7 @@ public class WorkManagerImplTest {
         mWorkManagerImpl.beginWith(work).enqueue().getResult().get();
 
         WorkSpec workSpec = mDatabase.workSpecDao().getWorkSpec(work.getStringId());
-        assertThat(workSpec.workerClassName, is(TestWorker.class.getName()));
+        assertThat(workSpec.workername, is(TestWorker.class.getName()));
     }
 
     @Test
@@ -1647,7 +1647,7 @@ public class WorkManagerImplTest {
         mWorkManagerImpl.beginWith(work).enqueue().getResult().get();
 
         WorkSpec workSpec = mDatabase.workSpecDao().getWorkSpec(work.getStringId());
-        assertThat(workSpec.workerClassName, is(ConstraintTrackingWorker.class.getName()));
+        assertThat(workSpec.workername, is(ConstraintTrackingWorker.class.getName()));
         assertThat(workSpec.input.getString(
                 ConstraintTrackingWorker.ARGUMENT_CLASS_NAME),
                 is(TestWorker.class.getName()));
@@ -1667,7 +1667,7 @@ public class WorkManagerImplTest {
         mWorkManagerImpl.beginWith(work).enqueue().getResult().get();
 
         WorkSpec workSpec = mDatabase.workSpecDao().getWorkSpec(work.getStringId());
-        assertThat(workSpec.workerClassName, is(ConstraintTrackingWorker.class.getName()));
+        assertThat(workSpec.workername, is(ConstraintTrackingWorker.class.getName()));
         assertThat(workSpec.input.getString(
                 ConstraintTrackingWorker.ARGUMENT_CLASS_NAME),
                 is(TestWorker.class.getName()));
@@ -1687,7 +1687,7 @@ public class WorkManagerImplTest {
         mWorkManagerImpl.beginWith(work).enqueue().getResult().get();
 
         WorkSpec workSpec = mDatabase.workSpecDao().getWorkSpec(work.getStringId());
-        assertThat(workSpec.workerClassName, is(TestWorker.class.getName()));
+        assertThat(workSpec.workername, is(TestWorker.class.getName()));
     }
 
     @Test
@@ -1704,7 +1704,7 @@ public class WorkManagerImplTest {
         mWorkManagerImpl.beginWith(work).enqueue().getResult().get();
 
         WorkSpec workSpec = mDatabase.workSpecDao().getWorkSpec(work.getStringId());
-        assertThat(workSpec.workerClassName, is(TestWorker.class.getName()));
+        assertThat(workSpec.workername, is(TestWorker.class.getName()));
     }
 
     // TODO (rahulrav@)  Before this test can be added to this test suite, we need to clean up our

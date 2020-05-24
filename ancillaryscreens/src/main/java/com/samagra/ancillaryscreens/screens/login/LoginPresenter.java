@@ -8,21 +8,19 @@ import com.samagra.ancillaryscreens.base.BasePresenter;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelper;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
+import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.commons.Constants;
 import com.samagra.commons.ExchangeObject;
 import com.samagra.commons.Modules;
+import com.samagra.grove.logging.Grove;
 
-import org.odk.collect.android.utilities.ResetUtility;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.odk.collect.android.contracts.IFormManagementContract;
 
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 /**
  * The presenter for the Login Screen. This class controls the interactions between the View and the data.
@@ -33,8 +31,8 @@ import timber.log.Timber;
 public class LoginPresenter<V extends LoginContract.View, I extends LoginContract.Interactor> extends BasePresenter<V, I> implements LoginContract.Presenter<V, I> {
 
     @Inject
-    public LoginPresenter(I mvpInteractor, BackendCallHelper apiHelper, CompositeDisposable compositeDisposable) {
-        super(mvpInteractor, apiHelper, compositeDisposable);
+    public LoginPresenter(I mvpInteractor, BackendCallHelper apiHelper, CompositeDisposable compositeDisposable, IFormManagementContract iFormManagementContract) {
+        super(mvpInteractor, apiHelper, compositeDisposable, iFormManagementContract);
     }
 
     /**
@@ -52,24 +50,17 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
                 .subscribe(loginResponse -> {
                     if (LoginPresenter.this.getMvpView() != null) {
                         if (loginResponse.token != null) {
-                            Timber.d("Response is %s ", loginResponse.toString());
+                            Grove.d("Received successful login response for the user");
                             LoginPresenter.this.getMvpView().onLoginSuccess(loginResponse);
                         } else
                             LoginPresenter.this.getMvpView().onLoginFailed();
                     }
                 }, throwable -> {
                     if (throwable instanceof ANError)
-                        Timber.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", ((ANError) (throwable)).getErrorBody(), ((ANError) (throwable)).getErrorCode(), ((ANError) (throwable)).getErrorDetail());
+                        Grove.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", ((ANError) (throwable)).getErrorBody(), ((ANError) (throwable)).getErrorCode(), ((ANError) (throwable)).getErrorDetail());
                     LoginPresenter.this.getMvpView().onLoginFailed();
-                    Timber.e(throwable);
+                    Grove.e(throwable);
                 }));
-    }
-
-    @Override
-    public void resetSelectedIfRequired() {
-        if (getMvpInteractor().isFirstLogin()) {
-            resetSelected();
-        }
     }
 
     /**
@@ -86,16 +77,5 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
         getMvpView().finishActivity();
     }
 
-    /**
-     * Resets ODK form using {@link ResetUtility}. This action is required in some apps during the first time login.
-     */
-    private void resetSelected() {
-        final List<Integer> resetActions = new ArrayList<>();
-        resetActions.add(ResetUtility.ResetAction.RESET_FORMS);
-        if (!resetActions.isEmpty()) {
-            Runnable runnable = () -> new ResetUtility().reset(getMvpView().getActivityContext(), resetActions);
-            new Thread(runnable).start();
-        }
-    }
 
 }

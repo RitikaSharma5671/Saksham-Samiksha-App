@@ -111,7 +111,7 @@ public class InstancesDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE " + INSTANCES_TABLE_NAME + " ADD COLUMN "
                     + CAN_EDIT_WHEN_COMPLETE + " text;");
             db.execSQL("UPDATE " + INSTANCES_TABLE_NAME + " SET "
-                    + CAN_EDIT_WHEN_COMPLETE + " = '" + Boolean.toString(true)
+                    + CAN_EDIT_WHEN_COMPLETE + " = '" + true
                     + "' WHERE " + STATUS + " IS NOT NULL AND "
                     + STATUS + " != '" + InstanceProviderAPI.STATUS_INCOMPLETE
                     + "'");

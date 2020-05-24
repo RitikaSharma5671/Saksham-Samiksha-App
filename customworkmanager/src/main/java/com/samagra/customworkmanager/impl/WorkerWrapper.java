@@ -152,7 +152,7 @@ public class WorkerWrapper implements Runnable {
                 mWorkDatabase.setTransactionSuccessful();
                 Logger.get().debug(TAG,
                         String.format("%s is not in ENQUEUED state. Nothing more to do.",
-                                mWorkSpec.workerClassName));
+                                mWorkSpec.workername));
                 return;
             }
 
@@ -179,7 +179,7 @@ public class WorkerWrapper implements Runnable {
                             String.format(
                                     "Delaying execution for %s because it is being executed "
                                             + "before schedule.",
-                                    mWorkSpec.workerClassName));
+                                    mWorkSpec.workername));
                     // For AlarmManager implementation we need to reschedule this kind  of Work.
                     // This is not a problem for JobScheduler because we will only reschedule
                     // work if JobScheduler is unaware of a jobId.
@@ -202,12 +202,12 @@ public class WorkerWrapper implements Runnable {
             input = mWorkSpec.input;
         } else {
             InputMergerFactory inputMergerFactory = mConfiguration.getInputMergerFactory();
-            String inputMergerClassName = mWorkSpec.inputMergerClassName;
+            String inputMergername = mWorkSpec.inputMergername;
             InputMerger inputMerger =
-                    inputMergerFactory.createInputMergerWithDefaultFallback(inputMergerClassName);
+                    inputMergerFactory.createInputMergerWithDefaultFallback(inputMergername);
             if (inputMerger == null) {
                 Logger.get().error(TAG, String.format("Could not create Input Merger %s",
-                        mWorkSpec.inputMergerClassName));
+                        mWorkSpec.inputMergername));
                 setFailedAndResolve();
                 return;
             }
@@ -233,13 +233,13 @@ public class WorkerWrapper implements Runnable {
         if (mWorker == null) {
             mWorker = mConfiguration.getWorkerFactory().createWorkerWithDefaultFallback(
                     mAppContext,
-                    mWorkSpec.workerClassName,
+                    mWorkSpec.workername,
                     params);
         }
 
         if (mWorker == null) {
             Logger.get().error(TAG,
-                    String.format("Could not create Worker %s", mWorkSpec.workerClassName));
+                    String.format("Could not create Worker %s", mWorkSpec.workername));
             setFailedAndResolve();
             return;
         }
@@ -248,7 +248,7 @@ public class WorkerWrapper implements Runnable {
             Logger.get().error(TAG,
                     String.format("Received an already-used Worker %s; WorkerFactory should return "
                             + "new instances",
-                            mWorkSpec.workerClassName));
+                            mWorkSpec.workername));
             setFailedAndResolve();
             return;
         }
@@ -269,7 +269,7 @@ public class WorkerWrapper implements Runnable {
                         public void run() {
                             try {
                                 Logger.get().debug(TAG, String.format("Starting work for %s",
-                                        mWorkSpec.workerClassName));
+                                        mWorkSpec.workername));
                                 mInnerFuture = mWorker.startWork();
                                 future.setFuture(mInnerFuture);
                             } catch (Throwable e) {
@@ -291,10 +291,10 @@ public class WorkerWrapper implements Runnable {
                         if (result == null) {
                             Logger.get().error(TAG, String.format(
                                     "%s returned a null result. Treating it as a failure.",
-                                    mWorkSpec.workerClassName));
+                                    mWorkSpec.workername));
                         } else {
                             Logger.get().debug(TAG, String.format("%s returned a %s result.",
-                                    mWorkSpec.workerClassName, result));
+                                    mWorkSpec.workername, result));
                             mResult = result;
                         }
                     } catch (CancellationException exception) {

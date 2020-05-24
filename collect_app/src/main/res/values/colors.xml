@@ -21,6 +21,9 @@ the License.
     <color name="deep_purple_500">#673AB7</color>
     <color name="amber_500">#FFC107</color>
 
+    <color name="colorPrimary">#014d3f</color>
+    <color name="colorSecondary">#4CAF50</color>
+
     <!-- Dark Theme Palette -->
     <color name="darkPrimaryTextColor">#deffffff</color>
     <color name="darkSecondaryTextColor">#99ffffff</color>
@@ -60,4 +63,5 @@ the License.
     <color name="mapPointCircle">#ffff0000</color>
     <color name="mapPointFill">#ffffffff</color>
     <color name="mapLine">#ffff0000</color>
+    <color name="colorButton">#014D3F</color>
 </resources>

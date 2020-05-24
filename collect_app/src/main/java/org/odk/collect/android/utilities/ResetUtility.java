@@ -17,6 +17,9 @@
 package org.odk.collect.android.utilities;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
+
+import com.samagra.commons.Constants;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
@@ -52,17 +55,17 @@ public class ResetUtility {
                     break;
                 case ResetAction.RESET_LAYERS:
                     if (deleteFolderContents(Collect.OFFLINE_LAYERS)) {
-                        failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_LAYERS));
+                        failedResetActions.remove((Integer) ResetAction.RESET_LAYERS);
                     }
                     break;
                 case ResetAction.RESET_CACHE:
                     if (deleteFolderContents(Collect.CACHE_PATH)) {
-                        failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_CACHE));
+                        failedResetActions.remove((Integer) ResetAction.RESET_CACHE);
                     }
                     break;
                 case ResetAction.RESET_OSM_DROID:
                     if (deleteFolderContents(Configuration.getInstance().getOsmdroidTileCache().getPath())) {
-                        failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_OSM_DROID));
+                        failedResetActions.remove((Integer) ResetAction.RESET_OSM_DROID);
                     }
                     break;
             }
@@ -72,29 +75,28 @@ public class ResetUtility {
     }
 
     private void resetPreferences(Context context) {
+        String appLanguage = PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.APP_LANGUAGE_KEY, "en");
         GeneralSharedPreferences.getInstance().loadDefaultPreferences();
         AdminSharedPreferences.getInstance().loadDefaultPreferences();
-
         boolean deletedSettingsFolderContest = !new File(Collect.SETTINGS).exists()
                 || deleteFolderContents(Collect.SETTINGS);
 
         boolean deletedSettingsFile = !new File(Collect.ODK_ROOT + "/collect.settings").exists()
                 || (new File(Collect.ODK_ROOT + "/collect.settings").delete());
         
-        new LocaleHelper().updateLocale(context);
-
+        new LocaleHelper().updateLocale(context, appLanguage);
         if (deletedSettingsFolderContest && deletedSettingsFile) {
-            failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_PREFERENCES));
+            failedResetActions.remove((Integer) ResetAction.RESET_PREFERENCES);
         }
-
         Collect.getInstance().initProperties();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(Constants.APP_LANGUAGE_KEY, appLanguage).apply();
     }
 
     private void resetInstances() {
         new InstancesDao().deleteInstancesDatabase();
 
         if (deleteFolderContents(Collect.INSTANCES_PATH)) {
-            failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_INSTANCES));
+            failedResetActions.remove((Integer) ResetAction.RESET_INSTANCES);
         }
     }
 
@@ -104,7 +106,7 @@ public class ResetUtility {
         File itemsetDbFile = new File(Collect.METADATA_PATH + File.separator + ItemsetDbAdapter.DATABASE_NAME);
 
         if (deleteFolderContents(Collect.FORMS_PATH) && (!itemsetDbFile.exists() || itemsetDbFile.delete())) {
-            failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_FORMS));
+            failedResetActions.remove((Integer) ResetAction.RESET_FORMS);
         }
     }
 

@@ -42,5 +42,10 @@ public interface CommonsPreferenceHelper {
 
     int getPreviousVersion();
 
+    String getRefreshToken();
+
     void updateAppVersion(int currentVersion);
+
+    void updateToken(String token);
+    String getToken();
 }

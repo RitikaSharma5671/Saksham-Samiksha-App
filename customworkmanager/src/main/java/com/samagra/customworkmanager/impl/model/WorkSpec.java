@@ -67,10 +67,10 @@ public class WorkSpec {
 
     @ColumnInfo(name = "worker_class_name")
     @NonNull
-    public String workerClassName;
+    public String workername;
 
     @ColumnInfo(name = "input_merger_class_name")
-    public String inputMergerClassName;
+    public String inputMergername;
 
     @ColumnInfo(name = "input")
     @NonNull
@@ -125,16 +125,16 @@ public class WorkSpec {
     @ColumnInfo(name = "schedule_requested_at")
     public long scheduleRequestedAt = SCHEDULE_NOT_REQUESTED_YET;
 
-    public WorkSpec(@NonNull String id, @NonNull String workerClassName) {
+    public WorkSpec(@NonNull String id, @NonNull String workername) {
         this.id = id;
-        this.workerClassName = workerClassName;
+        this.workername = workername;
     }
 
     public WorkSpec(@NonNull WorkSpec other) {
         id = other.id;
-        workerClassName = other.workerClassName;
+        workername = other.workername;
         state = other.state;
-        inputMergerClassName = other.inputMergerClassName;
+        inputMergername = other.inputMergername;
         input = new Data(other.input);
         output = new Data(other.output);
         initialDelay = other.initialDelay;
@@ -305,10 +305,10 @@ public class WorkSpec {
         if (scheduleRequestedAt != workSpec.scheduleRequestedAt) return false;
         if (!id.equals(workSpec.id)) return false;
         if (state != workSpec.state) return false;
-        if (!workerClassName.equals(workSpec.workerClassName)) return false;
-        if (inputMergerClassName != null ? !inputMergerClassName.equals(
-                workSpec.inputMergerClassName)
-                : workSpec.inputMergerClassName != null) {
+        if (!workername.equals(workSpec.workername)) return false;
+        if (inputMergername != null ? !inputMergername.equals(
+                workSpec.inputMergername)
+                : workSpec.inputMergername != null) {
             return false;
         }
         if (!input.equals(workSpec.input)) return false;
@@ -321,8 +321,8 @@ public class WorkSpec {
     public int hashCode() {
         int result = id.hashCode();
         result = 31 * result + state.hashCode();
-        result = 31 * result + workerClassName.hashCode();
-        result = 31 * result + (inputMergerClassName != null ? inputMergerClassName.hashCode() : 0);
+        result = 31 * result + workername.hashCode();
+        result = 31 * result + (inputMergername != null ? inputMergername.hashCode() : 0);
         result = 31 * result + input.hashCode();
         result = 31 * result + output.hashCode();
         result = 31 * result + (int) (initialDelay ^ (initialDelay >>> 32));

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="login">लॉग इन करें</string>
+    <string name="username">यूज़र नेम</string>
+    <string name="password">पासवर्ड</string>
+    <string name="reset_password">पासवर्ड रीसेट करें</string>
+    <string name="submit">जमा करें</string>
+    <string name="forgot_password">पासवर्ड भूल गए?</string>
+    <string name="forgot_pass">ऐप पासवर्ड रीसेट</string>
+    <string name="phone_number">फ़ोन नंबर</string>
+    <string name="send_otp">अपने मोबाइल पर ओटीपी भेजें</string>
+    <string name="please_enter_the_otp_sent_to_the_mobile_number_of_school_incharge" tools:ignore="MissingTranslation">Please enter the OTP sent to the associated mobile number.</string>
+    <string name="invalid_phone_number">कृपया अपने द्वारा भरे गए मोबाइल नंबर की जांच करें</string>
+    <string name="enter_the_registered_mobile_number_associated_with_your_account">अपने खाते से संबद्ध पंजीकृत मोबाइल नंबर दर्ज करें।</string>
+    <string name="pass_change_successful"> पासवर्ड सफलतापूर्वक बदल दिया गया है। जारी रखने के लिए आपको फिर से लॉगिन करने की आवश्यकता है। आपको लॉगिन पृष्ठ पर पुनः निर्देशित किया जा रहा है।</string>
+    <string name="seconds_remaining">सेकंड शेष: </string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="resend_otp">कृपया ओटीपी को पुनः भेजें</string>
+    <string name="successful_logout_message">आप सफलता लॉग आउट कर चुके हैं।</string>
+    <string name="internet_not_connected_error_login">ऐसा लगता है कि आप इंटरनेट से नहीं जुड़े हैं। कृपया लॉगिन करने के लिए अपने मोबाइल डेटा को ऑन करें। </string>
+    <string name="user_name_empty_error">यूजरनेम खाली नहीं हो सकता</string>
+    <string name="user_name_not_apt_length_error">यूजरनेम 3 या अधिक अक्षर का होना चाहिए</string>
+    <string name="empty_password_error">पासवर्ड खाली नहीं हो सकता</string>
+    <string name="short_password_error">पासवर्ड कम से कम 8 अक्षर का होना चाहिए</string>
+    <string name="otp_sent_successfully">इस नंबर पर ओटीपी सफलतापूर्वक भेजा गया</string>
+    <string name="otp_sent_change_pwd">ओटीपी भेजा गया। कृपया पासवर्ड बदलने का प्रयास करें।</string>
+    <string name="login_failed_error">उपयोगकर्ता नाम या पासवर्ड मेल नहीं खाता। कृपया पुन: प्रयास करें।</string>
+</resources>

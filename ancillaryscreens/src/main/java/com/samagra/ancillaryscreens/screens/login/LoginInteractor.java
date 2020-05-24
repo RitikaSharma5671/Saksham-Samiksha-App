@@ -7,10 +7,10 @@ import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.ancillaryscreens.data.prefs.CommonsPreferenceHelper;
 import com.samagra.ancillaryscreens.screens.login.LoginContract.Interactor;
 import com.samagra.ancillaryscreens.screens.login.LoginContract.Presenter;
+import com.samagra.grove.logging.Grove;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
 
 /**
  * This class interacts with the {@link Presenter} and the stored app data. The class abstracts
@@ -39,8 +39,8 @@ public class LoginInteractor extends BaseInteractor implements LoginContract.Int
             getPreferenceHelper().setCurrentUserDetailsFromLogin(loginResponse);
             getPreferenceHelper().setCurrentUserAdditionalDetailsFromLogin(loginResponse);
         } catch (Exception e) {
-            Timber.e("Exception in persisting user data in shared prefs %s", e.getMessage());
-            Timber.e(e);
+            Grove.e("Exception in persisting user data in shared prefs %s", e.getMessage());
+            Grove.e(e);
         }
     }
 

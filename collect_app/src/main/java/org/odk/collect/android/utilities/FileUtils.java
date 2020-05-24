@@ -44,6 +44,7 @@ import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -260,12 +261,7 @@ public class FileUtils {
         }
 
         InputStreamReader isr;
-        try {
-            isr = new InputStreamReader(is, "UTF-8");
-        } catch (UnsupportedEncodingException uee) {
-            Timber.w(uee, "Trying default encoding as UTF 8 encoding unavailable");
-            isr = new InputStreamReader(is);
-        }
+        isr = new InputStreamReader(is, StandardCharsets.UTF_8);
 
         final Document doc;
         try {
@@ -317,7 +313,7 @@ public class FileUtils {
             }
 
             fields.put(FORMID, (id == null) ? cur.getNamespace() : id);
-            fields.put(VERSION, (version == null) ? null : version);
+            fields.put(VERSION, version);
         } else {
             throw new IllegalStateException(xmlFile.getAbsolutePath() + " could not be parsed");
         }
@@ -412,7 +408,7 @@ public class FileUtils {
         File lastSavedFile = getLastSavedFile(formXml);
 
         if (!lastSavedFile.exists()) {
-            write(lastSavedFile, STUB_XML.getBytes(Charset.forName("UTF-8")));
+            write(lastSavedFile, STUB_XML.getBytes(StandardCharsets.UTF_8));
         }
 
         return "jr://file/" + LAST_SAVED_FILENAME;
@@ -428,7 +424,7 @@ public class FileUtils {
             boolean deleted = mediaDir.delete();
             if (!deleted) {
                 throw new RuntimeException(
-                        Collect.getInstance().getString(R.string.fs_delete_media_path_if_file_error,
+                        Collect.getInstance().getAppContext().getResources().getString(R.string.fs_delete_media_path_if_file_error,
                                 mediaDir.getAbsolutePath()));
             }
         }
@@ -437,7 +433,7 @@ public class FileUtils {
         boolean createdOrExisted = createFolder(mediaDir.getAbsolutePath());
         if (!createdOrExisted) {
             throw new RuntimeException(
-                    Collect.getInstance().getString(R.string.fs_create_media_folder_error,
+                    Collect.getInstance().getAppContext().getResources().getString(R.string.fs_create_media_folder_error,
                             mediaDir.getAbsolutePath()));
         }
     }

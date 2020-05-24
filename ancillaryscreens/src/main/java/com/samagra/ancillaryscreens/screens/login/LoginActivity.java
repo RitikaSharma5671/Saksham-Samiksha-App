@@ -1,24 +1,30 @@
 package com.samagra.ancillaryscreens.screens.login;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.R2;
 import com.samagra.ancillaryscreens.base.BaseActivity;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
+import com.samagra.ancillaryscreens.screens.change_password.ChangePasswordActivity;
 import com.samagra.ancillaryscreens.utils.SnackbarUtils;
 import com.samagra.commons.CommonUtilities;
-import com.samagra.commons.Constants;
+import com.samagra.grove.logging.Grove;
 
 import java.util.Objects;
 
@@ -27,7 +33,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import butterknife.Unbinder;
+import io.sentry.Sentry;
 
 /**
  * The View Part for the Login Screen, must implement {@link LoginContract.View}
@@ -44,6 +52,16 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     public ProgressBar progressBar;
     @BindView(android.R.id.content)
     public FrameLayout content;
+    @BindView(R2.id.login_submit)
+    public Button submitButton;
+    @BindView(R2.id.userLayout)
+    public TextInputLayout userLayout;
+    @BindView(R2.id.pwdLayout)
+    public TextInputLayout pwdLayout;
+    @BindView(R2.id.loginParentlayout)
+    public ConstraintLayout loginParentLayout;
+    @BindView(R2.id.forgot_password)
+    public TextView forgot_password;
 
     private Unbinder unbinder;
 
@@ -57,13 +75,19 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         getActivityComponent().inject(this);
         unbinder = ButterKnife.bind(this);
         loginPresenter.onAttach(this);
-    }
+        if(getIntent().getBooleanExtra("loggedOut", false)){
+            SnackbarUtils.showShortSnackbar(loginParentLayout, getActivityContext().getResources().getString(R.string.successful_logout_message));
+        }
 
+        SpannableString content = new SpannableString(fetchString(R.string.forgot_password));
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        forgot_password.setText(content);
+    }
 
     @Override
     @OnClick(R2.id.forgot_password)
     public void changePassword() {
-        Intent changePassIntent = new Intent(LoginActivity.this, LoginActivity.class /*TODO: Change to ChangePasswordActivity.claass*/);
+        Intent changePassIntent = new Intent(LoginActivity.this, ChangePasswordActivity.class);
         startActivity(changePassIntent);
     }
 
@@ -76,7 +100,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void onLoginSuccess(LoginResponse loginResponse) {
         loginPresenter.getMvpInteractor().persistUserData(loginResponse);
-        loginPresenter.resetSelectedIfRequired();
         loginPresenter.finishAndMoveToHomeScreen();
     }
 
@@ -87,7 +110,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void onLoginFailed() {
         progressBar.setVisibility(View.GONE);
-        SnackbarUtils.showLongSnackbar(content, "Username or Password didn't match. Please try again");
+        SnackbarUtils.showLongSnackbar(content, getString(R.string.login_failed_error));
     }
 
     @Override
@@ -114,9 +137,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                 String password = Objects.requireNonNull(editTextPassword.getText()).toString().trim();
                 progressBar.setVisibility(View.VISIBLE);
                 loginPresenter.startAuthenticationTask(new LoginRequest(username, password));
+            }else{
+                styleDisabledButton();
             }
         } else {
-            SnackbarUtils.showLongSnackbar(content, "It seems you are not connected to the Internet. Please switch on your Mobile Data to login.");
+            SnackbarUtils.showLongSnackbar(content, getActivityContext().getResources().getString(R.string.internet_not_connected_error_login));
         }
     }
 
@@ -130,30 +155,35 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public boolean validateInputs(EditText editTextUsername, EditText editTextPassword) {
         if (TextUtils.isEmpty(editTextUsername.getText())) {
-            editTextUsername.setError("Username cannot be empty");
+            editTextUsername.setError(getString(R.string.user_name_empty_error));
             return false;
         }
         if (TextUtils.getTrimmedLength(editTextUsername.getText()) < 3) {
-            editTextUsername.setError("Username has to be 3 or more characters");
+            editTextUsername.setError(getString(R.string.user_name_not_apt_length_error));
             return false;
         }
         if (TextUtils.isEmpty(editTextPassword.getText())) {
-            editTextPassword.setError("Password cannot be empty");
+            editTextPassword.setError(getString(R.string.empty_password_error));
             return false;
         }
         if (TextUtils.getTrimmedLength(editTextPassword.getText()) < 8) {
-            editTextPassword.setError("Password has to be at least 8 characters");
+            editTextPassword.setError(getString(R.string.short_password_error));
             return false;
         }
         return true;
     }
 
-    @OnClick(R2.id.helpline_button)
-    @Override
-    public void callHelpline() {
-        Intent callIntent = new Intent(Intent.ACTION_DIAL);
-        callIntent.setData(Uri.parse(Constants.LOGIN_HELPLINE_TELEPHONE));
-        startActivity(callIntent);
+
+    @OnTextChanged(R2.id.login_username)
+    public void onUsernameChanged(CharSequence text){
+        editTextUsername.setError(null);
+        styleLiveButton();
+    }
+
+    @OnTextChanged(R2.id.login_password)
+    public void onPasswordChanged(CharSequence text){
+        editTextPassword.setError(null);
+        styleLiveButton();
     }
 
     @Override
@@ -161,5 +191,15 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         super.onDestroy();
         unbinder.unbind();
         loginPresenter.onDetach();
+    }
+
+    public void styleLiveButton(){
+        submitButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        submitButton.setTextColor(getResources().getColor(R.color.white));
+    }
+
+    public void styleDisabledButton(){
+        submitButton.setBackgroundColor(getResources().getColor(R.color.grey));
+        submitButton.setTextColor(getResources().getColor(R.color.white));
     }
 }
