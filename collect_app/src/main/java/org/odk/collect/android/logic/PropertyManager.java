@@ -104,7 +104,7 @@ public class PropertyManager implements IPropertyManager {
                     if(PermissionUtils.isReadPhoneStatePermissionGranted(Collect.getInstance().getAppContext()))
                     return telMgr.getDeviceId();
                     else
-                        return null;
+                        return "";
                 }
 
                 @Override
@@ -113,7 +113,7 @@ public class PropertyManager implements IPropertyManager {
                     if(PermissionUtils.isReadPhoneStatePermissionGranted(Collect.getInstance().getAppContext()) || PermissionUtils.isReadSMSPermissionGranted(Collect.getInstance().getAppContext()))
                         return telMgr.getLine1Number();
                     else
-                        return null;
+                        return "";
                 }
 
                 @Override
@@ -122,13 +122,16 @@ public class PropertyManager implements IPropertyManager {
                     if(PermissionUtils.isReadPhoneStatePermissionGranted(Collect.getInstance().getAppContext()))
                         return telMgr.getSubscriberId();
                     else
-                        return null;
+                        return "";
                 }
 
                 @Override
                 @SuppressLint({ "HardwareIds"})
                 public String getSimSerialNumber() {
+                    if(PermissionUtils.isReadPhoneStatePermissionGranted(Collect.getInstance().getAppContext()))
                     return telMgr.getSimSerialNumber();
+                    else
+                        return "";
                 }
             };
             IdAndPrefix idp = findDeviceId(context, deviceDetailsProvider);
