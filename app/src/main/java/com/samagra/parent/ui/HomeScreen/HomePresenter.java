@@ -56,11 +56,14 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void fetchWelcomeText() {
+        Grove.d("Fetching welcome text for the user...");
         getMvpView().displayHomeWelcomeText(getMvpInteractor().getUserName());
     }
 
     @Override
     public void onViewSubmittedFormsOptionsClicked() {
+        Grove.d("User selects the option View Submitted Forms...");
+
         if (getMvpView() != null) {
 
             Intent intent = new Intent(getMvpView().getActivityContext(), SubmissionsActivity.class);
@@ -71,6 +74,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void onSubmitFormsClicked() {
+        Grove.d("User selects the option Submit Forms...");
         if (getMvpView() != null) {
             getIFormManagementContract().launchViewUnsubmittedFormView(getMvpView().getActivityContext(), getClass().getName(), UtilityFunctions.generateToolbarModificationObject(true,
                     R.drawable.ic_arrow_back_white_24dp,
@@ -80,6 +84,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void onViewHelplineClicked() {
+        Grove.d("User selects the option View Helpline...");
         if (getMvpView() != null) {
             Intent i = new Intent(getMvpView().getActivityContext(), ComingSoon.class);
             getMvpView().getActivityContext().startActivity(i);
@@ -124,6 +129,11 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     }
 
 
+    /**
+     * Check if the ODK Forms have been updated?
+     * @param  version New Form Version
+     * @param  previousVersion Old Form Version from preferences
+     */
     private boolean isUpversioned(String version, String previousVersion) {
         try {
             return Integer.parseInt(version) > Integer.parseInt(previousVersion);
@@ -134,7 +144,8 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
 
     private String getUserRoleFromPref() {
-        return getMvpInteractor().getPreferenceHelper().getUserRoleFromPref(); //Viewing and download of forms is based on User's role, you can configure it via Preferences when logging in as per User's Login response
+        return getMvpInteractor().getPreferenceHelper().getUserRoleFromPref();
+        //Viewing and download of forms is based on User's role, you can configure it via Preferences when logging in as per User's Login response
     }
 
 
@@ -277,6 +288,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void prefillData(InstitutionInfo institutionInfo) {
+        Grove.d("Prefilling data for the Forms downloaded");
         List<Form> forms = getIFormManagementContract().getDownloadedFormsNamesFromDatabase();
         for (Form form : forms) {
             String formName = form.getDisplayName();
@@ -297,18 +309,20 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     class FormListDownloadListener implements FormListDownloadResultCallback {
         @Override
         public void onSuccessfulFormListDownload(HashMap<String, FormDetails> latestFormListFromServer) {
-            Grove.d("FormList download complete %s", latestFormListFromServer);
+            Grove.d("FormList download complete %s, is the form list size", latestFormListFromServer.size());
             String formsString = MyApplication.getmFirebaseRemoteConfig().getString(getRoleFromRoleMappingFirebase(getUserRoleFromPref()));
             HashMap<String, String> userRoleBasedForms = getIFormManagementContract().downloadFormList(formsString);
             // Download Forms if updates available or if forms not downloaded. Delete forms if not applied for the role.
             HashMap<String, FormDetails> formsToBeDownloaded = getIFormManagementContract().downloadNewFormsBasedOnDownloadedFormList(userRoleBasedForms, latestFormListFromServer);
             if (formsToBeDownloaded.size() > 0) {
+                Grove.d("Number of forms to be downloaded are %d", formsToBeDownloaded.size());
                 formsDownloadStatus = FormDownloadStatus.DOWNLOADING;
                 currentProgress = 2;
                 getMvpView().setDownloadProgress(30);
                 currentProgress = 30;
                 maxProgress = formsToBeDownloaded.size();
             } else {
+                Grove.d("No new forms to be downloaded");
                 getMvpView().setDownloadProgress(100);
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
                 getMvpView().renderLayoutVisible();
