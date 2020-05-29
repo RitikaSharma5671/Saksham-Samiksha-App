@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -382,8 +383,15 @@ public class SubmissionsActivity extends BaseActivity implements SubmissionsMvpV
         final MenuItem sortItem = menu.findItem(R.id.menu_sort);
         final MenuItem searchItem = menu.findItem(R.id.menu_filter);
         final MenuItem filterItem = menu.findItem(R.id.menu_form_selection);
+        final MenuItem filterItem1 = menu.findItem(R.id.menu_form_selection1);
         filterItem.setVisible(false);
         filterItem.setEnabled(false);
+        filterItem1.setVisible(true);
+        filterItem1.setEnabled(true);
+        filterItem1.setOnMenuItemClickListener(item -> {
+            onViewSubmissionsClicked();
+            return true;
+        });
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint(Html.fromHtml("<font color = #ffffff>" + getResources().getString(R.string.search) + "</font>"));
         searchView.setMaxWidth(Integer.MAX_VALUE);
@@ -407,16 +415,22 @@ public class SubmissionsActivity extends BaseActivity implements SubmissionsMvpV
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                if(item.getItemId() != R.id.menu_form_selection1){
                 sortItem.setVisible(false);
                 filterItem.setVisible(false);
-                return true;
+                return true;}
+                return false;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                sortItem.setVisible(true);
-                filterItem.setVisible(false);
-                return true;
+                if (item.getItemId() != R.id.menu_form_selection1) {
+                    sortItem.setVisible(true);
+
+                    filterItem.setVisible(false);
+                    return true;
+                }
+                return false;
             }
         });
 

@@ -27,7 +27,7 @@ public class HomeInteractor extends BaseInteractor implements HomeMvpInteractor 
 
     @Override
     public String getUserFullName() {
-        return getPreferenceHelper().getCurrentUserName();
+        return getPreferenceHelper().getCurrentUserFullName();
     }
 
     @Override
@@ -37,6 +37,6 @@ public class HomeInteractor extends BaseInteractor implements HomeMvpInteractor 
 
     @Override
     public String getUserName() {
-        return getPreferenceHelper().getCurrentUserFullName();
+        return getPreferenceHelper().getCurrentUserName();
     }
 }

@@ -73,7 +73,8 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         finish();
     }
 
-    /**
+    /**init();
+        }
      * This function sets the activity layout and binds the UI Views.
      * This function should be called after the relevant permissions are granted to the app by the user
      */

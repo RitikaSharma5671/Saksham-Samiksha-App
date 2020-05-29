@@ -306,7 +306,7 @@ public class AutoSendWorker extends Worker {
         String body = anyFailure ? Collect.getInstance().getAppContext().getResources().getString(R.string.failures)
                 : Collect.getInstance().getAppContext().getResources().getString(R.string.success);
 
-        PushNotification pushNotification = new PushNotification(pendingNotify, AUTO_SEND_RESULT_NOTIFICATION_ID, R.string.odk_auto_note, body);
+        PushNotification pushNotification = new PushNotification(pendingNotify, AUTO_SEND_RESULT_NOTIFICATION_ID, R.string.upload_results, body);
         ExchangeObject exchangeObject = new ExchangeObject.NotificationExchangeObject(Modules.MAIN_APP, Modules.COLLECT_APP, pushNotification);
         ODKDriver.applicationInstance.getEventBus().send(exchangeObject);
 

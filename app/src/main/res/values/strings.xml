@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">Saksham Samiksha</string>
     <string name="view_issues" translatable="false">View Forms</string>
     <string name="submit_form">Submit Form</string>
-    <string name="inspect_school" >Inspect School</string>
+    <string name="inspect_school">Fill Forms</string>
     <string name="my_visits">My Visits</string>
     <string name="on_internet_saving_complete" translatable="false">Data has been captured. SMS will be sent within 48 hours.</string>
     <string name="no_internet_saving_complete" translatable="false">Data has been captured. SMS will be sent after syncing with the internet. </string>
@@ -91,4 +91,5 @@
     <string name="form_submitted_offline">Thank you for filling the inspection report.\nSince you have filled the report in offline mode, the report is save under \'Un-submitted Forms\'.\n Please submit your forms manually by going to the \'Un-submitted Forms\' section when connected to internet.</string>
     <string name="view_submissions">View Submissions in Offline Mode</string>
     <string name="logging_out_message">Logging you out…Please wait.</string>
+    <string name="note_submissions">Click the eye icon in the menu above to view your submissions</string>
 </resources>

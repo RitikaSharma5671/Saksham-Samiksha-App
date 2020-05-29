@@ -57,7 +57,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     @Override
     public void fetchWelcomeText() {
         Grove.d("Fetching welcome text for the user...");
-        getMvpView().displayHomeWelcomeText(getMvpInteractor().getUserName());
+        getMvpView().displayHomeWelcomeText(getMvpInteractor().getUserFullName());
     }
 
     @Override
@@ -295,8 +295,8 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             getIFormManagementContract().updateFormBasedOnIdentifier(formName, "district", institutionInfo.District);
             getIFormManagementContract().updateFormBasedOnIdentifier(formName, "block", institutionInfo.Block);
             getIFormManagementContract().updateFormBasedOnIdentifier(formName, "school", institutionInfo.SchoolName);
-            getIFormManagementContract().updateFormBasedOnIdentifier(formName, "username", getMvpInteractor().getUserName());
-            getIFormManagementContract().updateFormBasedOnIdentifier(formName, "name", getMvpInteractor().getUserName());
+            getIFormManagementContract().updateFormBasedOnIdentifier(formName, "user_name", getMvpInteractor().getUserName());
+            getIFormManagementContract().updateFormBasedOnIdentifier(formName, "name", getMvpInteractor().getUserFullName());
             getIFormManagementContract().updateFormBasedOnIdentifier(formName, "designation", getUserRoleFromPref());
         }
     }

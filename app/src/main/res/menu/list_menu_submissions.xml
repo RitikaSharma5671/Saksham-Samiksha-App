@@ -12,6 +12,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_form_selection1"
+        android:icon="@drawable/view_icon"
+        android:title="@string/filter_the_list"
+        android:visible="true"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/menu_form_selection"
         android:icon="@drawable/ic_filter_list_white_24dp"
         android:title="@string/filter_the_list"

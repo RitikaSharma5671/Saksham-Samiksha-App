@@ -150,7 +150,7 @@
   <string name="fetching_manifest">%s. मेनीफेस्ट मिल रहा है </string>
   <string name="success">सफल</string>
   <string name="no_forms_uploaded">क्षमा करें, कोई फॉर्म अपलोड नहीं किया गया.</string>
-  <string name="upload_results">परिणाम अपलोड करें</string>
+  <string name="upload_results">आपकी द्वारा दर्ज की गई रिपोर्ट रिपोर्ट नीचे दिए गए परिणाम के साथ भेजी गई है</string>
   <string name="xform_parse_error">%1$sके लिए XForm पार्स गलती: %2$sलापता या अमान्य है. </string>
   <string name="choose_sound">ध्वनि चुनें</string>
   <string name="choose_video">वीडियो चुनें</string>

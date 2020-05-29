@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">Saksham Samiksha</string>
     <string name="view_issues">फार्म देखें</string>
     <string name="submit_form">फार्म जमा करें</string>
-    <string name="inspect_school">स्कूल विज़िट</string>
+    <string name="inspect_school">फार्म भरें</string>
     <string name="on_internet_saving_complete"> डेटा सुरक्षित हो चुका है। 48 घंटों में एसएमएस चला जाएगा। </string>
     <string name="no_internet_saving_complete"> डेटा सुरक्षित हो चुका है। डाटा ऑन करने के बाद एसएमएस चला जाएगा। </string>
     <string name="coming_soon"> जल्द आ रहा है…</string>
@@ -89,5 +89,6 @@
     <string name="view_submissions">ऑफ़लाइन मोड में सबमिशन देखें</string>
     <string name="error_submission_api">आपके सबमिशन का डेटा लाने में त्रुटि हुई है। इसलिए आपको पिछली बार दिखाई गई जानकारी को दिखाया जा रहा है|</string>
     <string name="logging_out_message">आपको लॉग आउट किया जा रहा है…कृपया प्रतीक्षा कीजिये।</string>
+    <string name="note_submissions">आपके द्वारा भरे गए फॉर्म देखने के लिए ऊपर दिए गए मेनू में नेत्र आइकन पर क्लिक करें.</string>
 
 </resources>

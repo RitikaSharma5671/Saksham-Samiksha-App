@@ -114,7 +114,6 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
         homePresenter.updateLanguageSettings();
         AppNotificationUtils.updateFirebaseToken(getActivityContext(), AppConstants.BASE_API_URL, getActivityContext().getResources().getString(R.string.fusionauth_api_key));
         mUpdateApp = new UpdateApp(this);
-        homePresenter.fetchWelcomeText();
         renderLayoutInvisible();
     }
 
@@ -139,6 +138,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
     protected void onResume() {
         super.onResume();
         renderLayoutInvisible();
+        homePresenter.fetchWelcomeText();
         homePresenter.resetProgressVariables();
         homePresenter.checkForFormUpdates();
         customizeToolbar();

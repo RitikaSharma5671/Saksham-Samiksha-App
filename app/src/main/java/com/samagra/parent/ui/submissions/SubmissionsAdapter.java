@@ -62,7 +62,7 @@ public class SubmissionsAdapter extends RecyclerView.Adapter<SubmissionsAdapter.
         holder.formName.setText(submission.getPDFItemTags().getFORMNAME());
         holder.formName.setTypeface(Typeface.DEFAULT_BOLD);
         holder.submissionDate.setText(submission.getPDFItemTags().getFormSubmissionDate());
-        if (submission.getCurrentStatus().equals("Queue") || submission.getPDFDocLink() == null || submission.getPDFDocLink().equals("")) {
+        if (submission.getCurrentStatus().equals("Queue") || submission.getPdfgenerated().getDocName() == null || submission.getPdfgenerated().getDocName() .equals("")) {
             Drawable pdfIcon = context.getResources().getDrawable(R.drawable.pdf_icon);
             ImageView iv = holder.pdfURL.findViewById(R.id.pdf_icon);
             iv.setImageAlpha(30);
@@ -77,7 +77,7 @@ public class SubmissionsAdapter extends RecyclerView.Adapter<SubmissionsAdapter.
             iv.setImageDrawable(pdfIcon);
             iv.setImageAlpha(255);
             holder.pdfURL.setOnClickListener(v -> {
-               Uri websiteUri = Uri.parse(submission.getPDFDocLink());
+               Uri websiteUri = Uri.parse(submission.getPdfgenerated().getDocName());
                 context.startActivity(new Intent(Intent.ACTION_VIEW, websiteUri));
                 Snackbar.make(context.getParentLayout(), R.string.file_download_start, Snackbar.LENGTH_LONG)
                         .setAction("CLOSE", view -> {
