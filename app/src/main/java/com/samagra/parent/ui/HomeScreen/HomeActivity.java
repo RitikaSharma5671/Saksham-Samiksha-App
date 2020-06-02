@@ -338,7 +338,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                     case R.id.profile:
                         ComponentManager.registerProfilePackage(new ProfileSectionInteractor(), ((MainApplication) (HomeActivity.this.getApplicationContext())),
                                 AppConstants.BASE_API_URL,
-                                "a664a16a-95dd-41fc-9b9b-e45fb49cf128",
+                                AppConstants.APPLICATION_ID,
                                 AppConstants.SEND_OTP_URL,
                                 AppConstants.UPDATE_PASSWORD_URL,
                                 HomeActivity.this.getApplicationContext().getResources().getString(R.string.fusionauth_api_key), homePresenter.fetchUserID());

@@ -2,6 +2,7 @@ package com.samagra.parent.ui.HomeScreen;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.samagra.commons.CustomTabHelper;
 import com.samagra.parent.R;
@@ -57,7 +59,17 @@ public class ComingSoon extends BaseActivity {
             }
         });
 
+        boolean isHelpline = getIntent().getBooleanExtra("helpline", false);
+        if(isHelpline){
+            TextView title = findViewById(R.id.helpline_title);
+            title.setText(getString(R.string.call_helpline));
+            title.setTypeface(Typeface.DEFAULT_BOLD);
+            title.setTextColor(ContextCompat.getColor(this, R.color.appBlue));
+        }
+
     }
+
+
 
     @Override
     public void setupToolbar() {

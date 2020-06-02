@@ -4,6 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Umang Bhola on 14/5/20.
@@ -62,6 +66,22 @@ public class Tags_ implements Serializable {
 
     public String getFORMSUBMISSIONDATE() {
         return fORMSUBMISSIONDATE;
+    }
+
+
+    public Date getParsedSubmissionDate() {
+        if (fORMSUBMISSIONDATE == null)
+            return new Date();
+        else {
+            DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+            // DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            try {
+                return df1.parse(fORMSUBMISSIONDATE);
+            } catch (ParseException | NullPointerException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 
     public void setFORMSUBMISSIONDATE(String fORMSUBMISSIONDATE) {

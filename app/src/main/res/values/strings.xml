@@ -91,5 +91,6 @@
     <string name="form_submitted_offline">Thank you for filling the inspection report.\nSince you have filled the report in offline mode, the report is save under \'Un-submitted Forms\'.\n Please submit your forms manually by going to the \'Un-submitted Forms\' section when connected to internet.</string>
     <string name="view_submissions">View Submissions in Offline Mode</string>
     <string name="logging_out_message">Logging you out…Please wait.</string>
+    <string name="call_helpline">If facing any issues, please send a WhatsApp message to +91 9780431345. Please do not call this number.</string>
     <string name="note_submissions">Click the eye icon in the menu above to view your submissions</string>
 </resources>

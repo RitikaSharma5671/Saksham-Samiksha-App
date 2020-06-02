@@ -63,21 +63,6 @@ public class Tags implements Serializable{
         this.iNSTANCEID = iNSTANCEID;
     }
 
-    public Date getFORMSUBMISSIONDATE() {
-        if (fORMSUBMISSIONDATE == null)
-            return new Date();
-        else {
-            DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
-            // DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-            try {
-                return df1.parse(fORMSUBMISSIONDATE);
-            } catch (ParseException  | NullPointerException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
-
     public String getFormSubmissionDate() {
             return fORMSUBMISSIONDATE;
     }

@@ -26,6 +26,7 @@
         android:layout_centerInParent="true"
         android:text="@string/coming_soon"
         android:gravity="center"
+        android:id="@+id/helpline_title"
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@color/colorPrimary"/>

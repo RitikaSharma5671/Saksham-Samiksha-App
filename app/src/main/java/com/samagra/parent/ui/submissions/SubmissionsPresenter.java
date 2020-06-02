@@ -187,11 +187,11 @@ public class SubmissionsPresenter implements SubmissionsMvpPresenter, GetPDFList
                 return submissions;
 
             case BY_DATE_DESC:
-                Collections.sort(submissions, (o1, o2) -> o2.getPDFItemTags().getFORMSUBMISSIONDATE().compareTo(o1.getPDFItemTags().getFORMSUBMISSIONDATE()));
+                Collections.sort(submissions, (o1, o2) -> o2.getOutputData().get(0).getTags().getFORMSUBMISSIONDATE().compareTo(o1.getOutputData().get(0).getTags().getFORMSUBMISSIONDATE()));
                 return submissions;
 
             case BY_DATE_ASC:
-                Collections.sort(submissions, (o1, o2) -> o1.getPDFItemTags().getFORMSUBMISSIONDATE().compareTo(o2.getPDFItemTags().getFORMSUBMISSIONDATE()));
+                Collections.sort(submissions, (o1, o2) -> o1.getOutputData().get(0).getTags().getFORMSUBMISSIONDATE().compareTo(o2.getOutputData().get(0).getTags().getFORMSUBMISSIONDATE()));
                 return submissions;
 
         }

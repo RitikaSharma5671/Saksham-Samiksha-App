@@ -87,6 +87,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         Grove.d("User selects the option View Helpline...");
         if (getMvpView() != null) {
             Intent i = new Intent(getMvpView().getActivityContext(), ComingSoon.class);
+            i.putExtra("helpline" ,false);
             getMvpView().getActivityContext().startActivity(i);
         }
     }
