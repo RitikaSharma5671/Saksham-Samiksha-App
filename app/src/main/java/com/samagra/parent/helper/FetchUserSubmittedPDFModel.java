@@ -34,11 +34,11 @@ public class FetchUserSubmittedPDFModel extends AsyncTask<String, Void, ArrayLis
     protected ArrayList<PDFItem> doInBackground(String[] strings) {
 
         String userName = this.userName;
-        String url = "http://159.89.163.33:5001/v1/graphql";
+        String url = "http://68.183.94.187:5001/v1/graphql";
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("application/json,text/plain");
-        RequestBody body = RequestBody.create(mediaType, "{\"query\":\"query MyQuery {\n  queuemanager(where: {tags: {_contains: {\n    USERNAME:\\\"" + userName + "\\\"\n  }}}) {\n    doc_name\n    instance_id\n    current_status\n    tags\n    Pdfgenerated {\n      doc_name\n      instance_id\n      tags\n    }\n  }\n}\"\n}\n");
+        RequestBody body = RequestBody.create(mediaType, "{\"query\":\"query MyQuery {\n  queuemanager(where: {tags: {_contains: {\n    USERNAME:\\\"" + userName + "\\\"\n  }}}) {\n    doc_name\n    instance_id\n    current_status\n    tags\n    outputtables {\n      doc_name\n      instance_id\n      tags\n    }\n  }\n}\"\n}\n");
         Request request = new Request.Builder()
                 .url(url)
                 .method("POST", body)
