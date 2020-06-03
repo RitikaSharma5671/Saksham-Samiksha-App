@@ -164,8 +164,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
 
         String roleMapping = MyApplication.getmFirebaseRemoteConfig().getString("role_mapping");
-        Grove.d("Finding the Role Mapping for the user");
-        Grove.e("Role Mapping string from firebase  is %s", roleMapping);
+        Grove.d("Finding the remote Role Mapping for the user:");
         String role = "";
         ArrayList<RoleMapping> roleMappings = new ArrayList<>();
         if (!roleMapping.equals("") && !userRole.equals("")) {

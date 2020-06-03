@@ -174,7 +174,6 @@
         android:layout_height="60dp"
         android:layout_gravity="center"
         android:visibility="invisible"
-        android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"

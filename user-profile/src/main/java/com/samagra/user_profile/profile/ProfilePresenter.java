@@ -102,6 +102,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
         String userId = ProfileSectionDriver.USER_ID;
         String oldPhone = getContentValueFromKey(profileElementHolders.get(1).getUserProfileElement().getContent());
         String updatedPhone = profileElementHolders.get(1).getUpdatedElementValue();
+        String updatedAccountName = profileElementHolders.get(0).getUpdatedElementValue();
 
         String oldEmail = getContentValueFromKey(profileElementHolders.get(2).getUserProfileElement().getContent());
         String updatedEmail = profileElementHolders.get(2).getUpdatedElementValue();
@@ -120,6 +121,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
                     } else {
                         internalData = new JSONObject();
                     }
+                    user.put("fullName",updatedAccountName);
                     if(!updatedEmail.equals("") && validateEmailAddress(updatedEmail)){
                         user.put("email", updatedEmail);
                     }
@@ -127,6 +129,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
                         user.put("mobilePhone", updatedPhone);
                     }
                     internalData.put("phone", updatedPhone);
+                    internalData.put("accountName", updatedAccountName);
                     user.put("data", internalData);
                     oldData.put("user", user);
                     return getApiHelper().performPutUserDetailsApiCall(userId, apiKey, oldData);

@@ -99,6 +99,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Chang
         }
 
         submitButton = view.findViewById(R.id.password_submit);
+        otp.addTextChangedListener(getWatcher(otp, password, confirmPassword, submitButton));
         password.addTextChangedListener(getWatcher(otp, password, confirmPassword, submitButton));
         confirmPassword.addTextChangedListener(getWatcher(otp, password, confirmPassword, submitButton));
 
@@ -143,6 +144,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Chang
                 } else if (pass.length() < 8 || confPass.length() < 8) {
                     SnackbarUtils.showLongSnackbar(parent, getString(R.string.less_than_8_pass));
                 } else if (pass.equals(confPass)) {
+                    showProgressBar();
                     new UpdatePasswordTask(this).executeOnExecutor(
                             AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber,
                             otp.getText().toString(),
@@ -156,6 +158,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Chang
 
     @Override
     public void onSuccess() {
+        hideProgressBar();
         SnackbarUtils.showLongSnackbar(parent, this.getResources().getString(R.string.pass_change_successful));
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -175,6 +178,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Chang
 
     @Override
     public void onFailure(Exception exception) {
+        hideProgressBar();
         if (parent != null) {
             SnackbarUtils.showLongSnackbar(parent, exception.getMessage());
         }
@@ -193,13 +197,11 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Chang
                 String _password = password.getText().toString().trim();
                 String _confirmPassword = confirmPassword.getText().toString().trim();
                 if (validateInputs(_otp, _password, _confirmPassword)) {
-                    login.setBackgroundColor(getResources().getColor(R.color.button_colors));
-//                    login.getBackground().setColorFilter(ContextCompat.getColor(getActivity(), R.color.appBlue), PorterDuff.Mode.MULTIPLY);
+                    login.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                     login.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
                 } else {
                     login.setBackgroundColor(getResources().getColor(R.color.grey));
-                    login.getBackground().setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.MULTIPLY);
-                    login.setTextColor(ContextCompat.getColor(getActivity(), R.color.black));
+                    login.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
                 }
             }
 

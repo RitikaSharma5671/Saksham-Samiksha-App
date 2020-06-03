@@ -105,6 +105,12 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
             if (data.has("joiningDate"))
                 editor.putString("user.joiningDate", data.get("joiningDate").getAsJsonPrimitive().getAsString());
             else editor.putString("user.joiningDate", "");
+
+            if (data.has("accountName")) {
+                editor.putString("user.accountName", data.get("accountName").getAsString());
+            } else {
+                editor.putString("user.accountName", "");
+            }
         }
         editor.apply();
     }
