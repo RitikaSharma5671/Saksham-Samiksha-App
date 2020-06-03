@@ -85,55 +85,6 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
         }
     }
 
-    public boolean testIfPhoneUnique(String phone, String userId){
-        boolean isPhoneUnique = true;
-        OkHttpClient client = new OkHttpClient();
-
-        MediaType mediaType = MediaType.parse("application/json");
-        JSONObject bodyObject = new JSONObject();
-        JSONObject search = new JSONObject();
-        try {
-            JSONArray sortFields = new JSONArray();
-            JSONObject sortFieldsBody = new JSONObject();
-            sortFieldsBody.put("name", "email");
-            sortFields.put(sortFieldsBody);
-            search.put("queryString", "(data.phone: " + phone + ") AND (registrations.applicationId: " + ProfileSectionDriver.applicationID +")");
-            search.put("sortFields", sortFields);
-            bodyObject.put("search", search);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(mediaType, bodyObject.toString());
-        Request request = new Request.Builder()
-                .url(ProfileSectionDriver.BASE_API_URL + "/api/user/search")
-                .post(body)
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "6DgFjRZOE94Wd9tIERk79YWJkWjCqvf5JUyKxIuxUgs")
-                .build();
-
-        try {
-            Response response = client.newCall(request).execute();
-            if(response.isSuccessful()){
-                LinkedTreeMap responseData = new Gson().fromJson(response.body().string(), LinkedTreeMap.class);
-                JsonObject jsonObject = new Gson().toJsonTree(responseData).getAsJsonObject();
-                int totalUsers = (int) Double.parseDouble(jsonObject.get("total").getAsJsonPrimitive().toString());
-                if(totalUsers == 0) {
-                    isPhoneUnique = true;
-                }else if(totalUsers == 1){
-                    JsonObject firstUser = (JsonObject) jsonObject.get("users").getAsJsonArray().get(0);
-                    isPhoneUnique = firstUser.getAsJsonPrimitive("id").getAsString().equals(userId);
-                }
-                else {
-                    isPhoneUnique = false;
-                }
-            }else isPhoneUnique = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            isPhoneUnique = true;
-        }
-        return isPhoneUnique;
-    }
-
     /**
      * Updates the User's profile properties at remote using FusionAuth APIs. The updated properties
      * are provided through the profileElementHolders parameter. This function first make an API

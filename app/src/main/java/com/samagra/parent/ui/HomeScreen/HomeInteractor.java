@@ -30,10 +30,6 @@ public class HomeInteractor extends BaseInteractor implements HomeMvpInteractor 
         return getPreferenceHelper().getCurrentUserFullName();
     }
 
-    @Override
-    public String getUserContactNumber() {
-        return getPreferenceHelper().getUserContactDetails();
-    }
 
     @Override
     public String getUserName() {

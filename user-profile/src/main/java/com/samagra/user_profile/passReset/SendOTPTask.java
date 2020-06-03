@@ -4,6 +4,9 @@ import android.os.AsyncTask;
 
 import com.samagra.user_profile.ProfileSectionDriver;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
@@ -15,6 +18,7 @@ public class SendOTPTask extends AsyncTask<String, Void, String> {
     private ActionListener listener;
     private String TAG = SendOTPTask.class.getName();
     private boolean isPhoneUnique;
+    private boolean isSuccess;
 
     public SendOTPTask(ActionListener listener){
         this.listener = listener;
@@ -42,9 +46,17 @@ public class SendOTPTask extends AsyncTask<String, Void, String> {
             try {
                 response = client.newCall(request).execute();
                 if (response.isSuccessful()) {
+                    isSuccess = true;
+                    response.body().close();
                     return response.body().toString();
+                }else{
+                    isSuccess = false;
+                    String jsonData = response.body().string();
+                    response.body().close();
+                    return "Failure";
                 }
             } catch (IOException e) {
+                isSuccess = false;
                 e.printStackTrace();
             }
             return null;
@@ -52,8 +64,10 @@ public class SendOTPTask extends AsyncTask<String, Void, String> {
     }
 
     protected void onPostExecute(String s){
-        if(isPhoneUnique) {
+        if(isSuccess) {
             listener.onSuccess();
+        }else{
+            listener.onFailure(new Exception(s));
         }
     }
 }

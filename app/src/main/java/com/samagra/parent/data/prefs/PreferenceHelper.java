@@ -28,6 +28,4 @@ public interface PreferenceHelper {
     String updateAppLanguage();
 
     String getCurrentUserFullName();
-
-    String getUserContactDetails();
 }

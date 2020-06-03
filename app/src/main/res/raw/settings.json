@@ -43,7 +43,9 @@
   "general" : {
 
     "protocol": "odk_default",
-    "server_url": "https://agg.dummy.samagra.io/",
+    "server_url": "http://aggregate.cttsamagra.xyz:8080",
+    "username": "samagra",
+    "password": "impact@scale",
     "navigation": "buttons",
 
     "delete_send": false,

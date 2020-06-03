@@ -48,12 +48,6 @@ public class AppPreferenceHelper implements PreferenceHelper {
     }
 
     @Override
-    public String getUserContactDetails() {
-        return defaultPreferences.getString("user.mobilePhone", "");
-    }
-
-
-    @Override
     public void updateFormVersion(String version) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("formVersion", version);
@@ -62,7 +56,10 @@ public class AppPreferenceHelper implements PreferenceHelper {
 
     @Override
     public String getValueForKey(String content) {
-        return defaultPreferences.getString(content, "");
+        if (content.equals("user.mobilePhone")) {
+            return new HashMap<String, String>((Map) new Gson().fromJson(defaultPreferences.getString("user.data", ""), HashMap.class)).get("phone");
+        } else
+            return defaultPreferences.getString(content, "");
     }
 
     @Override
