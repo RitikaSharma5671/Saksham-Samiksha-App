@@ -173,7 +173,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Chang
             editor1.putBoolean("isLoggedIn", false);
             editor1.apply();
             startActivity(new Intent(getActivity(), LoginActivity.class));
-        }, 5000);
+        }, 3000);
     }
 
     @Override

@@ -165,7 +165,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
         //check String LastPage for profile to redirect to Profile.
         if (lastPage.equals("profile")) {
             SnackbarUtils.showLongSnackbar(parent, this.getResources().getString(R.string.pass_changed_redirecting));
-            new CountDownTimer(5000, 1000) {
+            new CountDownTimer(3000, 1000) {
                 public void onTick(long millisUntilFinished) {
                 }
 

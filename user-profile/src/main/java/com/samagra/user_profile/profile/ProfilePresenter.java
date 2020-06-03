@@ -188,7 +188,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
                             }
                         } else {
                             getMvpView().hideLoading();
-                            getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_not_unique), 2000);
+                            getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.email_not_unique), 2000);
                         }
                     }, t -> {
                         Grove.e(t);
