@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 import com.samagra.commons.Constants;
-import com.samagra.grove.logging.Grove;
-import com.samagra.user_profile.ProfileSectionDriver;
 
 import org.json.JSONObject;
 
@@ -82,44 +80,5 @@ public class BackendCallHelperImpl implements BackendCallHelper {
                 .build()
                 .getJSONObjectSingle();
     }
-
-    @Override
-    public Single<JSONObject> performSearchUserByPhoneCall(String phone, String apiKey){
-        String json = "{\"search\":{\"queryString\":\"(registrations.applicationId: " + ProfileSectionDriver.applicationID + ") AND (data.phone: " + phone + ")\",\"sortFields\":[{\"name\":\"email\"}]}}";
-        JSONObject body = new JSONObject();
-        try {
-            body = new JSONObject(json);
-        } catch (Throwable t) {
-            Grove.e("Could not parse malformed JSON");
-        }
-        return Rx2AndroidNetworking.post(BackendApiUrls.USER_SEARCH_ENDPOINT)
-                .addHeaders("Authorization", apiKey)
-                .addHeaders("Content-Type", "application/json")
-                .setTag(Constants.LOGOUT_CALLS)
-                .addJSONObjectBody(body)
-                .build()
-                .getJSONObjectSingle();
-
-    }
-
-    @Override
-    public Single<JSONObject> performSearchUserByEmailCall(String email, String apiKey){
-        String json = "{\"search\":{\"queryString\":\"(registrations.applicationId: " + ProfileSectionDriver.applicationID + ") AND (email: " + email + ")\",\"sortFields\":[{\"name\":\"email\"}]}}";
-        JSONObject body = new JSONObject();
-        try {
-            body = new JSONObject(json);
-        } catch (Throwable t) {
-            Grove.e("Could not parse malformed JSON");
-        }
-        return Rx2AndroidNetworking.post(BackendApiUrls.USER_SEARCH_ENDPOINT)
-                .addHeaders("Authorization", apiKey)
-                .addHeaders("Content-Type", "application/json")
-                .setTag(Constants.LOGOUT_CALLS)
-                .addJSONObjectBody(body)
-                .build()
-                .getJSONObjectSingle();
-
-    }
-
 
 }
