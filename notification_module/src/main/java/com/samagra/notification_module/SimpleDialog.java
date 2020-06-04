@@ -47,7 +47,7 @@ public class SimpleDialog extends DialogFragment {
                     .add(this, tag)
                     .commit();
         } catch (IllegalStateException e) {
-            Grove.w(e);
+            Grove.e(e);
         }
     }
 

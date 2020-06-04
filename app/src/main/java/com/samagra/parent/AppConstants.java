@@ -23,7 +23,7 @@ public class AppConstants {
     public static final String SENDER_EMAIL_ID = "";
     public static final String RECEIVER_EMAIL_ID = "";
     public static final String APPLICATION_ID = "dd56e032-fb78-438b-8257-563f82a9f293";
-    public static String ABOUT_WEBSITE_LINK = "https://samagra-development.github.io/docs/";
-    public static String ABOOUT_FORUM_LINK = "https://samagra-development.github.io/docs/";
+    public static String ABOUT_WEBSITE_LINK = "";
+    public static String ABOOUT_FORUM_LINK = "";
 
 }
