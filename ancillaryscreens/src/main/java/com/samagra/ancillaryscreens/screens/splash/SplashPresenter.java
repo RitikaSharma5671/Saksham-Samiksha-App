@@ -1,13 +1,24 @@
 package com.samagra.ancillaryscreens.screens.splash;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Environment;
+import android.preference.PreferenceManager;
+
+import androidx.annotation.NonNull;
 
 import com.androidnetworking.error.ANError;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.BuildConfig;
 import com.samagra.ancillaryscreens.R;
@@ -20,11 +31,15 @@ import com.samagra.commons.utils.FileUnzipper;
 import com.samagra.commons.utils.UnzipTaskListener;
 import com.samagra.grove.logging.Grove;
 
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.contracts.AppPermissionUserActionListener;
 import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.contracts.PermissionsHelper;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import javax.inject.Inject;
 
@@ -123,7 +138,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
      */
     @Override
     public void init() {
-        startUnzipTask();
+        downloadFirebaseRemoteStorageConfigFile();
         getMvpView().showActivityLayout();
         PackageInfo packageInfo = null;
         try {
@@ -194,26 +209,52 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
     @Override
     public void downloadFirebaseRemoteStorageConfigFile() {
-        FirebaseUtilitiesWrapper.downloadFile(ROOT + "/saksham_data_json.json.gzip", new IFirebaseRemoteStorageFileDownloader() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference dataRef = storageRef.child("saksham_data_json.gzip");
+        File outputFile = new File(Collect.ODK_ROOT + "/abc.json.gzip");
+        dataRef.getFile(outputFile)
+                .addOnSuccessListener(taskSnapshot -> {
+                        Grove.e("Successfully downloaded the UDISE file");
+                        File zippedFile = new File(Collect.ODK_ROOT + "/data2.json.gzip");
+                        Grove.e("CWc", zippedFile.getAbsolutePath());
 
-            @Override
-            public void onFirebaseRemoteStorageFileDownloadFailure(Exception exception) {
-                Grove.d("Remote file from Firebase failed with error. " + exception.getMessage() + " Using local file only, ");
-                startUnzipTask();
-            }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Grove.e("cdc", "Data failed to download");
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        long progressPercentage = 100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount();
+                        Grove.e("On progress", "Data downloading " + progressPercentage);
+                    }
+                });
 
-            @Override
-            public void onFirebaseRemoteStorageFileDownloadProgressState(long progressPercentage) {
-
-            }
-
-            @Override
-            public void onFirebaseRemoteStorageFileDownloadSuccess() {
-//                getMvpView().showSnackbar("Remote file from Firebase has been downloaded successfully", Snackbar.LENGTH_LONG);
-                startUnzipTask();
-            }
-        });
     }
+//        FirebaseUtilitiesWrapper.downloadFile(ROOT + "/saksham_data_json.json.gzip", new IFirebaseRemoteStorageFileDownloader() {
+//
+//            @Override
+//            public void onFirebaseRemoteStorageFileDownloadFailure(Exception exception) {
+//                Grove.d("Remote file from Firebase failed with error. " + exception.getMessage() + " Using local file only, ");
+//                startUnzipTask();
+//            }
+//
+//            @Override
+//            public void onFirebaseRemoteStorageFileDownloadProgressState(long progressPercentage) {
+//
+//            }
+//
+//            @Override
+//            public void onFirebaseRemoteStorageFileDownloadSuccess() {
+////                getMvpView().showSnackbar("Remote file from Firebase has been downloaded successfully", Snackbar.LENGTH_LONG);
+//                startUnzipTask();
+//            }
+//        });
+//    }
 
 
 
