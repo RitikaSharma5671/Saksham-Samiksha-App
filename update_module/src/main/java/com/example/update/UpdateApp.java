@@ -35,7 +35,7 @@ import static com.example.update.CheckForUpdate.FLEXIBLE;
 public class UpdateApp implements LifecycleObserver {
 
     private static final String TAG = "UpdateApp";
-    int mCurrentAppVersion, mAvailableVersion;
+    private int mCurrentAppVersion, mAvailableVersion;
 
     private WeakReference<AppCompatActivity> mActivityWeakReference;
 
@@ -231,7 +231,7 @@ public class UpdateApp implements LifecycleObserver {
         snackbar.show();
     }
 
-    public void getAvailableVersionCode(final onVersionCheckListener onVersionCheckListener) {
+    private void getAvailableVersionCode(final onVersionCheckListener onVersionCheckListener) {
         appUpdateInfoTask.addOnSuccessListener(new OnSuccessListener<AppUpdateInfo>() {
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {

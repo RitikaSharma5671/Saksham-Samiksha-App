@@ -293,7 +293,7 @@ public class Manager {
                 incompleteTasksArrayList.remove(UUID);
                 updateIncompleteTasksArrayList(mainApplication.getCurrentApplication().getApplicationContext());
             } else {
-                Grove.w("incompleteTasksArrayList does not contain UUID %s", UUID);
+                Grove.d("incompleteTasksArrayList does not contain UUID %s", UUID);
             }
         }
     }

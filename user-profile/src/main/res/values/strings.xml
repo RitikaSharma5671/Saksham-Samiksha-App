@@ -73,6 +73,7 @@
     <string name="reset_password">Reset Password</string>
     <string name="phone_number_email_not_simultaneous">Both Phone number and email cannot change at the same time. Please try with one first.</string>
     <string name="phone_number_not_unique">Phone number is not unique</string>
+    <string name="email_not_unique">Phone number is not unique</string>
     <string name="internet_not_connected_otp">It seems you are not connected to the internet. Please switch on your mobile data/connect to Wi-fi to receive OTP</string>
     <string name="these_following_fields_cannot_be_updated_in_case_there_is_any_issue_contact_admin_edudata_hp_gmail_com">These following fields cannot be updated. In case there is any issue, contact admin.</string>
 

@@ -85,55 +85,6 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
         }
     }
 
-    public boolean testIfPhoneUnique(String phone, String userId){
-        boolean isPhoneUnique = true;
-        OkHttpClient client = new OkHttpClient();
-
-        MediaType mediaType = MediaType.parse("application/json");
-        JSONObject bodyObject = new JSONObject();
-        JSONObject search = new JSONObject();
-        try {
-            JSONArray sortFields = new JSONArray();
-            JSONObject sortFieldsBody = new JSONObject();
-            sortFieldsBody.put("name", "email");
-            sortFields.put(sortFieldsBody);
-            search.put("queryString", "(data.phone: " + phone + ") AND (registrations.applicationId: " + ProfileSectionDriver.applicationID +")");
-            search.put("sortFields", sortFields);
-            bodyObject.put("search", search);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(mediaType, bodyObject.toString());
-        Request request = new Request.Builder()
-                .url(ProfileSectionDriver.BASE_API_URL + "/api/user/search")
-                .post(body)
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "6DgFjRZOE94Wd9tIERk79YWJkWjCqvf5JUyKxIuxUgs")
-                .build();
-
-        try {
-            Response response = client.newCall(request).execute();
-            if(response.isSuccessful()){
-                LinkedTreeMap responseData = new Gson().fromJson(response.body().string(), LinkedTreeMap.class);
-                JsonObject jsonObject = new Gson().toJsonTree(responseData).getAsJsonObject();
-                int totalUsers = (int) Double.parseDouble(jsonObject.get("total").getAsJsonPrimitive().toString());
-                if(totalUsers == 0) {
-                    isPhoneUnique = true;
-                }else if(totalUsers == 1){
-                    JsonObject firstUser = (JsonObject) jsonObject.get("users").getAsJsonArray().get(0);
-                    isPhoneUnique = firstUser.getAsJsonPrimitive("id").getAsString().equals(userId);
-                }
-                else {
-                    isPhoneUnique = false;
-                }
-            }else isPhoneUnique = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            isPhoneUnique = true;
-        }
-        return isPhoneUnique;
-    }
-
     /**
      * Updates the User's profile properties at remote using FusionAuth APIs. The updated properties
      * are provided through the profileElementHolders parameter. This function first make an API
@@ -151,12 +102,13 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
         String userId = ProfileSectionDriver.USER_ID;
         String oldPhone = getContentValueFromKey(profileElementHolders.get(1).getUserProfileElement().getContent());
         String updatedPhone = profileElementHolders.get(1).getUpdatedElementValue();
+        String updatedAccountName = profileElementHolders.get(0).getUpdatedElementValue();
 
         String oldEmail = getContentValueFromKey(profileElementHolders.get(2).getUserProfileElement().getContent());
         String updatedEmail = profileElementHolders.get(2).getUpdatedElementValue();
 
-        Single<JSONObject> usersForPhone = getApiHelper().performSearchUserByPhoneCall(updatedPhone, apiKey);
-        Single<JSONObject> usersForEmail = getApiHelper().performSearchUserByEmailCall(updatedEmail, apiKey);
+//        Single<JSONObject> usersForPhone = getApiHelper().performSearchUserByPhoneCall(updatedPhone, apiKey);
+//        Single<JSONObject> usersForEmail = getApiHelper().performSearchUserByEmailCall(updatedEmail, apiKey);
         Single<JSONObject> updatedData = getApiHelper()
                 .performGetUserDetailsApiCall(userId, apiKey)
                 .flatMap(oldData -> {
@@ -169,6 +121,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
                     } else {
                         internalData = new JSONObject();
                     }
+                    user.put("fullName",updatedAccountName);
                     if(!updatedEmail.equals("") && validateEmailAddress(updatedEmail)){
                         user.put("email", updatedEmail);
                     }
@@ -176,6 +129,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
                         user.put("mobilePhone", updatedPhone);
                     }
                     internalData.put("phone", updatedPhone);
+                    internalData.put("accountName", updatedAccountName);
                     user.put("data", internalData);
                     oldData.put("user", user);
                     return getApiHelper().performPutUserDetailsApiCall(userId, apiKey, oldData);
@@ -184,63 +138,21 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
 
         if(oldPhone.equals(updatedPhone) && oldEmail.equals(updatedEmail)){
             updateUserProfile(profileElementHolders, updatedData);
-        }
-        else if (!oldPhone.equals(updatedPhone)) {
-            getCompositeDisposable().add(usersForPhone.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(searchResponse -> {
-                        boolean isPhoneUnique = false;
-                        int totalUsers = (int) Double.parseDouble(searchResponse.get("total").toString());
-                        if(totalUsers == 0) {
-                            isPhoneUnique = true;
-                        }else if(totalUsers == 1){
-                            isPhoneUnique = ((JSONObject) searchResponse.getJSONArray("users").get(0)).get("id").equals(userId);
-                        }
-                        else {
-                            isPhoneUnique = false;
-                        }
-
-                        if(isPhoneUnique){
-                            if (totalUsers == 0) {
-                                if (oldEmail.equals(updatedEmail)) {
-                                    updateUserProfile(profileElementHolders, updatedData);
-                                } else {
-                                    getMvpView().hideLoading();
-                                    getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_email_not_simultaneous), 2000);
-                                }
-                            } else {
-                                getMvpView().hideLoading();
-                                getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_not_unique), 2000);
-                            }
-                        }else{
-                            getMvpView().hideLoading();
-                            getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_not_unique), 2000);
-                        }
-                    }, t -> {
-                        Grove.e("Error in searching users for phone number");
-                        Grove.e(t);
-                        getMvpView().hideLoading();
-                    }));
-        }
-        else if (!oldEmail.equals(updatedEmail)) {
-            getCompositeDisposable().add(usersForEmail.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(searchResponse -> {
-                        int totalUsers = (int) Double.parseDouble(searchResponse.get("total").toString());
-                        if (totalUsers == 0) {
-                            if (oldPhone.equals(updatedPhone)) {
-                                updateUserProfile(profileElementHolders, updatedData);
-                            } else {
-                                getMvpView().hideLoading();
-                                getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_email_not_simultaneous), 2000);
-                            }
-                        } else {
-                            getMvpView().hideLoading();
-                            getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_not_unique), 2000);
-                        }
-                    }, t -> {
-                        Grove.e(t);
-                        getMvpView().hideLoading();
-                    }));
-        }else {
+        } else if (!oldPhone.equals(updatedPhone)) {
+            if (oldEmail.equals(updatedEmail)) {
+                updateUserProfile(profileElementHolders, updatedData);
+            } else {
+                getMvpView().hideLoading();
+                getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_email_not_simultaneous), 2000);
+            }
+        } else if (!oldEmail.equals(updatedEmail)) {
+            if (oldPhone.equals(updatedPhone)) {
+                updateUserProfile(profileElementHolders, updatedData);
+            } else {
+                getMvpView().hideLoading();
+                getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_email_not_simultaneous), 2000);
+            }
+        } else {
             getMvpView().hideLoading();
         }
     }

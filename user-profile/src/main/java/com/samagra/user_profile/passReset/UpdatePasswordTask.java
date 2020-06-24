@@ -2,6 +2,7 @@ package com.samagra.user_profile.passReset;
 
 import android.os.AsyncTask;
 
+import com.samagra.grove.logging.Grove;
 import com.samagra.user_profile.ProfileSectionDriver;
 
 import org.json.JSONException;
@@ -15,13 +16,14 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+
 public class UpdatePasswordTask extends AsyncTask<String, Void, String> {
 
     private ActionListener listener;
     private String TAG = UpdatePasswordTask.class.getName();
-    private boolean isSuccessful = true;
+    private boolean isSuccessful = false;
 
-    public UpdatePasswordTask(ActionListener listener){
+    UpdatePasswordTask(ActionListener listener){
         this.listener = listener;
     }
 
@@ -52,26 +54,44 @@ public class UpdatePasswordTask extends AsyncTask<String, Void, String> {
             try {
                 response = client.newCall(request).execute();
                 if(response.isSuccessful()){
+                    isSuccessful = true;
+                    Grove.d(TAG, "Successful Response, for Password API, sending control back to user");
                     return response.body().string();
-
                 }else{
                     isSuccessful = false;
-                    String jsonData = response.body().string();
-                    JSONObject responseObject = new JSONObject(jsonData);
-                    return responseObject.getString("status");
+                    return response.body().string();
                 }
             } catch (IOException e) {
+                Grove.e(e);
                 e.printStackTrace();
+                return e.getMessage();
             }
         } catch (JSONException e) {
+            Grove.e(e);
             e.printStackTrace();
+            return e.getMessage();
         }
 
-        return null;
     }
 
-    protected void onPostExecute(String s){
-        if(!isSuccessful) listener.onFailure(new Exception(s));
-        else listener.onSuccess();
+    protected void onPostExecute(String s) {
+        if (!isSuccessful) {
+            if (s != null) {
+                Grove.e("API Response to update pwd failed with this error: " + s);
+                if (s.contains("status")){
+                    try {
+                        JSONObject responseObject = new JSONObject(s);
+                        listener.onFailure(new Exception(responseObject.getString("status")));
+                    } catch (JSONException e) {
+                        listener.onFailure(new Exception("Couldn't change password. Please contact admin."));
+                        e.printStackTrace();
+                    }
+                }else {
+                    listener.onFailure(new Exception("Couldn't change password. Please try again after some time."));
+                }
+            } else {
+                listener.onFailure(new Exception("Couldn't change password. Please contact admin."));
+            }
+        } else listener.onSuccess();
     }
 }

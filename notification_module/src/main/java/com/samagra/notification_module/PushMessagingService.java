@@ -58,7 +58,7 @@ public class PushMessagingService extends FirebaseMessagingService {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
                         if (!task.isSuccessful()) {
-                            Grove.w(task.getException(), "getInstanceId failed");
+                            Grove.d(task.getException(), "getInstanceId failed");
                             return;
                         }
                         // Get new Instance ID token

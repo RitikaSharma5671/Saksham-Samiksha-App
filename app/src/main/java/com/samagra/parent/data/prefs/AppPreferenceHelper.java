@@ -44,14 +44,12 @@ public class AppPreferenceHelper implements PreferenceHelper {
 
     @Override
     public String getCurrentUserFullName() {
-        return defaultPreferences.getString("user.fullName", "");
-    }
+        if(defaultPreferences.getString("user.accountName", "").equals(""))
+            return defaultPreferences.getString("user.fullName", "");
+        else
+            return defaultPreferences.getString("user.accountName", "");
 
-    @Override
-    public String getUserContactDetails() {
-        return defaultPreferences.getString("user.mobilePhone", "");
     }
-
 
     @Override
     public void updateFormVersion(String version) {
@@ -62,7 +60,10 @@ public class AppPreferenceHelper implements PreferenceHelper {
 
     @Override
     public String getValueForKey(String content) {
-        return defaultPreferences.getString(content, "");
+        if (content.equals("user.mobilePhone")) {
+            return new HashMap<String, String>((Map) new Gson().fromJson(defaultPreferences.getString("user.data", ""), HashMap.class)).get("phone");
+        } else
+            return defaultPreferences.getString(content, "");
     }
 
     @Override

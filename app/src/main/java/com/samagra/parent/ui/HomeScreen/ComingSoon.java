@@ -26,7 +26,7 @@ public class ComingSoon extends BaseActivity {
 
     private CustomTabHelper websiteTabHelper;
     private Uri websiteUri;
-    private static final String SAMAGRA_DOC_WEBSITE = "https://samagra-development.github.io/docs/docs/COMobileApplication";
+    private static final String SAMAGRA_DOC_WEBSITE = "";
 
 
 

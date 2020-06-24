@@ -110,7 +110,6 @@ public class MyApplication extends Application implements MainApplication, Lifec
                 getApplicationId(), getApplicationContext().getResources().getString(R.string.fusionauth_api_key));
         Grove.d("Ancillary Screens Module initialised >>>>");
         initBus();
-        initialiseLoggingComponent();
         UpdateDriver.init(this);
         rxEventBus = new EventBus();
     }
@@ -121,7 +120,6 @@ public class MyApplication extends Application implements MainApplication, Lifec
         if (initializer != null) {
             initializer.initializeLoggingComponent(this, this, getApplicationContext(), (context, s, s1, s2, s3) -> {
             }, false, true, BuildConfig.dsn, AppConstants.SENDER_EMAIL_ID, AppConstants.RECEIVER_EMAIL_ID);
-            Grove.d("App Logging Module initialised >>>>");
         }
 
     }
@@ -317,7 +315,6 @@ public class MyApplication extends Application implements MainApplication, Lifec
     }
 
     public void setupRemoteConfig() {
-//        FirebaseRemoteConfigWrapper.init(getApplicationContext());
         FirebaseApp.initializeApp(this);
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()

@@ -15,5 +15,4 @@ import com.samagra.user_profile.ProfileSectionDriver;
 // * @see AncillaryScreensDriver#init(MainApplication, String)
 final class BackendApiUrls {
     static final String USER_DETAILS_ENDPOINT = ProfileSectionDriver.BASE_API_URL +  "/api/user/{user_id}/";
-    static final String USER_SEARCH_ENDPOINT =  ProfileSectionDriver.BASE_API_URL+ "/api/user/search";
 }

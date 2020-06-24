@@ -99,6 +99,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
         submitButton = view.findViewById(R.id.password_submit);
         password.addTextChangedListener(getWatcher(otp, password, confirmPassword, submitButton));
         confirmPassword.addTextChangedListener(getWatcher(otp, password, confirmPassword, submitButton));
+        otp.addTextChangedListener(getWatcher(otp, password, confirmPassword, submitButton));
 
         resendListener = new View.OnClickListener() {
             @Override
@@ -138,12 +139,12 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
             if (v.getId() == R.id.password_submit) {
                 String pass = password.getText().toString();
                 String confPass = confirmPassword.getText().toString();
-                if(pass.equals("")){
+                if (pass.equals("")) {
                     SnackbarUtils.showLongSnackbar(parent, getResources().getString(R.string.pass_cannot_be_empty));
-                }else if(pass.length() < 8 || confPass.length() < 8){
+                } else if (pass.length() < 8 || confPass.length() < 8) {
                     SnackbarUtils.showLongSnackbar(parent, getString(R.string.less_than_8_pass));
-                }
-                else if (pass.equals(confPass)) {
+                } else if (pass.equals(confPass)) {
+                    showProgressBar();
                     new UpdatePasswordTask(this).executeOnExecutor(
                             AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber,
                             otp.getText().toString(),
@@ -160,11 +161,11 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
 
         // Return to login screen. Show snackbar that password was changed successfully.
         // Logout if not logged out and ask him to login again.
-
+        hideProgressBar();
         //check String LastPage for profile to redirect to Profile.
         if (lastPage.equals("profile")) {
-           SnackbarUtils.showLongSnackbar(parent, this.getResources().getString(R.string.pass_changed_redirecting));
-            new CountDownTimer(5000, 1000) {
+            SnackbarUtils.showLongSnackbar(parent, this.getResources().getString(R.string.pass_changed_redirecting));
+            new CountDownTimer(3000, 1000) {
                 public void onTick(long millisUntilFinished) {
                 }
 
@@ -178,6 +179,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
 
     @Override
     public void onFailure(Exception exception) {
+        hideProgressBar();
         if (parent != null) {
             SnackbarUtils.showLongSnackbar(parent, exception.getMessage());
         }
@@ -202,7 +204,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
                 } else {
                     login.setBackgroundColor(getResources().getColor(R.color.dark_grey));
 //                    login.getBackground().setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.MULTIPLY);
-                    login.setTextColor(ContextCompat.getColor(getActivity(), R.color.black));
+                    login.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
                 }
             }
 
