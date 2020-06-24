@@ -34,7 +34,7 @@ public class FetchUserSubmittedPDFModel extends AsyncTask<String, Void, ArrayLis
     protected ArrayList<PDFItem> doInBackground(String[] strings) {
 
         String userName = this.userName;
-        String url = "http://159.89.163.33:5001/v1/graphql";
+        String url = "http://68.183.94.187:5001/v1/graphql";
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("application/json,text/plain");

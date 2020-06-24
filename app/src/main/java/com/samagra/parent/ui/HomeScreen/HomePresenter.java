@@ -63,12 +63,13 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     @Override
     public void onViewSubmittedFormsOptionsClicked() {
         Grove.d("User selects the option View Submitted Forms...");
-
         if (getMvpView() != null) {
-
-            Intent intent = new Intent(getMvpView().getActivityContext(), SubmissionsActivity.class);
-            getMvpView().getActivityContext().startActivity(intent);
-           }
+            getIFormManagementContract().launchViewSubmittedFormsView(getMvpView().getActivityContext(), UtilityFunctions.generateToolbarModificationObject(true,
+                    R.drawable.ic_arrow_back_white_24dp,
+                    getMvpView().getActivityContext().getResources().getString(R.string.view_sent_forms), true));
+            //            Intent intent = new Intent(getMvpView().getActivityContext(), SubmissionsActivity.class);
+//            getMvpView().getActivityContext().startActivity(intent);
+        }
     }
 
 
@@ -372,6 +373,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             int formProgress = (progress * 100) / total;
             Grove.d("Form Download Progress: %s", formProgress);
             currentProgress = currentProgress + 70 / 9;
+            if(getMvpView() != null)
             getMvpView().setDownloadProgress(currentProgress);
             if (formProgress == 100) {
                 if (getMvpView() != null) {
