@@ -1,20 +1,16 @@
 package com.samagra.ancillaryscreens.screens.splash;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 
 import com.androidnetworking.error.ANError;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -24,8 +20,8 @@ import com.samagra.ancillaryscreens.BuildConfig;
 import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.base.BasePresenter;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelper;
-import com.samagra.commons.firebase.FirebaseUtilitiesWrapper;
-import com.samagra.commons.firebase.IFirebaseRemoteStorageFileDownloader;
+import com.samagra.ancillaryscreens.network.infra.GlobalDataFetcher;
+import com.samagra.ancillaryscreens.network.infra.IUserSyncListener;
 import com.samagra.commons.utils.AlertDialogUtils;
 import com.samagra.commons.utils.FileUnzipper;
 import com.samagra.commons.utils.UnzipTaskListener;
@@ -37,9 +33,6 @@ import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.contracts.PermissionsHelper;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import javax.inject.Inject;
 
@@ -75,11 +68,11 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
      */
     @Override
     public void moveToNextScreen() {
-//        if (getMvpInteractor().isLoggedIn() && !getMvpInteractor().getRefreshToken().equals("") ) {
-        if ( !getMvpInteractor().getRefreshToken().equals("")  && getMvpInteractor().isLoggedIn()) {
+        if (!getMvpInteractor().getRefreshToken().equals("") && getMvpInteractor().isLoggedIn()) {
             isJWTTokenValid();
         } else {
-            launchLoginScreen();
+            Grove.d("start time " + System.currentTimeMillis());
+            fetchConfigInfo(false);
         }
     }
 
@@ -103,9 +96,8 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
     private void isJWTTokenValid() {
         if (getMvpInteractor().isLoggedIn()) {
-            if(isNetworkConnected()) {
+            if (isNetworkConnected()) {
                 String jwtToken = getMvpInteractor().getPreferenceHelper().getToken();
-//            SplashModel.validateJWTToken(jwtToken, this);
                 getCompositeDisposable().add(getApiHelper()
                         .validateToken(jwtToken)
                         .subscribeOn(Schedulers.io())
@@ -113,8 +105,8 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                         .subscribe(updatedToken -> {
                             if (updatedToken != null && updatedToken.has("jwt")) {
                                 SplashPresenter.this.getIFormManagementContract().resetODKForms(SplashPresenter.this.getMvpView().getActivityContext());
-                                getMvpView().redirectToHomeScreen();
                                 Grove.e(updatedToken.toString());
+                                fetchConfigInfo(true);
                             } else {
                                 updateJWT(AncillaryScreensDriver.API_KEY);
                             }
@@ -131,6 +123,21 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         }
     }
 
+    private void fetchConfigInfo(boolean isUserLoggedIn) {
+        GlobalDataFetcher.fetchUserData(isUserLoggedIn, new IUserSyncListener() {
+            /** {@inheritDoc} */
+            @Override
+            public void onUserDataSynced(Object... options) {
+                Grove.d("end time " + System.currentTimeMillis());
+                if (isUserLoggedIn)
+                    getMvpView().redirectToHomeScreen();
+                else
+                    launchLoginScreen();
+
+            }
+        });
+    }
+
 
     /**
      * This function initialises the {@link SplashActivity} by setting up the layout and updating necessary flags in
@@ -138,7 +145,8 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
      */
     @Override
     public void init() {
-        downloadFirebaseRemoteStorageConfigFile();
+        startUnzipTask();
+//        downloadFirebaseRemoteStorageConfigFile();
         getMvpView().showActivityLayout();
         PackageInfo packageInfo = null;
         try {
@@ -215,9 +223,9 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         File outputFile = new File(Collect.ODK_ROOT + "/abc.json.gzip");
         dataRef.getFile(outputFile)
                 .addOnSuccessListener(taskSnapshot -> {
-                        Grove.e("Successfully downloaded the UDISE file");
-                        File zippedFile = new File(Collect.ODK_ROOT + "/data2.json.gzip");
-                        Grove.e("CWc", zippedFile.getAbsolutePath());
+                    Grove.e("Successfully downloaded the UDISE file");
+                    File zippedFile = new File(Collect.ODK_ROOT + "/data2.json.gzip");
+                    Grove.e("CWc", zippedFile.getAbsolutePath());
 
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -257,16 +265,16 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 //    }
 
 
-
-    private void updateCurrentVersion(){
+    private void updateCurrentVersion() {
         int currentVersion = BuildConfig.VERSION_CODE;
         int previousSavedVersion = getMvpInteractor().getPreferenceHelper().getPreviousVersion();
-        if(previousSavedVersion < currentVersion){
+        if (previousSavedVersion < currentVersion) {
             getMvpInteractor().getPreferenceHelper().updateAppVersion(currentVersion);
             getIFormManagementContract().resetEverythingODK();
             Grove.e("Up version detected");
         }
     }
+
     private void updateJWT(String apiKey) {
         boolean firstRun = getMvpInteractor().isFirstRun();
         if (!firstRun) {
@@ -278,18 +286,20 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(updatedToken -> {
-                            if(updatedToken != null && updatedToken.has("token")){
+                            if (updatedToken != null && updatedToken.has("token")) {
                                 getMvpInteractor().updateToken(updatedToken.getString("token"));
-                                getMvpView().redirectToHomeScreen();
-                            }else{
-                                launchLoginScreen();
+                                fetchConfigInfo(true);
+                            } else {
+                                fetchConfigInfo(false);
                             }
-
                         }, throwable -> {
                             if (throwable instanceof ANError)
-                                Grove.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", ((ANError) (throwable)).getErrorBody(), ((ANError) (throwable)).getErrorCode(), ((ANError) (throwable)).getErrorDetail());
+                                Grove.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s",
+                                        ((ANError) (throwable)).getErrorBody(),
+                                        ((ANError) (throwable)).getErrorCode(),
+                                        ((ANError) (throwable)).getErrorDetail());
                             Grove.e(throwable);
-                            launchLoginScreen();
+                            fetchConfigInfo(false);
                         }));
             }
         }

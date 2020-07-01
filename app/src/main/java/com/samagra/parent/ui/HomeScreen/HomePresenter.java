@@ -64,11 +64,8 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     public void onViewSubmittedFormsOptionsClicked() {
         Grove.d("User selects the option View Submitted Forms...");
         if (getMvpView() != null) {
-            getIFormManagementContract().launchViewSubmittedFormsView(getMvpView().getActivityContext(), UtilityFunctions.generateToolbarModificationObject(true,
-                    R.drawable.ic_arrow_back_white_24dp,
-                    getMvpView().getActivityContext().getResources().getString(R.string.view_sent_forms), true));
-            //            Intent intent = new Intent(getMvpView().getActivityContext(), SubmissionsActivity.class);
-//            getMvpView().getActivityContext().startActivity(intent);
+                        Intent intent = new Intent(getMvpView().getActivityContext(), SubmissionsActivity.class);
+            getMvpView().getActivityContext().startActivity(intent);
         }
     }
 

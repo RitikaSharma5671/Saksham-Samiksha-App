@@ -9,6 +9,8 @@ import com.samagra.ancillaryscreens.data.network.BackendCallHelper;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
+import com.samagra.ancillaryscreens.network.infra.GlobalDataFetcher;
+import com.samagra.ancillaryscreens.network.infra.IUserSyncListener;
 import com.samagra.commons.Constants;
 import com.samagra.commons.ExchangeObject;
 import com.samagra.commons.Modules;
@@ -51,7 +53,8 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
                     if (LoginPresenter.this.getMvpView() != null) {
                         if (loginResponse.token != null) {
                             Grove.d("Received successful login response for the user");
-                            LoginPresenter.this.getMvpView().onLoginSuccess(loginResponse);
+                            fetchConfigInfo( loginResponse);
+
                         } else
                             LoginPresenter.this.getMvpView().onLoginFailed();
                     }
@@ -63,6 +66,16 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
                 }));
     }
 
+    private void fetchConfigInfo(LoginResponse loginResponse) {
+        GlobalDataFetcher.fetchUserDataLoggedInUser(new IUserSyncListener() {
+            /** {@inheritDoc} */
+            @Override
+            public void onUserDataSynced(Object... options) {
+                Grove.d("end time " + System.currentTimeMillis());
+                LoginPresenter.this.getMvpView().onLoginSuccess(loginResponse);
+            }
+        });
+    }
     /**
      * This function finishes the {@link LoginActivity} and starts the HomeActivity. The HomeActivity is outside this
      * module and can be any activity which has {@link com.samagra.commons.Constants#INTENT_LAUNCH_HOME_ACTIVITY} defined

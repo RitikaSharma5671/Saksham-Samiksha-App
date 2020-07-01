@@ -29,7 +29,7 @@ import butterknife.Unbinder;
  */
 public class SplashActivity extends BaseActivity implements SplashContract.View {
 
-    private static final int SPLASH_TIMEOUT = 2000; // milliseconds
+    private static final int SPLASH_TIMEOUT = 3000; // milliseconds
 
     @BindView(R2.id.splash)
     public ImageView splashImage;
