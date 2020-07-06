@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.samagra.grove.logging.Grove;
 import com.samagra.parent.R;
 import com.samagra.parent.data.models.PDFItem;
 
@@ -61,7 +62,10 @@ public class SubmissionsAdapter extends RecyclerView.Adapter<SubmissionsAdapter.
         PDFItem submission = submissions.get(position);
         holder.formName.setText(submission.getPDFItemTags().getFORMNAME());
         holder.formName.setTypeface(Typeface.DEFAULT_BOLD);
+        if(submission.getOutputData().size() > 0 && submission.getOutputData().get(0) != null && submission.getOutputData().get(0).getTags() !=null)
         holder.submissionDate.setText(submission.getOutputData().get(0).getTags().getFORMSUBMISSIONDATE());
+        else
+        holder.submissionDate.setVisibility(View.INVISIBLE);
         if (submission.getCurrentStatus().equals("Queue") || submission.getOutputData().get(0).getDocName() == null || submission.getOutputData().get(0).getDocName() .equals("")) {
             Drawable pdfIcon = context.getResources().getDrawable(R.drawable.pdf_icon);
             ImageView iv = holder.pdfURL.findViewById(R.id.pdf_icon);
