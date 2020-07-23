@@ -118,6 +118,7 @@ public class AncillaryScreensDriver {
      */
     public static void performLogout(@NonNull Context context, String apiKey) {
         // TODO : Logout button => Logout from fusionAuth => Update user by removing registration token => Login splash_ss
+        Grove.d("Inside performLogout() method....");
         checkValidConfig();
         notifyLogoutInitiated();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -149,14 +150,14 @@ public class AncillaryScreensDriver {
                 .subscribe(new SingleObserver<JSONObject>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Grove.d("OnSubscribe make Remove token api call");
+                        Grove.d("OnSubscribe make Remove token api call onSubscribe() called");
                     }
 
                     @Override
                     public void onSuccess(JSONObject jsonObject) {
                         String appLanguage = PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.APP_LANGUAGE_KEY, "en");
                         PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
-                        Grove.d("OnSuccess make Remove token api call invoked");
+                        Grove.d("OnSuccess() make Remove token api makeRemoveTokenApiCall() call invoked");
                         JSONObject removedFCMTokenObject = removeFCMTokenFromObject(jsonObject);
                         Grove.d("Removed FCM Token, from the user data");
                         putUpdatedUserDetailsObject(removedFCMTokenObject, context, userId, apiKey, appLanguage);
@@ -165,7 +166,7 @@ public class AncillaryScreensDriver {
                     @Override
                     public void onError(Throwable e) {
                         notifyLogoutCompleted();
-                        Grove.e(e);
+                        Grove.e("onError() called for makeRemoveTokenApiCall() with error Exception: " + e.getMessage());
                         Toast.makeText(context, "Unable to Log you out, Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -188,12 +189,12 @@ public class AncillaryScreensDriver {
                 .subscribe(new SingleObserver<JSONObject>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Grove.d("On Subscribe Put updated objects...");
+                        Grove.d("On Subscribe Put updated objects... putUpdatedUserDetailsObject() called ");
                     }
 
                     @Override
                     public void onSuccess(JSONObject jsonObject) {
-                        Grove.d("Successfully removed FCM TOKEN,while logging out");
+                        Grove.d("Successfully removed FCM TOKEN,while logging out on Success() for putUpdatedUserDetailsObject() called");
                         logoutUserLocally(context, appLanguage);
                         notifyLogoutCompleted();
                         Intent intent = new Intent(context, LoginActivity.class);
@@ -203,7 +204,7 @@ public class AncillaryScreensDriver {
                     @Override
                     public void onError(Throwable e) {
                         notifyLogoutCompleted();
-                        Grove.e(e);
+                        Grove.e("onError for putUpdatedUserDetailsObject() called " + e.getMessage());
                         Toast.makeText(context, context.getResources().getString(R.string.unable_to_log_out), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -256,7 +257,7 @@ public class AncillaryScreensDriver {
      * @see CustomEvents#LOGOUT_INITIATED
      */
     private static void notifyLogoutInitiated() {
-        Grove.i("Logout initiated");
+        Grove.d("Logout initiated Event Triggered");
         ExchangeObject.EventExchangeObject eventExchangeObject = new ExchangeObject.EventExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, CustomEvents.LOGOUT_INITIATED);
         mainApplication.getEventBus().send(eventExchangeObject);
     }
@@ -270,7 +271,7 @@ public class AncillaryScreensDriver {
      * @see CustomEvents#LOGOUT_COMPLETED
      */
     private static void notifyLogoutCompleted() {
-        Grove.i("Logout completed");
+        Grove.d("Logout completed event triggered ");
         ExchangeObject.EventExchangeObject eventExchangeObject = new ExchangeObject.EventExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, CustomEvents.LOGOUT_COMPLETED);
         mainApplication.getEventBus().send(eventExchangeObject);
     }

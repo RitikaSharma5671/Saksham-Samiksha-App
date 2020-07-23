@@ -119,9 +119,13 @@ public class MyApplication extends Application implements MainApplication, Lifec
         IGroveLoggingComponent initializer = LoggingComponentManager.iGroveLoggingComponent;
         if (initializer != null) {
             initializer.initializeLoggingComponent(this, this, getApplicationContext(), (context, s, s1, s2, s3) -> {
-            }, false, true, BuildConfig.dsn, AppConstants.SENDER_EMAIL_ID, AppConstants.RECEIVER_EMAIL_ID);
+            }, true, true, BuildConfig.dsn, AppConstants.SENDER_EMAIL_ID, AppConstants.RECEIVER_EMAIL_ID);
         }
 
+        new UCHandler.Builder(getCurrentApplication())
+                .setTrackActivitiesEnabled(true)
+                .setBackgroundModeEnabled(true)
+                .build();
     }
 
     private void initializeFormManagementPackage() {
@@ -279,26 +283,37 @@ public class MyApplication extends Application implements MainApplication, Lifec
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
+                if(activity != null){
+                    currentActivity = activity;
+                    Grove.d("onCreate() called for Activity ... " + activity.getLocalClassName());
+                }
             }
 
             @Override
             public void onActivityStarted(Activity activity) {
-
+                if(activity != null){
+                    currentActivity = activity;
+                    Grove.d("onStart() called for Activity ... " + activity.getLocalClassName());
+                }
             }
 
             @Override
             public void onActivityResumed(Activity activity) {
                 currentActivity = activity;
+                if(activity != null){
+                    Grove.d("onResume() called for Activity ... " + activity.getLocalClassName());
+                }
             }
 
             @Override
             public void onActivityPaused(Activity activity) {
+                Grove.d("onPause() called for Activity ... " + activity != null ? activity.getLocalClassName() : "No Activity Found");
                 currentActivity = null;
             }
 
             @Override
             public void onActivityStopped(Activity activity) {
+                Grove.d("onStop() called for Activity ... " + activity != null ? activity.getLocalClassName() : "No Activity Founr");
 
             }
 

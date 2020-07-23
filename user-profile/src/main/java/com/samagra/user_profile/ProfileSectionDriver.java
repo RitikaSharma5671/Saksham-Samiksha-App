@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.samagra.commons.ExchangeObject;
 import com.samagra.commons.MainApplication;
 import com.samagra.commons.Modules;
+import com.samagra.grove.logging.Grove;
 import com.samagra.user_profile.profile.ProfileActivity;
 import com.samagra.user_profile.profile.UserProfileElement;
 
@@ -54,7 +55,7 @@ public class ProfileSectionDriver {
         intent.putParcelableArrayListExtra("config", userProfileElements);
         intent.putExtra("apiKey", fusionAuthApiKey);
         intent.putExtra("applicationID", applicationID);
-
+        Grove.d("Profile screen about to be launched...");
         context.startActivity(intent);
     }
 

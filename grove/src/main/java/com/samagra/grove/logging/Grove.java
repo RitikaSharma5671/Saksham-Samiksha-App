@@ -94,11 +94,13 @@ public class Grove {
             Timber.e(message);
             HyperLog.e(clazz.getName(), message);
             Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(clazz.getName() + "::" + message).build());
+            Sentry.capture(message);
         } else {
             Timber.tag(TAG);
             Timber.e(message);
             HyperLog.e(TAG, message);
             Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(TAG + "::" + message).build());
+            Sentry.capture(message);
         }
     }
 

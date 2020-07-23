@@ -20,8 +20,8 @@ public class AppConstants {
             + File.separator + "odk" + "/saksham_data_json.json";
     public static final String SEND_OTP_URL = "https://relay.saksham.staging.samagra.io/shiksha-saathi/";
     public static final String UPDATE_PASSWORD_URL = "https://0222dd1790d6.ngrok.io/shiksha-saathi/";
-    public static final String SENDER_EMAIL_ID = "";
-    public static final String RECEIVER_EMAIL_ID = "";
+    public static final String SENDER_EMAIL_ID = "test@samagragovernance.in";
+    public static final String RECEIVER_EMAIL_ID = "umangbhola@samagragovernance.in";
     public static final String APPLICATION_ID = "dd56e032-fb78-438b-8257-563f82a9f293";
     public static String ABOUT_WEBSITE_LINK = "";
     public static String ABOOUT_FORUM_LINK = "";

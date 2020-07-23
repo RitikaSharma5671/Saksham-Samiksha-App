@@ -336,6 +336,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         homePresenter.onViewHelplineClicked();
                         break;
                     case R.id.profile:
+                        Grove.d("User clicked on View Profile Section option");
                         ComponentManager.registerProfilePackage(new ProfileSectionInteractor(), ((MainApplication) (HomeActivity.this.getApplicationContext())),
                                 AppConstants.BASE_API_URL,
                                 AppConstants.APPLICATION_ID,
@@ -345,14 +346,20 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         IProfileContract initializer = ComponentManager.iProfileContract;
                         ArrayList<UserProfileElement> profileElements = homePresenter.getProfileConfig();
                         if (initializer != null) {
+                            Grove.d("Launching Profile Screen");
                             initializer.launchProfileActivity(HomeActivity.this.getActivityContext(), profileElements
                                     , HomeActivity.this.getActivityContext().getResources().getString(R.string.fusionauth_api_key));
+                        }else{
+                            Grove.e("Initializer was null, so could not launch Profile screen");
                         }
                         break;
                     case R.id.logout:
+                        Grove.d("User clicked to logout out of application");
                         if (homePresenter.isNetworkConnected()) {
-                            if (logoutListener == null)
+                            if (logoutListener == null) {
+                                Grove.d("Logout Listener initialised");
                                 HomeActivity.this.initializeLogoutListener();
+                            }
                             AncillaryScreensDriver.performLogout(HomeActivity.this, HomeActivity.this.getActivityContext().getResources().getString(R.string.fusionauth_api_key));
                         } else {
                             showSnackbar("It seems you are offline. Logout cannot happen in offline conditions.", 3000);
@@ -367,6 +374,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
 
 
     private void initializeLogoutListener() {
+        Grove.d("Inside Logout initialisation method....");
         logoutListener = ((MainApplication) (getApplicationContext()))
                 .getEventBus()
                 .toObservable()
@@ -378,9 +386,13 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         ExchangeObject.EventExchangeObject eventExchangeObject = (ExchangeObject.EventExchangeObject) o;
                         if (eventExchangeObject.to == Modules.MAIN_APP && eventExchangeObject.from == Modules.ANCILLARY_SCREENS) {
                             if (eventExchangeObject.customEvents == CustomEvents.LOGOUT_COMPLETED) {
+                                Grove.d("Logout completed Event received");
                                 hideLoading();
+                                Grove.d("Logout snackbar hidden");
                                 logoutListener.dispose();
+                                Grove.d("Logout listener disposed off...");
                             } else if (eventExchangeObject.customEvents == CustomEvents.LOGOUT_INITIATED) {
+                                Grove.d("Logout initiated Event received");
                                 showLoading(getString(R.string.logging_out_message));
                             }
                         }

@@ -114,6 +114,7 @@ public class BackendCallHelperImpl implements BackendCallHelper {
      */
     @Override
     public Single<JSONObject> performGetUserDetailsApiCall(String userId, String apiKey) {
+        Grove.d("performGetUserDetailsApiCall() method called...");
         return Rx2AndroidNetworking.get(BackendApiUrls.USER_DETAILS_ENDPOINT)
                 .addPathParameter("user_id", userId)
                 .addHeaders("Authorization", apiKey)

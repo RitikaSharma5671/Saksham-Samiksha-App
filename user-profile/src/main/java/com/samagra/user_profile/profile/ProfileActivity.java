@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.samagra.grove.logging.Grove;
 import com.samagra.user_profile.InvalidConfigurationException;
 import com.samagra.user_profile.R;
 import com.samagra.user_profile.R2;
@@ -67,6 +68,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             throw new InvalidConfigurationException(ProfileActivity.class);
         }
         initToolbar();
+        Grove.d("Profile Activity onCreate() called ");
         initUserDetails(userProfileElements);
     }
 

@@ -11,7 +11,6 @@
     <string name="unexpected_error_occured" tools:ignore="MissingTranslation">Something unexpected has occurred.</string>
     <string name="send_otp"> Send OTP </string>
     <string name="let_s_start_again" tools:ignore="MissingTranslation">Let\'s Start Again</string>
-
     <string name="otp_successfully_sent">OTP successfully sent to this number</string>
     <string name="enter_the_registered_mobile_number_associated_with_your_account">Enter the registered Mobile number associated with your account.</string>
     <string name="invalid_email" tools:ignore="MissingTranslation">Invalid Email</string>

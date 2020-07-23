@@ -99,6 +99,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     compile project(path: ':user-profile')
+
+    implementation 'com.amazonaws:aws-android-sdk-core:2.2.13'
+    implementation 'com.amazonaws:aws-android-sdk-cognito:2.2.13'
+    implementation 'com.amazonaws:aws-android-sdk-ses:2.2.13'
     implementation project(path: ':grove')
     implementation project(path: ':update_module')
     compile project(path: ':cascading_module')
