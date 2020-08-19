@@ -127,7 +127,7 @@ abstract class AppListActivity extends CollectAbstractActivity {
 
         listView = findViewById(android.R.id.list);
         listView.setOnItemClickListener((AdapterView.OnItemClickListener) this);
-        listView.setEmptyView(findViewById(R.id.empty_view1));
+        listView.setEmptyView(findViewById(android.R.id.empty));
         progressBar = findViewById(R.id.progressBar);
         llParent = findViewById(R.id.llParent);
 

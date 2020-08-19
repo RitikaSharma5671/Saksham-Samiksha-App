@@ -99,11 +99,18 @@ the specific language governing permissions and limitations under the License.
             </intent-filter>
         </service>
 
-<!--        <service-->
-<!--            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="false"-->
-<!--            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION" />-->
+        <service
+            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+            android:enabled="true"
+            android:exported="false"
+            tools:replace="android:exported"
+            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION" />
+
+        <receiver
+            android:name="com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.INSTALL_PACKAGES" />
 
         <service android:name="com.google.android.gms.measurement.AppMeasurementService"
             android:enabled="true"

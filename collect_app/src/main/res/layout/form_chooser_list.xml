@@ -57,7 +57,7 @@ the License.
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/empty_view1"
+            android:id="@android:id/empty"
             style="@style/emptyViewStyle"
             android:visibility="gone" />
 

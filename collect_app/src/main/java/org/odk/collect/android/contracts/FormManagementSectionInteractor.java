@@ -95,12 +95,14 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
         final List<Integer> resetActions = new ArrayList<>();
         resetActions.add(ResetUtility.ResetAction.RESET_FORMS);
         resetActions.add(ResetUtility.ResetAction.RESET_PREFERENCES);
+        resetActions.add(ResetUtility.ResetAction.RESET_INSTANCES);
         resetActions.add(ResetUtility.ResetAction.RESET_LAYERS);
         resetActions.add(ResetUtility.ResetAction.RESET_CACHE);
         resetActions.add(ResetUtility.ResetAction.RESET_OSM_DROID);
 
-        List<Integer> failedResetActions = new ResetUtility().reset(Collect.getInstance().getAppContext(), resetActions);
-        Timber.e("Reset Complete%s", failedResetActions.size());
+        Runnable runnable = () ->  new ResetUtility().reset(Collect.getInstance().getAppContext(), resetActions);
+        new Thread(runnable).start();
+        Timber.e("Reset Complete for the ODK");
 
         File dir = new File(Collect.INSTANCES_PATH);
         if (dir.isDirectory()) {
