@@ -57,7 +57,7 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
                     }
                 }, throwable -> {
                     if (throwable instanceof ANError)
-                        Grove.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", ((ANError) (throwable)).getErrorBody(), ((ANError) (throwable)).getErrorCode(), ((ANError) (throwable)).getErrorDetail());
+                        Grove.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", throwable, throwable, throwable);
                     LoginPresenter.this.getMvpView().onLoginFailed();
                     Grove.e(throwable);
                 }));

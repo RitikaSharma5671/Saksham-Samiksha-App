@@ -39,7 +39,6 @@ import com.google.android.gms.security.ProviderInstaller;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.samagra.commons.Constants;
 import com.samagra.commons.MainApplication;
-import com.squareup.leakcanary.LeakCanary;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -163,7 +162,6 @@ public class Collect {
             FormMetadataMigrator.migrate(PreferenceManager.getDefaultSharedPreferences(appContext));
             AutoSendPreferenceMigrator.migrate();
             initProperties();
-//            setupLeakCanary();
             informer.onSuccess();
         }else{
             informer.onFailure("Failed");
@@ -209,14 +207,6 @@ public class Collect {
         FormController.initializeJavaRosa(mgr);
     }
 
-    protected void setupLeakCanary() {
-        if(BuildConfig.DEBUG) {
-            if (LeakCanary.isInAnalyzerProcess(appContext)) {
-                return;
-            }
-            LeakCanary.install(applicationVal);
-        }
-    }
 
     public static int getQuestionFontSize() {
         // For testing:

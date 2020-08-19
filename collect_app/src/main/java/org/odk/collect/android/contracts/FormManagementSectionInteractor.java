@@ -122,12 +122,12 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
 
     @Override
     public void resetODKForms(Context context) {
-            final List<Integer> resetActions = new ArrayList<>();
-            resetActions.add(ResetUtility.ResetAction.RESET_FORMS);
-            if (!resetActions.isEmpty()) {
-                Runnable runnable = () -> new ResetUtility().reset(context, resetActions);
-                new Thread(runnable).start();
-            }
+        final List<Integer> resetActions = new ArrayList<>();
+        resetActions.add(ResetUtility.ResetAction.RESET_FORMS);
+        if (!resetActions.isEmpty()) {
+            Runnable runnable = () -> new ResetUtility().reset(context, resetActions);
+            new Thread(runnable).start();
+        }
     }
 
     @Override
@@ -235,7 +235,7 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
 
 
     @Override
-    public void updateFormBasedOnIdentifier(String formIdentifier, String tag, String tagValue){
+    public void updateFormBasedOnIdentifier(String formIdentifier, String tag, String tagValue) {
         int id = fetchSpecificFormID(formIdentifier);
         Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, id);
         String fileName = ContentResolverHelper.getFormPath(formUri);
@@ -266,7 +266,7 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
 
     @Override
     public ArrayList<String> fetchMediaDirs(String referenceFileName) {
-       return CSVHelper.fetchFormMediaDirectoriesWithMedia(referenceFileName);
+        return CSVHelper.fetchFormMediaDirectoriesWithMedia(referenceFileName);
     }
 
     @Override
@@ -285,26 +285,26 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
     @Override
     public void launchViewUnsubmittedFormView(Context context, String className, HashMap<String, Object> toolbarModificationObject) {
 
-        if (Collect.allowClick(className)){
+        if (Collect.allowClick(className)) {
             Intent i = new Intent(context, InstanceUploaderListActivity.class);
             i.putExtra(Constants.KEY_CUSTOMIZE_TOOLBAR, toolbarModificationObject);
             context.startActivity(i);
         }
     }
+
     @Override
-    public int fetchSpecificFormID(String formIdentifier){
+    public int fetchSpecificFormID(String formIdentifier) {
         List<Form> formsFromDB = getDownloadedFormsNamesFromDatabase();
         HashMap<Integer, String> hashMap = new HashMap<>();
-        for(int i = 0 ; i< formsFromDB.size(); i++){
+        for (int i = 0; i < formsFromDB.size(); i++) {
             hashMap.put(formsFromDB.get(i).getId(), formsFromDB.get(i).getDisplayName());
         }
-        for(Map.Entry<Integer, String> entry : hashMap.entrySet()) {
-            if(entry.getValue().contains(formIdentifier))
+        for (Map.Entry<Integer, String> entry : hashMap.entrySet()) {
+            if (entry.getValue().contains(formIdentifier))
                 return entry.getKey();
         }
         return 1;
     }
-
 
 
     private boolean shouldUpdate() {
@@ -317,9 +317,10 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
         Cursor cursor = fd.getFormsCursor();
         return fd.getFormsFromCursor(cursor);
     }
+
     @Override
     public boolean checkIfODKFormsMatch(String formsString) {
-        HashMap<String, String> formsListToBeDownloaded = downloadFormList( formsString);
+        HashMap<String, String> formsListToBeDownloaded = downloadFormList(formsString);
         Timber.e("formsListToBeDownloaded: " + formsListToBeDownloaded.size() + " FormsFromDatabase: " + getDownloadedFormsNamesFromDatabase().size());
         return getDownloadedFormsNamesFromDatabase().size() == formsListToBeDownloaded.size() && getDownloadedFormsNamesFromDatabase().size() != 0;
     }
@@ -328,13 +329,13 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
     public void startDownloadODKFormListTask(FormListDownloadResultCallback formListDownloadResultCallback) {
         DownloadFormListTask downloadFormListTask = new DownloadFormListTask(ODKDriver.getDownloadFormListUtils());
         downloadFormListTask.setDownloaderListener(value -> {
-            if(value != null && !value.containsKey("dlerrormessage")){
-                formListDownloadResultCallback.onSuccessfulFormListDownload(value);}
-            else {
+            if (value != null && !value.containsKey("dlerrormessage")) {
+                formListDownloadResultCallback.onSuccessfulFormListDownload(value);
+            } else {
                 assert value != null;
                 if (value.containsKey("dlerrormessage")) {
                     formListDownloadResultCallback.onFailureFormListDownload(true);
-                }else{
+                } else {
                     formListDownloadResultCallback.onFailureFormListDownload(false);
                 }
             }
@@ -347,7 +348,7 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
         HashMap<String, String> formsToBeDownloaded = new HashMap<>();
         HashMap<String, FormDetails> formsToBeDownloadedABC = new HashMap<>();
 
-        List<Form>  formsFromDB = getDownloadedFormsNamesFromDatabase();
+        List<Form> formsFromDB = getDownloadedFormsNamesFromDatabase();
         Iterator it = latestFormListFromServer.entrySet().iterator();
 
         // Delete excess forms
@@ -392,7 +393,7 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
         if (formsToBeDeleted.size() > 0 && formsToBeDeleted.toArray() != null) {
             new FormsDao().deleteFormsFromMd5Hash(formsToBeDeleted.toArray(new String[0]));
         }
-       return formsToBeDownloadedABC;
+        return formsToBeDownloadedABC;
     }
 
     @Override
@@ -402,7 +403,7 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
         Iterator it = forms.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            String formID =  ((FormDetails)pair.getValue()).getFormID();
+            String formID = ((FormDetails) pair.getValue()).getFormID();
 //                String fileName = Collect.FORMS_PATH + File.separator + formName + ".xml";
             String serverURL = new WebCredentialsUtils().getServerUrlFromPreferences();
             String partURL = "/www/formXml?formId=";
@@ -410,13 +411,13 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
             String manifestUrl = serverURL + "/forms/" + formID + "/manifest";
             //http://aggregate.cttsamagra.xyz:8080/formXml?formId=build_SchoolPerformance_1574326800
             FormDetails fm = new FormDetails(
-                    ((FormDetails)pair.getValue()).getFormName(),
+                    ((FormDetails) pair.getValue()).getFormName(),
                     downloadUrl,
                     null,
                     formID,
-                    ((FormDetails)pair.getValue()).getFormVersion(),
-                    ((FormDetails)pair.getValue()).getHash(),
-                    ((FormDetails)pair.getValue()).getManifestFileHash(),
+                    ((FormDetails) pair.getValue()).getFormVersion(),
+                    ((FormDetails) pair.getValue()).getHash(),
+                    ((FormDetails) pair.getValue()).getManifestFileHash(),
                     false,
                     false);
             filesToDownload.add(fm);
@@ -426,10 +427,21 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
         downloadFormsTask.setDownloaderListener(new DownloadFormsTaskListener() {
             @Override
             public void formsDownloadingComplete(HashMap<FormDetails, String> result) {
-                if(result != null)
-                    dataFormDownloadResultCallback.formsDownloadingSuccessful(result);
-                else
+                if (result != null) {
+                    int successCount = 0;
+                    int totalExpected = result.size();
+                    for(Map.Entry<FormDetails, String> entry : result.entrySet()){
+                        if(entry.getValue() != null && entry.getValue().equals("Success"))
+                            successCount+=1;
+                    }
+                    if(successCount ==totalExpected) {
+                        dataFormDownloadResultCallback.formsDownloadingSuccessful(result);
+                    }else{
+                        dataFormDownloadResultCallback.formsDownloadingFailure();
+                    }
+                } else {
                     dataFormDownloadResultCallback.formsDownloadingFailure();
+                }
             }
 
             @Override

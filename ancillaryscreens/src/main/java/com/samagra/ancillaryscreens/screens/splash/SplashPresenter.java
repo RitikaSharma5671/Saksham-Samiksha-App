@@ -90,7 +90,6 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         if (getMvpInteractor().isLoggedIn()) {
             if(isNetworkConnected()) {
                 String jwtToken = getMvpInteractor().getPreferenceHelper().getToken();
-//            SplashModel.validateJWTToken(jwtToken, this);
                 getCompositeDisposable().add(getApiHelper()
                         .validateToken(jwtToken)
                         .subscribeOn(Schedulers.io())
@@ -106,8 +105,6 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
                         }, throwable -> {
                             updateJWT(AncillaryScreensDriver.API_KEY);
-                            if (throwable instanceof ANError)
-                                Grove.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", ((ANError) (throwable)).getErrorBody(), ((ANError) (throwable)).getErrorCode(), ((ANError) (throwable)).getErrorDetail());
                             Grove.e(throwable);
                         }));
             } else {

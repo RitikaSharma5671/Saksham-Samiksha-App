@@ -10,8 +10,4 @@ package org.odk.collect.android.application;
 
 public class TestCollect extends Collect {
 
-    @Override
-    protected void setupLeakCanary() {
-        // No leakcanary in unit tests.
-    }
 }

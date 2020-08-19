@@ -622,7 +622,6 @@ public class WorkManagerImpl extends WorkManager {
 
     /**
      * This method is invoked by
-     * {@link com.samagra.customworkmanager.impl.background.systemalarm.RescheduleReceiver}
      * after a call to {@link BroadcastReceiver#goAsync()}. Once {@link ForceStopRunnable} is done,
      * we can safely call {@link BroadcastReceiver.PendingResult#finish()}.
      *

@@ -44,10 +44,10 @@ public class AppPreferenceHelper implements PreferenceHelper {
 
     @Override
     public String getCurrentUserFullName() {
-        if(defaultPreferences.getString("user.accountName", "").equals(""))
-            return defaultPreferences.getString("user.fullName", "");
+        if(defaultPreferences.getString("user.fullName", "").equals(""))
+            return defaultPreferences.getString("user.username", "");
         else
-            return defaultPreferences.getString("user.accountName", "");
+            return defaultPreferences.getString("user.fullName", "");
 
     }
 

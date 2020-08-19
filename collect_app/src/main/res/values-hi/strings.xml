@@ -467,5 +467,6 @@
   <string name="start_video_capture_instruction">रिकॉर्डिंग प्रारंभ करने के लिए स्क्रीन को टैप करें</string>
     <string name="please_check_your_data_before_submitting_the_form">कृपया फॉर्म जमा करने से पहले आपके द्वारा दर्ज की गई जानकारी को सत्यापित करें।</string>
   <string name="quit_dialog_label">क्या बाहर जाना चाहते हो? अब तक भरे गए डेटा को सहेजा नहीं जाएगा।</string>
+    <string name="no_submissions">किसी भी स्कूल की यात्रा के लिए कोई सबमिशन नहीं मिला।</string>
     <!--Sms submission-->
 </resources>

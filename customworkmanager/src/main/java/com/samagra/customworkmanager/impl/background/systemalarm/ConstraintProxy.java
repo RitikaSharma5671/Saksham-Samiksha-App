@@ -37,29 +37,6 @@ abstract class ConstraintProxy extends BroadcastReceiver {
         context.startService(constraintChangedIntent);
     }
 
-    /**
-     * Proxy for Battery Not Low constraint
-     */
-    public static class BatteryNotLowProxy extends ConstraintProxy {
-    }
-
-    /**
-     * Proxy for Battery Charging constraint
-     */
-    public static class BatteryChargingProxy extends ConstraintProxy {
-    }
-
-    /**
-     * Proxy for Storage Not Low constraint
-     */
-    public static class StorageNotLowProxy extends ConstraintProxy {
-    }
-
-    /**
-     * Proxy for Network State constraints
-     */
-    public static class NetworkStateProxy extends ConstraintProxy {
-    }
 
     /**
      * Enables/Disables proxies based on constraints in {@link WorkSpec}s

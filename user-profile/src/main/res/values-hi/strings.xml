@@ -3,12 +3,15 @@
     <string name="resend_otp_profile">कृपया ओटीपी को पुनः भेजें</string>
     <string name="reset_password">पासवर्ड रीसेट करें</string>
     <string name="submit">जमा करें</string>
+    <string name="enter_new_password1"> नया पासवर्ड दर्ज करें</string>
+    <string name="confirm_password">पासवर्ड की पुष्टि कीजिये</string>
+    <string name="otp">ओ.टी.पी.</string>
     <string name="seconds_remaining">सेकंड शेष: </string>
     <string name="error_sending_otp">ओ.टी.पी. भेजने में त्रुटि| कृपया एडमिन से संपर्क करें।</string>
     <string name="otp_sent_change_pwd">ओ.टी.पी. भेजा गया। कृपया पासवर्ड बदलने का प्रयास करें।</string>
     <string name="internet_not_connected">ऐसा लगता है कि आप इंटरनेट से नहीं जुड़े हैं। पासवर्ड बदलने के लिए कृपया अपने मोबाइल डेटा को ऑन करें। </string>
     <string name="internet_not_connected_profile_screen">ऐसा लगता है कि आप इंटरनेट से नहीं जुड़े हैं। अपनी प्रोफ़ाइल बदलने के लिए कृपया अपने मोबाइल डेटा को ऑन करें। </string>
-    <string name="please_enter_the_otp_sent_to_the_mobile_number_of_school_incharge" tools:ignore="MissingTranslation">कृपया संबंधित मोबाइल नंबर पर भेजे गए ओ.टी.पी. दर्ज करें।</string>
+    <string name="please_enter_the_otp" >कृपया संबंधित मोबाइल नंबर पर भेजे गए ओ.टी.पी. दर्ज करें।</string>
     <string name="phone_number_email_not_simultaneous">फ़ोन नंबर और ईमेल दोनों एक ही समय में बदल नहीं सकते। कृपया पहले एक के साथ प्रयास करें। </string>
     <string name="phone_number_not_unique">फोन नंबर अद्वितीय नहीं है</string>
     <string name="pass_changed_redirecting">पासवर्ड सफलतापूर्वक बदल दिया गया है। आपको प्रोफ़ाइल पृष्ठ पर पुनर्निर्देशित कर रहा है</string>

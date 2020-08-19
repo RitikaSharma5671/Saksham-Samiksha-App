@@ -5,11 +5,10 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.samagra.user_profile.R;
+import com.samagra.user_profile.base.BaseActivity;
 
 
-public class OTPActivity extends AppCompatActivity implements OTPCallBackListener {
-
-    public OTPCallBackListener otpCallBackListener;
+public class OTPActivity extends BaseActivity implements OTPCallBackListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -167,7 +167,7 @@ public class AncillaryScreensDriver {
                     public void onError(Throwable e) {
                         notifyLogoutCompleted();
                         Grove.e("onError() called for makeRemoveTokenApiCall() with error Exception: " + e.getMessage());
-                        Toast.makeText(context, "Unable to Log you out, Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getResources().getString(R.string.unable_to_log_out), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

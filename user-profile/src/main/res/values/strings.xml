@@ -62,10 +62,9 @@
     <string name="less_than_8_pass" tools:ignore="MissingTranslation">Password cannot be less than 8 characters</string>
     <string name="pass_cannot_be_empty" tools:ignore="MissingTranslation">Password cannot be empty</string>
     <string name="base_url_assessment_module" translatable="false" tools:ignore="MissingTranslation">http://139.59.55.86/api/v1/</string>
+    <string name="enter_new_password1">Enter new password</string>
 
-
-    <string name="resend_otp">Resend OTP</string>
-    <string name="please_enter_the_otp_sent_to_the_mobile_number_of_school_incharge" tools:ignore="MissingTranslation">Please enter the OTP sent to the associated mobile number.</string>
+    <string name="please_enter_the_otp">Please enter the OTP sent to the associated mobile number.</string>
     <string name="otp">OTP</string>
     <string name="password">Password</string>
     <string name="set_new_password">Reset Password</string>

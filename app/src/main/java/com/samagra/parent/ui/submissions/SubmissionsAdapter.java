@@ -61,8 +61,11 @@ public class SubmissionsAdapter extends RecyclerView.Adapter<SubmissionsAdapter.
         PDFItem submission = submissions.get(position);
         holder.formName.setText(submission.getPDFItemTags().getFORMNAME());
         holder.formName.setTypeface(Typeface.DEFAULT_BOLD);
+        if(submission.getOutputData() != null && submission.getOutputData().size() > 0){
         holder.submissionDate.setText(submission.getOutputData().get(0).getTags().getFORMSUBMISSIONDATE());
-        if (submission.getCurrentStatus().equals("Queue") || submission.getOutputData().get(0).getDocName() == null || submission.getOutputData().get(0).getDocName() .equals("")) {
+        if (submission.getCurrentStatus().equals("Queue") ||
+                submission.getOutputData().get(0).getDocName() == null ||
+                submission.getOutputData().get(0).getDocName() .equals("")) {
             Drawable pdfIcon = context.getResources().getDrawable(R.drawable.pdf_icon);
             ImageView iv = holder.pdfURL.findViewById(R.id.pdf_icon);
             iv.setImageAlpha(30);
@@ -71,7 +74,7 @@ public class SubmissionsAdapter extends RecyclerView.Adapter<SubmissionsAdapter.
                         Toast.makeText(context, R.string.pdf_not_generated_error, Toast.LENGTH_LONG).show();
                     }
             );
-        } else {
+        }else {
             Drawable pdfIcon = context.getResources().getDrawable(R.drawable.pdf_icon);
             ImageView iv = holder.pdfURL.findViewById(R.id.pdf_icon);
             iv.setImageDrawable(pdfIcon);
@@ -86,6 +89,9 @@ public class SubmissionsAdapter extends RecyclerView.Adapter<SubmissionsAdapter.
                         .setActionTextColor(context.getResources().getColor(R.color.colorPrimary))
                         .show();
             });
+        }}else{
+            holder.submissionDate.setText("");
+
         }
     }
 

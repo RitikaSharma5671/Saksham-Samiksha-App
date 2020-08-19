@@ -67,7 +67,10 @@ public class SendOTPTask extends AsyncTask<String, Void, String> {
         if(isSuccess) {
             listener.onSuccess();
         }else{
+            if(s != null)
             listener.onFailure(new Exception(s));
+            else
+                listener.onFailure(new Exception("Could not send OTP to the number."));
         }
     }
 }

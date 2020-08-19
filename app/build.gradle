@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.sentry.android.gradle'
 
@@ -8,7 +8,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
-        applicationId "com.samagra.master.sakshamsamiksha"
+        applicationId "com.samagra.sakshamSamiksha"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
@@ -52,7 +52,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
     implementation 'com.google.firebase:firebase-database:19.1.0'
-    implementation "com.google.firebase:firebase-auth:19.1.0"
+
     implementation "com.google.firebase:firebase-storage:19.1.0"
     implementation 'com.google.firebase:firebase-config:19.0.2'
     implementation "androidx.preference:preference:1.1.0"
@@ -98,15 +98,15 @@ dependencies {
     implementation "androidx.core:core-ktx:+"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    compile project(path: ':user-profile')
+    implementation project(path: ':user-profile')
 
     implementation 'com.amazonaws:aws-android-sdk-core:2.2.13'
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.2.13'
     implementation 'com.amazonaws:aws-android-sdk-ses:2.2.13'
     implementation project(path: ':grove')
     implementation project(path: ':update_module')
-    compile project(path: ':cascading_module')
-    compile project(path: ':notification_module')
+    implementation project(path: ':cascading_module')
+    implementation project(path: ':notification_module')
     implementation("com.airbnb.android:lottie:2.7.0") {
         exclude group: 'com.android.support'
     }

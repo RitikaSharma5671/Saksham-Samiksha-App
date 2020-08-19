@@ -336,7 +336,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(event -> {
-                            readPhoneStatePermissionRequestNeeded = true;
+                            readPhoneStatePermissionRequestNeeded = false;
                         }));
 
         errorMessage = null;

@@ -71,7 +71,7 @@ android {
 
     defaultConfig {
         minSdkVersion(16)
-        targetSdkVersion(26)
+        targetSdkVersion(28)
         versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
         versionName getVersionName()
         testInstrumentationRunner('androidx.test.runner.AndroidJUnitRunner')
@@ -275,12 +275,7 @@ dependencies {
     implementation "net.danlew:android.joda:2.9.9"
 
     // Real LeakCanary for debug builds only: notifications, analysis, etc
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:${rootProject.leakyCanaryVersion}"
     // No-Op version of LeakCanary for release builds: no notifications, no analysis, nothing
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
-    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
-    androidTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
-    odkCollectReleaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
 
     // Android Architecture Components:
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0-alpha02"

@@ -33,10 +33,10 @@ the specific language governing permissions and limitations under the License.
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <!-- <uses-permission android:name="android.permission.SEND_SMS" /> -->
+    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"
+        tools:node="remove" />
 
     <!-- Normal permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -91,6 +91,24 @@ the specific language governing permissions and limitations under the License.
                 android:resource="@xml/provider_paths" />
         </provider>
 
+        <service android:name="com.evernote.android.job.gcm.PlatformGcmService"
+            tools:replace="android:exported"
+            android:enabled="false" android:exported="false" android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
+            <intent-filter>
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY"/>
+            </intent-filter>
+        </service>
+
+<!--        <service-->
+<!--            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="false"-->
+<!--            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION" />-->
+
+        <service android:name="com.google.android.gms.measurement.AppMeasurementService"
+            android:enabled="true"
+            android:exported="false"/>
+
         <activity
             android:name=".activities.MainMenuActivity"
             android:configChanges="locale|orientation|screenSize" />
@@ -102,11 +120,12 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:name=".activities.FormEntryActivity"
             android:configChanges="orientation"
+            android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.NotificationActivity"
             android:excludeFromRecents="true"
-            android:launchMode="singleTask"
+            android:launchMode="standard"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
         <activity
@@ -116,8 +135,10 @@ the specific language governing permissions and limitations under the License.
             android:name=".activities.GoogleDriveActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.InstanceChooserList" />
-        <activity android:name=".activities.FormChooserList" />
+        <activity android:name=".activities.InstanceChooserList"
+            android:exported="false"/>
+        <activity android:name=".activities.FormChooserList"
+            android:exported="false"/>
         <activity android:name=".activities.FormDownloadList" />
         <activity
             android:name=".activities.FileManagerTabs"
@@ -211,9 +232,9 @@ the specific language governing permissions and limitations under the License.
 
         <activity-alias
             android:name=".activities.FormEntryActivity"
+            android:exported="false"
             android:targetActivity=".activities.FormEntryActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -225,32 +246,29 @@ the specific language governing permissions and limitations under the License.
 
         <activity-alias
             android:name=".activities.InstanceChooserList"
+            android:exported="false"
             android:targetActivity=".activities.InstanceChooserList">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
             </intent-filter>
         </activity-alias>
 
         <activity-alias
             android:name=".activities.FormChooserList"
+            android:exported="false"
             android:targetActivity=".activities.FormChooserList">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
                 <action android:name="android.intent.action.PICK" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
             </intent-filter>
         </activity-alias>
 
         <activity-alias
+            android:exported="false"
             android:name=".activities.FormDownloadList"
             android:targetActivity=".activities.FormDownloadList">
             <intent-filter>

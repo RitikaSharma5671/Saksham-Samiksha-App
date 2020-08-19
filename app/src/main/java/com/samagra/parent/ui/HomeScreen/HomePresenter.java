@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.samagra.commons.InstitutionInfo;
 import com.samagra.commons.utils.FormDownloadStatus;
 import com.samagra.grove.logging.Grove;
@@ -29,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 
 /**
@@ -57,18 +60,23 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     @Override
     public void fetchWelcomeText() {
         Grove.d("Fetching welcome text for the user...");
-        getMvpView().displayHomeWelcomeText(getMvpInteractor().getUserFullName());
+        if (getMvpView() != null)
+            getMvpView().displayHomeWelcomeText(getMvpInteractor().getUserFullName());
     }
 
     @Override
     public void onViewSubmittedFormsOptionsClicked() {
         Grove.d("User selects the option View Submitted Forms...");
+//        if (getMvpView() != null) {
+//            Intent intent = new Intent(getMvpView().getActivityContext(), SubmissionsActivity.class);
+//            getMvpView().getActivityContext().startActivity(intent);
+//        }
 
         if (getMvpView() != null) {
-
-            Intent intent = new Intent(getMvpView().getActivityContext(), SubmissionsActivity.class);
-            getMvpView().getActivityContext().startActivity(intent);
-           }
+            getIFormManagementContract().launchViewSubmittedFormsView(getMvpView().getActivityContext(),UtilityFunctions.generateToolbarModificationObject(true,
+                    R.drawable.ic_arrow_back_white_24dp,
+                    getMvpView().getActivityContext().getResources().getString(R.string.my_visits), true));
+        }
     }
 
 
@@ -87,7 +95,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         Grove.d("User selects the option View Helpline...");
         if (getMvpView() != null) {
             Intent i = new Intent(getMvpView().getActivityContext(), ComingSoon.class);
-            i.putExtra("helpline" ,false);
+            i.putExtra("helpline", false);
             getMvpView().getActivityContext().startActivity(i);
         }
     }
@@ -132,8 +140,9 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     /**
      * Check if the ODK Forms have been updated?
-     * @param  version New Form Version
-     * @param  previousVersion Old Form Version from preferences
+     *
+     * @param version         New Form Version
+     * @param previousVersion Old Form Version from preferences
      */
     private boolean isUpversioned(String version, String previousVersion) {
         try {
@@ -210,7 +219,8 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 Grove.d("Forms have been up-versioned/ odk forms don't match with one needed for the user...");
                 getMvpInteractor().getPreferenceHelper().updateFormVersion(latestFormVrsion);
                 // Downloading new forms list.
-                getMvpView().setDownloadProgress(10);
+                if (getMvpView() != null)
+                    getMvpView().setDownloadProgress(10);
                 Grove.d("Starting Form List Download Task");
                 getIFormManagementContract().startDownloadODKFormListTask(new FormListDownloadListener());
                 formsDownloadStatus = FormDownloadStatus.DOWNLOADING;
@@ -303,7 +313,8 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void searchmodule() {
-        getMvpView().launchSearchModule();
+        if (getMvpView() != null)
+            getMvpView().launchSearchModule();
     }
 
     class FormListDownloadListener implements FormListDownloadResultCallback {
@@ -318,14 +329,17 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 Grove.d("Number of forms to be downloaded are %d", formsToBeDownloaded.size());
                 formsDownloadStatus = FormDownloadStatus.DOWNLOADING;
                 currentProgress = 2;
-                getMvpView().setDownloadProgress(30);
+                if (getMvpView() != null)
+                    getMvpView().setDownloadProgress(30);
                 currentProgress = 30;
                 maxProgress = formsToBeDownloaded.size();
             } else {
                 Grove.d("No new forms to be downloaded");
-                getMvpView().setDownloadProgress(100);
+                if (getMvpView() != null)
+                    getMvpView().setDownloadProgress(100);
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
-                getMvpView().renderLayoutVisible();
+                if (getMvpView() != null)
+                    getMvpView().renderLayoutVisible();
             }
             if (formsDownloadStatus == FormDownloadStatus.DOWNLOADING)
                 getIFormManagementContract().downloadODKForms(new FormDownloadListener(), formsToBeDownloaded);
@@ -335,60 +349,69 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         public void onFailureFormListDownload(boolean isAPIFailure) {
             if (isAPIFailure) {
                 Grove.e("There has been an error in downloading the forms from ODK Server");
-                getMvpView().showDownloadFailureMessage();
+                if (getMvpView() != null)
+                    getMvpView().showDownloadFailureMessage();
                 formsDownloadStatus = FormDownloadStatus.FAILURE;
             }
-            getMvpView().renderLayoutVisible();
-            if (!isNetworkConnected())
-                getMvpView().showFailureDownloadMessage();
-            else
-                getMvpView().showNoInternetMessage();
-        }
-    }
-
-
-    class FormDownloadListener implements DataFormDownloadResultCallback {
-        @Override
-        public void formsDownloadingSuccessful(HashMap<FormDetails, String> result) {
-            Grove.d("Form Download Complete %s", result);
-            formsDownloadStatus = FormDownloadStatus.SUCCESS;
-            if (getMvpView() != null) {
+            if (getMvpView() != null)
                 getMvpView().renderLayoutVisible();
-                getMvpView().setDownloadProgress(100);
+            if (!isNetworkConnected()) {
+                if (getMvpView() != null)
+                    getMvpView().showFailureDownloadMessage();
+            } else {
+                if (getMvpView() != null)
+                    getMvpView().showNoInternetMessage();
             }
         }
 
-        @Override
-        public void formsDownloadingFailure() {
 
-        }
-
-        @Override
-        public void progressUpdate(String currentFile, int progress, int total) {
-            Grove.v("Form Download InProgress = " + currentFile + " Progress" + progress + " Out of=" + total);
-            Grove.d(" Total%s", String.valueOf(total));
-            Grove.d(" Total Progress %s", String.valueOf(progress));
-            int formProgress = (progress * 100) / total;
-            Grove.d("Form Download Progress: %s", formProgress);
-            currentProgress = currentProgress + 70 / 9;
-            getMvpView().setDownloadProgress(currentProgress);
-            if (formProgress == 100) {
-                if (getMvpView() != null) {
-                    currentProgress = 100;
-                    getMvpView().setDownloadProgress(currentProgress);
-                    Grove.d("Rendering UI Visible as forms already downloaded not, but now downloaded");
-                }
+        class FormDownloadListener implements DataFormDownloadResultCallback {
+            @Override
+            public void formsDownloadingSuccessful(HashMap<FormDetails, String> result) {
+                Grove.d("Form Download Complete %s", result);
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
+                if (getMvpView() != null) {
+                    getMvpView().renderLayoutVisible();
+                    getMvpView().setDownloadProgress(100);
+                }
             }
-        }
 
-        @Override
-        public void formsDownloadingCancelled() {
-            getMvpView().renderLayoutVisible();
-            getMvpView().showFailureDownloadMessage();
-            Grove.e("Form Download Cancelled >> API Cancelled callback received");
+            @Override
+            public void formsDownloadingFailure() {
+                Grove.d("Unable to download the forms");
+                if(getMvpView() != null)
+                    getMvpView().showSnackbar("Could not download the forms", Snackbar.LENGTH_LONG);
+            }
+
+            @Override
+            public void progressUpdate(String currentFile, int progress, int total) {
+                Grove.v("Form Download InProgress = " + currentFile + " Progress" + progress + " Out of=" + total);
+                Grove.d(" Total%s", String.valueOf(total));
+                Grove.d(" Total Progress %s", String.valueOf(progress));
+                int formProgress = (progress * 100) / total;
+                Grove.d("Form Download Progress: %s", formProgress);
+                currentProgress = currentProgress + 70 / 9;
+                if (getMvpView() != null)
+                    getMvpView().setDownloadProgress(currentProgress);
+                if (formProgress == 100) {
+                    if (getMvpView() != null) {
+                        currentProgress = 100;
+                        getMvpView().setDownloadProgress(currentProgress);
+                        Grove.d("Rendering UI Visible as forms already downloaded not, but now downloaded");
+                    }
+                    formsDownloadStatus = FormDownloadStatus.SUCCESS;
+                }
+            }
+
+            @Override
+            public void formsDownloadingCancelled() {
+                if (getMvpView() != null) {
+                    getMvpView().renderLayoutVisible();
+                    getMvpView().showFailureDownloadMessage();
+                }
+                Grove.e("Form Download Cancelled >> API Cancelled callback received");
+            }
         }
     }
-
 
 }

@@ -5,8 +5,9 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.samagra.ancillaryscreens.R;
+import com.samagra.ancillaryscreens.base.BaseActivity;
 
-public class OTPActivity extends AppCompatActivity implements OTPCallBackListener {
+public class OTPActivity extends BaseActivity implements OTPCallBackListener {
 
     public OTPCallBackListener otpCallBackListener;
 

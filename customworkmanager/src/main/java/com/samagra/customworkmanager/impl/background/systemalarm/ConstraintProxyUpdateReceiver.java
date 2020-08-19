@@ -25,11 +25,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.samagra.customworkmanager.Logger;
 import com.samagra.customworkmanager.impl.WorkManagerImpl;
-import com.samagra.customworkmanager.impl.background.systemalarm.ConstraintProxy.BatteryChargingProxy;
-import com.samagra.customworkmanager.impl.background.systemalarm.ConstraintProxy.BatteryNotLowProxy;
-import com.samagra.customworkmanager.impl.background.systemalarm.ConstraintProxy.NetworkStateProxy;
-import com.samagra.customworkmanager.impl.background.systemalarm.ConstraintProxy.StorageNotLowProxy;
-import com.samagra.customworkmanager.impl.utils.PackageManagerHelper;
 import com.samagra.customworkmanager.impl.utils.taskexecutor.TaskExecutor;
 
 
@@ -47,14 +42,7 @@ public class ConstraintProxyUpdateReceiver extends BroadcastReceiver {
     static final String KEY_NETWORK_STATE_PROXY_ENABLED = "KEY_NETWORK_STATE_PROXY_ENABLED";
 
     /**
-     * @param batteryNotLowProxyEnabled   {@code true} if {@link BatteryNotLowProxy needs to be
-     *                                    enabled.}
-     * @param batteryChargingProxyEnabled {@code true} if {@link BatteryChargingProxy needs to be
-     *                                    enabled.}
-     * @param storageNotLowProxyEnabled   {@code true} if {@link StorageNotLowProxy needs to be
-     *                                    enabled.}
-     * @param networkStateProxyEnabled    {@code true} if {@link NetworkStateProxy needs to be
-     *                                    enabled.}
+     *
      * @return an {@link Intent} with information about the constraint proxies which need to be
      * enabled.
      */
@@ -114,15 +102,15 @@ public class ConstraintProxyUpdateReceiver extends BroadcastReceiver {
                                         storageNotLowProxyEnabled,
                                         networkStateProxyEnabled));
 
-                        PackageManagerHelper.setComponentEnabled(context, BatteryNotLowProxy.class,
-                                batteryNotLowProxyEnabled);
-                        PackageManagerHelper.setComponentEnabled(context,
-                                BatteryChargingProxy.class,
-                                batteryChargingProxyEnabled);
-                        PackageManagerHelper.setComponentEnabled(context, StorageNotLowProxy.class,
-                                storageNotLowProxyEnabled);
-                        PackageManagerHelper.setComponentEnabled(context, NetworkStateProxy.class,
-                                networkStateProxyEnabled);
+//                        PackageManagerHelper.setComponentEnabled(context, BatteryNotLowProxy.class,
+//                                batteryNotLowProxyEnabled);
+//                        PackageManagerHelper.setComponentEnabled(context,
+//                                BatteryChargingProxy.class,
+//                                batteryChargingProxyEnabled);
+//                        PackageManagerHelper.setComponentEnabled(context, StorageNotLowProxy.class,
+//                                storageNotLowProxyEnabled);
+//                        PackageManagerHelper.setComponentEnabled(context, NetworkStateProxy.class,
+//                                networkStateProxyEnabled);
                     } finally {
                         pendingResult.finish();
                     }

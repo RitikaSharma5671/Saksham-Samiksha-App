@@ -27,6 +27,7 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toolbar;
 
 import org.odk.collect.android.R;
@@ -61,13 +62,15 @@ public class FormChooserList extends FormListActivity implements
 
     private static final boolean EXIT = true;
     private DiskSyncTask diskSyncTask;
-
+    private TextView textView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.form_chooser_list);
 
         setTitle(getString(R.string.enter_data));
+        textView =findViewById(R.id.empty_view);
+
 
         new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
@@ -91,7 +94,7 @@ public class FormChooserList extends FormListActivity implements
     }
 
     private void init() {
-        setupAdapter();
+//        setupAdapter();
 
         // DiskSyncTask checks the disk for any forms not already in the content provider
         // that is, put here by dragging and dropping onto the SDCard
@@ -240,6 +243,11 @@ public class FormChooserList extends FormListActivity implements
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         hideProgressBarIfAllowed();
+        if(cursor.getCount() <=0){
+            textView.setText(this.getResources().getString(R.string.no_items_display_forms));
+            textView.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.GONE);
+        }
         listAdapter.swapCursor(cursor);
     }
 

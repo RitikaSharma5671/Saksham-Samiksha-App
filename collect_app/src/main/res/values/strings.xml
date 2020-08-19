@@ -102,7 +102,7 @@
     <string name="noselect_error">Sorry, you have not selected any forms!</string>
     <string name="no_connection">No network connection available</string>
     <string name="no_items_display">Nothing available to display.</string>
-    <string name="no_items_display_forms">Nothing available to display.\n\nTry getting and filling out a blank form.</string>
+    <string name="no_items_display_forms">No forms found to be filled.</string>
     <string name="no_items_display_sent_forms">Nothing available to display.\n\nTry sending finalized forms before viewing.</string>
     <string name="no_items_display_instances">No search results.</string>
     <string name="ok">OK</string>
@@ -299,7 +299,7 @@
     <string name="google_search_browse">Search for forms. Or select \'My Drive\' below to browse.</string>
     <string name="google_sheets_url">Fallback submission URL</string>
     <string name="send_in_progress">Background send running, please try again shortly</string>
-    <string name="invalid_sheet_id">invalid sheet id: %1$s</string>
+    <string name="invalbuid_sheet_id">invalid sheet id: %1$s</string>
     <string name="missing_submission_url">Missing submission URL</string>
     <string name="google_sheets_access_denied">Access denied. Please make sure the spreadsheet owner has granted you edit permission.</string>
     <string name="google_sheets_missing_columns">Spreadsheet is missing the following columns: %1$s</string>
@@ -718,4 +718,5 @@
     <string name="please_check_your_data_before_submitting_the_form">Please check your data before submitting the Form</string>
     <string name="quit_dialog_label">Do you want to exit? The data filled so far will be lost.</string>
     <string name="confirm">CONFIRM</string>
+    <string name="no_submissions">No Visit Submissions found.</string>
 </resources>

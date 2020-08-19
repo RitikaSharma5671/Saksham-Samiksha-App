@@ -62,7 +62,7 @@ public class PermissionsHelper {
                 showAdditionalExplanation(activity, R.string.storage_runtime_permission_denied_title,
                         R.string.storage_runtime_permission_denied_desc, R.drawable.sd, action);
             }
-        }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE);
+        }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
 

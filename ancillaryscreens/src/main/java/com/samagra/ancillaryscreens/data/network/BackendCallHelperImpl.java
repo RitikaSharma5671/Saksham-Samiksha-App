@@ -84,11 +84,6 @@ public class BackendCallHelperImpl implements BackendCallHelper {
      */
     @Override
     public Single<LoginResponse> performLoginApiCall(LoginRequest loginRequest) {
-//        OkHttpClient.Builder okhttpClientBuilder = new OkHttpClient.Builder();
-//        okhttpClientBuilder.connectTimeout(30, TimeUnit.SECONDS);
-//        okhttpClientBuilder.readTimeout(30, TimeUnit.SECONDS);
-//        okhttpClientBuilder.writeTimeout(30, TimeUnit.SECONDS);
-//        AndroidNetworking.initialize(applicationContext ,okhttpClientBuilder.build());
         return Rx2AndroidNetworking.post(BackendApiUrls.AUTH_LOGIN_ENDPOINT)
                 .addHeaders("Content-Type", "application/json")
                 .addHeaders("Authorization", AncillaryScreensDriver.API_KEY)

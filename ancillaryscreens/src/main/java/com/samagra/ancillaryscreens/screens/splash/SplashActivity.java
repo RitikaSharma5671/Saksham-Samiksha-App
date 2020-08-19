@@ -64,6 +64,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     public void showSimpleSplash() {
         splashImage.setImageResource(R.drawable.login_bg);
         splashImage.setVisibility(View.VISIBLE);
+
         Handler handler = new Handler();
         handler.postDelayed(this::endSplashScreen, SPLASH_TIMEOUT);
     }
@@ -92,8 +93,6 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
-//        ExchangeObject.SignalExchangeObject signalExchangeObject = new ExchangeObject.SignalExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, intent, true);
-//        AncillaryScreensDriver.mainApplication.getEventBus().send(signalExchangeObject);
         Grove.d("Closing Splash Screen");
         finishActivity();
     }
