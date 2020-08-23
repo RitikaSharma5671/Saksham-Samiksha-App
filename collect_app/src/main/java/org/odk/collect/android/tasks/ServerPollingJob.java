@@ -28,7 +28,7 @@ import androidx.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
-import com.samagra.notification_module.AppNotificationUtils;
+import com.samagra.commons.notifications.AppNotificationUtils;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormDownloadList;

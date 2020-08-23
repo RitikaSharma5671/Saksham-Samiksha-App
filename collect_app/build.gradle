@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply from: '../config/quality.gradle'
 apply from: '../config/jacoco.gradle'
 apply plugin: 'com.jakewharton.butterknife'
 
@@ -359,7 +358,6 @@ dependencies {
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${rootProject.okhttp3Version}"
 
     androidTestImplementation "android.arch.work:work-testing:${rootProject.workManagerVersion}"
-    implementation project(path: ':notification_module')
     implementation project(path: ':grove')
 }
 

@@ -44,14 +44,6 @@ the specific language governing permissions and limitations under the License.
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- Removed in API 23 -->
-    <uses-permission
-        android:name="android.permission.USE_CREDENTIALS"
-        android:maxSdkVersion="22" />
-    <uses-permission
-        android:name="android.permission.MANAGE_ACCOUNTS"
-        android:maxSdkVersion="22" />
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -109,7 +101,8 @@ the specific language governing permissions and limitations under the License.
         <receiver
             android:name="com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver"
             android:enabled="true"
-            android:exported="true"
+            android:exported="false"
+            tools:replace="android:exported"
             android:permission="android.permission.INSTALL_PACKAGES" />
 
         <service android:name="com.google.android.gms.measurement.AppMeasurementService"
@@ -231,11 +224,11 @@ the specific language governing permissions and limitations under the License.
         <provider
             android:name=".provider.FormsProvider"
             android:authorities="org.odk.collect.android.provider.odk.forms"
-            android:exported="true" />
+            android:exported="false" />
         <provider
             android:name=".provider.InstanceProvider"
             android:authorities="org.odk.collect.android.provider.odk.instances"
-            android:exported="true" />
+            android:exported="false" />
 
         <activity-alias
             android:name=".activities.FormEntryActivity"
@@ -287,9 +280,9 @@ the specific language governing permissions and limitations under the License.
 
         <activity-alias
             android:name=".activities.InstanceUploaderList"
+            android:exported="false"
             android:targetActivity=".activities.InstanceUploaderListActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -297,6 +290,7 @@ the specific language governing permissions and limitations under the License.
         </activity-alias>
 
         <activity-alias
+            android:exported="false"
             android:name=".activities.InstanceUploaderActivity"
             android:targetActivity=".activities.InstanceUploaderActivity">
             <intent-filter>
@@ -307,6 +301,7 @@ the specific language governing permissions and limitations under the License.
         </activity-alias>
 
         <activity-alias
+            android:exported="false"
             android:name=".activities.SplashScreenActivity"
             android:targetActivity=".activities.SplashScreenActivity">
             <intent-filter>
@@ -315,9 +310,20 @@ the specific language governing permissions and limitations under the License.
             </intent-filter>
         </activity-alias>
 
+        <service
+            android:name="androidx.work.impl.background.systemjob.SystemJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            tools:replace="android:exported"
+            android:exported="false" />
+
+        <receiver
+            android:name="androidx.work.impl.background.systemalarm.RescheduleReceiver"
+            android:exported="false" />
+
         <!-- Enable Shortcuts for Command Actions -->
         <activity
             android:name=".activities.AndroidShortcuts"
+            android:exported="false"
             android:label="ODK Form"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>

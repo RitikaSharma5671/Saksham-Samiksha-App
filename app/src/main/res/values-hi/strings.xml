@@ -59,7 +59,7 @@
     <string name="retry">पुनः प्रयास करें</string>
     <string name="change_language">भाषा चुनें</string>
     <string name="hindi">हिंदी</string>
-    <string name="change_app_language">एप्लिकेशन की भाषा बदलें</string>
+    <string name="change_app_language_title">एप्लिकेशन की भाषा बदलें</string>
     <string name="settings">स्थापना</string>
     <string name="call_helpline">यदि ऐप को लेकर कोई शिकायत हो, तो +91 9780431345 पर Whatsapp मैसेज भेजें। कृपया इस नम्बर पर कॉल ना करें।</string>
     <string name="no_internet_45">डाटा अपडेट करने के लिए, इन्टरनेट ऑन करें</string>
@@ -72,7 +72,6 @@
     <string name="need_help">सहायता चाहिए?</string>
     <string name="my_visits">सब्मिट किए फ़ॉर्म देखें</string>
     <string name="select_language_english">Please select your language</string>
-    <string name="about_preferences">हमारे बारें में</string>
     <string name="select_language_hindi">कृपया अपनी भाषा चुनें</string>
     <string name="please_select_forms">फार्म चुनें</string>
     <string name="submit_saved_forms">सहेजे गए फ़ॉर्म सबमिट करें</string>

@@ -106,7 +106,6 @@ dependencies {
     implementation project(path: ':grove')
     implementation project(path: ':update_module')
     implementation project(path: ':cascading_module')
-    implementation project(path: ':notification_module')
     implementation("com.airbnb.android:lottie:2.7.0") {
         exclude group: 'com.android.support'
     }

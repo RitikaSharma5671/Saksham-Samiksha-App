@@ -1,4 +1,4 @@
-package com.samagra.notification_module;
+package com.samagra.commons.notifications;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -18,6 +18,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
+import com.samagra.commons.R;
 import com.samagra.grove.logging.Grove;
 
 

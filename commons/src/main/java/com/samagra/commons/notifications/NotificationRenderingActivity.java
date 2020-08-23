@@ -1,4 +1,4 @@
-package com.samagra.notification_module;
+package com.samagra.commons.notifications;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.samagra.commons.R;
 
 public class NotificationRenderingActivity extends AppCompatActivity {
 

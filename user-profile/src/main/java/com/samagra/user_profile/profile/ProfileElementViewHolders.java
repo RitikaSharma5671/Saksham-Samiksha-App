@@ -101,7 +101,7 @@ class ProfileElementViewHolders {
                 else if(userProfileElement.getContent().equals("user.designation"))
                     itemIcon.setImageDrawable(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_supervised_user_circle_24px));
                 else if(userProfileElement.getContent().equals("user.category"))
-                    itemIcon.setImageDrawable(ContextCompat.getDrawable(view.getContext(), R.drawable.org_icon));
+                    itemIcon.setImageDrawable(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_supervised_user_circle_24px));
 
                 itemIcon.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
 

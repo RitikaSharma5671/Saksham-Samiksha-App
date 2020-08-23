@@ -1,4 +1,4 @@
-package com.samagra.notification_module;
+package com.samagra.commons.notifications;
 
 import android.app.Application;
 import android.app.NotificationChannel;
@@ -9,6 +9,8 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+
+import com.samagra.commons.R;
 
 public class AppNotificationUtils {
 

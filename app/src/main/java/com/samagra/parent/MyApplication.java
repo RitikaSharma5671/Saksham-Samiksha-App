@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -36,7 +35,7 @@ import com.samagra.grove.contracts.IGroveLoggingComponent;
 import com.samagra.grove.contracts.LoggingComponentManager;
 import com.samagra.grove.logging.Grove;
 import com.samagra.grove.logging.LoggableApplication;
-import com.samagra.notification_module.AppNotificationUtils;
+import com.samagra.commons.notifications.AppNotificationUtils;
 import com.samagra.parent.di.component.ApplicationComponent;
 import com.samagra.parent.di.component.DaggerApplicationComponent;
 import com.samagra.parent.di.modules.ApplicationModule;

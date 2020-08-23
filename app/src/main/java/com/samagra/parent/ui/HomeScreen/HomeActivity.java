@@ -33,7 +33,7 @@ import com.samagra.commons.InternetMonitor;
 import com.samagra.commons.MainApplication;
 import com.samagra.commons.Modules;
 import com.samagra.grove.logging.Grove;
-import com.samagra.notification_module.AppNotificationUtils;
+import com.samagra.commons.notifications.AppNotificationUtils;
 import com.samagra.parent.AppConstants;
 import com.samagra.parent.R;
 import com.samagra.parent.UtilityFunctions;

@@ -1,4 +1,4 @@
-package com.samagra.notification_module;
+package com.samagra.commons.notifications;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
