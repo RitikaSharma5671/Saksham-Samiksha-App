@@ -5,11 +5,14 @@ import android.content.Context;
 
 import com.samagra.ancillaryscreens.di.FormManagementCommunicator;
 import com.samagra.parent.di.ActivityContext;
+import com.samagra.parent.helper.BackendNwHelper;
+import com.samagra.parent.helper.BackendNwHelperImpl;
 
 import org.odk.collect.android.contracts.IFormManagementContract;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Classes marked with @{@link Module} are responsible for providing objects that can be injected.
@@ -39,5 +42,15 @@ public class ActivityModule {
     @Provides
     IFormManagementContract provideIFormManagementContract() {
         return FormManagementCommunicator.getContract();
+    }
+
+    @Provides
+    CompositeDisposable provideCompositeDisposable() {
+        return new CompositeDisposable();
+    }
+
+    @Provides
+    BackendNwHelper provideApiHelper() {
+        return BackendNwHelperImpl.getInstance();
     }
 }

@@ -4,6 +4,7 @@ import com.samagra.parent.di.PerActivity;
 import com.samagra.parent.di.modules.ActivityAbstractProviders;
 import com.samagra.parent.di.modules.ActivityModule;
 import com.samagra.parent.ui.HomeScreen.HomeActivity;
+import com.samagra.parent.ui.splash.SplashActivity;
 import com.samagra.parent.ui.submissions.SubmissionsActivity;
 
 import dagger.Component;
@@ -17,5 +18,8 @@ import dagger.Component;
 public interface ActivityComponent {
 
     void inject(HomeActivity homeActivity);
+
+    void inject(SplashActivity splashActivity);
+
 
 }

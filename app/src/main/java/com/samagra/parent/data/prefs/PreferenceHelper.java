@@ -14,8 +14,33 @@ import javax.inject.Singleton;
 public interface PreferenceHelper {
     String getCurrentUserName();
 
+    String getToken();
+
+    boolean isFirstLogin();
+
     String getFormVersion();
+
     String fetchCurrentSystemLanguage();
+
+    int getPreviousVersion();
+
+    boolean isFirstRun();
+
+    boolean isShowSplash();
+
+    String getRefreshToken();
+
+    void updateAppVersion(int currentVersion);
+
+    void updateToken(String token);
+
+    boolean isLoggedIn();
+
+    void updateFirstRunFlag(boolean value);
+
+    void updateLastAppVersion(long updatedVersion);
+
+    Long getLastAppVersion();
 
     void updateFormVersion(String version);
 

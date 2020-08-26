@@ -7,9 +7,6 @@ import androidx.test.rule.GrantPermissionRule;
 
 import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.screens.login.LoginActivity;
-import com.samagra.ancillaryscreens.screens.login.LoginContract;
-import com.samagra.ancillaryscreens.screens.login.LoginPresenter;
-import com.samagra.ancillaryscreens.screens.splash.SplashActivity;
 
 import org.junit.Rule;
 import org.junit.Test;

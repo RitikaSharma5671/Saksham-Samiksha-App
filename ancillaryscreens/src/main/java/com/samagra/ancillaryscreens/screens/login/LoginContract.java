@@ -2,12 +2,15 @@ package com.samagra.ancillaryscreens.screens.login;
 
 import android.widget.EditText;
 
+import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.base.MvpInteractor;
 import com.samagra.ancillaryscreens.base.MvpPresenter;
 import com.samagra.ancillaryscreens.base.MvpView;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
+import com.samagra.ancillaryscreens.utils.SnackbarUtils;
+import com.samagra.commons.CommonUtilities;
 
 /**
  * The interface contract for Login Screen. This interface contains the methods that the Model, View & Presenter
@@ -27,11 +30,11 @@ public interface LoginContract {
          */
         boolean validateInputs(EditText editTextUsername, EditText editTextPassword);
 
+        void validateLoginButton();
 
-        void performLogin();
+        void onLoginButtonClicked(android.view.View v);
 
-        void changePassword();
-
+        void onForgotPasswordClicked(android.view.View v);
         /**
          * This function should be called to inform the UI that the Login Task has been completed <b>successfully</b>.
          * The UI update to reflect successful login should be done here.
@@ -44,7 +47,7 @@ public interface LoginContract {
          * This function should be called to inform the UI that the Login Task has been completed <b>unsuccessfully</b>
          * The UI update to reflect unsuccessful login should be done here.
          */
-        void onLoginFailed();
+        void onLoginFailed(String loginFailureError);
 
         void showProgressDialog();
 

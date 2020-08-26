@@ -13,8 +13,9 @@
             android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".screens.login.LoginActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
+            android:theme="@style/LoginTheme"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.samagra.ancillaryscreens.screens.change_password.ChangePasswordActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
@@ -22,15 +23,7 @@
         <activity
             android:name="com.samagra.ancillaryscreens.screens.tutorials.TutorialActivity"
             android:theme="@style/BaseAppTheme" />
-        <activity
-            android:name="com.samagra.ancillaryscreens.screens.splash.SplashActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

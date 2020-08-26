@@ -13,6 +13,7 @@ import com.samagra.parent.MyApplication;
 import com.samagra.parent.R;
 import com.samagra.parent.UtilityFunctions;
 import com.samagra.parent.base.BasePresenter;
+import com.samagra.parent.helper.BackendNwHelper;
 import com.samagra.parent.ui.submissions.SubmissionsActivity;
 import com.samagra.user_profile.profile.UserProfileElement;
 
@@ -31,6 +32,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
 
@@ -47,8 +49,8 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     private int maxProgress = 10;
 
     @Inject
-    public HomePresenter(I mvpInteractor, IFormManagementContract iFormManagementContract) {
-        super(mvpInteractor, iFormManagementContract);
+    public HomePresenter(I mvpInteractor, CompositeDisposable compositeDisposable, BackendNwHelper backendNwHelper, IFormManagementContract iFormManagementContract) {
+        super(mvpInteractor, compositeDisposable, backendNwHelper, iFormManagementContract);
     }
 
     @Override

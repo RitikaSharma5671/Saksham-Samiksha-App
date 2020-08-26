@@ -1,4 +1,4 @@
-package com.samagra.ancillaryscreens.screens.splash;
+package com.samagra.parent.ui.splash;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,14 +6,11 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.R2;
-import com.samagra.ancillaryscreens.base.BaseActivity;
 import com.samagra.commons.Constants;
-import com.samagra.commons.ExchangeObject;
-import com.samagra.commons.Modules;
 import com.samagra.grove.logging.Grove;
+import com.samagra.parent.base.BaseActivity;
 
 import javax.inject.Inject;
 
@@ -103,5 +100,10 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         if (unbinder != null)
             unbinder.unbind();
         splashPresenter.onDetach();
+    }
+
+    @Override
+    public void setupToolbar() {
+
     }
 }

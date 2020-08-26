@@ -1,4 +1,4 @@
-package com.samagra.ancillaryscreens.screens.splash;
+package com.samagra.parent.ui.splash;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -9,17 +9,17 @@ import android.os.Environment;
 
 import com.androidnetworking.error.ANError;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
-import com.samagra.ancillaryscreens.BuildConfig;
-import com.samagra.ancillaryscreens.R;
-import com.samagra.ancillaryscreens.base.BasePresenter;
-import com.samagra.ancillaryscreens.data.network.BackendCallHelper;
 import com.samagra.commons.firebase.FirebaseUtilitiesWrapper;
 import com.samagra.commons.firebase.IFirebaseRemoteStorageFileDownloader;
 import com.samagra.commons.utils.AlertDialogUtils;
 import com.samagra.commons.utils.FileUnzipper;
 import com.samagra.commons.utils.UnzipTaskListener;
 import com.samagra.grove.logging.Grove;
+import com.samagra.parent.R;
+import com.samagra.parent.base.BasePresenter;
+import com.samagra.parent.helper.BackendNwHelper;
 
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.contracts.AppPermissionUserActionListener;
 import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.contracts.PermissionsHelper;
@@ -34,7 +34,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * The presenter for the Splash Screen. This class controls the interactions between the View and the data.
- * Must implement {@link com.samagra.ancillaryscreens.screens.splash.SplashContract.Presenter}
+ * Must implement {@link SplashContract.Presenter}
  *
  * @author Pranav Sharma
  */
@@ -45,9 +45,10 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
     private static final boolean EXIT = true;
 
     @Inject
-    public SplashPresenter(I mvpInteractor, BackendCallHelper apiHelper, CompositeDisposable compositeDisposable, IFormManagementContract iFormManagementContract) {
-        super(mvpInteractor, apiHelper, compositeDisposable, iFormManagementContract);
+    public SplashPresenter(I mvpInteractor, CompositeDisposable compositeDisposable, BackendNwHelper backendNwHelper, IFormManagementContract iFormManagementContract) {
+        super(mvpInteractor, compositeDisposable, backendNwHelper, iFormManagementContract);
     }
+
 
 
     /**
@@ -60,7 +61,6 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
      */
     @Override
     public void moveToNextScreen() {
-//        if (getMvpInteractor().isLoggedIn() && !getMvpInteractor().getRefreshToken().equals("") ) {
         if ( !getMvpInteractor().getRefreshToken().equals("")  && getMvpInteractor().isLoggedIn()) {
             isJWTTokenValid();
         } else {

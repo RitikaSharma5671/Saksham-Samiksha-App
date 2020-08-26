@@ -1,6 +1,10 @@
 package com.samagra.parent.base;
 
+import com.samagra.parent.helper.BackendNwHelper;
+
 import org.odk.collect.android.contracts.IFormManagementContract;
+
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * This is the base interface that all the 'Presenter Contracts' must extend.
@@ -18,6 +22,11 @@ public interface MvpPresenter<V extends MvpView, I extends MvpInteractor> {
     void onDetach();
 
     boolean isViewAttached();
+
+    CompositeDisposable getCompositeDisposable();
+
+    BackendNwHelper getApiHelper();
+
     IFormManagementContract getIFormManagementContract();
 
 }

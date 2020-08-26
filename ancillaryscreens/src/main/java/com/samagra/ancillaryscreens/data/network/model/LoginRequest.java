@@ -18,10 +18,13 @@ public class LoginRequest {
 
     private String username;
     private String password;
+    private String applicationId;
 
     public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
+        this.applicationId = applicationId;
+
     }
 
     public String getUsername() {
@@ -44,7 +47,7 @@ public class LoginRequest {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("loginId", username);
-            jsonObject.put("applicationId", AncillaryScreensDriver.APPLICATION_ID);
+            jsonObject.put("applicationId", applicationId);
             jsonObject.put("password", password);
         } catch (JSONException e) {
             e.printStackTrace();

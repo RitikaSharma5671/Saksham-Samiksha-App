@@ -6,10 +6,9 @@ import com.samagra.parent.ui.HomeScreen.HomeMvpInteractor;
 import com.samagra.parent.ui.HomeScreen.HomeMvpPresenter;
 import com.samagra.parent.ui.HomeScreen.HomeMvpView;
 import com.samagra.parent.ui.HomeScreen.HomePresenter;
-import com.samagra.parent.ui.submissions.SubmissionsMvpInteractor;
-import com.samagra.parent.ui.submissions.SubmissionsMvpPresenter;
-import com.samagra.parent.ui.submissions.SubmissionsMvpView;
-import com.samagra.parent.ui.submissions.SubmissionsPresenter;
+import com.samagra.parent.ui.splash.SplashContract;
+import com.samagra.parent.ui.splash.SplashInteractor;
+import com.samagra.parent.ui.splash.SplashPresenter;
 
 import dagger.Binds;
 import dagger.Module;
@@ -28,6 +27,17 @@ public abstract class ActivityAbstractProviders {
     @Binds
     @PerActivity
     abstract HomeMvpInteractor provideHomeMvpInteractor(HomeInteractor homeInteractor);
+
+
+    @Binds
+    @PerActivity
+    abstract SplashContract.Presenter<SplashContract.View, SplashContract.Interactor> provideSplashMvpPresenter(
+            SplashPresenter<SplashContract.View, SplashContract.Interactor> presenter);
+
+    @Binds
+    @PerActivity
+    abstract SplashContract.Interactor provideSplashMvpInteractor(SplashInteractor splashInteractor);
+
 
 //
 //    @Binds

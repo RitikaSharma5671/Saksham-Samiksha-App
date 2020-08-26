@@ -75,7 +75,10 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
     public void setCurrentUserDetailsFromLogin(LoginResponse response) {
         SharedPreferences.Editor editor = defaultPreferences.edit();
         Grove.d("Refresh Token is " + response.refreshToken);
+        if(response.refreshToken != null)
         editor.putString("refreshToken", response.refreshToken.getAsString());
+        else
+        editor.putString("refreshToken", "");
         editor.putString("token", response.token.getAsString());
 
         if (response.user.has("accountName"))

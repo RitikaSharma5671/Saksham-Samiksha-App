@@ -14,20 +14,13 @@
     <color name="colorSecondaryDark">#4CAF50</color>
     <color name="primary_text">#ffffff</color>
     <color name="secondary_text">#ffffff</color>
-
-
-
     <color name="primary_light">#C5CAE9</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
-    <color name="light_grey">#E5E5E5</color>
     <color name="white">#FFFFFF</color>
     <color name="grey">#8E8E8E</color>
-
     <color name="whiteTextColor">#fff</color>
-    <color name="primaryTextColor">#231E69</color>
     <color name="loginBkColor">#f0f0f0</color>
-
     <color name="black">#000000</color>
     <!--colors for card-->
     <color name="button_colors">#014d3f</color>

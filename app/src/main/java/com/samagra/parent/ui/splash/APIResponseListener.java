@@ -1,4 +1,4 @@
-package com.samagra.ancillaryscreens.screens.splash;
+package com.samagra.parent.ui.splash;
 
 import org.json.JSONObject;
 

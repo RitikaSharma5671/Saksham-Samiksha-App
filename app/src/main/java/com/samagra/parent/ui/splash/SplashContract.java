@@ -1,11 +1,12 @@
-package com.samagra.ancillaryscreens.screens.splash;
+package com.samagra.parent.ui.splash;
 
 import android.content.pm.PackageInfo;
 
-import com.samagra.ancillaryscreens.base.MvpInteractor;
-import com.samagra.ancillaryscreens.base.MvpPresenter;
-import com.samagra.ancillaryscreens.base.MvpView;
+
 import com.samagra.commons.MainApplication;
+import com.samagra.parent.base.MvpInteractor;
+import com.samagra.parent.base.MvpPresenter;
+import com.samagra.parent.base.MvpView;
 
 /**
  * The interface contract for Splash Screen. This interface contains the methods that the Model, View & Presenter

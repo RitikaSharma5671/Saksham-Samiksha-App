@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.androidnetworking.error.ANError;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
+import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.base.BasePresenter;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelper;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelperImpl;
@@ -20,6 +21,7 @@ import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -51,15 +53,24 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
                     if (LoginPresenter.this.getMvpView() != null) {
                         if (loginResponse.token != null) {
                             Grove.d("Received successful login response for the user");
-                            LoginPresenter.this.getMvpView().onLoginSuccess(loginResponse);
+                            getMvpView().onLoginSuccess(loginResponse);
+                            getMvpInteractor().persistUserData(loginResponse);
                         } else
-                            LoginPresenter.this.getMvpView().onLoginFailed();
+                            LoginPresenter.this.getMvpView().onLoginFailed(getMvpView().getActivityContext().getResources().getString(R.string.errorlogin));
                     }
                 }, throwable -> {
-                    if (throwable instanceof ANError)
-                        Grove.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", throwable, throwable, throwable);
-                    LoginPresenter.this.getMvpView().onLoginFailed();
-                    Grove.e(throwable);
+                    if (throwable instanceof ANError) {
+                        if(((ANError) (throwable)).getErrorCode() == 404) {
+                            LoginPresenter.this.getMvpView().onLoginFailed(getMvpView().getActivityContext().getResources().getString(R.string.incorrect_credentials));
+                        }else {
+                            LoginPresenter.this.getMvpView().onLoginFailed(getMvpView().getActivityContext().getResources().getString(R.string.errorlogin));
+                        }
+                        Grove.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", ((ANError) (throwable)).getErrorBody(), ((ANError) (throwable)).getErrorCode(), ((ANError) (throwable)).getErrorDetail());
+                    }else{
+                        LoginPresenter.this.getMvpView().onLoginFailed(getMvpView().getActivityContext().getResources().getString(R.string.errorlogin));
+                    }
+
+                    Grove.e("Login error " + throwable);
                 }));
     }
 

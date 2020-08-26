@@ -1,5 +1,6 @@
 package com.samagra.parent.data.prefs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -8,9 +9,11 @@ import androidx.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.samagra.commons.Constants;
 import com.samagra.commons.LocaleManager;
+import com.samagra.commons.PreferenceKeys;
 import com.samagra.parent.di.ApplicationContext;
 import com.samagra.parent.di.PreferenceInfo;
 
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.utilities.LocaleHelper;
 
 import java.util.HashMap;
@@ -18,6 +21,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Solid implementation of the {@link PreferenceHelper}, performs the read/write operations on the {@link SharedPreferences}
@@ -30,11 +35,13 @@ public class AppPreferenceHelper implements PreferenceHelper {
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences defaultPreferences;
+    private final Context context;
 
     @Inject
     public AppPreferenceHelper(@ApplicationContext Context context, @PreferenceInfo String prefFileName) {
         this.sharedPreferences = context.getSharedPreferences(prefFileName, Context.MODE_PRIVATE);
         defaultPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        this.context = context;
     }
 
     @Override
@@ -49,6 +56,77 @@ public class AppPreferenceHelper implements PreferenceHelper {
         else
             return defaultPreferences.getString("user.fullName", "");
 
+    }
+
+    @Override
+    public int getPreviousVersion() {
+        return context.getSharedPreferences("VersionPref", MODE_PRIVATE).getInt("appVersionCode", 0);
+    }
+
+    @Override
+    public String getToken() {
+        return defaultPreferences.getString("token", "");
+    }
+
+
+    @Override
+    public boolean isFirstLogin() {
+        return defaultPreferences.getBoolean("firstLoginIn", false);
+    }
+
+    @Override
+    public boolean isFirstRun() {
+        return defaultPreferences.getBoolean(PreferenceKeys.KEY_FIRST_RUN, true);
+    }
+
+    @Override
+    public boolean isShowSplash() {
+        return defaultPreferences.getBoolean(GeneralKeys.KEY_SHOW_SPLASH, false);
+    }
+
+    @Override
+    public String getRefreshToken() {
+        return defaultPreferences.getString("refreshToken", "");
+    }
+
+    @Override
+    public void updateAppVersion(int currentVersion) {
+        SharedPreferences.Editor editor = context.getSharedPreferences("VersionPref", MODE_PRIVATE).edit();
+        editor.putInt("appVersionCode", currentVersion);
+        editor.putBoolean("isAppJustUpdated", true);
+        editor.commit();
+    }
+
+    @Override
+    public void updateToken(String token) {
+        SharedPreferences.Editor editor = defaultPreferences.edit();
+        editor.putString("token", token);
+        editor.apply();
+    }
+
+    @Override
+    public boolean isLoggedIn() {
+        return defaultPreferences.getBoolean("isLoggedIn", false);
+    }
+
+    @SuppressLint("ApplySharedPref")
+    @Override
+    public void updateFirstRunFlag(boolean value) {
+        SharedPreferences.Editor editor = defaultPreferences.edit();
+        editor.putBoolean(GeneralKeys.KEY_FIRST_RUN, false);
+        editor.commit();
+    }
+
+    @Override
+    public Long getLastAppVersion() {
+        return sharedPreferences.getLong(GeneralKeys.KEY_LAST_VERSION, 0);
+    }
+
+    @Override
+    public void updateLastAppVersion(long updatedVersion) {
+        SharedPreferences.Editor editor = defaultPreferences.edit();
+        editor.putLong(GeneralKeys.KEY_LAST_VERSION, updatedVersion);
+        editor.apply();
     }
 
     @Override
