@@ -307,7 +307,6 @@ dependencies {
     implementation "com.trello.rxlifecycle2:rxlifecycle:${rootProject.rxLifecycleVersion}"
     implementation "com.trello.rxlifecycle2:rxlifecycle-android:${rootProject.rxLifecycleVersion}"
     implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:${rootProject.rxLifecycleVersion}"
-
     // WorkManager for specifying deferrable, asynchronous tasks
     implementation("android.arch.work:work-runtime:${rootProject.workManagerVersion}") {
         exclude group: 'com.google.guava', module: 'listenablefuture'

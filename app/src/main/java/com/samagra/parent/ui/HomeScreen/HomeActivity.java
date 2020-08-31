@@ -19,6 +19,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.androidnetworking.AndroidNetworking;
+import com.example.student_details.contracts.IStudentDetailsContract;
+import com.example.student_details.contracts.StudentDetailsComponentManager;
+import com.example.student_details.contracts.StudentDetailsSectionInteractor;
 import com.example.update.UpdateApp;
 import com.google.android.material.snackbar.Snackbar;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
@@ -316,17 +319,22 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                 switch (item.getItemId()) {
                     case R.id.change_lang:
                         if (HomeActivity.this.findViewById(R.id.fragment_container) != null) {
-                            UpdateAppLanguageFragment firstFragment = UpdateAppLanguageFragment.newInstance(PreferenceManager.getDefaultSharedPreferences(HomeActivity.this.getActivityContext())
-                                    .getString(Constants.APP_LANGUAGE_KEY, "en"), language -> {
-                                SharedPreferences.Editor edit = PreferenceManager
-                                        .getDefaultSharedPreferences(getActivityContext()).edit();
-                                edit.putString(KEY_APP_LANGUAGE, language);
-                                edit.putString(Constants.APP_LANGUAGE_KEY, language);
-                                edit.apply();
-                                relaunchHomeScreen();
-                            });
-                            HomeActivity.this.addFragment(R.id.fragment_container, HomeActivity.this.getSupportFragmentManager(), firstFragment, "UpdateAppLanguageFragment");
-                            parentHome.setVisibility(View.GONE);
+                            StudentDetailsComponentManager.registerProfilePackage(new StudentDetailsSectionInteractor());
+                            IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+                            iStudentDetailsContract.launchProfileActivity(getActivityContext(), R.id.fragment_container, getSupportFragmentManager());
+
+
+//                            UpdateAppLanguageFragment firstFragment = UpdateAppLanguageFragment.newInstance(PreferenceManager.getDefaultSharedPreferences(HomeActivity.this.getActivityContext())
+//                                    .getString(Constants.APP_LANGUAGE_KEY, "en"), language -> {
+//                                SharedPreferences.Editor edit = PreferenceManager
+//                                        .getDefaultSharedPreferences(getActivityContext()).edit();
+//                                edit.putString(KEY_APP_LANGUAGE, language);
+//                                edit.putString(Constants.APP_LANGUAGE_KEY, language);
+//                                edit.apply();
+//                                relaunchHomeScreen();
+//                            });
+//                            HomeActivity.this.addFragment(R.id.fragment_container, HomeActivity.this.getSupportFragmentManager(), firstFragment, "UpdateAppLanguageFragment");
+//                            parentHome.setVisibility(View.GONE);
                         }
                         break;
                     case R.id.about_us:

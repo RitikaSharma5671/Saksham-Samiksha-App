@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/otp_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color4"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:id="@+id/filters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:padding="4dp"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Spinner
+            android:id="@+id/grade_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            style="@style/DropdownStyle1"
+            android:entries="@array/grades_list"
+            android:padding="8dp" />
+
+        <Spinner
+            android:id="@+id/section_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/DropdownStyle1"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:entries="@array/sections_list"
+            android:padding="8dp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_below="@id/filters"
+        android:background="@color/color_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/filters" />
+
+
+    <RadioGroup
+        android:id="@+id/category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        android:layout_marginTop="12dp"
+        android:minHeight="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+
+        <RadioButton
+            android:id="@+id/category_general"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            style="@style/LabelStyle1"
+            android:textStyle="normal"
+            android:text="Humanities" />
+
+        <RadioButton
+            android:id="@+id/category_OBC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="Science"
+            style="@style/LabelStyle1"
+            android:textStyle="normal" />
+
+        <RadioButton
+            android:id="@+id/category_SC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="Commerce"
+            style="@style/LabelStyle1"
+            android:textStyle="normal"/>
+
+        <RadioButton
+            android:id="@+id/category_ST"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="Vocational"
+            style="@style/LabelStyle1"
+            android:textStyle="normal"/>
+    </RadioGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/student_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/category" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="60dp"
+        app:backgroundTint="@color/white"
+        android:id="@+id/mark_attendance"
+        android:src="@drawable/ic_edit_student__icon"
+        android:layout_marginBottom="80dp"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

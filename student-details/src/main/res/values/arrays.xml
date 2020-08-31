@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="grades_list">
+        <item>Class 1</item>
+        <item>Class 2</item>
+        <item>Class 3</item>
+        <item>Class 4</item>
+        <item>Class 5</item>
+        <item>Class 6</item>
+        <item>Class 7</item>
+        <item>Class 8</item>
+    </string-array>
+    <string-array name="sections_list">
+        <item>Section A</item>
+        <item>Section B</item>
+        <item>Section C</item>
+        <item>Section D</item>
+    </string-array>
+</resources>

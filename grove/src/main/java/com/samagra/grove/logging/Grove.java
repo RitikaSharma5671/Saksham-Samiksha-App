@@ -15,7 +15,7 @@ import timber.log.Timber;
 @SuppressWarnings("ConstantConditions")
 public class Grove {
     private static LoggableApplication applicationInstance;
-    private static String TAG = BuildConfig.FLAVOR.toUpperCase();
+    private static String TAG = "com.samagra.sakshamsamiksha";
 
     public static void init(LoggableApplication applicationInstance, Context context, boolean isHyperLogEnabled, String domainID) {
         Grove.applicationInstance = applicationInstance;

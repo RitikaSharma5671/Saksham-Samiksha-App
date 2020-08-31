@@ -1,2 +1,3 @@
+include ':student-details'
 include ':assets'
 include ':app', ':commons', ':customworkmanager', ':grove',':ancillaryscreens', ':collect_app', ':user-profile', ':cascading_module', ':update_module'

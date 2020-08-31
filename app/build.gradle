@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.sentry.android.gradle'
+apply plugin: 'com.apollographql.android'
 
 android {
     compileSdkVersion 28
@@ -105,6 +106,7 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-ses:2.2.13'
     implementation project(path: ':grove')
     implementation project(path: ':update_module')
+    implementation project(path: ':student-details')
     implementation project(path: ':cascading_module')
     implementation("com.airbnb.android:lottie:2.7.0") {
         exclude group: 'com.android.support'
