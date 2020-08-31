@@ -54,5 +54,7 @@
     <string name="otp_sent_successfully">OTP successfully sent to this number:</string>
     <string name="otp_sent_change_pwd">OTP sent. Please retry changing the password.</string>
     <string name="login_failed_error">Username or Password didn\'t match. Please try again</string>
-
+    <string name="sending_the_request">Sending the Request</string>
+    <string name="contact_admin_for_this">It looks like there is no user registered with this mobile number.\n Please contact helpline to get password reset.</string>
+    <string name="unable_to_send_OTP">OTP could not be sent.</string>
 </resources>

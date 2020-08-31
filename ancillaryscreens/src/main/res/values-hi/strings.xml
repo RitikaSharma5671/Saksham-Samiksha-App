@@ -27,4 +27,5 @@
     <string name="otp_sent_successfully">इस नंबर पर ओटीपी सफलतापूर्वक भेजा गया</string>
     <string name="otp_sent_change_pwd">ओटीपी भेजा गया। कृपया पासवर्ड बदलने का प्रयास करें।</string>
     <string name="login_failed_error">उपयोगकर्ता नाम या पासवर्ड मेल नहीं खाता। कृपया पुन: प्रयास करें।</string>
+    <string name="sending_the_request">Sending the Request</string>
 </resources>

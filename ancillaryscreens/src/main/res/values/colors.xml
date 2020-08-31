@@ -33,4 +33,5 @@
     <color name="button_colors">#014d3f</color>
     <color name="whiteCardColor">#fff</color>
     <color name="disable_button_colors">#cbecea</color>
+    <color name="red">#FFC32627</color>
 </resources>
