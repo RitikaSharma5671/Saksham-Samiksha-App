@@ -2,10 +2,8 @@ package com.samagra.user_profile.passReset;
 
 import android.os.AsyncTask;
 
+import com.samagra.grove.logging.Grove;
 import com.samagra.user_profile.ProfileSectionDriver;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -15,23 +13,24 @@ import okhttp3.Response;
 
 public class SendOTPTask extends AsyncTask<String, Void, String> {
 
-    private ActionListener listener;
+    private ChangePasswordActionListener listener;
     private String TAG = SendOTPTask.class.getName();
     private boolean isPhoneUnique;
-    private boolean isSuccess;
+    private boolean isSuccess = false;
 
-    public SendOTPTask(ActionListener listener){
+    public SendOTPTask(ChangePasswordActionListener listener){
         this.listener = listener;
     }
 
-    private boolean testIfPhoneUnique(String phone){
+    private boolean testIfPhoneUnique(){
         return true;
     }
 
     @Override
     protected String doInBackground(String[] strings) {
-        isPhoneUnique = testIfPhoneUnique(strings[0]);
+        isPhoneUnique = testIfPhoneUnique();
         if (!isPhoneUnique) {
+            Grove.e(new Exception("Multiple users with the same phone number found. Contact Admin."));
             listener.onFailure(new Exception("Multiple users with the same phone number found. Contact Admin."));
             return null;
         } else {
@@ -49,13 +48,15 @@ public class SendOTPTask extends AsyncTask<String, Void, String> {
                     isSuccess = true;
                     response.body().close();
                     return response.body().toString();
-                }else{
+                } else {
+                    Grove.e("Response Failure received for Send OTP Task with failure " + response.body().string());
                     isSuccess = false;
                     String jsonData = response.body().string();
                     response.body().close();
-                    return "Failure";
+                    return jsonData;
                 }
             } catch (IOException e) {
+                Grove.e("OTP Network R/Q failed with IO Exception at Login Screen with Execption " + e.getMessage());
                 isSuccess = false;
                 e.printStackTrace();
             }
@@ -63,12 +64,13 @@ public class SendOTPTask extends AsyncTask<String, Void, String> {
         }
     }
 
-    protected void onPostExecute(String s){
-        if(isSuccess) {
+
+    protected void onPostExecute(String s) {
+        if (isSuccess) {
             listener.onSuccess();
-        }else{
-            if(s != null)
-            listener.onFailure(new Exception(s));
+        } else {
+            if (s != null)
+                listener.onFailure(new Exception(s));
             else
                 listener.onFailure(new Exception("Could not send OTP to the number."));
         }

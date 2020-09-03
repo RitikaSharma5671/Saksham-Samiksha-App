@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">AncillaryScreens</string>
-    <string name="fusionauth_api_key" translatable="false">oaX0jboTeMCNuF-Cyue_K_Lqj_BI_kHQkmiIlTFjBbQ</string>
+    <string name="fusionauth_api_key" translatable="false">YBr98KDc32etBmd-T-9zOkX4iyF9DqDp9YuDOtd3Miw</string>
     <string name="profile_contact_message" translatable="false">These following fields cannot be updated. In case there is any issue, contact admin.</string>
     <string-array name="category_of_user_shiksha_sathi">
         <item>Not Applicable</item>
@@ -51,10 +51,31 @@
     <string name="user_name_not_apt_length_error">Username has to be 3 or more characters</string>
     <string name="empty_password_error">Password cannot be empty</string>
     <string name="short_password_error">Password has to be at least 8 characters</string>
-    <string name="otp_sent_successfully">OTP successfully sent to this number:</string>
+    <string name="otp_sent_successfully">OTP successfully sent to  %s</string>
+    <string name="no_users_found">No Users Found.</string>
+    <string name="number_zero">0</string>
+    <string name="number_one">1</string>
+    <string name="number_two">2</string>
+    <string name="number_three">3</string>
+    <string name="number_four">4</string>
+    <string name="number_five">5</string>
+    <string name="number_six">6</string>
+    <string name="otp_length">OTP should be of 4 digits</string>
+    <string name="empty_otp">OTP cannot be empty.</string>
+    <string name="number_seven">7</string>
+    <string name="number_eight">8</string>
+    <string name="number_nine">9</string>
+    <string name="btn_clear">Clear</string>
+    <string name="btn_backspace">Back</string>
     <string name="otp_sent_change_pwd">OTP sent. Please retry changing the password.</string>
     <string name="login_failed_error">Username or Password didn\'t match. Please try again</string>
     <string name="sending_the_request">Sending the Request</string>
     <string name="contact_admin_for_this">It looks like there is no user registered with this mobile number.\n Please contact helpline to get password reset.</string>
     <string name="unable_to_send_OTP">OTP could not be sent.</string>
+    <string name="enter_valid_number">Please enter a valid mobile number.</string>
+    <string name="sending_otp">Sending OTP</string>
+    <string name="password_changing">Changing Password..</string>
+    <string name="enter_otp">Enter OTP Received</string>
+    <string name="set_new_password">Reset App Password</string>
+    <string name="password_changed">Password has been successfully changed</string>
 </resources>

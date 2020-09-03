@@ -2,13 +2,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 
-    <style name="ButtonStyle1" parent="@style/Widget.MaterialComponents.Button">
+    <style name="ButtonStyle1" parent="@style/Widget.AppCompat.Button">
         <item name="android:gravity">center_vertical|center_horizontal</item>
-        <item name="android:textColor">@color/buttonstyle1_text_color_selector</item>
+        <item name="android:textColor">@color/textWhitePrimary</item>
         <item name="android:textSize">17sp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:background">@drawable/custom_button</item> <!--Made compatible with Android 4.4-->
+        <item name="android:background">@drawable/your_enabled_drawable</item> <!--Made compatible with Android 4.4-->
         <item name="android:lineSpacingMultiplier">1.42</item>
         <item name="android:letterSpacing" tools:targetApi="lollipop">0.062</item>
         <item name="android:stateListAnimator" tools:targetApi="lollipop">@null</item>

@@ -2,6 +2,7 @@ package com.samagra.ancillaryscreens.screens.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
@@ -14,6 +15,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.samagra.ancillaryscreens.R;
@@ -22,6 +26,7 @@ import com.samagra.ancillaryscreens.base.BaseActivity;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.ancillaryscreens.screens.change_password.ChangePasswordActivity;
+import com.samagra.ancillaryscreens.screens.passReset.EnterMobileNumberFragment;
 import com.samagra.ancillaryscreens.utils.SnackbarUtils;
 import com.samagra.commons.CommonUtilities;
 import com.samagra.grove.logging.Grove;
@@ -87,8 +92,35 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     @OnClick(R2.id.forgot_password)
     public void changePassword() {
-        Intent changePassIntent = new Intent(LoginActivity.this, ChangePasswordActivity.class);
-        startActivity(changePassIntent);
+        if (CommonUtilities.isNetworkAvailable(this)){
+            EnterMobileNumberFragment mForgotPasswordFragment = new EnterMobileNumberFragment();
+            addFragment(R.id.login_fragment_container,getSupportFragmentManager(),mForgotPasswordFragment,"EnterMobileNumberFragment");
+        }else{
+            SnackbarUtils.showLongSnackbar(loginParentLayout,  "It seems you are not connected to the internet. Please switch of on your mobile data to login.");
+        }
+    }
+
+    private void addFragment(int containerViewId, FragmentManager manager, Fragment fragment, String fragmentTag) {
+        try {
+            final String fragmentName = fragment.getClass().getName();
+            Grove.d("addFragment() :: Adding new fragment %s", fragmentName);
+            // Create new fragment and transaction
+            final FragmentTransaction transaction = manager.beginTransaction();
+
+            transaction.add(containerViewId, fragment, fragmentTag);
+            transaction.addToBackStack(fragmentTag);
+            new Handler().post(() -> {
+                try {
+                    transaction.commit();
+                } catch (IllegalStateException ex) {
+                    Grove.e("Failed to commit Fragment Transaction with exception %s", ex.getMessage());
+                }
+            });
+        } catch (IllegalStateException ex) {
+            Grove.e("Failed to add Fragment with exception %s", ex.getMessage());
+
+        }
+
     }
 
     /**

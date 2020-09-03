@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/otp_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/rl_confirmation_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/ttb_close_button"
+            android:layout_width="55dp"
+            android:layout_height="42dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:contentDescription="@string/reset_password"
+            android:scaleType="fitStart"
+            app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
+
+        <TextView
+            android:id="@+id/ttb_confirmation_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/ttb_close_button"
+            android:gravity="center"
+            android:letterSpacing="0.10"
+            android:text="@string/reset_password"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+
+    </RelativeLayout>
+
+
+    <View
+        android:id="@+id/header_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"
+        android:layout_below="@id/rl_confirmation_header" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@id/header_divider"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dfd">
+
+                <ImageView
+                    android:id="@+id/ivBusiness"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="32dp"
+                    android:minHeight="125dp"
+                    app:srcCompat="@drawable/ic_receive_otp" />
+
+                <TextView
+                    android:id="@+id/reset_password_label"
+                    style="@style/LabelStyle2"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_below="@id/ivBusiness"
+                    android:gravity="center"
+                    android:text="@string/enter_the_registered_mobile_number_associated_with_your_account" />
+
+                <EditText
+                    android:id="@+id/etResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/border_black"
+                    android:focusable="false"
+                    android:gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:maxLines="2"
+                    android:textColor="@color/black"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="visible"
+                    android:layout_below="@id/reset_password_label"
+                    tools:text="128 + 78" />
+
+                <Button
+                    android:id="@+id/btnCollect"
+                    style="@style/ButtonStyle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="5dp"
+                    android:focusable="false"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:layout_below="@id/etResult"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/etResult"
+                    tools:text="@string/send_otp" />
+
+            </RelativeLayout>
+
+
+            <TableLayout
+                android:id="@+id/keyboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:divider="@drawable/keyboard_divider"
+                android:orientation="vertical"
+                android:layout_below="@id/dfd"
+                android:layout_marginTop="26dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:showDividers="beginning|middle|end">
+
+                <TableRow style="@style/keyboard_row">
+
+                    <TextView
+                        android:id="@+id/t9_key_1"
+                        style="@style/keyboard_number_button"
+                        android:text="@string/number_one"/>
+
+                    <TextView
+                        android:id="@+id/t9_key_2"
+                        style="@style/keyboard_number_button"
+                        android:text="@string/number_two"/>
+
+                    <TextView
+                        android:id="@+id/t9_key_3"
+                        style="@style/keyboard_number_button"
+                        android:text="@string/number_three"/>
+                </TableRow>
+
+                <TableRow style="@style/keyboard_row">
+
+                    <TextView
+                        android:id="@+id/t9_key_4"
+                        style="@style/keyboard_number_button"
+                        android:text="@string/number_four"/>
+
+                    <TextView
+                        android:id="@+id/t9_key_5"
+                        style="@style/keyboard_number_button"
+                        android:text="@string/number_five"/>
+
+                    <TextView
+                        android:id="@+id/t9_key_6"
+                        style="@style/keyboard_number_button"
+                        android:text="@string/number_six"/>
+                </TableRow>
+
+                <TableRow style="@style/keyboard_row">
+
+                    <TextView
+                        android:id="@+id/t9_key_7"
+                        style="@style/keyboard_number_button"
+                        android:text="@string/number_seven"/>
+
+                    <TextView
+                        android:id="@+id/t9_key_8"
+                        style="@style/keyboard_number_button"
+                        android:text="@string/number_eight"/>
+
+                    <TextView
+                        android:id="@+id/t9_key_9"
+                        style="@style/keyboard_number_button"
+                        android:text="@string/number_nine"/>
+                </TableRow>
+
+                <TableRow style="@style/keyboard_row">
+
+                    <ImageView
+                        android:id="@+id/t9_key_clear"
+                        android:src="@drawable/ic_cross_icon"
+                        style="@style/keyboard_button"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                    <TextView
+                        android:id="@+id/t9_key_0"
+                        style="@style/keyboard_number_button"
+                        android:text="@string/number_zero"/>
+
+                    <ImageView
+                        android:id="@+id/t9_key_backspace"
+                        style="@style/keyboard_button"
+                        android:src="@drawable/ic_delete_keypad"
+                        android:text="@string/btn_backspace"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </TableRow>
+            </TableLayout>
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

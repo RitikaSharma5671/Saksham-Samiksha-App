@@ -2,8 +2,8 @@
     <item android:state_enabled="false">
         <shape>
             <gradient
-                android:endColor="@color/light_grey"
-                android:startColor="@color/light_grey"
+                android:endColor="#FFB1B1B1"
+                android:startColor="#FFB1B1B1"
                 android:angle="270" />
             <stroke
                 android:width="2dp"

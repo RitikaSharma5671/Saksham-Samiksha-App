@@ -17,6 +17,7 @@ public class SendOTPTask extends AsyncTask<String, Void, String> {
     private ChangePasswordActionListener listener;
     private String TAG = SendOTPTask.class.getName();
     private boolean isPhoneUnique;
+    private boolean isSuccess = false;
 
     public SendOTPTask(ChangePasswordActionListener listener){
         this.listener = listener;
@@ -45,20 +46,34 @@ public class SendOTPTask extends AsyncTask<String, Void, String> {
             try {
                 response = client.newCall(request).execute();
                 if (response.isSuccessful()) {
-                    Grove.d("Successful Response received for Sending OTP to the user");
+                    isSuccess = true;
+                    response.body().close();
                     return response.body().toString();
+                } else {
+                    Grove.e("Response Failure received for Send OTP Task with failure " + response.body().string());
+                    isSuccess = false;
+                    String jsonData = response.body().string();
+                    response.body().close();
+                    return jsonData;
                 }
             } catch (IOException e) {
-                Grove.d(e);
+                Grove.e("OTP Network R/Q failed with IO Exception at Login Screen with Execption " + e.getMessage());
+                isSuccess = false;
                 e.printStackTrace();
             }
             return null;
         }
     }
 
-    protected void onPostExecute(String s){
-        if(isPhoneUnique) {
+
+    protected void onPostExecute(String s) {
+        if (isSuccess) {
             listener.onSuccess();
+        } else {
+            if (s != null)
+                listener.onFailure(new Exception(s));
+            else
+                listener.onFailure(new Exception("Could not send OTP to the number."));
         }
     }
 }

@@ -47,10 +47,14 @@
     <string name="school">SCHOOL</string>
     <string name="udise">UDISE</string>
     <string name="username">Username</string>
+    <string name="otp_length">OTP should be of 4 digits</string>
+    <string name="empty_otp">OTP cannot be empty.</string>
+    <string name="please_enter_the_otp_sent_to_the_mobile_number_of_school_incharge" tools:ignore="MissingTranslation">Please enter the OTP sent to the associated mobile number.</string>
     <string name="category">Category</string>
     <string name="pass_did_not_match">Passwords didn\'t match.</string>
-    <string name="pass_changed_redirecting">The password has been successfully changed. Redirecting you to profile page</string>
-    <string name="pass_change_successful">The password has been successfully changed. You need to login again to continue. Redirecting you to login page</string>
+    <string name="enter_otp">Enter OTP Received</string>
+    <string name="pass_changed_redirecting">The password has been successfully changed. Click OK to go to profile page</string>
+    <string name="pass_change_successful">The password has been successfully changed. You need to login again to continue. Click OK to go to login page</string>
     <string name="internet_not_connected">It seems you are not connected to the internet. Please switch on your mobile data to change password.</string>
     <string name="internet_not_connected_profile_screen">It seems you are not connected to the internet. Please switch on your mobile data/connect to Wi-fi to update your profile</string>
     <string name="otp_sent_change_pwd">OTP sent. Please retry changing the password.</string>
@@ -74,5 +78,8 @@
     <string name="email_not_unique">Phone number is not unique</string>
     <string name="internet_not_connected_otp">It seems you are not connected to the internet. Please switch on your mobile data/connect to Wi-fi to receive OTP</string>
     <string name="these_following_fields_cannot_be_updated_in_case_there_is_any_issue_contact_admin_edudata_hp_gmail_com">These following fields cannot be updated. In case there is any issue, contact admin.</string>
+    <string name="sending_otp">Sending OTP....</string>
+    <string name="password_changing">Chaning App Password...</string>
+    <string name="password_changed">The app password has bee changed.</string>
 
 </resources>

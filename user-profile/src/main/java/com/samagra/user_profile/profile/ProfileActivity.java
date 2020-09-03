@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.samagra.user_profile.R;
 import com.samagra.user_profile.R2;
 import com.samagra.user_profile.base.BaseActivity;
 import com.samagra.user_profile.passReset.ActionListener;
+import com.samagra.user_profile.passReset.ChangePasswordActionListener;
 import com.samagra.user_profile.passReset.OTPActivity;
 import com.samagra.user_profile.passReset.SendOTPTask;
 import com.samagra.user_profile.passReset.SnackbarUtils;
@@ -182,13 +184,13 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         showLoading("Sending OTP");
         if(profilePresenter.isNetworkConnected()){
             String phoneNumber= profilePresenter.getContentValueFromKey(dynamicHolders.get(1).getUserProfileElement().getContent());
-            new SendOTPTask(new ActionListener() {
+            new SendOTPTask(new ChangePasswordActionListener() {
                 @Override
                 public void onSuccess() {
                     hideLoading();
                     Intent otpIntent = new Intent(ProfileActivity.this, OTPActivity.class);
-                    otpIntent.putExtra("phoneNumber", phoneNumber);
-                    otpIntent.putExtra("last", "profile");
+                    otpIntent.putExtra( "phoneNumber" ,phoneNumber);
+                    otpIntent.putExtra("lastPage","profile");
                     startActivity(otpIntent);
                 }
 

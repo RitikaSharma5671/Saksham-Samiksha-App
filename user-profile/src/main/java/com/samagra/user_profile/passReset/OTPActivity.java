@@ -24,7 +24,10 @@ public class OTPActivity extends BaseActivity implements OTPCallBackListener {
             }
 
             OTPFragment firstFragment = new OTPFragment();
-            firstFragment.setArguments(getIntent().getExtras());
+            Bundle bundle = new Bundle();
+            bundle.putString("lastPage", "profile");
+            bundle.putString("phoneNumber", getIntent().getStringExtra("phoneNumber"));
+            firstFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, firstFragment).commit();
         }

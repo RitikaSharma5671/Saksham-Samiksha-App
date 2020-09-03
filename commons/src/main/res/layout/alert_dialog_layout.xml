@@ -78,7 +78,7 @@
         android:layout_marginTop="14dp"
         android:layout_marginBottom="20dp"
         android:visibility="gone"
-        style="@style/ButtonStyleGrey"
+        style="@style/ButtonStyle1"
         android:textAlignment="center"
         android:textStyle="normal"
         android:id="@+id/btn_action3"

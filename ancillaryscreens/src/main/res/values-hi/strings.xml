@@ -24,8 +24,10 @@
     <string name="user_name_not_apt_length_error">यूजरनेम 3 या अधिक अक्षर का होना चाहिए</string>
     <string name="empty_password_error">पासवर्ड खाली नहीं हो सकता</string>
     <string name="short_password_error">पासवर्ड कम से कम 8 अक्षर का होना चाहिए</string>
-    <string name="otp_sent_successfully">इस नंबर पर ओटीपी सफलतापूर्वक भेजा गया</string>
+    <string name="otp_sent_successfully">%s नंबर पर ओटीपी सफलतापूर्वक भेजा गया</string>
     <string name="otp_sent_change_pwd">ओटीपी भेजा गया। कृपया पासवर्ड बदलने का प्रयास करें।</string>
     <string name="login_failed_error">उपयोगकर्ता नाम या पासवर्ड मेल नहीं खाता। कृपया पुन: प्रयास करें।</string>
     <string name="sending_the_request">Sending the Request</string>
+    <string name="enter_valid_number">कृपया एक मान्य मोबाइल नंबर दर्ज करें।</string>
+    <string name="no_users_found">कोई उपयोग्कर्ता नहीं मिले।</string>
 </resources>

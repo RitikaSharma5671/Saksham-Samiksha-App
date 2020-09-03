@@ -19,11 +19,11 @@ import okhttp3.Response;
 
 public class UpdatePasswordTask extends AsyncTask<String, Void, String> {
 
-    private ActionListener listener;
+    private ChangePasswordActionListener listener;
     private String TAG = UpdatePasswordTask.class.getName();
     private boolean isSuccessful = false;
 
-    UpdatePasswordTask(ActionListener listener){
+    UpdatePasswordTask(ChangePasswordActionListener listener){
         this.listener = listener;
     }
 
@@ -83,14 +83,14 @@ public class UpdatePasswordTask extends AsyncTask<String, Void, String> {
                         JSONObject responseObject = new JSONObject(s);
                         listener.onFailure(new Exception(responseObject.getString("status")));
                     } catch (JSONException e) {
-                        listener.onFailure(new Exception("Couldn't change password. Please contact admin."));
+                        listener.onFailure(new Exception(s));
                         e.printStackTrace();
                     }
                 }else {
-                    listener.onFailure(new Exception("Couldn't change password. Please try again after some time."));
+                    listener.onFailure(new Exception(s));
                 }
             } else {
-                listener.onFailure(new Exception("Couldn't change password. Please contact admin."));
+                listener.onFailure(new Exception("Password could not be changed. Please contact admin."));
             }
         } else listener.onSuccess();
     }

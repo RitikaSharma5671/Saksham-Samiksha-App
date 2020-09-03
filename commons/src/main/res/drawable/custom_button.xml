@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <size android:height="44dp" android:width="328dp"/>
-    <solid android:color="#014d3f"/>
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/your_enabled_drawable" android:state_enabled="true" />
+    <item android:drawable="@drawable/your_disabled_drawable" android:state_enabled="false" />
+    <!-- default state-->
+    <item android:drawable="@drawable/your_disabled_drawable" />
+</selector>

@@ -34,4 +34,6 @@
     <color name="whiteCardColor">#fff</color>
     <color name="disable_button_colors">#cbecea</color>
     <color name="red">#FFC32627</color>
+    <color name="green">#80cbc4</color>
+    <color name="trans">#00000000</color>
 </resources>

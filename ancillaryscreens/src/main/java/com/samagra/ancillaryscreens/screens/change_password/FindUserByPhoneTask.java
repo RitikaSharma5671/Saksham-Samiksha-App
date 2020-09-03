@@ -35,11 +35,7 @@ public class FindUserByPhoneTask extends AsyncTask<String, Void, String> {
         String serverURL = BASE_URL;
         String phoneNo = strings[0];
         String apiKey = strings[1];
-//        String json =   "{\n" +
-//                "    \"search\": {\n" +
-//                "        \"queryString\": \"(registrations.applicationId: a664a16a-95dd-41fc-9b9b-e45fb49cf128)AND("+ phoneNo+ ")\"\n" +
-//                "            }\n" +
-//                "}";
+//
         String json = "{\n" +
                 "    \"search\": {\n" +
                 "        \"queryString\": \"(registrations.applicationId: " + AncillaryScreensDriver.APPLICATION_ID + ")AND(data.phone:" + phoneNo +
