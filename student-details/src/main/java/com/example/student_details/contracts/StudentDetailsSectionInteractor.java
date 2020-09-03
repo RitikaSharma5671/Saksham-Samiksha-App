@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.student_details.ui.ClassFilterFragment;
 import com.example.student_details.ui.StudentDetailsView;
 
 import java.util.ArrayList;
@@ -18,8 +19,8 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
     public void launchProfileActivity(Context activityContext,
                                       int fragment_container, FragmentManager supportFragmentManager) {
 
-        StudentDetailsView studentDetailsView = new StudentDetailsView();
-        addFragment(fragment_container, supportFragmentManager, studentDetailsView, "StudentDetailsView");
+        ClassFilterFragment studentDetailsView = new ClassFilterFragment();
+        addFragment(fragment_container, supportFragmentManager, studentDetailsView, "ClassFilterFragment");
 
     }
 

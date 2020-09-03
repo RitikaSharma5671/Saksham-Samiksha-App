@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="filter_title">उपयुक्त फ़िल्टर का चयन करें</string>
+    <string name="select_grade">कक्षा का चयन करें</string>
+    <string name="mandatory">*(अनिवार्य)</string>
+    <string name="select_class_section">कक्षा - सेक्शन का चयन करें</string>
+    <string name="select_subject_stream">विषय स्ट्रीम का चयन करें</string>
+    <string name="filter_clear">फ़िल्टर  हटाएं</string>
+    <string name="filter_cross_content_desc">close filters</string>
+    <string name="filter_apply">डेटा दर्ज करें</string>
+    <string name="no_grade_selected">No Grade Selected</string>
+    <string name="please_select_atleast_one_grade">Please select atleast one grade to upload data</string>
+    <string name="fetching_student_data">We are fetching student information</string>
+    <string name="please_wait">Please wait ...</string>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="49dp"
+    android:layout_margin="5dp">
+
+    <Button
+        android:id="@+id/individual_filter"
+        android:layout_width="124dp"
+        android:layout_height="49dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:padding="8dp"
+        android:textSize="13.5sp"
+        android:text="VOCATIONAL"/>
+
+    <!--    <View-->
+    <!--        android:id="@+id/disable_state_background"-->
+    <!--        android:layout_width="49dp"-->
+    <!--        android:layout_height="49dp"-->
+    <!--        android:visibility="gone"-->
+    <!--        />-->
+
+</RelativeLayout>

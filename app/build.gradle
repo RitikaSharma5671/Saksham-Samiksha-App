@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.apollographql.apollo'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.sentry.android.gradle'
-apply plugin: 'com.apollographql.android'
 
 android {
     compileSdkVersion 28
@@ -27,6 +27,9 @@ android {
         debug {
             buildConfigField 'String', "dsn", "\"https://1d7e1ffa0d084ae697a0c3dd334555ba@bugs.samagra.io/6\""
         }
+    }
+    dataBinding {
+        enabled = true
     }
 
     compileOptions {
@@ -111,6 +114,23 @@ dependencies {
     implementation("com.airbnb.android:lottie:2.7.0") {
         exclude group: 'com.android.support'
     }
+    implementation("com.apollographql.apollo:apollo-runtime:2.2.0")
+
+    // optional: if you want to use the normalized cache
+    implementation("com.apollographql.apollo:apollo-normalized-cache-sqlite:2.2.0")
+    // optional: for coroutines support
+    implementation("com.apollographql.apollo:apollo-coroutines-support:2.2.0")
+    // optional: for RxJava3 support
+    implementation("com.apollographql.apollo:apollo-rx3-support:2.2.0")
+    // optional: if you just want the generated models and parsers and write your own HTTP code/cache code, you can remove apollo-runtime
+    // and use apollo-api instead
+    implementation("com.apollographql.apollo:apollo-api:2.2.0")
+    compileOnly 'org.jetbrains:annotations:13.0'
+    testCompileOnly 'org.jetbrains:annotations:13.0'
+    implementation 'javax.annotation:jsr250-api:1.0'
+
+
+
 }
 repositories {
     jcenter()

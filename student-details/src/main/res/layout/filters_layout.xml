@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal">
+      <TextView
+          android:id="@+id/class_filter_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          style="@style/LabelStyle2"
+          android:layout_margin="16dp"
+          android:layout_centerVertical="true"
+          android:layout_centerHorizontal="true"
+          android:text="@string/select_grade"/>
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          style="@style/LabelStyle2"
+          android:layout_marginTop="16dp"
+          android:layout_marginBottom="16dp"
+          android:layout_marginStart="8dp"
+          android:layout_centerVertical="true"
+          android:textStyle="normal"
+          android:textColor="@color/color5"
+          android:textSize="@dimen/font_size_medium"
+          android:layout_toEndOf="@id/class_filter_title"
+          android:text="@string/mandatory"/>
+  </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/class_recycler_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:animationCache="true"
+        android:layout_gravity="center_horizontal"
+        android:fadeScrollbars="false"
+        android:overScrollMode="never"
+        android:scrollbars="vertical"
+        android:layout_margin="6dp"
+        android:scrollingCache="true"
+        android:smoothScrollbar="true" />
+
+    <View android:id="@+id/tile_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:layout_margin="12dp"
+        android:background="@color/color5" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        style="@style/LabelStyle2"
+        android:layout_margin="16dp"
+        android:text="@string/select_class_section"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/section_recycler_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:animationCache="true"
+        android:layout_margin="4dp"
+        android:fadeScrollbars="false"
+        android:layout_gravity="center_horizontal"
+        android:overScrollMode="never"
+        android:scrollbars="vertical"
+        android:scrollingCache="true"
+        android:smoothScrollbar="true" />
+
+    <View android:id="@+id/tile_divider_2"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:layout_margin="12dp"
+        android:background="@color/color5" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        style="@style/LabelStyle2"
+        android:layout_margin="16dp"
+        android:text="@string/select_subject_stream"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/stream_recycler_view"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:animationCache="true"
+        android:layout_margin="4dp"
+        android:fadeScrollbars="false"
+        android:overScrollMode="never"
+        android:scrollbars="vertical"
+        android:scrollingCache="true"
+        android:smoothScrollbar="true" />
+</LinearLayout>

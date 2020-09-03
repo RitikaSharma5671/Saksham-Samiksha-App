@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="filter_title">Select Appropriate Filter</string>
+    <string name="select_grade">Select Grade </string>
+    <string name="mandatory">*(Mandatory)</string>
+    <string name="select_class_section">Select Section</string>
+    <string name="filter_clear">CLEAR ALL</string>
+    <string name="filter_apply">RECORD DATA</string>
+    <string name="filter_cross_content_desc">close filters</string>
+    <string name="select_subject_stream">Select Subject Stream</string>
+    <string name="no_grade_selected">No Grade Selected</string>
+    <string name="please_select_atleast_one_grade">Please select atleast one grade to upload data</string>
+    <string name="fetching_student_data">We are fetching student information</string>
+    <string name="please_wait">Please wait ...</string>
+</resources>

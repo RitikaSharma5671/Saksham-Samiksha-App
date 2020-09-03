@@ -2,6 +2,7 @@ package com.example.student_details.ui
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.student_details.R
+import com.example.student_details.modules.StudentDataModel
 import kotlinx.android.synthetic.main.fragment_student_details.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -53,9 +55,14 @@ class StudentDetailsView : Fragment(), OnSelectListener, EditListener {
         initFilters()
         mark_attendance.setOnClickListener {
             val studentDetailsView = MarkAttendanceView()
+            val bundle = Bundle()
+            bundle.putSerializable("student_list", studentList)
             addFragment(R.id.fragment_container_1, parentFragmentManager, studentDetailsView, "StudentDetailsView")
 
         }
+        Log.d("veev bertvbtr", "veet btb tre")
+        val sd =  StudentDataModel()
+        sd.fvf();
     }
 
     private fun addFragment(containerViewId: Int, manager: FragmentManager, fragment: Fragment, fragmentTag: String) {

@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/filters"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:layout_marginTop="36dp"
         android:padding="4dp"
         android:weightSum="2"
@@ -22,24 +22,26 @@
         <Spinner
             android:id="@+id/grade_spinner"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:background="@drawable/ece"
             android:layout_marginEnd="8dp"
             style="@style/DropdownStyle1"
             android:entries="@array/grades_list"
-            android:padding="8dp" />
+            android:padding="4dp" />
 
         <Spinner
             android:id="@+id/section_spinner"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/ece"
             style="@style/DropdownStyle1"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:entries="@array/sections_list"
-            android:padding="8dp" />
+            android:padding="4dp" />
     </LinearLayout>
 
     <View
@@ -56,7 +58,7 @@
 
     <RadioGroup
         android:id="@+id/category"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,15 +68,20 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:gravity="center_vertical"
+        android:visibility="visible">
 
 
         <RadioButton
             android:id="@+id/category_general"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="8dp"
             style="@style/LabelStyle1"
+            android:paddingStart="5dp"
+            android:textSize="15sp"
+            android:paddingEnd="5dp"
+            android:button="@drawable/radio_bg"
             android:textStyle="normal"
             android:text="Humanities" />
 
@@ -82,7 +89,11 @@
             android:id="@+id/category_OBC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="8dp"
+            android:button="@drawable/radio_bg"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textSize="15sp"
             android:text="Science"
             style="@style/LabelStyle1"
             android:textStyle="normal" />
@@ -92,8 +103,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
+            android:textSize="15sp"
             android:text="Commerce"
             style="@style/LabelStyle1"
+            android:button="@drawable/radio_bg"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
             android:textStyle="normal"/>
 
         <RadioButton
@@ -102,7 +117,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:text="Vocational"
+            android:textSize="15sp"
             style="@style/LabelStyle1"
+            android:button="@drawable/radio_bg"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
             android:textStyle="normal"/>
     </RadioGroup>
 

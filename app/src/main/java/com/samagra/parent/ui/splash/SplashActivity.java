@@ -80,6 +80,15 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     public void showActivityLayout() {
         setContentView(R.layout.activity_splash);
         unbinder = ButterKnife.bind(this);
+//        Button bb = findViewById(R.id.decrdc);
+//        bb.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                StudentDetailsComponentManager.registerProfilePackage(new StudentDetailsSectionInteractor());
+//                IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+//                iStudentDetailsContract.launchProfileActivity(getActivityContext(), com.samagra.parent.R.id.fragment_container, getSupportFragmentManager());
+//            }
+//        });
     }
 
     @Override

@@ -5,30 +5,54 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.student_details.R
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+
+import com.example.student_details.databinding.FragmentMarkAttendanceBinding
 import kotlinx.android.synthetic.main.fragment_mark_attendance.*
 
 class MarkAttendanceView : Fragment() {
-    lateinit var attendanceAdapter: AttendanceAdapter
+
+    private lateinit var layoutBinding: FragmentMarkAttendanceBinding
+    private lateinit var attendanceAdapter: AttendanceAdapter
+    private val markAttendanceViewModel: MarkAttendanceViewModel by lazy {
+        getViewModelProvider(this, null).get(
+                MarkAttendanceViewModel::class.java
+        )
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_mark_attendance, container, false)
-//        studentDetailsViewModel =   getViewModelProvider(
-//                this,
-//                StudentDetailsViewModelFactory(
-//                        activity!!.application,""
-//                )
-//        )
-//                .get(StudentDetailsViewModel::class.java)
-//        studentDetailsViewModel.falseetchStudentData()
-        return rootView
+        layoutBinding = FragmentMarkAttendanceBinding.inflate(inflater, container, false)
+        layoutBinding.markAttendanceViewModel = markAttendanceViewModel
+        layoutBinding.executePendingBindings()
+        return layoutBinding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val studentForClass = arguments!!.getString("studentList") as ArrayList<StudentInfo>
-        attendanceAdapter = AttendanceAdapter(context!!, studentForClass)
-        rootContainer.setAdapter(attendanceAdapter)
+        val studentForClass = arguments!!.getString("student_list") as ArrayList<StudentInfo>
+        initializeAdapter(layoutBinding)
+    }
+
+    private fun initializeAdapter(binding: FragmentMarkAttendanceBinding) {
+//        attendanceAdapter = AttendanceAdapter(
+//                viewLifecycleOwner,
+//                onRackViewModel,
+//                closetAnalyticsEventsHandler,
+//                OnTheRackEventsListener(context!!, binding.rackGarmentsList)
+//        )
+//        binding.rackGarmentsList.adapter = adapter
+//        binding.rackGarmentsList.itemAnimator =
+//                OnRackGarmentItemAnimator(binding.rackGarmentsList)
+    }
+
+
+    private fun getViewModelProvider(
+            fragment: Fragment,
+            factory: ViewModelProvider.Factory?
+    ): ViewModelProvider {
+        return ViewModelProviders.of(fragment)
     }
 
 

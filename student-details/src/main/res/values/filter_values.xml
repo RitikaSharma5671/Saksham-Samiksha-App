@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- This file contains dimensions for the Collections Filters -->
+    <dimen name="brand_fast_scroll_text">12sp</dimen>
+
+    <!-- Filter Fragment -->
+    <dimen name="filter_title_strip_height">44dp</dimen>
+    <dimen name="filter_view_pager_margin">16dp</dimen>
+    <dimen name="filter_buttons_size">92dp</dimen>
+    <dimen name="filter_items_margin">4dp</dimen>
+    <dimen name="filter_close_button_margin_left">10dp</dimen>
+    <dimen name="filter_color_dimen">48dp</dimen>
+    <dimen name="filter_color_text_width">48dp</dimen>
+    <dimen name="filter_color_text_height">13dp</dimen>
+    <dimen name="filter_color_tick_width">13.6dp</dimen>
+    <dimen name="filter_color_tick_height">9.8dp</dimen>
+    <dimen name="filter_color_tick_margin_start">16.7dp</dimen>
+    <dimen name="filter_color_tick_margin_top">19dp</dimen>
+
+    <!-- For Brands -->
+    <dimen name="filter_brand_search_height">45dp</dimen>
+    <dimen name="filter_brand_search_padding">16.5dp</dimen>
+    <dimen name="filter_brand_fast_scroll_width">10dp</dimen>
+    <dimen name="filter_brand_category_text_width">25dp</dimen>
+
+    <!--For Size-->
+    <dimen name="filter_size_item_diameter_size">56dp</dimen>
+
+
+    <!-- Added for the filters -->
+
+
+    <drawable name="filter_close_icon">@drawable/cross_icon</drawable>
+
+
+    <!--Filter Color Codes (preserving the order)-->
+    <color name="filter_color_BLK">#000000</color>
+    <color name="filter_color_WHT">#FFFFFF</color>
+    <color name="filter_color_BLU">#1e3466</color>
+    <color name="filter_color_GRN">#8ac22e</color>
+    <!--Multi MUL-->
+    <color name="filter_color_PNK">#ff69b4</color>
+    <color name="filter_color_PUR">#832696</color>
+    <color name="filter_color_RED">#E10C14</color>
+    <color name="filter_color_BGE">#f5f5dc</color>
+    <color name="filter_color_BRN">#33081c</color>
+    <color name="filter_color_GRY">#8E8E8E</color>
+    <color name="filter_color_ORG">#f7941d</color>
+    <!--Gold GLD-->
+    <color name="filter_color_YEL">#ffff00</color>
+    <color name="filter_color_NVY">#000080</color>
+
+
+    <color name="filter_color_check_light">#FFF</color>
+    <color name="filter_color_check_dark">#000</color>
+
+    <color name="filter_band_side_selector_enabled_text_color">@color/color1</color>
+    <color name="filter_band_side_selector_disabled_text_color">@color/color5</color>
+    <font name="filter_side_selector_font">@font/default_font_family</font>
+
+    <style name="filter_size_item_button_style" parent="ButtonStyle4"/>
+    <style name="filter_color_item_label_text_style" parent="LabelStyle5"/>
+    <style name="filter_brand_item_brand_category_text_style" parent="LabelStyle2"/>
+    <style name="filter_brand_item_brand_name_text_style" parent="LabelStyle3"/>
+    <style name="filter_applied_filter_category_header_text_style" parent="LabelStyle5"/>
+    <style name="filter_applied_filter_empty_text_style" parent="LabelStyle6"/>
+    <style name="filter_clear_all_button_style" parent="ButtonStyle2"/>
+    <style name="filter_apply_button_style" parent="ButtonStyle2"/>
+    <style name="filter_screen_header_text_style" parent="LabelStyle1"/>
+    <style name="filter_product_clear_all_button_style" parent="ButtonStyle2"/>
+    <style name="filter_brand_query_style" parent="EditTextStyle1"/>
+    <style name="filter_tv_empty_list_message" parent="LabelStyle6"/>
+    <style name="collection_filter_text_chip_style" parent="LabelStyle3"/>
+
+    <!--Sort Value-->
+    <string name="filter_sort_by_featured">FEATURED</string>
+    <string name="filter_sort_by_brand">BRAND</string>
+    <string name="filter_sort_by_color">COLOR</string>
+    <string name="filter_applied_empty">NO FILTERS APPLIED</string>
+
+    <dimen name="filter_sort_item_text_size">10sp</dimen>
+    <dimen name="filter_sort_item_text_height">40dp</dimen>
+
+    <color name="filter_sort_by_text_unselected">#F2F1F0</color>
+</resources>

@@ -1,30 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<layout>
 
-    <LinearLayout
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="attendanceItemViewModel"
+            type="com.example.student_details.ui.AttendanceItemViewModel" />
+
+    </data>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="horizontal"
-        android:padding="10dp">
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="5dp">
 
-        <CheckBox
-            android:id="@+id/check_box"
-            style="@style/Widget.MaterialComponents.CompoundButton.CheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/list_avatar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/heart_blank_small" />
 
-        <TextView
-            android:id="@+id/tv_name"
-            style="@style/LabelStyle2"
+        <LinearLayout
+            android:id="@+id/cdc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp" />
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:layout_toEndOf="@id/list_avatar"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/list_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/md_keylines"
+                android:layout_marginTop="10dp"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textSize="@dimen/article_subheading"
+                android:textStyle="bold"
+                tools:text="@string/item_title" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/list_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/md_keylines"
+                android:layout_marginTop="12dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textColor="@color/color1"
+                android:textSize="@dimen/list_body"
+                tools:text="@string/item_desc" />
+        </LinearLayout>
 
-</LinearLayout>
+        <androidx.appcompat.widget.SwitchCompat
+            style="@style/SwitchStyle1"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="12dp"
+            android:layout_toEndOf="@id/cdc" />
+    </RelativeLayout>
+</layout>

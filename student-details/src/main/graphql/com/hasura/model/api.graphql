@@ -1,0 +1,46 @@
+mutation addNewStudents($query_param: [student_insert_input!]!) {
+  insert_student(objects: $query_param) {
+    affected_rows
+     returning {
+          srn
+          name
+        }
+  }
+}
+
+mutation sendAttendance($query_param: [attendance_insert_input!]!) {
+  insert_attendance(objects: $query_param) {
+    affected_rows
+  }
+}
+
+query getStudentsForSchool($query_param : String) {
+  student(where: {school_code: {_eq: $query_param}}) {
+    fatherContactNumber
+    class
+    fatherName
+    motherContactNumber
+    motherName
+    name
+    school_code
+    srn
+    section
+    stream
+  }
+}
+
+mutation updateStudentSection($srn: String, $changedSection: String) {  update_student(
+    where: {srn: {_eq: $srn}},
+    _set: {
+      section: $changedSection
+    }
+  ) {
+    affected_rows
+    returning {
+      id
+      srn
+      section
+      name
+    }
+  }
+}
