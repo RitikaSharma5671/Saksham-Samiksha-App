@@ -53,7 +53,7 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
                     .enableComplexMapKeySerialization()
                     .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
                     .setPrettyPrinting()
-                    .setVersion(1.0)
+                    .setVersion(2.0)
                     .create();
 
             Type type = new TypeToken<ArrayList<InstitutionInfo>>() {
@@ -70,7 +70,7 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
     private void addDummySchoolAtTheStart() {
         InstitutionInfo dummy = new InstitutionInfo(" Select the District Name",
                 " Select the Block Name",
-                " Select the School Name");
+                " Select the School Name", 100000);
         listOfHostpitals.add(0, dummy);
     }
 
@@ -87,7 +87,7 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
         ArrayList<String> districtValues = new ArrayList<>();
 
         for (int i = 1; i < listOfHostpitals.size(); i++) {
-            districtValues.add(listOfHostpitals.get(i).District);
+            districtValues.add(listOfHostpitals.get(i).getDistrict());
         }
         ArrayList<String> newList = SearchSchoolTask.makeUnique(districtValues);
         newList.add(0, two_Spaces + getMvpView().getActivityContext().getResources().getString(R.string.dummy_district));
@@ -98,8 +98,8 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
     public ArrayList<String> getLevel2ValuesUnderLevel1Set(String district) {
         ArrayList<String> blockValues = new ArrayList<>();
         for (int i = 0; i < listOfHostpitals.size(); i++) {
-            if (listOfHostpitals.get(i).District.equals(district)) {
-                blockValues.add(listOfHostpitals.get(i).Block);
+            if (listOfHostpitals.get(i).getDistrict().equals(district)) {
+                blockValues.add(listOfHostpitals.get(i).getBlock());
             }
         }
         ArrayList<String> newList = SearchSchoolTask.makeUnique(blockValues);
@@ -116,8 +116,8 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
     public ArrayList<String> getLevel3ValuesUnderLevel1Set(String selectedBlock, String selectedDistrict){
         ArrayList<String> gramPanchayatsUnderBlock = new ArrayList<>();
         for (int i = 0; i < listOfHostpitals.size(); i++) {
-            if (listOfHostpitals.get(i).Block.equals(selectedBlock) && listOfHostpitals.get(i).District.equals(selectedDistrict)) {
-                gramPanchayatsUnderBlock.add(listOfHostpitals.get(i).SchoolName);
+            if (listOfHostpitals.get(i).getBlock().equals(selectedBlock) && listOfHostpitals.get(i).getDistrict().equals(selectedDistrict)) {
+                gramPanchayatsUnderBlock.add(listOfHostpitals.get(i).getSchoolName());
             }
         }
         ArrayList<String> newList = SearchSchoolTask.makeUnique(gramPanchayatsUnderBlock);
@@ -151,4 +151,12 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
         }
     }
 
+    public int fetchSchoolCode(String selectedSchoolName) {
+        for (int i = 0; i < listOfHostpitals.size(); i++) {
+            if (listOfHostpitals.get(i).getSchoolName().equals(selectedSchoolName)) {
+                return  listOfHostpitals.get(i).getSchoolCode();
+            }
+        }
+        return -1;
+    }
 }

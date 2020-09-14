@@ -14,12 +14,17 @@ mutation sendAttendance($query_param: [attendance_insert_input!]!) {
   }
 }
 
+mutation sendTeacherAttendance($query_param: [teacher_attendance_insert_input!]!) {
+    insert_teacher_attendance(objects: $query_param) {
+        affected_rows
+    }
+}
+
 query getStudentsForSchool($query_param : String) {
   student(where: {school_code: {_eq: $query_param}}) {
     fatherContactNumber
-    class
+    grade
     fatherName
-    motherContactNumber
     motherName
     name
     school_code
@@ -28,6 +33,7 @@ query getStudentsForSchool($query_param : String) {
     stream
   }
 }
+
 
 mutation updateStudentSection($srn: String, $changedSection: String) {  update_student(
     where: {srn: {_eq: $srn}},
@@ -43,4 +49,37 @@ mutation updateStudentSection($srn: String, $changedSection: String) {  update_s
       name
     }
   }
+}
+
+
+
+
+query FetchAttendanceByGradeSection($date: date, $taken_by: String, $grade: Int, $section: String) {
+    attendance_aggregate(where: {date: {_eq: $date}, taken_by: {_eq: $taken_by}, studentByStudent: {grade: {_eq: $grade}, section: {_eq: $section}}}) {
+        nodes {
+            studentByStudent {
+                name
+                srn
+                grade
+                section
+            }
+            isPresent
+        }
+
+    }
+}
+
+query FetchAttendanceByGradeSectionStream($date: date, $taken_by: String, $grade: Int, $section: String,  $stream: String) {
+    attendance_aggregate(where: {date: {_eq: $date}, taken_by: {_eq: $taken_by}, studentByStudent: {grade: {_eq: $grade}, section: {_eq: $section}, stream: {_eq: $stream}}}) {
+        nodes {
+            studentByStudent {
+                name
+                srn
+                grade
+                section
+            }
+            isPresent
+        }
+
+    }
 }

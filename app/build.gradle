@@ -102,7 +102,6 @@ dependencies {
     implementation "androidx.core:core-ktx:+"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation project(path: ':user-profile')
     implementation 'com.google.android.material:material:1.2.0'
     implementation 'com.amazonaws:aws-android-sdk-core:2.2.13'
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.2.13'

@@ -7,6 +7,9 @@ import com.samagra.ancillaryscreens.screens.about.AboutPresenter;
 import com.samagra.ancillaryscreens.screens.login.LoginContract;
 import com.samagra.ancillaryscreens.screens.login.LoginInteractor;
 import com.samagra.ancillaryscreens.screens.login.LoginPresenter;
+import com.samagra.ancillaryscreens.screens.profile.ProfileContract;
+import com.samagra.ancillaryscreens.screens.profile.ProfileInteractor;
+import com.samagra.ancillaryscreens.screens.profile.ProfilePresenter;
 
 import dagger.Binds;
 import dagger.Module;
@@ -40,5 +43,15 @@ public abstract class CommonsActivityAbstractProviders {
     @Binds
     @PerActivity
     abstract AboutContract.Interactor provideAboutMvpInteractor(AboutInteractor aboutInteractor);
+
+    @Binds
+    @PerActivity
+    abstract ProfileContract.Presenter<ProfileContract.View, ProfileContract.Interactor> provideProfileMvpPresenter(
+            ProfilePresenter<ProfileContract.View, ProfileContract.Interactor> presenter);
+
+    @Binds
+    @PerActivity
+    abstract ProfileContract.Interactor provideProfileMvpInteractor(ProfileInteractor profileInteractor);
+
 
 }

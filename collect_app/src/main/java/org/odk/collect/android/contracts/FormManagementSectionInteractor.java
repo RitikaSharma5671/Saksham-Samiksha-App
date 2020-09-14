@@ -21,6 +21,7 @@ import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.dao.helpers.ContentResolverHelper;
 import org.odk.collect.android.dto.Form;
 import org.odk.collect.android.listeners.ActionListener;
@@ -80,14 +81,31 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
     }
 
     @Override
-    public void resetPreviousODKForms() {
+    public void resetPreviousODKForms(IResetActionListener iResetActionListener) {
         final List<Integer> resetActions = new ArrayList<>();
         resetActions.add(ResetUtility.ResetAction.RESET_FORMS);
         resetActions.add(ResetUtility.ResetAction.RESET_LAYERS);
+        resetActions.add(ResetUtility.ResetAction.RESET_INSTANCES);
         resetActions.add(ResetUtility.ResetAction.RESET_CACHE);
         resetActions.add(ResetUtility.ResetAction.RESET_OSM_DROID);
-        Runnable runnable = () -> new ResetUtility().reset(Collect.getInstance().getAppContext(), resetActions);
-        new Thread(runnable).start();
+        new InstancesDao().deleteInstancesDatabase();
+        new AsyncTask<Void, Void, List<Integer>>() {
+            @Override
+            protected void onPreExecute() {
+
+            }
+
+            @Override
+            protected List<Integer> doInBackground(Void... voids) {
+                return new ResetUtility().reset(Collect.getInstance().getAppContext(), resetActions);
+            }
+
+            @Override
+            protected void onPostExecute(List<Integer> failedResetActions) {
+                iResetActionListener.onResetActionDone(failedResetActions);
+
+            }
+        }.execute();
     }
 
     @Override
@@ -410,12 +428,11 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
             String serverURL = new WebCredentialsUtils().getServerUrlFromPreferences();
             String partURL = "/www/formXml?formId=";
             String downloadUrl = serverURL + partURL + formID;
-            String manifestUrl = serverURL + "/forms/" + formID + "/manifest";
-            //http://aggregate.cttsamagra.xyz:8080/formXml?formId=build_SchoolPerformance_1574326800
+            String manifestUrl = serverURL + "/xformsManifest?formId=" + formID;
             FormDetails fm = new FormDetails(
                     ((FormDetails) pair.getValue()).getFormName(),
                     downloadUrl,
-                    null,
+                    manifestUrl,
                     formID,
                     ((FormDetails) pair.getValue()).getFormVersion(),
                     ((FormDetails) pair.getValue()).getHash(),

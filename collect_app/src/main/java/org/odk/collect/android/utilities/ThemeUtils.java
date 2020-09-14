@@ -77,9 +77,7 @@ public final class ThemeUtils {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @StyleRes
     public int getMaterialDialogTheme() {
-        return isDarkTheme() ?
-                android.R.style.Theme_Material_Dialog :
-                android.R.style.Theme_Material_Light_Dialog;
+        return android.R.style.Theme_Material_Dialog;
     }
 
     @StyleRes

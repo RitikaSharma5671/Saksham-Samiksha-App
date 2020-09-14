@@ -39,7 +39,7 @@ public class CSVHelper {
      * @param referenceFileName - {{@link String}} Name of the file which is to be checked for presence in Form Media directories.
      * @return {{@link ArrayList <String>}} List of names of media directories for all the forms containing to be modified reference File.
      */
-    static ArrayList<String> fetchFormMediaDirectoriesWithMedia(String referenceFileName) {
+    public static ArrayList<String> fetchFormMediaDirectoriesWithMedia(String referenceFileName) {
         File dir = new File(Collect.FORMS_PATH);
         File[] files;
         ArrayList<String> directoriesNames = new ArrayList<>();
@@ -60,6 +60,50 @@ public class CSVHelper {
         } else
             return directoriesNames;
     }
+
+
+    /**
+     * This is the abstracted method that will be called by the downloading class to read the form sample ODKs and edit them accordingly. Returns a listener telling
+     * if the operation is done or not and also the type of error.
+     *
+     * @param csvBuildStatusListener - {{@link CSVBuildStatusListener}} CSV Build Operation Listener
+     * @param mediaDirectoriesNames  - {{@link ArrayList<String>}} List of the forms' names for which the operation is to be done. (Given that same format of CSV is needed for all the forms), just the path is different.
+     * @param studentCSVData              - {{@link JSONArray}} Data to be inserted into the final CSVs, it ideally should contain the data for the keys to be entered.
+     * @param mediaFileName          -{{@link String}} Media File to be updated
+     */
+   public static void buildCSVForODK1(CSVBuildStatusListener csvBuildStatusListener, ArrayList<String> mediaDirectoriesNames,
+                               ArrayList<ArrayList<String>> studentCSVData, String mediaFileName,  ArrayList<ArrayList<String>> teacherCSVData) {
+        if(mediaDirectoriesNames.size()==0){
+            return;
+        }
+        ArrayList<ArrayList<String>> result = new ArrayList<>(); //List of list of Strings, containing sample csv downloaded.
+        CSVReader reader;
+        boolean fileAvailability = checkFilesAvailability(mediaDirectoriesNames, mediaFileName);
+        if (!fileAvailability) {
+            Exception exception = new Exception("Copy of File could not be found in some directory ");
+            csvBuildStatusListener.onFailure(exception, BuildFailureType.COPY_NOT_FOUND);
+            return;
+        }
+        String fileDir = Collect.FORMS_PATH + File.separator + mediaDirectoriesNames.get(0) + File.separator + mediaFileName;
+        try {
+            File file = new File(fileDir);
+            reader = new CSVReader(new FileReader(file));
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                result.add(new ArrayList<>(Arrays.asList(nextLine)));
+            }
+            Timber.d("Reference CSV from ODK Media Folder has been parsed successfully");
+            saveCSV(studentCSVData, csvBuildStatusListener, mediaDirectoriesNames, mediaFileName, teacherCSVData);
+            readCsv(mediaDirectoriesNames, mediaFileName);
+            Timber.d("Read and write CSV Operation has been successful.");
+        } catch (IOException ioException) {
+
+            csvBuildStatusListener.onFailure(ioException, BuildFailureType.IO_EXCEPTION);
+
+
+        }
+    }
+
 
     /**
      * @param directories       {@link ArrayList<String>} List of names of media directories for the all the which may/may not be containing to be modified reference File.
@@ -107,51 +151,51 @@ public class CSVHelper {
      * @param inputData              - {{@link JSONArray}} Data to be inserted into the final CSVs, it ideally should contain the data for the keys to be entered.
      * @param mediaFileName          -{{@link String}} Media File to be updated
      */
-    static void buildCSVForODK(CSVBuildStatusListener csvBuildStatusListener, ArrayList<String> mediaDirectoriesNames,
+    public static void buildCSVForODK(CSVBuildStatusListener csvBuildStatusListener, ArrayList<String> mediaDirectoriesNames,
                                JSONArray inputData, String mediaFileName) {
-        ArrayList<ArrayList<String>> result = new ArrayList<>(); //List of list of Strings, containing sample csv downloaded.
-        CSVReader reader;
-        String listTitle;
-        ArrayList<String> titleRow;
-
-        boolean fileAvailability = checkFilesAvailability(mediaDirectoriesNames, mediaFileName);
-        if (!fileAvailability) {
-            Exception exception = new Exception("Copy of File could not be found in some directory ");
-            csvBuildStatusListener.onFailure(exception, BuildFailureType.COPY_NOT_FOUND);
-            return;
-        }
-        String fileDir = Collect.FORMS_PATH + File.separator + mediaDirectoriesNames.get(0) + File.separator + mediaFileName;
-        try {
-            File file = new File(fileDir);
-            //parsing a CSV file into CSVReader class constructor
-            reader = new CSVReader(new FileReader(file));
-            String[] nextLine;
-            while ((nextLine = reader.readNext()) != null) {
-                result.add(new ArrayList<>(Arrays.asList(nextLine)));
-                // nextLine[] is an array of values from the line
-            }
-            Timber.d("Reference CSV from ODK Media Folder has been parsed successfully");
-            listTitle = result.get(1).get(0);
-            titleRow = result.get(0);
-            Set<String> referenceKeySet = fetchReferenceKeys(result.get(0));
-            if (!validateReferenceKeys(referenceKeySet, inputData)) {
-                csvBuildStatusListener.onFailure(new Exception("Reference Keys are not found"), BuildFailureType.INVALID_KEYS);
-                return;
-            }
-
-            ArrayList<ArrayList<String>> finalCSVData = getCSVData(referenceKeySet, inputData, listTitle, titleRow);
-            saveCSV(finalCSVData, csvBuildStatusListener, mediaDirectoriesNames, mediaFileName);
-            readCsv(mediaDirectoriesNames, mediaFileName);
-            Timber.d("Read and write CSV Operation has been successful.");
-        } catch (IOException | JSONException ioException) {
-            if (ioException instanceof JSONException)
-                csvBuildStatusListener.onFailure(ioException, BuildFailureType.IO_EXCEPTION);
-            else {
-                csvBuildStatusListener.onFailure(ioException, BuildFailureType.IO_EXCEPTION);
-
-            }
-
-        }
+//        ArrayList<ArrayList<String>> result = new ArrayList<>(); //List of list of Strings, containing sample csv downloaded.
+//        CSVReader reader;
+//        String listTitle;
+//        ArrayList<String> titleRow;
+//
+//        boolean fileAvailability = checkFilesAvailability(mediaDirectoriesNames, mediaFileName);
+//        if (!fileAvailability) {
+//            Exception exception = new Exception("Copy of File could not be found in some directory ");
+//            csvBuildStatusListener.onFailure(exception, BuildFailureType.COPY_NOT_FOUND);
+//            return;
+//        }
+//        String fileDir = Collect.FORMS_PATH + File.separator + mediaDirectoriesNames.get(0) + File.separator + mediaFileName;
+//        try {
+//            File file = new File(fileDir);
+//            //parsing a CSV file into CSVReader class constructor
+//            reader = new CSVReader(new FileReader(file));
+//            String[] nextLine;
+//            while ((nextLine = reader.readNext()) != null) {
+//                result.add(new ArrayList<>(Arrays.asList(nextLine)));
+//                // nextLine[] is an array of values from the line
+//            }
+//            Timber.d("Reference CSV from ODK Media Folder has been parsed successfully");
+//            listTitle = result.get(1).get(0);
+//            titleRow = result.get(0);
+//            Set<String> referenceKeySet = fetchReferenceKeys(result.get(0));
+//            if (!validateReferenceKeys(referenceKeySet, inputData)) {
+//                csvBuildStatusListener.onFailure(new Exception("Reference Keys are not found"), BuildFailureType.INVALID_KEYS);
+//                return;
+//            }
+//
+//            ArrayList<ArrayList<String>> finalCSVData = getCSVData(referenceKeySet, inputData, listTitle, titleRow);
+//            saveCSV(finalCSVData, csvBuildStatusListener, mediaDirectoriesNames, mediaFileName);
+//            readCsv(mediaDirectoriesNames, mediaFileName);
+//            Timber.d("Read and write CSV Operation has been successful.");
+//        } catch (IOException | JSONException ioException) {
+//            if (ioException instanceof JSONException)
+//                csvBuildStatusListener.onFailure(ioException, BuildFailureType.IO_EXCEPTION);
+//            else {
+//                csvBuildStatusListener.onFailure(ioException, BuildFailureType.IO_EXCEPTION);
+//
+//            }
+//
+//        }
     }
 
     /**
@@ -209,29 +253,45 @@ public class CSVHelper {
     /**
      * Write data into the reference CSVs in the Media Folder
      *
-     * @param finalCSVData           - {{@link ArrayList<ArrayList>}}
+     * @param studentCSVData           - {{@link ArrayList<ArrayList>}}
      * @param csvBuildStatusListener - {{@link CSVBuildStatusListener}} CSV Build Operation Listener
      * @param mediaDirectoriesNames  - {{@link ArrayList<String>}} List of the forms' names for which the operation is to be done. (Given that same format of CSV is needed for all the forms), just the path is different.
      * @param mediaFileName          {{@link String}} Media File to be updated with extension
      */
-    private static void saveCSV(ArrayList<ArrayList<String>> finalCSVData, CSVBuildStatusListener csvBuildStatusListener, ArrayList<String> mediaDirectoriesNames, String mediaFileName) {
+    private static void saveCSV(ArrayList<ArrayList<String>> studentCSVData, CSVBuildStatusListener csvBuildStatusListener,
+                                ArrayList<String> mediaDirectoriesNames, String mediaFileName, ArrayList<ArrayList<String>> teacherCSVData) {
         CSVWriter writer;
         try {
             for (String form : mediaDirectoriesNames) {
+                String formName = form.toLowerCase();
+                String student = "student";
+                String teacher = "teacher";
+                String COVID = "covid";
+                if(formName.contains(student) && formName.contains(COVID)){
                 String fileDir = Collect.FORMS_PATH + File.separator + form + File.separator + mediaFileName;
                 File outputFile = new File(fileDir);
-
                 writer = new CSVWriter(new FileWriter(outputFile), ',');
-                for (ArrayList<String> list : finalCSVData) {
-
+                for (ArrayList<String> list : studentCSVData) {
                     String[] stockArr = new String[list.size()];
                     stockArr = list.toArray(stockArr);
                     writer.writeNext(stockArr);
                 }
                 writer.close();
-                storeCSVFileCopy(finalCSVData, mediaFileName, csvBuildStatusListener);
+                storeCSVFileCopy(studentCSVData, mediaFileName, csvBuildStatusListener);
                 csvBuildStatusListener.onSuccess();
-
+            }else if(formName.contains(teacher) && formName.contains(COVID)) {
+                    String fileDir = Collect.FORMS_PATH + File.separator + form + File.separator + mediaFileName;
+                    File outputFile = new File(fileDir);
+                    writer = new CSVWriter(new FileWriter(outputFile), ',');
+                    for (ArrayList<String> list : teacherCSVData) {
+                        String[] stockArr = new String[list.size()];
+                        stockArr = list.toArray(stockArr);
+                        writer.writeNext(stockArr);
+                    }
+                    writer.close();
+                    storeCSVFileCopy(teacherCSVData, mediaFileName, csvBuildStatusListener);
+                    csvBuildStatusListener.onSuccess();
+                }
             }
         } catch (IOException ioException) {
             csvBuildStatusListener.onFailure(ioException, BuildFailureType.IO_EXCEPTION);

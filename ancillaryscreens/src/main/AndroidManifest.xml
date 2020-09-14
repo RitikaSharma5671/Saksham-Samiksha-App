@@ -24,6 +24,10 @@
             android:name="com.samagra.ancillaryscreens.screens.tutorials.TutorialActivity"
             android:theme="@style/BaseAppTheme" />
 
+        <activity
+            android:name="com.samagra.ancillaryscreens.screens.profile.ProfileActivity"
+            android:theme="@style/BaseAppTheme" />
+
     </application>
 
 </manifest>

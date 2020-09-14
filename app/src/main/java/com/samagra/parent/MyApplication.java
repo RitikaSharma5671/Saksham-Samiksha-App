@@ -13,6 +13,8 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
+import com.example.student_details.contracts.StudentDetailsComponentManager;
+import com.example.student_details.contracts.StudentDetailsSectionInteractor;
 import com.example.update.UpdateDriver;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -111,6 +113,13 @@ public class MyApplication extends Application implements MainApplication, Lifec
         initBus();
         UpdateDriver.init(this);
         rxEventBus = new EventBus();
+        initialiseStudentModule();
+    }
+
+    private void initialiseStudentModule() {
+        StudentDetailsComponentManager.registerProfilePackage(new StudentDetailsSectionInteractor(),
+                this, getApplicationContext().getResources().getString(R.string.fusionauth_api_key), AppConstants.APPLICATION_ID, AppConstants.BASE_API_URL);
+
     }
 
     private void initialiseLoggingComponent() {

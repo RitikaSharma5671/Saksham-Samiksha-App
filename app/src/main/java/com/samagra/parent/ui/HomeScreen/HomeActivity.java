@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,16 +15,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.androidnetworking.AndroidNetworking;
+import com.example.assets.uielements.SamagraAlertDialog;
 import com.example.student_details.contracts.IStudentDetailsContract;
 import com.example.student_details.contracts.StudentDetailsComponentManager;
-import com.example.student_details.contracts.StudentDetailsSectionInteractor;
+import com.example.student_details.ui.teacher_aggregate.MainActivity;
 import com.example.update.UpdateApp;
 import com.google.android.material.snackbar.Snackbar;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.models.AboutBundle;
+import com.samagra.ancillaryscreens.screens.profile.ProfileActivity;
+import com.samagra.ancillaryscreens.screens.profile.UserProfileElement;
 import com.samagra.cascading_module.CascadingModuleDriver;
 import com.samagra.commons.Constants;
 import com.samagra.commons.CustomEvents;
@@ -35,17 +38,13 @@ import com.samagra.commons.InstitutionInfo;
 import com.samagra.commons.InternetMonitor;
 import com.samagra.commons.MainApplication;
 import com.samagra.commons.Modules;
-import com.samagra.grove.logging.Grove;
 import com.samagra.commons.notifications.AppNotificationUtils;
+import com.samagra.grove.logging.Grove;
 import com.samagra.parent.AppConstants;
 import com.samagra.parent.R;
 import com.samagra.parent.UtilityFunctions;
 import com.samagra.parent.base.BaseActivity;
 import com.samagra.parent.ui.Settings.UpdateAppLanguageFragment;
-import com.samagra.user_profile.contracts.ComponentManager;
-import com.samagra.user_profile.contracts.IProfileContract;
-import com.samagra.user_profile.contracts.ProfileSectionInteractor;
-import com.samagra.user_profile.profile.UserProfileElement;
 
 import org.odk.collect.android.utilities.LocaleHelper;
 
@@ -54,9 +53,6 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -70,54 +66,66 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_LANGUAGE;
  *
  * @author Pranav Sharma
  */
-public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnClickListener {
+public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItemClickListener {
 
-    @BindView(R.id.fill_forms)
-    public LinearLayout fillFormLayout;
-    @BindView(R.id.view_submitted_forms)
-    public LinearLayout viewSubmittedLayout;
-    @BindView(R.id.submit_forms)
-    public LinearLayout submitFormLayout;
-    @BindView(R.id.need_help)
-    public LinearLayout helplineLayout;
-    @BindView(R.id.parent)
-    public RelativeLayout parent;
-    @BindView(R.id.progress_bar_layout)
-    public RelativeLayout progressBarLayout;
-    @BindView(R.id.progress_bar_text)
-    public TextView progressBarText;
-    @BindView(R.id.lottie_loader)
-    public LottieAnimationView lottie_loader;
-    @BindView(R.id.parentHome)
-    public LinearLayout parentHome;
-    @BindView(R.id.welcome_text)
-    public TextView welcomeText;
+    private RelativeLayout parent;
+    private RelativeLayout progressBarLayout;
+    private TextView progressBarText;
+    private LottieAnimationView lottie_loader;
+    private RelativeLayout parentHome;
+    private TextView welcomeText;
+    private RecyclerView homeRecyclerView;
 
     private Disposable logoutListener = null;
     private static CompositeDisposable formSentDisposable = new CompositeDisposable();
     private PopupMenu popupMenu;
     private Snackbar messageView = null;
-    private Unbinder unbinder;
     UpdateApp mUpdateApp;
 
     @Inject
     HomePresenter<HomeMvpView, HomeMvpInteractor> homePresenter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        parent = findViewById(R.id.parent);
+        progressBarLayout = findViewById(R.id.progress_bar_layout);
+        progressBarText = findViewById(R.id.progress_bar_text);
+        lottie_loader = findViewById(R.id.lottie_loader);
+        parentHome = findViewById(R.id.parentHome);
+        welcomeText = findViewById(R.id.welcome_text);
+        homeRecyclerView = findViewById(R.id.home_items_layout);
         getActivityComponent().inject(this);
-        unbinder = ButterKnife.bind(this);
         homePresenter.onAttach(this);
+        HomeItemsAdapter  homeItemsAdapter = new HomeItemsAdapter(
+                this,
+                homePresenter.fetchHomeItemList(),
+                getActivityContext()
+        );
+        homeRecyclerView.setAdapter(homeItemsAdapter);
         setupToolbar();
         homePresenter.applySettings();
         InternetMonitor.startMonitoringInternet(((MainApplication) getApplicationContext()));
-        setupListeners();
         homePresenter.updateLanguageSettings();
         AppNotificationUtils.updateFirebaseToken(getActivityContext(), AppConstants.BASE_API_URL, getActivityContext().getResources().getString(R.string.fusionauth_api_key));
         mUpdateApp = new UpdateApp(this);
+        homePresenter.fetchStudentData();
+        homePresenter.fetchSchoolEmployeeData();
         renderLayoutInvisible();
+    }
+
+    private void showUpdateMobileNumberDialog() {
+        if(!homePresenter.hasSeenDialog()) {
+            new SamagraAlertDialog.Builder(getActivityContext()).setTitle(getText(R.string.profile_incomplete)).
+                    setMessage(getText(R.string.please_update_the_password_and_details_of_the_school_in_charge))
+                    .setAction2(getText(R.string.update_details), (actionIndex, alertDialog) -> {
+                        ArrayList<UserProfileElement> profileElements = homePresenter.getProfileConfig();
+                        AncillaryScreensDriver.launchProfileActivity(this, profileElements, homePresenter.fetchUserID());
+                        alertDialog.dismiss();
+                    }).show();
+            homePresenter.updateSeenDialogCount();
+        }
     }
 
     private void relaunchHomeScreen() {
@@ -131,6 +139,10 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
     public void setDownloadProgress(int progress) {
         if (progress >= 100) {
             progressBarText.setText(R.string.hundred_percent);
+//            boolean isProfileComplete = homePresenter.isProfileComplete();
+//            if (!isProfileComplete) {
+//                showUpdateMobileNumberDialog();
+//            }
         } else {
             progressBarText.setText(String.format(Locale.ENGLISH, "%d%%", progress));
         }
@@ -144,6 +156,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
         homePresenter.fetchWelcomeText();
         homePresenter.resetProgressVariables();
         homePresenter.checkForFormUpdates();
+        homePresenter.checkForDownloadStudentData();
         customizeToolbar();
         setDisposable();
     }
@@ -193,32 +206,6 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
         }
     }
 
-    private void setupListeners() {
-        fillFormLayout.setOnClickListener(this);
-        viewSubmittedLayout.setOnClickListener(this);
-        submitFormLayout.setOnClickListener(this);
-        helplineLayout.setOnClickListener(this);
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fill_forms:
-                homePresenter.searchmodule();
-                break;
-            case R.id.view_submitted_forms:
-                homePresenter.onViewSubmittedFormsOptionsClicked();
-                break;
-            case R.id.submit_forms:
-                homePresenter.onSubmitFormsClicked();
-                break;
-            case R.id.need_help:
-                homePresenter.onViewHelplineClicked();
-                break;
-        }
-    }
-
     @SuppressWarnings("SameParameterValue")
     private void addFragment(int containerViewId, FragmentManager manager, Fragment fragment, String fragmentTag) {
         try {
@@ -251,7 +238,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(event -> {
-                            String snackbarMessage = homePresenter.isNetworkConnected() ? getString(R.string.form_submitted_online) :
+                            String snackbarMessage = homePresenter.isNetworkConnected() ?
+                                    getString(R.string.form_submitted_online) :
                                     getString(R.string.form_submitted_offline);
                             UtilityFunctions.showLongSnackbar(parent, snackbarMessage);
                         }));
@@ -269,7 +257,6 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
             formSentDisposable.dispose();
         }
         homePresenter.onDetach();
-        unbinder.unbind();
     }
 
     /**
@@ -319,22 +306,17 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                 switch (item.getItemId()) {
                     case R.id.change_lang:
                         if (HomeActivity.this.findViewById(R.id.fragment_container) != null) {
-                            StudentDetailsComponentManager.registerProfilePackage(new StudentDetailsSectionInteractor());
-                            IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
-                            iStudentDetailsContract.launchProfileActivity(getActivityContext(), R.id.fragment_container, getSupportFragmentManager());
-
-
-//                            UpdateAppLanguageFragment firstFragment = UpdateAppLanguageFragment.newInstance(PreferenceManager.getDefaultSharedPreferences(HomeActivity.this.getActivityContext())
-//                                    .getString(Constants.APP_LANGUAGE_KEY, "en"), language -> {
-//                                SharedPreferences.Editor edit = PreferenceManager
-//                                        .getDefaultSharedPreferences(getActivityContext()).edit();
-//                                edit.putString(KEY_APP_LANGUAGE, language);
-//                                edit.putString(Constants.APP_LANGUAGE_KEY, language);
-//                                edit.apply();
-//                                relaunchHomeScreen();
-//                            });
-//                            HomeActivity.this.addFragment(R.id.fragment_container, HomeActivity.this.getSupportFragmentManager(), firstFragment, "UpdateAppLanguageFragment");
-//                            parentHome.setVisibility(View.GONE);
+                            UpdateAppLanguageFragment firstFragment = UpdateAppLanguageFragment.newInstance(PreferenceManager.getDefaultSharedPreferences(HomeActivity.this.getActivityContext())
+                                    .getString(Constants.APP_LANGUAGE_KEY, "en"), language -> {
+                                SharedPreferences.Editor edit = PreferenceManager
+                                        .getDefaultSharedPreferences(getActivityContext()).edit();
+                                edit.putString(KEY_APP_LANGUAGE, language);
+                                edit.putString(Constants.APP_LANGUAGE_KEY, language);
+                                edit.apply();
+                                relaunchHomeScreen();
+                            });
+                            HomeActivity.this.addFragment(R.id.fragment_container, HomeActivity.this.getSupportFragmentManager(), firstFragment, "UpdateAppLanguageFragment");
+                            parentHome.setVisibility(View.GONE);
                         }
                         break;
                     case R.id.about_us:
@@ -345,21 +327,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         break;
                     case R.id.profile:
                         Grove.d("User clicked on View Profile Section option");
-                        ComponentManager.registerProfilePackage(new ProfileSectionInteractor(), ((MainApplication) (HomeActivity.this.getApplicationContext())),
-                                AppConstants.BASE_API_URL,
-                                AppConstants.APPLICATION_ID,
-                                AppConstants.SEND_OTP_URL,
-                                AppConstants.UPDATE_PASSWORD_URL,
-                                HomeActivity.this.getApplicationContext().getResources().getString(R.string.fusionauth_api_key), homePresenter.fetchUserID());
-                        IProfileContract initializer = ComponentManager.iProfileContract;
                         ArrayList<UserProfileElement> profileElements = homePresenter.getProfileConfig();
-                        if (initializer != null) {
-                            Grove.d("Launching Profile Screen");
-                            initializer.launchProfileActivity(HomeActivity.this.getActivityContext(), profileElements
-                                    , HomeActivity.this.getActivityContext().getResources().getString(R.string.fusionauth_api_key));
-                        }else{
-                            Grove.e("Initializer was null, so could not launch Profile screen");
-                        }
+                        AncillaryScreensDriver.launchProfileActivity(this, profileElements, homePresenter.fetchUserID());
                         break;
                     case R.id.logout:
                         Grove.d("User clicked to logout out of application");
@@ -394,6 +363,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         ExchangeObject.EventExchangeObject eventExchangeObject = (ExchangeObject.EventExchangeObject) o;
                         if (eventExchangeObject.to == Modules.MAIN_APP && eventExchangeObject.from == Modules.ANCILLARY_SCREENS) {
                             if (eventExchangeObject.customEvents == CustomEvents.LOGOUT_COMPLETED) {
+                                IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+                                iStudentDetailsContract.removeRealsmDB();
                                 Grove.d("Logout completed Event received");
                                 hideLoading();
                                 Grove.d("Logout snackbar hidden");
@@ -427,7 +398,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
     @Override
     public void launchSearchModule() {
         CascadingModuleDriver.init((MainApplication) getApplicationContext(), AppConstants.FILE_PATH, AppConstants.ROOT);
-        CascadingModuleDriver.launchSearchView(getActivityContext(), AppConstants.ROOT + "/saksham_data_json.json", this);
+        CascadingModuleDriver.launchSearchView(getActivityContext(),
+                this, CascadingModuleDriver.SEARCH_ACTIVITY_REQUEST_CODE);
     }
 
     @Override
@@ -471,4 +443,69 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
             homePresenter.onFillFormsOptionClicked();
         }
     }
+
+    @Override
+    public void onFillFormsClicked() {
+        homePresenter.searchmodule();
+    }
+
+    @Override
+    public void onViewHelplineClicked() {
+        homePresenter.onViewHelplineClicked();
+    }
+
+    @Override
+    public void onSubmitOfflineFormsClicked() {
+        homePresenter.onSubmitFormsClicked();
+    }
+
+    @Override
+    public void onViewODKSubmissionsClicked() {
+        homePresenter.onViewSubmittedFormsOptionsClicked();
+    }
+
+    @Override
+    public void onEditStudentDataClicked() {
+        IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+        iStudentDetailsContract.viewStudentData(getActivityContext(), R.id.fragment_container, getSupportFragmentManager());
+
+    }
+
+    @Override
+    public void onMarkStudentAttendanceClicked() {
+        IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+        iStudentDetailsContract.markStudentAttendance(getActivityContext(), R.id.fragment_container, getSupportFragmentManager());
+    }
+
+    @Override
+    public void onViewStudentAttendanceClicked() {
+        Intent i = new Intent(getActivityContext(), MainActivity.class);
+        startActivity(i);
+    }
+
+    @Override
+    public void onMarkTeacherAttendanceClicked() {
+        IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+        iStudentDetailsContract.markTeacherAttendance(getActivityContext(), R.id.fragment_container, getSupportFragmentManager());
+
+    }
+
+    @Override
+    public void onViewSchoolAttendanceClicked() {
+        IStudentDetailsContract iStudentDetailsContract1 = StudentDetailsComponentManager.iStudentDetailsContract;
+        iStudentDetailsContract1.launchStudentAttendanceView(getActivityContext());
+    }
+
+    @Override
+    public void onViewTeacherAttendanceClicked() {
+    }
+
+
+
+    @Override
+    public void onReportCOVIDCaseClicked() {
+
+    }
+
+
 }

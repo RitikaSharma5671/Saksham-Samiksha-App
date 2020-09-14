@@ -12,6 +12,7 @@ import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.ancillaryscreens.di.ApplicationContext;
 import com.samagra.ancillaryscreens.di.PreferenceInfo;
 
+import com.samagra.commons.InstitutionInfo;
 import com.samagra.commons.PreferenceKeys;
 import com.samagra.grove.logging.Grove;
 
@@ -81,10 +82,6 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
         editor.putString("refreshToken", "");
         editor.putString("token", response.token.getAsString());
 
-        if (response.user.has("accountName"))
-            editor.putString("user.accountName", response.user.get("accountName").getAsString());
-        else editor.putString("user.accountName", "");
-
         if (response.user.has("email"))
             editor.putString("user.email", response.user.get("email").getAsString());
         else editor.putString("user.email", "");
@@ -109,11 +106,6 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
                 editor.putString("user.joiningDate", data.get("joiningDate").getAsJsonPrimitive().getAsString());
             else editor.putString("user.joiningDate", "");
 
-            if (data.has("accountName")) {
-                editor.putString("user.accountName", data.get("accountName").getAsString());
-            } else {
-                editor.putString("user.accountName", "");
-            }
         }
         editor.apply();
     }
@@ -125,7 +117,6 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
             JsonArray registrations = response.user.get("registrations").getAsJsonArray();
             for (int i = 0; i < registrations.size(); i++) {
                 if (registrations.get(i).getAsJsonObject().has("applicationId")) {
-
                     String applicationId = registrations.get(i).getAsJsonObject().get("applicationId").getAsString();
                     if (applicationId.equals(AncillaryScreensDriver.APPLICATION_ID)) {
                         // This is applicationId for Shiksha Saathi
@@ -134,16 +125,16 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
                 }
             }
         }
-
         if (response.user.has("fullName"))
             editor.putString("user.fullName", response.user.get("fullName").getAsString());
-        else editor.putString("user.fullName", response.user.get("username").getAsString());
-        if (defaultPreferences.getString("user.username", "").isEmpty()) {
-            editor.putString("user.username", response.user.get("fullName").getAsString());
-
+        else if (response.user.has("data") && response.user.get("data") != null
+        && response.user.get("data").getAsJsonObject().has("accountName")) {
+            String fullName = response.user.get("data").getAsJsonObject().get("accountName").getAsString();
+            editor.putString("user.fullName", fullName);
+        } else {
+            editor.putString("user.fullName", response.user.get("username").getAsString());
         }
         editor.putString("user.id", response.user.get("id").getAsString());
-
         if (response.user.has("mobilePhone"))
             editor.putString("user.mobilePhone", response.user.get("mobilePhone").getAsString());
         else editor.putString("user.mobilePhone", "");
@@ -151,8 +142,31 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
         if(response.user.has("data") && response.user.get("data")!= null){
             JsonObject userData = response.user.get("data").getAsJsonObject();
             if (userData.has("roleData")) {
-                if (userData.get("roleData").getAsJsonObject().has("designation"))
-                    editor.putString("user.designation", response.user.get("data").getAsJsonObject().get("roleData").getAsJsonObject().get("designation").getAsJsonPrimitive().getAsString());
+                if (userData.get("roleData").getAsJsonObject().has("designation")) {
+                    editor.putString("user.designation", response.user.get("data").
+                            getAsJsonObject().get("roleData").getAsJsonObject().
+                            get("designation").getAsJsonPrimitive().getAsString());
+                }
+                if (userData.get("roleData").getAsJsonObject().has("block")) {
+                    editor.putString("user.block", response.user.get("data").
+                            getAsJsonObject().get("roleData").getAsJsonObject()
+                            .get("block").getAsJsonPrimitive().getAsString());
+                }
+                if (userData.get("roleData").getAsJsonObject().has("district")) {
+                    editor.putString("user.district",
+                            response.user.get("data").getAsJsonObject()
+                                    .get("roleData").getAsJsonObject().
+                                    get("district").getAsJsonPrimitive().getAsString());
+                }
+                if (userData.get("roleData").getAsJsonObject().has("schoolCode")) {
+                    editor.putString("user.schoolCode",
+                            response.user.get("data").getAsJsonObject()
+                                    .get("roleData").getAsJsonObject()
+                                    .get("schoolCode").getAsJsonPrimitive().getAsString());
+                }
+                if (userData.get("roleData").getAsJsonObject().has("schoolName")) {
+                    editor.putString("user.schoolName", response.user.get("data").getAsJsonObject().get("roleData").getAsJsonObject().get("schoolName").getAsJsonPrimitive().getAsString());
+                }
             }}
         editor.apply();
     }
@@ -199,6 +213,33 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
     @Override
     public String getToken() {
         return defaultPreferences.getString("token", "");
+    }
+
+    @Override
+    public String fetchDesignation() {
+        String designation = defaultPreferences.getString("user.designation", "");
+        return designation;
+    }
+
+    @Override
+    public InstitutionInfo fetchSchoolInfo() {
+        String schoolCode = defaultPreferences.getString("user.schoolCode", "");
+        String schoolName = defaultPreferences.getString("user.schoolName", "");
+        String block = defaultPreferences.getString("user.block", "");
+        String district = defaultPreferences.getString("user.district", "");
+        assert schoolCode != null;
+        return new InstitutionInfo(district, block, schoolName, Integer.parseInt(schoolCode));
+    }
+
+    @Override
+    public void updateSchoolDetails(InstitutionInfo institutionInfo) {
+        SharedPreferences.Editor editor = defaultPreferences.edit();
+        editor.putString("user.schoolCode", String.valueOf(institutionInfo.getSchoolCode()));
+        editor.putString("user.schoolName", institutionInfo.getSchoolName());
+        editor.putString("user.block", institutionInfo.getBlock());
+        editor.putString("user.district", institutionInfo.getDistrict());
+        editor.putBoolean("schoolUpdated", true);
+        editor.apply();
     }
 
     @SuppressLint("ApplySharedPref")

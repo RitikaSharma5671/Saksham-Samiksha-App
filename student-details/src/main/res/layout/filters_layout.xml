@@ -2,94 +2,133 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
-  <RelativeLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal">
-      <TextView
-          android:id="@+id/class_filter_title"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          style="@style/LabelStyle2"
-          android:layout_margin="16dp"
-          android:layout_centerVertical="true"
-          android:layout_centerHorizontal="true"
-          android:text="@string/select_grade"/>
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          style="@style/LabelStyle2"
-          android:layout_marginTop="16dp"
-          android:layout_marginBottom="16dp"
-          android:layout_marginStart="8dp"
-          android:layout_centerVertical="true"
-          android:textStyle="normal"
-          android:textColor="@color/color5"
-          android:textSize="@dimen/font_size_medium"
-          android:layout_toEndOf="@id/class_filter_title"
-          android:text="@string/mandatory"/>
-  </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/class_filter_title"
+            style="@style/LabelStyle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="4dp"
+            android:textAllCaps="true"
+            android:textSize="12sp"
+            android:text="@string/select_grade" />
+
+        <TextView
+            style="@style/LabelStyle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/class_filter_title"
+            android:text="@string/mandatory"
+            android:textColor="@color/color5"
+            android:textSize="11sp"
+            android:textStyle="normal" />
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/class_recycler_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:animationCache="true"
         android:layout_gravity="center_horizontal"
+        android:layout_margin="6dp"
+        android:animationCache="true"
         android:fadeScrollbars="false"
         android:overScrollMode="never"
         android:scrollbars="vertical"
-        android:layout_margin="6dp"
         android:scrollingCache="true"
         android:smoothScrollbar="true" />
 
-    <View android:id="@+id/tile_divider"
+    <View
+        android:id="@+id/tile_divider"
         android:layout_width="match_parent"
         android:layout_height="1.5dp"
-        android:layout_margin="12dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="6dp"
         android:background="@color/color5" />
+
     <TextView
+        style="@style/LabelStyle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        style="@style/LabelStyle2"
-        android:layout_margin="16dp"
-        android:text="@string/select_class_section"/>
+        android:layout_margin="10dp"
+        android:textAllCaps="true"
+        android:textSize="12sp"
+        android:text="@string/select_class_section" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/section_recycler_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:animationCache="true"
-        android:layout_margin="4dp"
-        android:fadeScrollbars="false"
         android:layout_gravity="center_horizontal"
+        android:layout_margin="4dp"
+        android:animationCache="true"
+        android:fadeScrollbars="false"
         android:overScrollMode="never"
         android:scrollbars="vertical"
         android:scrollingCache="true"
         android:smoothScrollbar="true" />
 
-    <View android:id="@+id/tile_divider_2"
+    <View
+        android:id="@+id/tile_divider_2"
         android:layout_width="match_parent"
         android:layout_height="1.5dp"
-        android:layout_margin="12dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="6dp"
         android:background="@color/color5" />
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal">
+
     <TextView
+        style="@style/LabelStyle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/subject_stream_title"
+        android:textAllCaps="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="4dp"
+        android:textSize="12sp"
+        android:text="@string/select_subject_stream" />
+
+    <TextView
         style="@style/LabelStyle2"
-        android:layout_margin="16dp"
-        android:text="@string/select_subject_stream"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/subject_stream_title"
+        android:text="@string/valid_class_11_12"
+        android:textColor="@color/color5"
+        android:textSize="11sp"
+        android:textStyle="normal" />
+    </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/stream_recycler_view"
         android:layout_width="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:animationCache="true"
+        android:layout_gravity="center_horizontal"
         android:layout_margin="4dp"
+        android:animationCache="true"
         android:fadeScrollbars="false"
         android:overScrollMode="never"
         android:scrollbars="vertical"

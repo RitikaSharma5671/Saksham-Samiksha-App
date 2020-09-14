@@ -5,21 +5,15 @@
     android:layout_height="49dp"
     android:layout_margin="5dp">
 
-    <Button
-        android:id="@+id/individual_filter"
+    <android.widget.Button
+        android:id="@+id/individual_filter1"
         android:layout_width="124dp"
         android:layout_height="49dp"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:padding="8dp"
-        android:textSize="13.5sp"
+        android:letterSpacing="0.052"
+        android:textSize="12.5sp"
         android:text="VOCATIONAL"/>
-
-    <!--    <View-->
-    <!--        android:id="@+id/disable_state_background"-->
-    <!--        android:layout_width="49dp"-->
-    <!--        android:layout_height="49dp"-->
-    <!--        android:visibility="gone"-->
-    <!--        />-->
 
 </RelativeLayout>

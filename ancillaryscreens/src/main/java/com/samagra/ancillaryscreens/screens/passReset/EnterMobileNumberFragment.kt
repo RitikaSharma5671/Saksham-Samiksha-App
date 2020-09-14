@@ -138,7 +138,6 @@ class EnterMobileNumberFragment : Fragment(), View.OnClickListener, OnUserFound,
 
     private fun checkPhoneValidity(amount: String) {
         FindUserByPhoneTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, amount, requireContext().getText(R.string.fusionauth_api_key).toString())
-
     }
 
     private fun isValidPhoneNumber(phoneNumber: String): Boolean {
@@ -146,7 +145,6 @@ class EnterMobileNumberFragment : Fragment(), View.OnClickListener, OnUserFound,
         val m = p.matcher(phoneNumber)
         return !m.find() || m.group() != phoneNumber
     }
-
 
     @SuppressLint("SetTextI18n")
     private fun checkSpaceAndAdd(value: Int) {

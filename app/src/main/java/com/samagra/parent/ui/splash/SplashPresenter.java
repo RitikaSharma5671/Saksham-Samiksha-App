@@ -8,7 +8,11 @@ import android.net.NetworkInfo;
 import android.os.Environment;
 
 import com.androidnetworking.error.ANError;
+import com.example.student_details.contracts.IStudentDetailsContract;
+import com.example.student_details.contracts.StudentDetailsComponentManager;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
+import com.samagra.commons.MainApplication;
+import com.samagra.commons.ScreenChangeEvent;
 import com.samagra.commons.firebase.FirebaseUtilitiesWrapper;
 import com.samagra.commons.firebase.IFirebaseRemoteStorageFileDownloader;
 import com.samagra.commons.utils.AlertDialogUtils;
@@ -44,12 +48,22 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
             + File.separator + "odk";
     private static final boolean EXIT = true;
 
+    public boolean isJwtTokenValid() {
+        return jwtTokenValid;
+    }
+
+    private boolean jwtTokenValid = false;
+    private MainApplication mainApplication;
+
+
     @Inject
     public SplashPresenter(I mvpInteractor, CompositeDisposable compositeDisposable, BackendNwHelper backendNwHelper, IFormManagementContract iFormManagementContract) {
         super(mvpInteractor, compositeDisposable, backendNwHelper, iFormManagementContract);
     }
 
-
+    public void initialise(MainApplication applicationContext) {
+        mainApplication = applicationContext;
+    }
 
     /**
      * Decides the next screen and moves to the decided screen.
@@ -61,7 +75,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
      */
     @Override
     public void moveToNextScreen() {
-        if ( !getMvpInteractor().getRefreshToken().equals("")  && getMvpInteractor().isLoggedIn()) {
+        if (!getMvpInteractor().getRefreshToken().equals("") && getMvpInteractor().isLoggedIn()) {
             isJWTTokenValid();
         } else {
             launchLoginScreen();
@@ -72,7 +86,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         getIFormManagementContract().resetEverythingODK();
         Grove.d("Launching Login");
         AncillaryScreensDriver.launchLoginScreen(getMvpView().getActivityContext());
-        getMvpView().finishActivity();
+        getMvpView().finishSplashScreen();
     }
 
     public boolean isNetworkConnected() {
@@ -86,9 +100,37 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         return true;
     }
 
+    @Override
+    public void verifyJWTTokenValidity(String apiKey) {
+        if (getMvpInteractor().isLoggedIn() && !getMvpInteractor().getRefreshToken().equals("") && isNetworkConnected()) {
+            String jwtToken = getMvpInteractor().getPreferenceHelper().getToken();
+            getCompositeDisposable().add(getApiHelper()
+                    .validateToken(jwtToken)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(updatedToken -> {
+                        if (updatedToken != null && updatedToken.has("jwt")) {
+                            jwtTokenValid = true;
+                            getMvpView().endSplashScreen();
+                            Grove.e("JWT Token found to be valid for this user with value: " + updatedToken.toString());
+                        } else {
+                            Grove.d("JWT Token expired for this user, trying to update the JWT Token");
+                            jwtTokenValid = false;
+                            updateJWT(apiKey);
+                        }
+
+                    }, throwable -> {
+                        jwtTokenValid = false;
+                        Grove.d("JWT Token network call failed for this user, trying to update the JWT Token");
+                        updateJWT(apiKey);
+                        Grove.e(throwable);
+                    }));
+        }
+    }
+
     private void isJWTTokenValid() {
         if (getMvpInteractor().isLoggedIn()) {
-            if(isNetworkConnected()) {
+            if (isNetworkConnected()) {
                 String jwtToken = getMvpInteractor().getPreferenceHelper().getToken();
                 getCompositeDisposable().add(getApiHelper()
                         .validateToken(jwtToken)
@@ -118,14 +160,12 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
      * This function initialises the {@link SplashActivity} by setting up the layout and updating necessary flags in
      * the {@link android.content.SharedPreferences}.
      */
-    @Override
-    public void init() {
+    private void init(String packageName, PackageManager packageManager) {
         startUnzipTask();
-        getMvpView().showActivityLayout();
+//        getMvpView().showActivityLayout();
         PackageInfo packageInfo = null;
         try {
-            packageInfo = getMvpView().getActivityContext().getPackageManager()
-                    .getPackageInfo(getMvpView().getActivityContext().getPackageName(), PackageManager.GET_META_DATA);
+            packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA);
         } catch (PackageManager.NameNotFoundException e) {
             Grove.e(e, "Unable to get package info");
         }
@@ -145,7 +185,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
     }
 
     @Override
-    public void requestStoragePermissions() {
+    public void requestStoragePermissions(String packageName, PackageManager packageManager) {
         PermissionsHelper permissionUtils = new PermissionsHelper();
         if (!PermissionsHelper.areStoragePermissionsGranted(getMvpView().getActivityContext())) {
             permissionUtils.requestStoragePermissions((SplashActivity) getMvpView().getActivityContext(), new AppPermissionUserActionListener() {
@@ -158,17 +198,22 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                                 e.getMessage(), EXIT), (SplashActivity) getMvpView().getActivityContext());
                         return;
                     }
-                    init();
+                    init(packageName, packageManager);
                 }
 
                 @Override
                 public void denied() {
-                    getMvpView().finishActivity();
+                    getMvpView().finishSplashScreen();
                 }
             });
         } else {
-            init();
+            init(packageName, packageManager);
         }
+    }
+
+    @Override
+    public boolean canLaunchHome() {
+        return getMvpInteractor().isLoggedIn() && !getMvpInteractor().getRefreshToken().equals("");
     }
 
 
@@ -178,6 +223,8 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
             @Override
             public void unZipSuccess() {
                 Grove.d("Data file has been unzipped successfully.");
+//                IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+//                iStudentDetailsContract.loadSchoolDistrictData();
             }
 
             @Override
@@ -213,17 +260,18 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
     }
 
 
-
-    private void updateCurrentVersion(){
+    private void updateCurrentVersion() {
         int currentVersion = BuildConfig.VERSION_CODE;
         int previousSavedVersion = getMvpInteractor().getPreferenceHelper().getPreviousVersion();
-        if(previousSavedVersion < currentVersion){
+        if (previousSavedVersion < currentVersion) {
             getMvpInteractor().getPreferenceHelper().updateAppVersion(currentVersion);
             getIFormManagementContract().resetEverythingODK();
             Grove.e("Up version detected");
         }
     }
-    private void updateJWT(String apiKey) {
+
+    @Override
+    public void updateJWT(String apiKey) {
         boolean firstRun = getMvpInteractor().isFirstRun();
         if (!firstRun) {
             if (getMvpInteractor().isLoggedIn()) {
@@ -234,21 +282,27 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(updatedToken -> {
-                            if(updatedToken != null && updatedToken.has("token")){
+                            if (updatedToken != null && updatedToken.has("token")) {
                                 getMvpInteractor().updateToken(updatedToken.getString("token"));
-                                getMvpView().redirectToHomeScreen();
-                            }else{
-                                launchLoginScreen();
+                                mainApplication.eventBusInstance().post(new ScreenChangeEvent("Splash", "Home"));
+                            } else {
+                                mainApplication.eventBusInstance().post(new ScreenChangeEvent("Splash", "Login"));
                             }
-
                         }, throwable -> {
-                            if (throwable instanceof ANError)
-                                Grove.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", ((ANError) (throwable)).getErrorBody(), ((ANError) (throwable)).getErrorCode(), ((ANError) (throwable)).getErrorDetail());
-                            Grove.e(throwable);
-                            launchLoginScreen();
+                            if (throwable instanceof ANError) {
+                                Grove.e("ANError Received while fetching JWT Token with error " + throwable);
+                            } else {
+                                Grove.e("Fetch JWT Failed... " + throwable);
+                            }
+                            mainApplication.eventBusInstance().post(new ScreenChangeEvent("Splash", "Login"));
                         }));
             }
         }
     }
 
+    public void setInclompleteProfileCount() {
+        getMvpInteractor().getPreferenceHelper().updateCountFlag(false);
+    }
 }
+
+

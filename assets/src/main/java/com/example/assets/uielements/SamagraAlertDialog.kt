@@ -1,6 +1,7 @@
 package com.example.assets.uielements
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -76,6 +77,17 @@ class SamagraAlertDialog {
         fun setAction2(action: CharSequence, listener: CaastleAlertDialogActionListener?): Builder {
             alertDialogLayout.btn_action2.text = action
             alertDialogLayout.btn_action2.visibility = View.VISIBLE
+            alertDialogLayout.btn_action2.setOnClickListener {
+                listener?.onActionButtonClicked(1, caastleAlertDialog)
+            }
+            return this
+        }
+
+        fun setAction2(action: CharSequence, listener: CaastleAlertDialogActionListener?, drawable: Drawable, colorId :Int): Builder {
+            alertDialogLayout.btn_action2.text = action
+            alertDialogLayout.btn_action2.visibility = View.VISIBLE
+            alertDialogLayout.btn_action2.background = drawable
+            alertDialogLayout.btn_action2.setTextColor(colorId)
             alertDialogLayout.btn_action2.setOnClickListener {
                 listener?.onActionButtonClicked(1, caastleAlertDialog)
             }

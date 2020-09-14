@@ -108,21 +108,21 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
                     SnackbarUtils.showLongSnackbar(parent, OTPFragment.this.getActivity().getResources().getString(R.string.internet_not_connected));
                 } else {
                     showProgressBar();
-                    new SendOTPTask(new ActionListener() {
-                        @Override
-                        public void onSuccess() {
-                            hideProgressBar();
-                            startTimer();
-                            SnackbarUtils.showLongSnackbar(parent, getActivity().getResources().getString(R.string.otp_sent_change_pwd));
-                            submitButton.setText(getActivity().getResources().getString(R.string.submit));
-                            submitButton.setOnClickListener(OTPFragment.this::onClick);
-                        }
-
-                        @Override
-                        public void onFailure(Exception exception) {
-                            SnackbarUtils.showLongSnackbar(parent, OTPFragment.this.getActivity().getResources().getString(R.string.error_sending_otp));
-                        }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber);
+//                    new SendOTPTask(new ActionListener() {
+//                        @Override
+//                        public void onSuccess() {
+//                            hideProgressBar();
+//                            startTimer();
+//                            SnackbarUtils.showLongSnackbar(parent, getActivity().getResources().getString(R.string.otp_sent_change_pwd));
+//                            submitButton.setText(getActivity().getResources().getString(R.string.submit));
+//                            submitButton.setOnClickListener(OTPFragment.this::onClick);
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Exception exception) {
+//                            SnackbarUtils.showLongSnackbar(parent, OTPFragment.this.getActivity().getResources().getString(R.string.error_sending_otp));
+//                        }
+//                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber);
                 }
             }
         };

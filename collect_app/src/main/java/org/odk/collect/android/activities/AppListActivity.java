@@ -55,6 +55,7 @@ import java.util.List;
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_ASC;
+import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_DESC;
 
 abstract class AppListActivity extends CollectAbstractActivity {
     protected static final int LOADER_ID = 0x01;
@@ -293,7 +294,7 @@ abstract class AppListActivity extends CollectAbstractActivity {
     protected void restoreSelectedSortingOrder() {
         selectedSortingOrder = PreferenceManager
                 .getDefaultSharedPreferences(Collect.getInstance().getAppContext())
-                .getInt(getSortingOrderKey(), BY_NAME_ASC);
+                .getInt(getSortingOrderKey(),BY_NAME_DESC);
     }
 
     protected int getSelectedSortingOrder() {

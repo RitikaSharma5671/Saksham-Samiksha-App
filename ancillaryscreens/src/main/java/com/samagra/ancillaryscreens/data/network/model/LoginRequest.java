@@ -47,7 +47,7 @@ public class LoginRequest {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("loginId", username);
-            jsonObject.put("applicationId", applicationId);
+            jsonObject.put("applicationId", AncillaryScreensDriver.APPLICATION_ID);
             jsonObject.put("password", password);
         } catch (JSONException e) {
             e.printStackTrace();

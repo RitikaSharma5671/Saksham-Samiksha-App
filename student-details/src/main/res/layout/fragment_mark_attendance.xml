@@ -2,67 +2,155 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="markAttendanceViewModel"
-            type="com.example.student_details.ui.MarkAttendanceViewModel"/>
+            type="com.example.student_details.ui.MarkAttendanceViewModel" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="true"
+        android:focusable="true">
+
+        <RelativeLayout
+            android:id="@+id/filter_header"
+            android:layout_width="match_parent"
+            android:layout_height="64dp">
+
+            <ImageView
+                android:id="@+id/filter_close_cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/filter_close_button_margin_left"
+                android:contentDescription="@string/filter_cross_content_desc"
+                android:padding="10dp"
+                android:scaleType="center"
+
+                android:src="@drawable/filter_close_icon" />
+
+            <!--android:onClick="@{filterCollectionViewModel.onClose()}"-->
+            <TextView
+                android:id="@+id/filters_text"
+                style="@style/filter_screen_header_text_style"
+                android:layout_width="wrap_content"
+                android:textColor="@color/color1"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="14sp"
+                android:letterSpacing="0.052"
+                android:text="@string/mark_attendance_title" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/filter_title_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/filter_header"
+            android:background="@color/color3" />
+
 
         <RelativeLayout
             android:id="@+id/rl1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_below="@id/filter_title_divider"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:visibility="@{markAttendanceViewModel.isStudentListVisible() ? View.VISIBLE : View.GONE}">
 
             <TextView
-                android:id="@+id/class_name"
+                android:id="@+id/filter_name"
+                style="@style/LabelStyle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="10" />
+                android:textSize="13.5sp"
+                android:text="10"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/class_section"
+                android:id="@+id/rc"
+                style="@style/LabelStyle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/class_name"
-                android:text="A" />
+                android:layout_below="@id/filter_name"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="12dp"
+                android:maxLines="3"
+                android:textSize="11.5sp"
+                android:text="Please check to mark all\nstudents present."
+                android:textStyle="normal" />
 
+            <CheckBox
+                android:id="@+id/mark_all_present"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_below="@id/filter_name"
+                android:layout_alignParentEnd="true"
+                android:buttonTint="@color/color_primary"
+                android:padding="12dp"
+                android:textColorHighlight="@color/color_primary" />
         </RelativeLayout>
 
 
-        <TextView
-            android:id="@+id/header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:text="Please select the students who are absent today"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rl1" />
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/students_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/rl1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/white"
             android:clipToPadding="false"
-            android:paddingLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/header"
-            android:paddingRight="16dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:visibility="@{markAttendanceViewModel.isStudentListVisible() ? View.VISIBLE : View.GONE}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/empty_on_rack_section_message_heading"
+            style="@style/LabelStyle6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:maxLines="3"
+            android:textColor="@color/color2"
+            android:text="No students found corresponding to the filters applied."
+            android:visibility="@{markAttendanceViewModel.isEmptyListMessageVisible() ? View.VISIBLE : View.GONE}" />
+
+        <com.example.student_details.ui.MovableFloatingActionButton
+            android:id="@+id/vffv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="40dp"
+            android:tint="@color/white"
+            android:background="@color/white"
+            android:onClick="@{() -> markAttendanceViewModel.onSendAttendanceClicked()}"
+            android:src="@drawable/ic_baseline_send_24"
+            android:visibility="@{markAttendanceViewModel.isStudentListVisible() ? View.VISIBLE : View.GONE}" />
+
+    </RelativeLayout>
 </layout>

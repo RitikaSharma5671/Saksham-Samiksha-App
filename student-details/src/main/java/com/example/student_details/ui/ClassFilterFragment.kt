@@ -15,7 +15,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.assets.uielements.SamagraAlertDialog
 import com.example.student_details.R
 import com.example.student_details.databinding.ClassFilterLayoutBinding
 import com.example.student_details.getViewModelProvider
@@ -65,7 +64,7 @@ class ClassFilterFragment : Fragment() {
         val sections = ArrayList<String>()
         sections.addAll(arrayOf("A", "B", "C", "D"))
         val streams = ArrayList<String>()
-        streams.addAll(arrayOf("HUMANITIES", "SCIENCE", "COMMERCE", "VOCATIONAL"))
+        streams.addAll(arrayOf("ARTS", "SCIENCE", "COMMERCE", "VOCATIONAL"))
         filterAttributes.allGrades = grades
         filterAttributes.allSections = sections
         filterAttributes.allStreams = streams
@@ -73,22 +72,38 @@ class ClassFilterFragment : Fragment() {
         filterViewModel.selectedGrades.value = ArrayList()
         setupAdapter()
         view.findViewById<ImageView>(R.id.filter_close_cross).setOnClickListener {
-            parentFragmentManager.popBackStack()
+            activity!!.finish()
         }
 //
         view.findViewById<TextView>(R.id.apply_button).setOnClickListener {
             if (filterViewModel.selectedGrades.value != null &&
                     filterViewModel.selectedGrades.value!!.size > 0) {
-                mProgress.show()
+                val bundle = Bundle()
+                bundle.putSerializable("selectedGrades", filterViewModel.selectedGrades.value!!)
+                if (filterViewModel.selectedSections.value != null &&
+                        filterViewModel.selectedSections.value!!.size > 0) {
+                    bundle.putSerializable("selectedSections", filterViewModel.selectedSections.value!!)
+                }
 
+                if (filterViewModel.selectedStreams.value != null &&
+                        filterViewModel.selectedStreams.value!!.size > 0 && filterViewModel.selectedGrades.value != null &&
+                        (filterViewModel.selectedGrades.value!!.contains(11) || filterViewModel.selectedGrades.value!!.contains(12))) {
+                    bundle.putSerializable("selectedStreams", filterViewModel.selectedStreams.value!!)
+                }
+                val markAttendanceView = MarkAttendanceView()
+                markAttendanceView.arguments = bundle
+                addFragment(R.id.bleh_fragment_container, parentFragmentManager, markAttendanceView, "MarkAttendanceView")
 
             } else {
-                SamagraAlertDialog.Builder(requireContext()).setTitle(getText(R.string.no_grade_selected)).setMessage(getText(R.string.please_select_atleast_one_grade)).setAction2(getText(R.string.ok),
-                        object : SamagraAlertDialog.CaastleAlertDialogActionListener {
-                            override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog) {
+                SamagraAlertDialog1.Builder(requireContext()).setTitle(getText(R.string.no_grade_selected)).setMessage(getText(R.string.please_select_atleast_one_grade)).setAction3(getText(R.string.ok),
+                        object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {
+                            override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                 alertDialog.dismiss()
                             }
+
                         }).show()
+//                , context!!.resources.getDrawable(R.drawable.buttonstyle4_background_selected),
+//                        context!!.resources.getColor(R.color.white)).show()
             }
 //            filterViewModel.applyFilter()
 //            val markAttendanceView = MarkAttendanceView()

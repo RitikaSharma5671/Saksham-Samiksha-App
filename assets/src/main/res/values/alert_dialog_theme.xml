@@ -7,6 +7,6 @@
     </style>
 
     <style name="AlertDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">?colorSecondary</item>
+        <item name="android:textColor">@color/color_primary</item>
     </style>
 </resources>

@@ -53,4 +53,20 @@ public interface PreferenceHelper {
     String updateAppLanguage();
 
     String getCurrentUserFullName();
+
+    int fetchSchoolCode();
+
+    boolean isTeacher();
+
+    boolean isSchool();
+
+    boolean isSchoolUpdated();
+
+    String fetchSchoolName();
+
+    boolean isProfileComplete();
+
+    boolean hasSeenDialog();
+
+    void updateCountFlag(boolean flag);
 }

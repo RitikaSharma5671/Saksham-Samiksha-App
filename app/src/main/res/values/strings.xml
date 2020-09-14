@@ -9,7 +9,7 @@
     <string name="server_2_base_url_local"  translatable="false">http://192.168.1.14:8080</string>
     <string name="change_app_language_title">Change Language</string>
     <string name="coming_soon">Coming Soon...</string>
-    <string name="welcome" translatable="true">Welcome,</string>
+    <string name="welcome" translatable="true">WELCOME,</string>
     <string name="track_sms_delivery">Track SMS \nDelivery</string>
     <string name="fill_assessment_data">Fill Assessment \nData</string>
     <string name="support">Support</string>
@@ -54,10 +54,10 @@
     <string name="no_internet">Failed to get data. Please check your internet connection</string>
     <string name="server_error">Failed to get data. Please check your internet connection.</string>
     <string name="track_sms_title">Track SMS</string>
-    <string name="please_update_the_password_and_details_of_the_school_in_charge">Please update the password and details of the school in-charge.</string>
-    <string name="update_details">Update details</string>
+    <string name="please_update_the_password_and_details_of_the_school_in_charge">Please update the contact details in the Profile Section.</string>
     <string name="update_cancel_1">To update the language on the app, select the language and click on Update. Please restart the phone to update the language.</string>
     <string name="update">UPDATE</string>
+    <string name="update_details">UPDATE DETAILS</string>
     <string name="cancel">Cancel</string>
     <string name="select_form">Select form</string>
     <string name="no_internet_retry">Please connect to internet and retry</string>
@@ -94,4 +94,5 @@
     <string name="logging_out_message">Logging you out…Please wait.</string>
     <string name="call_helpline">If facing any issues, please send a WhatsApp message to +91 9780431345. Please do not call this number.</string>
     <string name="note_submissions">Click the eye icon in the menu above to view your submissions</string>
+    <string name="profile_incomplete">Your Profile is Incomplete.</string>
 </resources>

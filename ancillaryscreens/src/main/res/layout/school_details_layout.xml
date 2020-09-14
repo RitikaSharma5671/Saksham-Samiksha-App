@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/color_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/school_image"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="25dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/school_black"
+        app:tint="@color/color_primary" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="10dp"
+        android:layout_toEndOf="@+id/school_image">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/school_code"
+            android:text="School Code"
+            android:textColor="@color/color_primary"
+            style="@style/LabelStyle6"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/change_details"
+            android:text="@string/change_details"
+            style="@style/LabelStyle2"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:gravity="end"
+            android:padding="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@id/school_district"
+            android:textAllCaps="true"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="School Code"
+            style="@style/LabelStyle8"
+            android:textStyle="normal"
+            android:textColor="@color/color_primary"
+            android:id="@+id/school_name"
+            android:layout_marginTop="4dp"
+            android:layout_below="@id/school_code"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/school_block"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Block"
+            style="@style/LabelStyle8"
+            android:textStyle="normal"
+            android:textColor="@color/color_primary"
+            android:layout_below="@id/school_name"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:id="@+id/school_district"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_height="wrap_content"
+            android:text="District"
+            android:layout_below="@id/school_block"
+            android:textColor="@color/color_primary"
+            android:layout_marginBottom="5dp"
+            style="@style/LabelStyle8"
+            android:textStyle="normal"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+</RelativeLayout>

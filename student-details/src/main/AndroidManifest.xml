@@ -1,5 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.student_details">
 
-    /
+    <application>
+        <activity
+        android:name=".contracts.HHH"
+        android:theme="@style/MyMaterialTheme"/>
+        <activity
+            android:name="com.example.student_details.ui.teacher_aggregate.MainActivity"
+            android:label="rfvrfvftv"
+            android:theme="@style/MyMaterialTheme"/>
+    </application>
+
 </manifest>

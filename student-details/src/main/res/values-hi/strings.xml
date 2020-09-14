@@ -12,4 +12,5 @@
     <string name="please_select_atleast_one_grade">Please select atleast one grade to upload data</string>
     <string name="fetching_student_data">We are fetching student information</string>
     <string name="please_wait">Please wait ...</string>
+    <string name="sending_the_request">Uploading the Data</string>
 </resources>

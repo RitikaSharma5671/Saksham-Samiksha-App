@@ -32,23 +32,22 @@ class SectionSizeAdapter(private val filterCollectionViewModel: ClassFilterViewM
 
             val sizeView = itemView.findViewById<Button>(R.id.individual_filter)
             val size = filterCollectionViewModel.dataFilterAttributes.value!!.allSections!![position]
-//            val availableSizes = filterCollectionViewModel.collectionNodeResponse.value!!.availableSizes
-            sizeView.text = size.toString()
+            sizeView.text = size
 
 
 
             val selectedSections = filterCollectionViewModel.selectedSections.value
             sizeView.isSelected = selectedSections != null && selectedSections.contains(size)
 
+
             if (sizeView.isSelected) {
                 sizeView.setTextColor(itemView.context.resources.getColor(R.color.color4))
                 sizeView.background = itemView.context.resources.getDrawable(R.drawable.buttonstyle4_background_selected)
-
             } else {
                 sizeView.setTextColor(itemView.context.resources.getColor(R.color.color1))
                 sizeView.background = itemView.context.resources.getDrawable(R.drawable.buttonstyle4_background)
             }
-//
+
             sizeView.setOnClickListener {
                 sizeView.isSelected = !sizeView.isSelected
                 if (sizeView.isSelected) {
@@ -58,9 +57,8 @@ class SectionSizeAdapter(private val filterCollectionViewModel: ClassFilterViewM
                 } else {
                     sizeView.setTextColor(itemView.context.resources.getColor(R.color.color1))
                     sizeView.background = itemView.context.resources.getDrawable(R.drawable.buttonstyle4_background)
-
-                    filterCollectionViewModel.onSectionSelected(size, sizeView.isSelected)
                 }
+                filterCollectionViewModel.onSectionSelected(size, sizeView.isSelected)
             }
         }
     }

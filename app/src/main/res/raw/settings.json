@@ -4,11 +4,11 @@
     "admin_password": false,
     "admin_pw": false,
 
-    "edit_saved": false,
+    "edit_saved": true,
     "send_finalized": true,
     "view_sent": true,
     "get_blank": true,
-    "delete_saved": true,
+    "delete_saved": false,
 
     "save_mid": false,
     "jump_to": true,
@@ -35,7 +35,6 @@
     "change_server": false,
 
     "import_settings": false,
-    "change_server": false,
     "change_protocol_settings": false
 
   },

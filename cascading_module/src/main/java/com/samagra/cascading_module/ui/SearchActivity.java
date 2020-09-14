@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.appcompat.widget.Toolbar;
@@ -55,6 +56,13 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
     @BindView(R2.id.lottie_loader_search)
     public LottieAnimationView lottie_loader;
 
+    @BindView(R2.id.select_school_cta)
+    public LinearLayout select_school_cta;
+    @BindView(R2.id.select_button)
+    public Button select_button;
+    @BindView(R2.id.cancel_button)
+    public Button cancelButton;
+
     private String selectedDistrict ="";
     private String selectedBlock = "";
     private String selectedSchoolName = "";
@@ -62,7 +70,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
     private KeyboardHandler keyboardHandler;
     private int count = 0;
     private String two_Spaces = " ";
-    String userName = "";
+    String lastScreen = "";
     @Inject
     SearchPresenter<SearchMvpView, SearchMvpInteractor> searchPresenter;
     private Unbinder unbinder;
@@ -77,27 +85,37 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
         getActivityComponent().inject(this);
         unbinder = ButterKnife.bind(this);
         searchPresenter.onAttach(this);
+        if(getIntent() != null){
+            lastScreen = getIntent().getStringExtra("fromScreen");
+        }
         setupToolbar();
         initializeKeyboardHandler();
         searchPresenter.addKeyboardListeners(keyboardHandler);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(getIntent() != null){
-            userName = getIntent().getStringExtra("userName");
-        }
+
         schoolInfoFromPreferences = sharedPreferences.getString("studentGeoData", "");
 
         schoolGeoDataFromPreferences = TextUtils.isEmpty(schoolInfoFromPreferences) ? null : searchPresenter.fetchObjectFromPreferenceString(schoolInfoFromPreferences);
-        if (schoolGeoDataFromPreferences != null) {
-            Grove.d("Data saved in Preferences for Cascading Module, District %s Block %s School %s", schoolGeoDataFromPreferences.District, schoolGeoDataFromPreferences.Block, schoolGeoDataFromPreferences.SchoolName);
+        if (schoolGeoDataFromPreferences != null && lastScreen.equals("home")) {
+            Grove.d("Data saved in Preferences for Cascading Module, District %s Block %s School %s",
+                    schoolGeoDataFromPreferences.getDistrict(), schoolGeoDataFromPreferences.getBlock(), schoolGeoDataFromPreferences.getSchoolName());
             count = 1;
             selectedSchoolData = schoolGeoDataFromPreferences;
-            selectedDistrict = schoolGeoDataFromPreferences.District;
-            selectedBlock = schoolGeoDataFromPreferences.Block;
-            selectedSchoolName = schoolGeoDataFromPreferences.SchoolName;
+            selectedDistrict = schoolGeoDataFromPreferences.getDistrict();
+            selectedBlock = schoolGeoDataFromPreferences.getBlock();
+            selectedSchoolName = schoolGeoDataFromPreferences.getSchoolName();
         }
         searchPresenter.loadValuesToMemory();
         initSpinners();
         initNextButton();
+        if(lastScreen.equals("home")) {
+            select_school_cta.setVisibility(View.GONE);
+            nextButton.setVisibility(View.VISIBLE);
+        }else {
+            select_school_cta.setVisibility(View.VISIBLE);
+            nextButton.setVisibility(View.GONE);
+
+        }
     }
 
     @Override
@@ -106,6 +124,10 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
         customizeToolbar();
         nextButton.setClickable(true);
         nextButton.setEnabled(true);
+        cancelButton.setClickable(true);
+        cancelButton.setEnabled(true);
+        select_button.setClickable(true);
+        select_button.setEnabled(true);
         lottie_loader.setVisibility(View.INVISIBLE);
     }
 
@@ -125,7 +147,10 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
      */
     public void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
+        if(lastScreen.equals("home"))
         setTitle(getString(R.string.search_screen_title));
+        else
+            setTitle(getString(R.string.search_screen_title_profile));
         setSupportActionBar(toolbar);
     }
 
@@ -147,13 +172,14 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
         setListenerOnDistrictSpinner();
         setListenerOnBlockSpinner();
         setListenerOnSchoolNameSpinner();
-        if (schoolInfoFromPreferences != null && schoolGeoDataFromPreferences != null) {
+        if (schoolInfoFromPreferences != null && schoolGeoDataFromPreferences != null && lastScreen.equals("home")) {
             nextButton.setEnabled(true);
             blockSpinner.setEnabled(true);
             schoolNameSpinner.setEnabled(true);
             setDataForSpinnersExplicit(schoolGeoDataFromPreferences, false);
         } else {
             nextButton.setEnabled(false);
+            select_button.setEnabled(false);
             blockSpinner.setEnabled(false);
             schoolNameSpinner.setEnabled(true);
         }
@@ -163,18 +189,18 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
     private void setDataForSpinnersExplicit(InstitutionInfo individualStudentData, boolean b) {
         ArrayList<String> districtValues = searchPresenter.getLevel1Values();
         addValuesToSpinner(districtSpinner, districtValues);
-        selectedDistrict = individualStudentData.District;
-        districtSpinner.setSelection(districtValues.indexOf(individualStudentData.District));
+        selectedDistrict = individualStudentData.getDistrict();
+        districtSpinner.setSelection(districtValues.indexOf(individualStudentData.getDistrict()));
 
-        ArrayList<String> blockValues = searchPresenter.getLevel2ValuesUnderLevel1Set(individualStudentData.District);
+        ArrayList<String> blockValues = searchPresenter.getLevel2ValuesUnderLevel1Set(individualStudentData.getDistrict());
         addValuesToSpinner(blockSpinner, blockValues);
-        selectedBlock = individualStudentData.Block;
-        blockSpinner.setSelection(blockValues.indexOf(individualStudentData.Block));
+        selectedBlock = individualStudentData.getBlock();
+        blockSpinner.setSelection(blockValues.indexOf(individualStudentData.getBlock()));
 
-        ArrayList<String> institutionTypeValues = searchPresenter.getLevel3ValuesUnderLevel1Set(individualStudentData.Block, selectedDistrict);
+        ArrayList<String> institutionTypeValues = searchPresenter.getLevel3ValuesUnderLevel1Set(individualStudentData.getBlock(), selectedDistrict);
         addValuesToSpinner(schoolNameSpinner, institutionTypeValues);
-        selectedSchoolName = individualStudentData.SchoolName;
-        schoolNameSpinner.setSelection(institutionTypeValues.indexOf(individualStudentData.SchoolName));
+        selectedSchoolName = individualStudentData.getSchoolName();
+        schoolNameSpinner.setSelection(institutionTypeValues.indexOf(individualStudentData.getSchoolName()));
     }
 
     private void setListenerOnDistrictSpinner() {
@@ -254,6 +280,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
                     selectedSchoolData = new InstitutionInfo(selectedDistrict, selectedBlock, selectedSchoolName);
                     // Enable the next button
                     nextButton.setEnabled(true);
+                    select_button.setEnabled(true);
                 }
             }
 
@@ -303,6 +330,29 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
                 finish();
             }
         });
+        select_button.setOnClickListener(v -> {
+            if (districtSpinner.getSelectedItem().toString().equals(two_Spaces + getActivityContext().getResources().getString(R.string.dummy_district)) ||
+                    blockSpinner.getSelectedItem().toString().equals(two_Spaces + getActivityContext().getResources().getString(R.string.dummy_block)) ||
+                    schoolNameSpinner.getSelectedItem().toString().equals(two_Spaces + getActivityContext().getResources().getString(R.string.dummy_gram_panchayat))) {
+                SnackbarUtils.showLongSnackbar(rootView, getActivityContext().getResources().getString(R.string.error_message_search));
+            } else {
+                Grove.d("User selected the data " + selectedDistrict + ", Block = " + selectedBlock + ", School = " + selectedSchoolName);
+                searchLayout.setClickable(false);
+                startAnimation();
+                updatePreferenceData();
+                select_button.setClickable(false);
+                select_button.setEnabled(false);
+                Intent intent = new Intent();
+                intent.putExtra("selectedDistrict", selectedDistrict);
+                intent.putExtra("selectedBlock", selectedBlock);
+                intent.putExtra("selectedSchool", selectedSchoolName);
+                intent.putExtra("selectedSchoolCode", searchPresenter.fetchSchoolCode(selectedSchoolName));
+                Grove.d("Setting result, sending back to Home Screen");
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+        cancelButton.setOnClickListener(v -> finish());
     }
 
     private void startAnimation() {

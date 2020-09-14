@@ -5,7 +5,16 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+import com.example.student_details.contracts.ApolloQueryResponseListener;
+import com.example.student_details.contracts.EmployeeInfoListener;
+import com.example.student_details.contracts.IStudentDetailsContract;
+import com.example.student_details.contracts.StudentDetailsComponentManager;
+import com.example.student_details.models.realm.SchoolEmployeesInfo;
 import com.google.android.material.snackbar.Snackbar;
+import com.hasura.model.GetStudentsForSchoolQuery;
+import com.samagra.ancillaryscreens.screens.profile.UserProfileElement;
 import com.samagra.commons.InstitutionInfo;
 import com.samagra.commons.utils.FormDownloadStatus;
 import com.samagra.grove.logging.Grove;
@@ -15,16 +24,18 @@ import com.samagra.parent.UtilityFunctions;
 import com.samagra.parent.base.BasePresenter;
 import com.samagra.parent.helper.BackendNwHelper;
 import com.samagra.parent.ui.submissions.SubmissionsActivity;
-import com.samagra.user_profile.profile.UserProfileElement;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.odk.collect.android.contracts.CSVBuildStatusListener;
+import org.odk.collect.android.contracts.CSVHelper;
 import org.odk.collect.android.contracts.DataFormDownloadResultCallback;
 import org.odk.collect.android.contracts.FormListDownloadResultCallback;
 import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.dto.Form;
 import org.odk.collect.android.logic.FormDetails;
+import org.odk.collect.android.utilities.PermissionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +45,6 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
-
 
 /**
  * The Presenter class for Home Screen. This class controls interaction between the View and Data.
@@ -46,7 +56,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     private FormDownloadStatus formsDownloadStatus = FormDownloadStatus.FAILURE;
     private int currentProgress = 0;
-    private int maxProgress = 10;
+    private List<SchoolEmployeesInfo> employeeInfos1;
 
     @Inject
     public HomePresenter(I mvpInteractor, CompositeDisposable compositeDisposable, BackendNwHelper backendNwHelper, IFormManagementContract iFormManagementContract) {
@@ -67,18 +77,43 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     }
 
     @Override
+    public void fetchStudentData() {
+        long ff = System.currentTimeMillis();
+        Timber.d("Starting time at fetching School Data is " + ff);
+        int schoolCode = getMvpInteractor().getPreferenceHelper().fetchSchoolCode();
+        String code = String.valueOf(schoolCode);
+        if (schoolCode != 0 && (getMvpInteractor().getPreferenceHelper().isTeacher() || getMvpInteractor().getPreferenceHelper().isSchool())) {
+            Grove.d("School code is " + code);
+            IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+            iStudentDetailsContract.fetchStudentData(code, new ApolloQueryResponseListener<GetStudentsForSchoolQuery.Data>() {
+                @Override
+                public void onResponseReceived(Response<GetStudentsForSchoolQuery.Data> response) {
+                    long gg = System.currentTimeMillis();
+                    Grove.d("Size of student data is " + response.getData().student().size());
+                    long timetaken = gg - ff;
+                    Timber.d("ending time at fetching School Data is  " + gg + "   tine for n/w call  " + timetaken);
+                }
+
+                @Override
+                public void onFailureReceived(ApolloException e) {
+                    Timber.d("bdbgdbggb" + e.getLocalizedMessage());
+                }
+            });
+        }
+    }
+
+    @Override
     public void onViewSubmittedFormsOptionsClicked() {
         Grove.d("User selects the option View Submitted Forms...");
-//        if (getMvpView() != null) {
-//            Intent intent = new Intent(getMvpView().getActivityContext(), SubmissionsActivity.class);
-//            getMvpView().getActivityContext().startActivity(intent);
-//        }
-
         if (getMvpView() != null) {
-            getIFormManagementContract().launchViewSubmittedFormsView(getMvpView().getActivityContext(),UtilityFunctions.generateToolbarModificationObject(true,
-                    R.drawable.ic_arrow_back_white_24dp,
-                    getMvpView().getActivityContext().getResources().getString(R.string.my_visits), true));
+            Intent intent = new Intent(getMvpView().getActivityContext(), SubmissionsActivity.class);
+            getMvpView().getActivityContext().startActivity(intent);
         }
+//        if (getMvpView() != null) {
+//            getIFormManagementContract().launchViewSubmittedFormsView(getMvpView().getActivityContext(),UtilityFunctions.generateToolbarModificationObject(true,
+//                    R.drawable.ic_arrow_back_white_24dp,
+//                    getMvpView().getActivityContext().getResources().getString(R.string.my_visits), true));
+//        }
     }
 
 
@@ -101,7 +136,6 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             getMvpView().getActivityContext().startActivity(i);
         }
     }
-
 
     @Override
     public boolean isNetworkConnected() {
@@ -139,7 +173,6 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         getIFormManagementContract().applyODKCollectSettings(getMvpView().getActivityContext(), R.raw.settings);
     }
 
-
     /**
      * Check if the ODK Forms have been updated?
      *
@@ -154,12 +187,20 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         }
     }
 
-
     private String getUserRoleFromPref() {
         return getMvpInteractor().getPreferenceHelper().getUserRoleFromPref();
         //Viewing and download of forms is based on User's role, you can configure it via Preferences when logging in as per User's Login response
     }
 
+    private boolean isTeacherAccount() {
+        return getMvpInteractor().getPreferenceHelper().isTeacher();
+        //Viewing and download of forms is based on User's role, you can configure it via Preferences when logging in as per User's Login response
+    }
+
+    private boolean isSchoolAccount() {
+        return getMvpInteractor().getPreferenceHelper().isSchool();
+        //Viewing and download of forms is based on User's role, you can configure it via Preferences when logging in as per User's Login response
+    }
 
     private String getRoleFromRoleMappingFirebase(String userRole) {
         if (userRole.equals("")) return "all_grades";
@@ -230,7 +271,22 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 Grove.d("Network Available, forms are matching, rendering the layout");
                 if (getMvpView() != null) {
                     Grove.d("Rendering UI Visible as forms already downloaded");
+                    if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+                        buildCSV();
+                        buildCSVForTeachers();
+                    }
+                    if (getMvpInteractor().getPreferenceHelper().isTeacher()) {
+                        buildCSV();
+                    }
                     getMvpView().renderLayoutVisible();
+                }else {
+                    if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+                        buildCSV();
+                        buildCSVForTeachers();
+                    }
+                    if (getMvpInteractor().getPreferenceHelper().isTeacher()) {
+                        buildCSV();
+                    }
                 }
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
             }
@@ -295,18 +351,17 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     @Override
     public void resetProgressVariables() {
         currentProgress = 0;
-        maxProgress = 10;
     }
 
     @Override
     public void prefillData(InstitutionInfo institutionInfo) {
-        Grove.d("Prefilling data for the Forms downloaded");
+        Grove.d("Pre-filling data for the Forms downloaded");
         List<Form> forms = getIFormManagementContract().getDownloadedFormsNamesFromDatabase();
         for (Form form : forms) {
             String formName = form.getDisplayName();
-            getIFormManagementContract().updateFormBasedOnIdentifier(formName, "district", institutionInfo.District);
-            getIFormManagementContract().updateFormBasedOnIdentifier(formName, "block", institutionInfo.Block);
-            getIFormManagementContract().updateFormBasedOnIdentifier(formName, "school", institutionInfo.SchoolName);
+            getIFormManagementContract().updateFormBasedOnIdentifier(formName, "district", institutionInfo.getDistrict());
+            getIFormManagementContract().updateFormBasedOnIdentifier(formName, "block", institutionInfo.getBlock());
+            getIFormManagementContract().updateFormBasedOnIdentifier(formName, "school", institutionInfo.getSchoolName());
             getIFormManagementContract().updateFormBasedOnIdentifier(formName, "user_name", getMvpInteractor().getUserName());
             getIFormManagementContract().updateFormBasedOnIdentifier(formName, "name", getMvpInteractor().getUserFullName());
             getIFormManagementContract().updateFormBasedOnIdentifier(formName, "designation", getUserRoleFromPref());
@@ -317,6 +372,37 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     public void searchmodule() {
         if (getMvpView() != null)
             getMvpView().launchSearchModule();
+    }
+
+    public void checkForDownloadStudentData() {
+        if (getMvpInteractor().getPreferenceHelper().isSchoolUpdated())
+            fetchStudentData();
+    }
+
+    public void fetchSchoolEmployeeData() {
+        if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+            IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+            iStudentDetailsContract.fetchSchoolInfo(String.valueOf(getMvpInteractor().getPreferenceHelper().fetchSchoolCode())
+                    , getMvpInteractor().getPreferenceHelper().fetchSchoolName(), new EmployeeInfoListener() {
+                        @Override
+                        public void onSuccess(List<SchoolEmployeesInfo> employeeInfos) {
+                            employeeInfos1 = employeeInfos;
+                        }
+
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+        }
+    }
+
+    public boolean hasSeenDialog() {
+        return getMvpInteractor().getPreferenceHelper().hasSeenDialog();
+    }
+
+    public void updateSeenDialogCount() {
+        getMvpInteractor().getPreferenceHelper().updateCountFlag(true);
     }
 
     class FormListDownloadListener implements FormListDownloadResultCallback {
@@ -334,9 +420,15 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 if (getMvpView() != null)
                     getMvpView().setDownloadProgress(30);
                 currentProgress = 30;
-                maxProgress = formsToBeDownloaded.size();
             } else {
                 Grove.d("No new forms to be downloaded");
+                if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+                    buildCSV();
+                    buildCSVForTeachers();
+                }
+                if (getMvpInteractor().getPreferenceHelper().isTeacher()) {
+                    buildCSV();
+                }
                 if (getMvpView() != null)
                     getMvpView().setDownloadProgress(100);
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
@@ -374,15 +466,40 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
                 if (getMvpView() != null) {
                     getMvpView().renderLayoutVisible();
-                    getMvpView().setDownloadProgress(100);
+                    getMvpView().setDownloadProgress(97);
+                    if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+                        buildCSV();
+                        buildCSVForTeachers();
+                    }
+                    if (getMvpInteractor().getPreferenceHelper().isTeacher()) {
+                        buildCSV();
+                    }
+                    if (!getMvpInteractor().getPreferenceHelper().isTeacher() && !getMvpInteractor().getPreferenceHelper().isSchool()) {
+                        getMvpView().setDownloadProgress(100);
+                        getMvpView().renderLayoutVisible();
+                    }
+                } else {
+                    if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+                        buildCSV();
+                        buildCSVForTeachers();
+                    }
+                    if (getMvpInteractor().getPreferenceHelper().isTeacher()) {
+                        buildCSV();
+                    }
+                    if (!getMvpInteractor().getPreferenceHelper().isTeacher() && !getMvpInteractor().getPreferenceHelper().isSchool()) {
+                        if (getMvpView() != null)
+                            getMvpView().renderLayoutVisible();
+                    }
                 }
             }
 
             @Override
             public void formsDownloadingFailure() {
                 Grove.d("Unable to download the forms");
-                if(getMvpView() != null)
+                if (getMvpView() != null) {
                     getMvpView().showSnackbar("Could not download the forms", Snackbar.LENGTH_LONG);
+                    getMvpView().renderLayoutVisible();
+                }
             }
 
             @Override
@@ -413,6 +530,128 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 }
                 Grove.e("Form Download Cancelled >> API Cancelled callback received");
             }
+        }
+    }
+
+    private void buildCSVForTeachers() {
+        String referenceFileName = "itemsets.csv";
+        IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+        ArrayList<ArrayList<String>> list = iStudentDetailsContract.buildJSONArrayForEmployees(employeeInfos1);
+        ArrayList<String> mediaDirectoriesNames = (PermissionUtils.areStoragePermissionsGranted(getMvpView().getActivityContext())) ? CSVHelper.fetchFormMediaDirectoriesWithMedia(referenceFileName) : new ArrayList<>();
+        if (mediaDirectoriesNames.size() > 0 && list.size() > 0) {
+            String direcName = "";
+            for (String name : mediaDirectoriesNames) {
+                String formName = name.toLowerCase();
+                String teacher = "teacher";
+                String COVID = "covid";
+                if (formName.contains(teacher) && formName.contains(COVID)) {
+                    direcName = name;
+                    break;
+                }
+            }
+            ArrayList<String> teacherCOVIDReportingMediaFile = new ArrayList<>();
+            teacherCOVIDReportingMediaFile.add(direcName);
+            CSVHelper.buildCSVForODK1(new CSVBuildStatusListener() {
+                @Override
+                public void onSuccess() {
+                    getMvpView().setDownloadProgress(100);
+                    getMvpView().renderLayoutVisible();
+                }
+
+                @Override
+                public void onFailure(Exception exception, CSVHelper.BuildFailureType buildFailureType) {
+                    Grove.e(exception);
+                }
+            }, teacherCOVIDReportingMediaFile, null, referenceFileName, list);
+
+        }
+    }
+
+    @Override
+    public ArrayList<String> fetchHomeItemList() {
+        ArrayList<String> atHomeItemsList = new ArrayList<>();
+        if (isSchoolAccount()) {
+            atHomeItemsList.add("Fill Forms");
+            atHomeItemsList.add("Mark Teacher Attendance");
+            atHomeItemsList.add("View Forms");
+            atHomeItemsList.add("Submit Forms");
+            atHomeItemsList.add("Helpline");
+            return atHomeItemsList;
+        }
+        String role = getRoleFromRoleMappingFirebase(getUserRoleFromPref());
+        switch (role) {
+            case "Teacher":
+                atHomeItemsList.add("Fill Forms");
+                atHomeItemsList.add("Edit Student Data");
+                atHomeItemsList.add("Mark Student Attendance");
+                atHomeItemsList.add("View Student Attendance");
+                atHomeItemsList.add("View Forms");
+                atHomeItemsList.add("Submit Forms");
+                atHomeItemsList.add("Helpline");
+                break;
+            case "Principal":
+                atHomeItemsList.add("Fill Forms");
+                atHomeItemsList.add("Mark Teacher Attendance");
+                atHomeItemsList.add("View Teacher Attendance");
+                atHomeItemsList.add("View School Attendance");
+                atHomeItemsList.add("View Forms");
+                atHomeItemsList.add("Submit Forms");
+                atHomeItemsList.add("Helpline");
+                break;
+            case "School":
+                atHomeItemsList.add("Fill Forms");
+                atHomeItemsList.add("Mark Teacher Attendance");
+//                atHomeItemsList.add("View Teacher Attendance");
+                atHomeItemsList.add("View Forms");
+                atHomeItemsList.add("Submit Forms");
+                atHomeItemsList.add("Helpline");
+                break;
+            default:
+                atHomeItemsList.add("Fill Forms");
+                atHomeItemsList.add("View Forms");
+                atHomeItemsList.add("Submit Forms");
+                atHomeItemsList.add("Helpline");
+                break;
+        }
+        return atHomeItemsList;
+    }
+
+    @Override
+    public boolean isProfileComplete() {
+        return getMvpInteractor().getPreferenceHelper().isProfileComplete();
+    }
+
+
+    private void buildCSV() {
+        String referenceFileName = "itemsets.csv";
+        IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+        ArrayList<ArrayList<String>> list = iStudentDetailsContract.buildJSONArray();
+        ArrayList<String> mediaDirectoriesNames = (PermissionUtils.areStoragePermissionsGranted(getMvpView().getActivityContext())) ? CSVHelper.fetchFormMediaDirectoriesWithMedia(referenceFileName) : new ArrayList<>();
+        if (mediaDirectoriesNames.size() > 0 && list.size() > 0) {
+            String direcName = "";
+            for (String name : mediaDirectoriesNames) {
+                String formName = name.toLowerCase();
+                String student = "student";
+                String COVID = "covid";
+                if (formName.contains(student) && formName.contains(COVID)) {
+                    direcName = name;
+                    break;
+                }
+            }
+            ArrayList<String> studentReportingMediaFileList = new ArrayList<>();
+            studentReportingMediaFileList.add(direcName);
+            CSVHelper.buildCSVForODK1(new CSVBuildStatusListener() {
+                @Override
+                public void onSuccess() {
+                    getMvpView().setDownloadProgress(99);
+
+                }
+
+                @Override
+                public void onFailure(Exception exception, CSVHelper.BuildFailureType buildFailureType) {
+                    Grove.e(exception);
+                }
+            }, studentReportingMediaFileList, list, referenceFileName, null);
         }
     }
 

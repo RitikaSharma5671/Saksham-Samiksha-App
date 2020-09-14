@@ -65,7 +65,7 @@
     <style name="filter_applied_filter_category_header_text_style" parent="LabelStyle5"/>
     <style name="filter_applied_filter_empty_text_style" parent="LabelStyle6"/>
     <style name="filter_clear_all_button_style" parent="ButtonStyle2"/>
-    <style name="filter_apply_button_style" parent="ButtonStyle2"/>
+    <style name="filter_apply_button_style" parent="ButtonStyle1"/>
     <style name="filter_screen_header_text_style" parent="LabelStyle1"/>
     <style name="filter_product_clear_all_button_style" parent="ButtonStyle2"/>
     <style name="filter_brand_query_style" parent="EditTextStyle1"/>

@@ -1,6 +1,7 @@
 package com.samagra.parent.ui.splash;
 
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 
 import com.samagra.commons.MainApplication;
@@ -17,22 +18,9 @@ import com.samagra.parent.base.MvpView;
 public interface SplashContract {
     interface View extends MvpView {
         void endSplashScreen();
-
-        /**
-         * This function configures the Splash Screen
-         * and renders it on screen. This includes the Splash screen image and other UI configurations.
-         *
-         */
         void showSimpleSplash();
-
-        void finishActivity();
-
-        /**
-         * This function sets the activity layout and binds the UI Views.
-         * This function should be called after the relevant permissions are granted to the app by the user
-         */
+        void finishSplashScreen();
         void showActivityLayout();
-
         void redirectToHomeScreen();
     }
 
@@ -74,11 +62,11 @@ public interface SplashContract {
          * @see com.samagra.ancillaryscreens.data.prefs.CommonsPrefsHelperImpl
          */
         void moveToNextScreen();
-
         void startUnzipTask();
         void downloadFirebaseRemoteStorageConfigFile();
-        void init();
-
-        void requestStoragePermissions();
+        boolean canLaunchHome();
+        void updateJWT(String apiKey);
+        void verifyJWTTokenValidity(String apiKey);
+        void requestStoragePermissions(String packageName, PackageManager packageManager);
     }
 }

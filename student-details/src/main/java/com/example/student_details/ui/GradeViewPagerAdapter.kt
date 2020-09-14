@@ -6,7 +6,7 @@ import androidx.viewpager.widget.PagerAdapter
 
 class GradeViewPagerAdapter(val lifecycleOwner: ClassFilterFragment, val filterCollectionViewModel: ClassFilterViewModel) : PagerAdapter() {
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        return FilterViewProvider.getSizeFilterView(container, lifecycleOwner, filterCollectionViewModel)
+        return FilterViewProvider.getSizeFilterView(container)
     }
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {

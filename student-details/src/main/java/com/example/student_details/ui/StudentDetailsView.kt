@@ -1,121 +1,184 @@
 package com.example.student_details.ui
 
+import android.app.ProgressDialog
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
+import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.student_details.R
-import com.example.student_details.modules.StudentDataModel
+import com.example.student_details.databinding.FragmentStudentDetailsBinding
+import com.example.student_details.getViewModelProvider
+import com.example.student_details.models.realm.StudentInfo
 import kotlinx.android.synthetic.main.fragment_student_details.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 class StudentDetailsView : Fragment(), OnSelectListener, EditListener {
 
     private lateinit var studentAdapter: StudentAdapter
-    private lateinit var studentDetailsViewModel: StudentDetailsViewModel
+    private val studentDetailsViewModel: StudentDetailsViewModel by lazy {
+        getViewModelProvider(this, StudentDetailsViewModelFactory(
+                activity!!.application,""
+        )).get(
+                StudentDetailsViewModel::class.java
+        )
+    }
 
     private lateinit var selectedGrade: String
     private  lateinit var selectedSection : String
     private  var selectedSectionPosition:Int = 0
     private  var selectedGradePosition:Int = 0
-    private lateinit var studentList: ArrayList<StudentInfo>
+    private val studentList = ArrayList<StudentInfo>()
     private lateinit var masterList: ArrayList<StudentInfo>
+    private lateinit var mProgress: ProgressDialog
+
+    private lateinit var layoutBinding: FragmentStudentDetailsBinding
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_student_details, container, false)
-        studentDetailsViewModel =   getViewModelProvider(
-                this,
-                StudentDetailsViewModelFactory(
-                        activity!!.application,""
-                )
-        )
-                .get(StudentDetailsViewModel::class.java)
-        studentDetailsViewModel.fetchStudentData()
-        return rootView
+        layoutBinding = FragmentStudentDetailsBinding.inflate(inflater, container, false)
+        layoutBinding.studentDetailsViewModel = studentDetailsViewModel
+        layoutBinding.executePendingBindings()
+        return layoutBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        studentList = studentDetailsViewModel.fetchStudentData()
-        masterList = ArrayList()
-        masterList.addAll(studentList)
-        setInitialData()
         initFilters()
-        mark_attendance.setOnClickListener {
-            val studentDetailsView = MarkAttendanceView()
-            val bundle = Bundle()
-            bundle.putSerializable("student_list", studentList)
-            addFragment(R.id.fragment_container_1, parentFragmentManager, studentDetailsView, "StudentDetailsView")
-
+        view.findViewById<ImageView>(R.id.close_cross).setOnClickListener {
+            activity!!.finish()
         }
-        Log.d("veev bertvbtr", "veet btb tre")
-        val sd =  StudentDataModel()
-        sd.fvf();
-    }
-
-    private fun addFragment(containerViewId: Int, manager: FragmentManager, fragment: Fragment, fragmentTag: String) {
-        try {
-            val fragmentName = fragment.javaClass.name
-            //            Grove.d("addFragment() :: Adding new fragment %s", fragmentName);
-            // Create new fragment and transaction
-            val transaction = manager.beginTransaction()
-            transaction.add(containerViewId, fragment, fragmentTag)
-            transaction.addToBackStack(fragmentTag)
-            Handler().post {
-                try {
-                    transaction.commit()
-                } catch (ex: IllegalStateException) {
+        mProgress = ProgressDialog(requireContext())
+        mProgress.setTitle(getString(R.string.sending_the_request))
+        mProgress.setMessage(getString(R.string.please_wait))
+        mProgress.setCancelable(false)
+        mProgress.isIndeterminate = true
+        initializeAdapter(layoutBinding)
+        studentDetailsViewModel.fetchStudentData()
+        studentDetailsViewModel.progressBarVisible.observe(viewLifecycleOwner, Observer {
+            if(it == "true") {
+                layoutBinding.studentParentLayout.isClickable = false
+                layoutBinding.progressBar.visibility = View.VISIBLE
+            }else {
+                layoutBinding.studentParentLayout.isClickable = true
+                layoutBinding.progressBar.visibility = View.GONE
+            }
+        })
+        studentDetailsViewModel.studentsList.observe(viewLifecycleOwner, Observer {
+            val productList = studentDetailsViewModel.studentsList.value
+            when {
+                productList != null && productList.isNotEmpty() -> {
+                    layoutBinding.emptyOnRackSectionMessageHeading.visibility = View.GONE
+                    layoutBinding.studentList.visibility = View.VISIBLE
+                    studentAdapter.submitList(productList)
+                    studentAdapter.notifyDataSetChanged()
+                }
+                else -> {
+                    layoutBinding.emptyOnRackSectionMessageHeading.visibility = View.VISIBLE
+                    layoutBinding.studentList.visibility = View.GONE
+                    initializeAdapter(layoutBinding)
                 }
             }
-        } catch (ex: IllegalStateException) {
-//            Grove.e("Failed to add Fragment with exception %s", ex.getMessage());
-        }
+        })
+        studentAdapter.submitList(studentList)
     }
-    private fun setInitialData() {
-        studentAdapter = StudentAdapter(studentList, this, this, context!!)
-        val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity!!)
-        student_list.layoutManager = mLayoutManager
-        student_list.itemAnimator = DefaultItemAnimator()
-        student_list.setAdapter(studentAdapter)
-        (student_list.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
+    private fun initializeAdapter(binding: FragmentStudentDetailsBinding) {
+        studentAdapter = StudentAdapter(
+                viewLifecycleOwner,
+                studentDetailsViewModel
+        )
+        binding.studentList.adapter = studentAdapter
+        binding.studentList.itemAnimator = DefaultItemAnimator()
+        ( binding.studentList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
     }
 
     private fun initFilters() {
-        val listener: AdapterView.OnItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View, position: Int, id: Long) {
+        val grades = ArrayList<String>()
+        grades.add("Class 1")
+        grades.add("Class 2")
+        grades.add("Class 3")
+        grades.add("Class 4")
+        grades.add("Class 5")
+        grades.add("Class 6")
+        grades.add("Class 7")
+        grades.add("Class 8")
+        grades.add("Class 9")
+        grades.add("Class 10")
+        grades.add("Class 11")
+        grades.add("Class 12")
+        val adapter = ArrayAdapter(
+                context!!,
+                R.layout.spinner_item, grades
+        )
+
+        val mPreconditionSpinner = layoutBinding.gradeSpinner
+        mPreconditionSpinner.adapter = adapter
+        mPreconditionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                studentDetailsViewModel.selectedGrade.postValue(grade_spinner.selectedItem.toString().split(" ".toRegex()).toTypedArray().get(1).toInt())
                 selectedGrade = grade_spinner.selectedItem.toString().split(" ".toRegex()).toTypedArray().get(1)
-                selectedSection = section_spinner.selectedItem.toString().split(" ".toRegex()).toTypedArray().get(1)
-                selectedSectionPosition = section_spinner.selectedItemPosition
+                if (selectedGrade == "11" || selectedGrade == "12") {
+                    category.visibility = View.VISIBLE
+                } else {
+                    category.visibility = View.GONE
+                }
                 selectedGradePosition = grade_spinner.selectedItemPosition
-                refreshData()
             }
 
-            override fun onNothingSelected(parentView: AdapterView<*>?) {
-                // your code here
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //To change body of created functions use File | Settings | File Templates.
             }
         }
-        section_spinner.onItemSelectedListener = listener
-        grade_spinner.onItemSelectedListener = listener
+
+        val sections = ArrayList<String>()
+        sections.add("Section A")
+        sections.add("Section B")
+        sections.add("Section C")
+        sections.add("Section D")
+        sections.add("Section E")
+        val adapter1 = ArrayAdapter(
+                context!!,
+                R.layout.spinner_item, sections
+        )
+
+        val mPreconditionSpinner1 = layoutBinding.sectionSpinner
+        mPreconditionSpinner1.adapter = adapter1
+        mPreconditionSpinner1.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                studentDetailsViewModel.selectedSection.postValue(section_spinner.selectedItem.toString().split(" ".toRegex()).toTypedArray().get(1))
+                selectedSection = section_spinner.selectedItem.toString().split(" ".toRegex()).toTypedArray().get(1)
+                selectedSectionPosition = section_spinner.selectedItemPosition
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                 //To change body of created functions use File | Settings | File Templates.
+            }
+        }
+
+        category.setOnCheckedChangeListener { group, checkedId ->
+            // This will get the radiobutton that has changed in its check state
+            val checkedRadioButton: RadioButton = group.findViewById(checkedId) as RadioButton
+            // This puts the value (true/false) into the variable
+            val isChecked: Boolean = checkedRadioButton.isChecked
+            // If the radiobutton that has changed in check state is now checked...
+            if (isChecked) {
+                studentDetailsViewModel.selectedStream.postValue(checkedRadioButton.text.toString())
+            } else {
+                studentDetailsViewModel.selectedStream.postValue("")
+            }
+        }
     }
 
     private fun filterList(grade: String, section: String): List<StudentInfo> {
         val filtered: MutableList<StudentInfo> = ArrayList<StudentInfo>()
         for (s in masterList) {
             try {
-                if (s.standard.toString() == grade && s.section == section) {
+                if (s.grade.toString() == grade && s.section == section) {
                     filtered.add(s)
                 }
             } catch (e: Exception) {
@@ -126,19 +189,14 @@ class StudentDetailsView : Fragment(), OnSelectListener, EditListener {
 
     private fun refreshData() {
         // https://stackoverflow.com/questions/31367599/how-to-update-recyclerview-adapter-data?rq=1
-        studentList.clear()
-        val temp: List<StudentInfo> = filterList(selectedGrade, selectedSection)
+//        studentList.clear()
+//        val temp: List<StudentInfo> = filterList(selectedGrade, selectedSection)
+//
+//        studentList.addAll(temp)
+//        studentAdapter.studentList = studentList
+//        studentAdapter.notifyDataSetChanged()
+    }
 
-        studentList.addAll(temp)
-        studentAdapter.studentList = studentList
-        studentAdapter.notifyDataSetChanged()
-    }
-    private fun getViewModelProvider(
-            fragment: Fragment,
-            factory: ViewModelProvider.Factory?
-    ): ViewModelProvider {
-        return ViewModelProviders.of(fragment, factory)
-    }
 
     override fun onItemSelected(position: Int, isChecked: Boolean) {
         //
@@ -153,10 +211,10 @@ class StudentDetailsView : Fragment(), OnSelectListener, EditListener {
 
 class Com : Comparator<StudentInfo> {
     override fun compare(left: StudentInfo, right: StudentInfo): Int {
-        if (left.studentName.toLowerCase().equals(right.studentName.toLowerCase())) {
+        if (left.name.toLowerCase().equals(right.name.toLowerCase())) {
             return  left.srn.compareTo(right.srn)
         }
-        return left.studentName.toLowerCase().compareTo(right.studentName.toLowerCase())
+        return left.name.toLowerCase().compareTo(right.name.toLowerCase())
     }
 
 }

@@ -1,6 +1,7 @@
 package com.samagra.ancillaryscreens.data.prefs;
 
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
+import com.samagra.commons.InstitutionInfo;
 
 /**
  * Interface defining the access point to the SharedPreference used by the ancillaryscreens module.
@@ -48,4 +49,10 @@ public interface CommonsPreferenceHelper {
 
     void updateToken(String token);
     String getToken();
+
+    String fetchDesignation();
+
+    InstitutionInfo fetchSchoolInfo();
+
+    void updateSchoolDetails(InstitutionInfo institutionInfo);
 }

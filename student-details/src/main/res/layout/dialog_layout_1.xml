@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/alert_dialog_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/LabelStyle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="23.5dp"
+        android:layout_marginTop="31dp"
+        android:layout_marginEnd="23.5dp"
+        android:gravity="center"
+        android:textSize="17sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_message"
+        style="@style/LabelStyle3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="23.5dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="23.5dp"
+        android:textSize="12sp"
+        android:letterSpacing="0.052"
+        android:layout_marginBottom="14dp"
+        android:textAlignment="center"
+        android:visibility="gone" />
+
+
+    <android.widget.Button
+        android:id="@+id/btn_action1"
+        style="@style/ButtonStyle1"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="23.5dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="23.5dp"
+        android:layout_marginBottom="14dp"
+        android:stateListAnimator="@null"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textStyle="normal"
+        android:visibility="gone" />
+
+    <android.widget.Button
+        android:id="@+id/btn_action2"
+        style="@style/ButtonStyle1"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="23.5dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="23.5dp"
+        android:layout_marginBottom="14dp"
+        android:stateListAnimator="@null"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textStyle="normal"
+        android:visibility="gone" />
+
+    <android.widget.Button
+        android:id="@+id/btn_action3"
+        style="@style/ButtonStyleGrey"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="23.5dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="23.5dp"
+        android:layout_marginBottom="20dp"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textStyle="normal"
+        android:visibility="gone" />
+
+
+</LinearLayout>

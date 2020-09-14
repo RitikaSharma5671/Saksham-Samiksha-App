@@ -2,21 +2,25 @@ package com.samagra.parent.ui.splash;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-import com.samagra.ancillaryscreens.R;
-import com.samagra.ancillaryscreens.R2;
+import com.samagra.ancillaryscreens.screens.login.LoginActivity;
+import com.samagra.commons.CommonUtilities;
 import com.samagra.commons.Constants;
+import com.samagra.commons.MainApplication;
+import com.samagra.commons.ScreenChangeEvent;
 import com.samagra.grove.logging.Grove;
+import com.samagra.parent.R;
 import com.samagra.parent.base.BaseActivity;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * The View Part for the Splash Screen, must implement {@link SplashContract.View}
@@ -26,13 +30,9 @@ import butterknife.Unbinder;
  */
 public class SplashActivity extends BaseActivity implements SplashContract.View {
 
-    private static final int SPLASH_TIMEOUT = 2000; // milliseconds
-
-    @BindView(R2.id.splash)
+    public LinearLayout splashDefaultLayout;
     public ImageView splashImage;
-
-    private Unbinder unbinder;
-
+    private static CompositeDisposable screenChangeDisposable;
     @Inject
     SplashPresenter<SplashContract.View, SplashContract.Interactor> splashPresenter;
 
@@ -40,76 +40,136 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        unbinder = ButterKnife.bind(this);
         getActivityComponent().inject(this);
         splashPresenter.onAttach(this);
-        splashPresenter.requestStoragePermissions();
+        splashImage = findViewById(R.id.splash);
+        splashDefaultLayout = findViewById(R.id.splash_default);
+        splashImage.setImageResource(R.drawable.login_bg);
+        splashImage.setVisibility(View.VISIBLE);
+        splashPresenter.initialise((MainApplication) getApplicationContext());
+        splashPresenter.requestStoragePermissions(getActivityContext().getPackageName(), getActivityContext().getPackageManager());
+        screenChangeDisposable = new CompositeDisposable();
+        setDisposable();
     }
 
 
     @Override
     public void endSplashScreen() {
-        splashPresenter.moveToNextScreen();
+        Grove.d("Moving to next screen from Splash");
+        if (splashPresenter.getMvpInteractor().isLoggedIn()) {
+            if (splashPresenter.canLaunchHome()) {
+                if (splashPresenter.isJwtTokenValid()) {
+                    splashPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
+                        Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
+                       redirectToHomeScreen();
+                    });
+
+                } else {
+                    splashPresenter.updateJWT(getActivityContext().getResources().getString(R.string.fusionauth_api_key));
+                }
+            }
+        } else {
+            new CountDownTimer(2500, 500) {
+                public void onTick(long millisUntilFinished) {
+                }
+
+                public void onFinish() {
+                    launchLoginScreen();
+                }
+            }.start();
+            Grove.d("Closing Splash Screen and Launching Login");
+        }
     }
 
     /**
      * This function configures the Splash Screen
      * and renders it on screen. This includes the Splash screen image and other UI configurations.
-     *
      */
     @Override
     public void showSimpleSplash() {
         splashImage.setImageResource(R.drawable.login_bg);
         splashImage.setVisibility(View.VISIBLE);
+        if (!splashPresenter.getMvpInteractor().isLoggedIn()) {
+            new CountDownTimer(2500, 500) {
+                public void onTick(long millisUntilFinished) {
+                }
 
-        Handler handler = new Handler();
-        handler.postDelayed(this::endSplashScreen, SPLASH_TIMEOUT);
+                public void onFinish() {
+                    launchLoginScreen();
+                }
+            }.start();
+
+        } else {
+            splashPresenter.verifyJWTTokenValidity(getActivityContext().getResources().getString(R.string.fusionauth_api_key));
+        }
     }
 
     @Override
-    public void finishActivity() {
+    public void finishSplashScreen() {
         finish();
     }
 
-    /**init();
-        }
+    /**
      * This function sets the activity layout and binds the UI Views.
      * This function should be called after the relevant permissions are granted to the app by the user
      */
     @Override
     public void showActivityLayout() {
-        setContentView(R.layout.activity_splash);
-        unbinder = ButterKnife.bind(this);
-//        Button bb = findViewById(R.id.decrdc);
-//        bb.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                StudentDetailsComponentManager.registerProfilePackage(new StudentDetailsSectionInteractor());
-//                IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
-//                iStudentDetailsContract.launchProfileActivity(getActivityContext(), com.samagra.parent.R.id.fragment_container, getSupportFragmentManager());
-//            }
-//        });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        screenChangeDisposable.dispose();
+        splashPresenter.onDetach();
+    }
+
+    private void setDisposable() {
+        screenChangeDisposable
+                .add(((MainApplication) (getApplicationContext()))
+                        .eventBusInstance()
+                        .register(ScreenChangeEvent.class)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(event -> {
+                            if (event.getDestinationScreen().equals("Login")) {
+                                launchLoginScreen();
+                            } else if (event.getDestinationScreen().equals("Home")) {
+                                redirectToHomeScreen();
+                            }
+                        }));
+    }
+
+//    private void launchHomeScreen() {
+//        Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//        startActivity(intent);
+//        Grove.d("Closing Splash Screen");
+//        finishSplashScreen();
+//    }
+
+    private void launchLoginScreen() {
+        splashPresenter.setInclompleteProfileCount();
+        Intent intent = new Intent(this, LoginActivity.class);
+        CommonUtilities.startActivityAsNewTask(intent, this);
+        finishSplashScreen();
+    }
+
+
 
     @Override
     public void redirectToHomeScreen() {
         Grove.d("Redirecting to Home screen from Splash screen >>> ");
+        splashPresenter.setInclompleteProfileCount();
         Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         Grove.d("Closing Splash Screen");
-        finishActivity();
+        finishSplashScreen();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (unbinder != null)
-            unbinder.unbind();
-        splashPresenter.onDetach();
-    }
 
     @Override
     public void setupToolbar() {

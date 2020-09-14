@@ -26,7 +26,6 @@
         <item name="android:fontFamily">@string/font_family_regular</item>
         <item name="android:panelBackground">@android:color/white</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
-        <item name="alertDialogTheme">@style/AlertDialogTheme</item>
         <item name="iconColor">@color/icons</item>
         <item name="dividerColor">@color/divider</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
@@ -65,11 +64,23 @@
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
     </style>
 
+    <style name="LoginButtonStyle">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:textColor">@color/white</item>
+        <!--        <item name="android:textAppearance">@style/Font1</item>-->
+        <item name="android:textSize">@dimen/font_size_large</item>
+        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/button_round</item> <!--Made compatible with Android 4.4-->
+        <item name="android:lineSpacingMultiplier">@fraction/line_spacing_medium</item>
+        <item name="android:letterSpacing" tools:targetApi="lollipop">@fraction/letter_spacing_medium</item>
+        <item name="android:stateListAnimator" tools:targetApi="lollipop">@null</item>
+    </style>
+
     <style name="keyboard_number_button" parent="keyboard_button">
         <item name="android:textColor">@color/color_primary</item>
         <item name="android:textSize">17sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="fontFamily">@font/tinos_bold</item>
         <item name="android:tag">number_button</item>
     </style>
 

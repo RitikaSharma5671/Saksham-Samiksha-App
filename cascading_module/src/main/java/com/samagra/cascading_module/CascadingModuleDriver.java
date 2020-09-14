@@ -18,6 +18,7 @@ import com.samagra.commons.MainApplication;
  */
 public class CascadingModuleDriver {
     public static final int SEARCH_ACTIVITY_REQUEST_CODE = 123;
+    public static final int SEARCH_ACTIVITY_REQUEST_CODE_PROFILE = 124;
     public static String FILE_PATH;
     public static MainApplication application;
     public static String ROOT;
@@ -33,10 +34,13 @@ public class CascadingModuleDriver {
         CascadingModuleDriver.application = mainApplication;
     }
 
-    public static void launchSearchView(Context context, String path, Activity activity) {
+    public static void launchSearchView(Context context, Activity activity, int reqCode) {
         Intent intent = new Intent(context, SearchActivity.class);
-        activity.startActivityForResult(intent, CascadingModuleDriver.SEARCH_ACTIVITY_REQUEST_CODE);
-//        context.startActivityF(intent);
+        if(reqCode == 123)
+            intent.putExtra("fromScreen", "home");
+        else
+            intent.putExtra("fromScreen", "profile");
+        activity.startActivityForResult(intent, reqCode);
     }
 
 

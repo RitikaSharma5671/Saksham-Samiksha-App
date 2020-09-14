@@ -9,7 +9,7 @@
                             android:height="45dp"
                             android:width="329dp"/>
                     <solid
-                            android:color="@color/color4"/>
+                            android:color="@color/trans"/>
                     <stroke
                             android:color="#FFE6E6E6"
                             android:width="1dp"/>

@@ -3,7 +3,6 @@ package com.example.student_details.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import com.example.student_details.R
 
 object FilterViewProvider {
@@ -17,11 +16,8 @@ object FilterViewProvider {
     }
 
     fun getSizeFilterView(
-            container: ViewGroup,
-            lifeCycleOwner: LifecycleOwner,
-            filterCollectionViewModel: ClassFilterViewModel
+            container: ViewGroup
     ): View {
-        val MAX_COLUMN_PER_ROW = 6
         val sizeFilterView = LayoutInflater.from(container.context).inflate(
                 R.layout.filters_layout,
                 container,

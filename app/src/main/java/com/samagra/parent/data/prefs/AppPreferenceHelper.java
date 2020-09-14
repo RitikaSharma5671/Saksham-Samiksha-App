@@ -51,11 +51,74 @@ public class AppPreferenceHelper implements PreferenceHelper {
 
     @Override
     public String getCurrentUserFullName() {
-        if(defaultPreferences.getString("user.fullName", "").equals(""))
+        if (defaultPreferences.getString("user.fullName", "").equals(""))
             return defaultPreferences.getString("user.username", "");
         else
             return defaultPreferences.getString("user.fullName", "");
 
+    }
+
+    @Override
+    public int fetchSchoolCode() {
+        String schoolCode = defaultPreferences.getString("user.schoolCode", "");
+        if (!schoolCode.isEmpty())
+            return Integer.parseInt(schoolCode);
+        else
+            return 0;
+    }
+
+    @Override
+    public boolean isTeacher() {
+        String designation = defaultPreferences.getString("user.designation", "");
+        return designation.contains("TGT") || designation.contains("Clerk")
+                || designation.contains("Tabla Player") ||
+                designation.contains("Vocational Instructor") ||
+                designation.contains("Vocational PGT") ||
+                designation.contains("Classical & Vernacular Teacher") ||
+                designation.contains("JBT") || designation.contains("PGT");
+    }
+
+    @Override
+    public boolean isSchool() {
+        return defaultPreferences.getString("user.designation", "").equals("School Head");
+    }
+
+    @Override
+    public boolean isSchoolUpdated() {
+        return defaultPreferences.getBoolean("schoolUpdated", false);
+    }
+
+    @Override
+    public String fetchSchoolName() {
+        return defaultPreferences.getString("user.schoolName", "");
+    }
+
+    @Override
+    public boolean isProfileComplete() {
+        String phoneNumber = "", userAccountName = "";
+        if (defaultPreferences != null) {
+            phoneNumber = defaultPreferences.getString("user.mobilePhone", "");
+            userAccountName = defaultPreferences.getString("user.fullName", "");
+        }
+        if (phoneNumber != null) {
+            if (userAccountName != null) {
+                return !phoneNumber.equals("") && !userAccountName.equals("");
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean hasSeenDialog() {
+        return defaultPreferences.getBoolean("isIncompleteDialogShown", false);
+
+    }
+
+    @Override
+    public void updateCountFlag(boolean flag) {
+        SharedPreferences.Editor editor = defaultPreferences.edit();
+        editor.putBoolean("isIncompleteDialogShown", flag);
+        editor.apply();
     }
 
     @Override
@@ -160,11 +223,7 @@ public class AppPreferenceHelper implements PreferenceHelper {
 
     @Override
     public String getUserRoleFromPref() {
-        try {
-            return new HashMap<String, String>((Map) new Gson().fromJson(defaultPreferences.getString("user.data", ""), HashMap.class).get("roleData")).get("designation");
-        } catch (Exception e) {
-            return "";
-        }
+        return defaultPreferences.getString("user.designation", "");
     }
 
 
@@ -175,11 +234,11 @@ public class AppPreferenceHelper implements PreferenceHelper {
 
     @Override
     public String fetchCurrentSystemLanguage() {
-        if(defaultPreferences.getString("currentLanguage", "").isEmpty()) {
+        if (defaultPreferences.getString("currentLanguage", "").isEmpty()) {
             defaultPreferences.edit().putString("currentLanguage", LocaleManager.ENGLISH).apply();
             return LocaleManager.HINDI;
-        }else{
-           return defaultPreferences.getString("currentLanguage", "");
+        } else {
+            return defaultPreferences.getString("currentLanguage", "");
         }
     }
 

@@ -5,6 +5,7 @@ import com.samagra.ancillaryscreens.di.modules.CommonsActivityAbstractProviders;
 import com.samagra.ancillaryscreens.di.modules.CommonsActivityModule;
 import com.samagra.ancillaryscreens.screens.about.AboutActivity;
 import com.samagra.ancillaryscreens.screens.login.LoginActivity;
+import com.samagra.ancillaryscreens.screens.profile.ProfileActivity;
 
 import dagger.Component;
 
@@ -23,4 +24,7 @@ public interface ActivityComponent {
     void inject(LoginActivity loginActivity);
 
     void inject(AboutActivity aboutActivity);
+
+    void inject(ProfileActivity profileActivity);
+
 }

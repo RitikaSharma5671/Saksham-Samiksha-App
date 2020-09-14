@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
 
@@ -30,15 +31,11 @@ class StreamSizeAdapter(private val filterCollectionViewModel: ClassFilterViewMo
 
         fun bindItem(position: Int) {
 
-            val sizeView = itemView.findViewById<Button>(R.id.individual_filter)
+            val sizeView = itemView.findViewById<Button>(R.id.individual_filter1)
             val size = filterCollectionViewModel.dataFilterAttributes.value!!.allStreams!![position]
-//            val availableSizes = filterCollectionViewModel.collectionNodeResponse.value!!.availableSizes
-            sizeView.text = size.toString()
-
-
+            sizeView.text = size
             val selectedStreams = filterCollectionViewModel.selectedStreams.value
-            sizeView.isSelected = selectedStreams != null &&
-                    selectedStreams.contains(size)
+            sizeView.isSelected = selectedStreams != null && selectedStreams.contains(size)
 
             if (sizeView.isSelected) {
                 sizeView.setTextColor(itemView.context.resources.getColor(R.color.color4))
@@ -50,16 +47,20 @@ class StreamSizeAdapter(private val filterCollectionViewModel: ClassFilterViewMo
             }
 //
             sizeView.setOnClickListener {
-                sizeView.isSelected = !sizeView.isSelected
-                if (sizeView.isSelected) {
-                    sizeView.setTextColor(itemView.context.resources.getColor(R.color.color4))
-                    sizeView.background = itemView.context.resources.getDrawable(R.drawable.buttonstyle4_background_selected)
-
-                } else {
-                    sizeView.setTextColor(itemView.context.resources.getColor(R.color.color1))
-                    sizeView.background = itemView.context.resources.getDrawable(R.drawable.buttonstyle4_background)
-
-                filterCollectionViewModel.onStreamSelected(size, sizeView.isSelected)
+                val selectedGrades : ArrayList<Int> = filterCollectionViewModel.selectedGrades.value!!
+                if(selectedGrades.contains(11) || selectedGrades.contains(12)) {
+                    sizeView.isSelected = !sizeView.isSelected
+                    if (sizeView.isSelected) {
+                        sizeView.setTextColor(itemView.context.resources.getColor(R.color.color4))
+                        sizeView.background = itemView.context.resources.getDrawable(R.drawable.buttonstyle4_background_selected)
+                    } else {
+                        sizeView.setTextColor(itemView.context.resources.getColor(R.color.color1))
+                        sizeView.background = itemView.context.resources.getDrawable(R.drawable.buttonstyle4_background)
+                    }
+                    filterCollectionViewModel.onStreamSelected(size, sizeView.isSelected)
+                }else{
+                    Toast.makeText(itemView.context, "Streams only valid for Grade 11 and 12.",
+                            Toast.LENGTH_LONG).show()
                 }
             }
         }

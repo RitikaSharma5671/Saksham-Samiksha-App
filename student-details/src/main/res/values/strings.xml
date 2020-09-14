@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="filter_title">Select Appropriate Filter</string>
-    <string name="select_grade">Select Grade </string>
-    <string name="mandatory">*(Mandatory)</string>
-    <string name="select_class_section">Select Section</string>
+    <string name="mark_attendance_title">FILL DATA</string>
+    <string name="view_attendance_title">VIEW ATTENDNACE HISTORY</string>
+    <string name="select_grade">SELECT GRADE </string>
+    <string name="mandatory">(MANDATORY)</string>
+    <string name="select_class_section">SELECT SECTION</string>
     <string name="filter_clear">CLEAR ALL</string>
     <string name="filter_apply">RECORD DATA</string>
     <string name="filter_cross_content_desc">close filters</string>
     <string name="select_subject_stream">Select Subject Stream</string>
+    <string name="valid_class_11_12">(Valid for Grades 11 and 12)</string>
     <string name="no_grade_selected">No Grade Selected</string>
     <string name="please_select_atleast_one_grade">Please select atleast one grade to upload data</string>
     <string name="fetching_student_data">We are fetching student information</string>
     <string name="please_wait">Please wait ...</string>
+    <string name="temp_value">%s &#xb0;F</string>
+    <string name="sending_the_request">Uploading the Data</string>
+    <string name="empty_t">___ &#xb0;F</string>
 </resources>

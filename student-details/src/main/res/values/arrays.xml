@@ -10,6 +10,21 @@
         <item>Class 7</item>
         <item>Class 8</item>
     </string-array>
+
+<!--    <string-array name="temp_list">-->
+<!--        <item> &#60;97.7&#xb0;F></item>-->
+<!--        <item>&#62;97.7&#xb0;F and &#60;99.5&#xb0;F</item>-->
+<!--        <item>&#62;99.5&#xb0;F and &#60;100.9&#xb0;F</item>-->
+<!--        <item>&#62;100.9&#xb0;F</item>-->
+<!--    </string-array>-->
+
+    <string-array name="temp_list">
+    <item>97.7&#xb0;F</item>
+    <item>99.5&#xb0;F</item>
+    <item>100.9&#xb0;F</item>
+    <item>101.0&#xb0;F</item>
+</string-array>
+
     <string-array name="sections_list">
         <item>Section A</item>
         <item>Section B</item>

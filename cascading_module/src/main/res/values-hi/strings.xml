@@ -8,6 +8,9 @@
     <string name="error_message_search">\u0020\u0020कृपया छात्र के सभी प्रासंगिक विवरण भरें.</string>
     <string name="please_fill_the_details_below">कृपया नीचे विवरण भरें:</string>
     <string name="next">आगे बढ़ें</string>
+    <string name="cancel_it">प्रोफ़ाइल पर वापस जाएं</string>
     <string name="search_screen_title">स्कूल विवरण चयन</string>
     <string name="please_select_forms">फार्म चुनें</string>
+    <string name="search_screen_title_profile">Select New Select Code</string>
+    <string name="change_details">CHANGE DETAILS</string>
 </resources>

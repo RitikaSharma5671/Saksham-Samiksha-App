@@ -1,157 +1,219 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/otp_parent"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/color4"
-    android:clickable="true"
-    android:focusable="true">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/filters"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginTop="36dp"
-        android:padding="4dp"
-        android:weightSum="2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <data>
 
-        <Spinner
-            android:id="@+id/grade_spinner"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/ece"
-            android:layout_marginEnd="8dp"
-            style="@style/DropdownStyle1"
-            android:entries="@array/grades_list"
-            android:padding="4dp" />
+        <import type="android.view.View" />
 
-        <Spinner
-            android:id="@+id/section_spinner"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/ece"
-            style="@style/DropdownStyle1"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:entries="@array/sections_list"
-            android:padding="4dp" />
-    </LinearLayout>
+        <variable
+            name="studentDetailsViewModel"
+            type="com.example.student_details.ui.StudentDetailsViewModel" />
+    </data>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:layout_below="@id/filters"
-        android:background="@color/color_primary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filters" />
-
-
-    <RadioGroup
-        android:id="@+id/category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider"
-        android:layout_marginTop="12dp"
-        android:minHeight="40dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:visibility="visible">
-
-
-        <RadioButton
-            android:id="@+id/category_general"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            style="@style/LabelStyle1"
-            android:paddingStart="5dp"
-            android:textSize="15sp"
-            android:paddingEnd="5dp"
-            android:button="@drawable/radio_bg"
-            android:textStyle="normal"
-            android:text="Humanities" />
-
-        <RadioButton
-            android:id="@+id/category_OBC"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:button="@drawable/radio_bg"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textSize="15sp"
-            android:text="Science"
-            style="@style/LabelStyle1"
-            android:textStyle="normal" />
-
-        <RadioButton
-            android:id="@+id/category_SC"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:textSize="15sp"
-            android:text="Commerce"
-            style="@style/LabelStyle1"
-            android:button="@drawable/radio_bg"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textStyle="normal"/>
-
-        <RadioButton
-            android:id="@+id/category_ST"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:text="Vocational"
-            android:textSize="15sp"
-            style="@style/LabelStyle1"
-            android:button="@drawable/radio_bg"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textStyle="normal"/>
-    </RadioGroup>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/student_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="12dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/category" />
-
-    <FrameLayout
-        android:id="@+id/fragment_container_1"
+    <RelativeLayout
+        android:id="@+id/student_parent_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true" />
+        android:background="@color/color4"
+        android:clickable="true"
+        android:focusable="true">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="60dp"
-        app:backgroundTint="@color/white"
-        android:id="@+id/mark_attendance"
-        android:src="@drawable/ic_edit_student__icon"
-        android:layout_marginBottom="80dp"
-        />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <RelativeLayout
+            android:id="@+id/filter_header"
+            android:layout_width="match_parent"
+            android:layout_height="64dp">
+
+            <ImageView
+                android:id="@+id/close_cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/filter_close_button_margin_left"
+                android:contentDescription="@string/filter_cross_content_desc"
+                android:padding="10dp"
+                android:scaleType="center"
+
+                android:src="@drawable/filter_close_icon" />
+
+            <!--android:onClick="@{filterCollectionViewModel.onClose()}"-->
+            <TextView
+                android:id="@+id/filters_text"
+                style="@style/filter_screen_header_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:letterSpacing="0.052"
+                android:text="@string/mark_attendance_title"
+                android:textColor="@color/color1"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/filter_title_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/filter_header"
+            android:background="@color/color3" />
+
+        <LinearLayout
+            android:id="@+id/filters"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_below="@id/filter_title_divider"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:weightSum="2">
+
+            <android.widget.Spinner
+                android:id="@+id/grade_spinner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ece"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:entries="@array/grades_list"
+                android:padding="4dp"
+                android:focusable="true" />
+
+            <android.widget.Spinner
+                android:id="@+id/section_spinner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:background="@drawable/ece"
+                android:layout_weight="1"
+                android:entries="@array/sections_list"
+                android:padding="4dp"
+                android:focusable="true" />
+            <!--            android:background="@drawable/ece"-->
+
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/filters"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_vertical"
+            android:minHeight="40dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+
+            <RadioButton
+                android:id="@+id/category_arts"
+                style="@style/LabelStyle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:button="@drawable/radio_bg"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="Arts"
+                android:textSize="12.5sp"
+                android:textStyle="normal" />
+
+            <RadioButton
+                android:id="@+id/category_science"
+                style="@style/LabelStyle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:button="@drawable/radio_bg"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="Science"
+                android:textSize="12.5sp"
+                android:textStyle="normal" />
+
+            <RadioButton
+                android:id="@+id/category_commerce"
+                style="@style/LabelStyle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:button="@drawable/radio_bg"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="Commerce"
+                android:textSize="12.5sp"
+                android:textStyle="normal" />
+
+            <RadioButton
+                android:id="@+id/category_vocational"
+                style="@style/LabelStyle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:button="@drawable/radio_bg"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="Vocational"
+                android:textSize="12.5sp"
+                android:textStyle="normal" />
+        </RadioGroup>
+
+
+        <android.widget.Button
+            android:id="@+id/divider"
+            style="@style/ButtonStyle1"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_below="@id/category"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="12dp"
+            android:text="APPLY FILTERS"
+            android:onClick="@{() -> studentDetailsViewModel.onApplyFiltersClicked()}"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/category" />
+
+        <ProgressBar
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/progress_bar"
+            android:visibility="gone"
+            style="@style/Widget.AppCompat.ProgressBar"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/student_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="12dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <TextView
+            android:id="@+id/empty_on_rack_section_message_heading"
+            style="@style/LabelStyle6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:maxLines="3"
+            android:textColor="@color/color2"
+            android:text="No students found corresponding to the filters applied."
+            android:visibility="@{studentDetailsViewModel.isEmptyListMessageVisible() ? View.VISIBLE : View.GONE}" />
+
+
+    </RelativeLayout>
+</layout>

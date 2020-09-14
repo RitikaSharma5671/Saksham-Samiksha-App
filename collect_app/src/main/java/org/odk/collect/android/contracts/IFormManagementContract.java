@@ -31,7 +31,7 @@ public interface IFormManagementContract {
      * This method resets  a) Saved forms (instances folder, instances database); b) Blank forms (forms folder, forms database, itemsets database);
      * c) Form load cache (.cache folder)
      */
-    void resetPreviousODKForms();
+    void resetPreviousODKForms(IResetActionListener iResetActionListener);
 
     /**
      * This will delete a) Saved forms (instances folder, instances database); b) Blank forms (forms folder, forms database, itemsets database);

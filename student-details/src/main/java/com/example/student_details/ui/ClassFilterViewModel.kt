@@ -12,7 +12,6 @@ class ClassFilterViewModel(application: Application) : AndroidViewModel(applicat
     val selectedGrades = MutableLiveData<ArrayList<Int>>()
     val selectedSections = MutableLiveData<ArrayList<String>>()
     val selectedStreams = MutableLiveData<ArrayList<String>>()
-    val isApplyButtonEnabled = ObservableBoolean(false)
 
     fun onGradeSelected(size: Int, selected: Boolean) {
         if (selected) {
@@ -78,7 +77,7 @@ class ClassFilterViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun initialize() {
-        isApplyButtonEnabled.set(false)
+//        isApplyButtonEnabled.set(false)
     }
 
 }

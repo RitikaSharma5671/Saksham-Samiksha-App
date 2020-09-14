@@ -1,5 +1,6 @@
 package com.samagra.ancillaryscreens;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,8 @@ import com.samagra.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.samagra.ancillaryscreens.models.AboutBundle;
 import com.samagra.ancillaryscreens.screens.about.AboutActivity;
 import com.samagra.ancillaryscreens.screens.login.LoginActivity;
+import com.samagra.ancillaryscreens.screens.profile.ProfileActivity;
+import com.samagra.ancillaryscreens.screens.profile.UserProfileElement;
 import com.samagra.ancillaryscreens.screens.tutorials.TutorialActivity;
 import com.samagra.commons.CommonUtilities;
 import com.samagra.commons.Constants;
@@ -24,6 +27,9 @@ import com.samagra.grove.logging.Grove;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -45,6 +51,7 @@ public class AncillaryScreensDriver {
     public static String SEND_OTP_URL;
     public static String APPLICATION_ID;
     public static String API_KEY;
+    public static String USER_ID;
 
     /**
      *
@@ -63,6 +70,16 @@ public class AncillaryScreensDriver {
         AncillaryScreensDriver.UPDATE_PASSWORD_URL = UPDATE_PASSWORD_URL;
         AncillaryScreensDriver.APPLICATION_ID = APPLICATION_ID;
         AncillaryScreensDriver.API_KEY = API_KEY;
+    }
+
+    public static void sendEvent(String contentKey, String updatedValue) {
+        HashMap<String, String> newMap = new HashMap<>();
+        newMap.put("key", contentKey);
+        newMap.put("value", updatedValue);
+        ExchangeObject.DataExchangeObject dataExchangeObject = new ExchangeObject.DataExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS,
+                newMap);
+        mainApplication.getEventBus().send(dataExchangeObject);
+
     }
 
     /**
@@ -286,5 +303,19 @@ public class AncillaryScreensDriver {
     private static void checkValidConfig() {
         if (mainApplication == null)
             throw new InvalidConfigurationException(AncillaryScreensDriver.class);
+    }
+
+    public static void launchProfileActivity(Context context, ArrayList<UserProfileElement> profileElements, String fetchUserID) {
+        checkValidConfig();
+        // Intent intent = new Intent(context, ProfileActivity.class);
+
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putParcelableArrayListExtra("config", profileElements);
+        USER_ID = fetchUserID;
+        context.startActivity(intent);
+    }
+
+    public static void onProfileSuccessfullyUpdated(String schoolCode) {
+
     }
 }

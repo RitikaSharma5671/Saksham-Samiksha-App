@@ -57,9 +57,9 @@ public class SearchSchoolTask extends AsyncTask<String, Void, List<InstitutionIn
             ArrayList<String> blocks = new ArrayList<>();
             ArrayList<String> schools = new ArrayList<>();
             for (int i = 0; i < data.size(); i++) {
-                districts.add(data.get(i).District);
-                blocks.add(data.get(i).Block);
-                schools.add(data.get(i).SchoolName);
+                districts.add(data.get(i).getDistrict());
+                blocks.add(data.get(i).getBlock());
+                schools.add(data.get(i).getSchoolName());
             }
 
             districts = makeUnique(districts);

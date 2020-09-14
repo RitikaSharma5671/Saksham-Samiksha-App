@@ -3,11 +3,5 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application>
-    <activity
-        android:name=".profile.ProfileActivity"
-        android:theme="@style/BaseAppTheme" />
-    <activity
-        android:name=".passReset.OTPActivity"
-        android:theme="@style/BaseAppTheme" />
     </application>
 </manifest>

@@ -1429,7 +1429,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         if (showNavigationButtons) {
             updateNavigationButtonVisibility();
         }
-        endView.findViewById(R.id.save_name).setVisibility(View.VISIBLE);
+        endView.findViewById(R.id.save_name).setVisibility(View.GONE);
         return endView;
     }
 
@@ -1916,7 +1916,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         textView.setTextSize(22);
         textView.setTextColor(getResources().getColor(R.color.darkRankItemColor));
 //        textView.setTypeface(null, Typeface.BOLD);
-        alertDialog = new AlertDialog.Builder(this, R.style.AlertDialogTheme_Light)
+//        alertDialog = new AlertDialog.Builder(this, R.style.AlertDialogTheme_Light)
+        alertDialog = new AlertDialog.Builder(this)
                 .setCustomTitle(textView)
                 .setPositiveButton(getString(R.string.confirm),
                         (dialog, id) -> {

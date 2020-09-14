@@ -21,7 +21,7 @@
         android:largeHeap="true"
         android:usesCleartextTraffic="true"
         android:supportsRtl="true"
-    tools:replace="android:name">
+    tools:replace="android:name,android:allowBackup">
         <uses-library android:name ="org.apache.http.legacy" android:required ="false"/>
         <activity
             android:name="com.samagra.parent.ui.HomeScreen.HomeActivity"
@@ -38,6 +38,7 @@
         android:name=".ui.submissions.SubmissionsActivity"
         android:theme="@style/BaseAppTheme" />
         <activity android:name=".ui.HomeScreen.WebViewActivity"/>
+
         <activity
             android:name="com.samagra.parent.ui.splash.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">

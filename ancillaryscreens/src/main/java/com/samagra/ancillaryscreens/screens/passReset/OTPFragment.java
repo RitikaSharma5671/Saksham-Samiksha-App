@@ -74,7 +74,12 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Chang
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-        toolbar.setNavigationOnClickListener(view1 -> getFragmentManager().popBackStack());
+        toolbar.setNavigationOnClickListener(view1 -> {
+            if (lastPage.equals("profile"))
+                getActivity().finish();
+            else
+                getFragmentManager().popBackStack();
+        });
         Bundle arguments = getArguments();
 
         if (arguments != null) {
@@ -132,6 +137,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Chang
         mProgress.setIndeterminate(true);
         return view;
     }
+
     @Override
     public void onClick(View v) {
         if (isNetworkConnected()) {
