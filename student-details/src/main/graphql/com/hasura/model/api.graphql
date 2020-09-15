@@ -64,6 +64,7 @@ query FetchAttendanceByGradeSection($date: date, $taken_by: String, $grade: Int,
                 section
             }
             isPresent
+            temperature
         }
 
     }

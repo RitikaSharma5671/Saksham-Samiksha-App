@@ -16,39 +16,38 @@
 
 package org.odk.collect.android.fragments.dialogs;
 
-import org.javarosa.core.model.FormIndex;
 import org.joda.time.LocalDateTime;
-import org.odk.collect.android.logic.DatePickerDetails;
-
-import java.util.Arrays;
-
-//import bikramsambat.BikramSambatDate;
-//import bikramsambat.BsCalendar;
-//import bikramsambat.BsException;
-//import bikramsambat.BsGregorianDate;
-import timber.log.Timber;
 
 public class BikramSambatDatePickerDialog extends CustomDatePickerDialog {
-    private static final int MIN_SUPPORTED_YEAR = 1970; //1913 in Gregorian calendar
-    private static final int MAX_SUPPORTED_YEAR = 2090; //2033 in Gregorian calendar
-
-    private final String[] monthsArray = new String[2];
-
-    public static BikramSambatDatePickerDialog newInstance(FormIndex formIndex, LocalDateTime date, DatePickerDetails datePickerDetails) {
-        BikramSambatDatePickerDialog dialog = new BikramSambatDatePickerDialog();
-        dialog.setArguments(getArgs(formIndex, date, datePickerDetails));
-
-        return dialog;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        setUpValues();
-    }
-
     @Override
     protected void updateDays() {
+
+    }
+
+    @Override
+    protected LocalDateTime getOriginalDate() {
+        return null;
+    }
+//    private static final int MIN_SUPPORTED_YEAR = 1970; //1913 in Gregorian calendar
+//    private static final int MAX_SUPPORTED_YEAR = 2090; //2033 in Gregorian calendar
+//
+//    private final String[] monthsArray = BsCalendar.MONTH_NAMES.toArray(new String[BsCalendar.MONTH_NAMES.size()]);
+//
+//    public static BikramSambatDatePickerDialog newInstance(FormIndex formIndex, LocalDateTime date, DatePickerDetails datePickerDetails) {
+//        BikramSambatDatePickerDialog dialog = new BikramSambatDatePickerDialog();
+//        dialog.setArguments(getArgs(formIndex, date, datePickerDetails));
+//
+//        return dialog;
+//    }
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        setUpValues();
+//    }
+//
+//    @Override
+//    protected void updateDays() {
 //        BikramSambatDate bikramSambatDate = new BikramSambatDate(getYear(), Arrays.asList(monthsArray).indexOf(getMonth()) + 1, getDay());
 //        int daysInMonth = 0;
 //        try {
@@ -57,11 +56,10 @@ public class BikramSambatDatePickerDialog extends CustomDatePickerDialog {
 //            Timber.e(e);
 //        }
 //        setUpDayPicker(bikramSambatDate.day, daysInMonth);
-    }
-
-    @Override
-    protected LocalDateTime getOriginalDate() {
-        return null;
+//    }
+//
+//    @Override
+//    protected LocalDateTime getOriginalDate() {
 //        BsGregorianDate bsGregorianDate = null;
 //        try {
 //            bsGregorianDate = BsCalendar.getInstance().toGreg(new BikramSambatDate(getYear(), Arrays.asList(monthsArray).indexOf(getMonth()) + 1, getDay()));
@@ -77,9 +75,9 @@ public class BikramSambatDatePickerDialog extends CustomDatePickerDialog {
 //                .withMinuteOfHour(0)
 //                .withSecondOfMinute(0)
 //                .withMillisOfSecond(0);
-    }
-
-    private void setUpDatePicker() {
+//    }
+//
+//    private void setUpDatePicker() {
 //        LocalDateTime localDateTime = getDate();
 //        try {
 //            BikramSambatDate bikramSambatDate = BsCalendar.getInstance().toBik(localDateTime.getYear(), localDateTime.getMonthOfYear(), localDateTime.getDayOfMonth());
@@ -89,10 +87,10 @@ public class BikramSambatDatePickerDialog extends CustomDatePickerDialog {
 //        } catch (BsException e) {
 //            Timber.e(e);
 //        }
-    }
-
-    private void setUpValues() {
-        setUpDatePicker();
-        updateGregorianDateLabel();
-    }
+//    }
+//
+//    private void setUpValues() {
+//        setUpDatePicker();
+//        updateGregorianDateLabel();
+//    }
 }

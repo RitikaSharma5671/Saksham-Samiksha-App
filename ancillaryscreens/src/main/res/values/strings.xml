@@ -57,8 +57,9 @@
     <string name="login">Login</string>
     <string name="login_failed_error">Username or Password didn\'t match. Please try again</string>
     <string name="logout">Logout</string>
+    <string name="update_failed">User details failed to update.</string>
     <string name="mulitple_users_same_email_found" tools:ignore="MissingTranslation">Multiple users with the same email found. Please ensure that your email is not used by any other account or Contact Admin.</string>
-
+    <string name="mulitple_users_same_phone_found">Multiple users with the same phone number found. Please ensure that your contact number is not used by any other account or Contact Admin.</string>
     <string name="next">NEXT</string>
     <string name="no_internet_saving_complete" translatable="false">Thank you for filling the inspection report for. Since you have filled the report in offline mode, please manually submit the form when connected to the internet from the "Submit form" option</string>
     <string name="no_users_found">No Users Found.</string>
@@ -147,7 +148,7 @@
     <string name="user_name_empty_error">Username cannot be empty</string>
     <string name="user_name_not_apt_length_error">Username has to be more than characters</string>
     <string name="username">Username</string>
-
+    <string name="forgot_password">Forgot Password?</string>
     <string name="view_issues" translatable="false">View Dashboard</string>
     <string name="welcome_heading_login_screen">Welcome Back!</string>
     <string name="try_otp_for_no_phone">Please check if you have mobile number registered in your profile and if you are entering a valid number, if registered.</string>
@@ -158,4 +159,5 @@
     <string name="school_name_label">Name : %s</string>
     <string name="school_block_label">Block: %s</string>
     <string name="school_district_label">District: %s</string>
+    <string name="if_your_school_details_are_incorrect_please_click_here_to_edit">If your school details are incorrect, Please click here to edit.</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.student_details.ui
 
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -92,7 +93,12 @@ class MarkAttendanceView : Fragment() {
         })
         markAttendanceViewModel.showCompleteDialog.observe(viewLifecycleOwner, Observer {
             if (it) {
-                SamagraAlertDialog1.Builder(context!!).setTitle("SEND STUDENT DATA").setMessage("Please ensure that you have entered correct data for the students.")
+             val message =    if(markAttendanceViewModel.highTemp.value!!) {
+                 Html.fromHtml("Please ensure that you have entered correct data for the students." + "<font><b>" + "<br/>There are some student(s) with Temperature > 100° F. <br/>Please follow necessary precautions for those student(s)." + "</b></font>" );
+                }else{
+                 "Please ensure that you have entered correct data for the students."
+             }
+                SamagraAlertDialog1.Builder(context!!).setTitle("SEND STUDENT DATA").setMessage(message)
                         .setAction2("YES, PLEASE", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {
                             override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                 alertDialog.dismiss()

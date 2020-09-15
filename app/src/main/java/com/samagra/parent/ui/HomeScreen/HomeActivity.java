@@ -2,10 +2,8 @@ package com.samagra.parent.ui.HomeScreen;
 
 import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -27,7 +25,6 @@ import com.example.update.UpdateApp;
 import com.google.android.material.snackbar.Snackbar;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.models.AboutBundle;
-import com.samagra.ancillaryscreens.screens.profile.ProfileActivity;
 import com.samagra.ancillaryscreens.screens.profile.UserProfileElement;
 import com.samagra.cascading_module.CascadingModuleDriver;
 import com.samagra.commons.Constants;
@@ -44,8 +41,8 @@ import com.samagra.parent.AppConstants;
 import com.samagra.parent.R;
 import com.samagra.parent.UtilityFunctions;
 import com.samagra.parent.base.BaseActivity;
-import com.samagra.parent.ui.Settings.UpdateAppLanguageFragment;
 
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.utilities.LocaleHelper;
 
 import java.util.ArrayList;
@@ -57,8 +54,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_LANGUAGE;
 
 /**
  * View part of the Home Screen. This class only handles the UI operations, all the business logic is simply
@@ -86,8 +81,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
     HomePresenter<HomeMvpView, HomeMvpInteractor> homePresenter;
 
     @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         parent = findViewById(R.id.parent);
         progressBarLayout = findViewById(R.id.progress_bar_layout);
@@ -98,7 +93,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         homeRecyclerView = findViewById(R.id.home_items_layout);
         getActivityComponent().inject(this);
         homePresenter.onAttach(this);
-        HomeItemsAdapter  homeItemsAdapter = new HomeItemsAdapter(
+        HomeItemsAdapter homeItemsAdapter = new HomeItemsAdapter(
                 this,
                 homePresenter.fetchHomeItemList(),
                 getActivityContext()
@@ -106,6 +101,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         homeRecyclerView.setAdapter(homeItemsAdapter);
         setupToolbar();
         homePresenter.applySettings();
+        homePresenter.setStudentData();
         InternetMonitor.startMonitoringInternet(((MainApplication) getApplicationContext()));
         homePresenter.updateLanguageSettings();
         AppNotificationUtils.updateFirebaseToken(getActivityContext(), AppConstants.BASE_API_URL, getActivityContext().getResources().getString(R.string.fusionauth_api_key));
@@ -116,7 +112,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
     }
 
     private void showUpdateMobileNumberDialog() {
-        if(!homePresenter.hasSeenDialog()) {
+        if (!homePresenter.hasSeenDialog()) {
             new SamagraAlertDialog.Builder(getActivityContext()).setTitle(getText(R.string.profile_incomplete)).
                     setMessage(getText(R.string.please_update_the_password_and_details_of_the_school_in_charge))
                     .setAction2(getText(R.string.update_details), (actionIndex, alertDialog) -> {
@@ -270,7 +266,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         Toolbar toolbar = findViewById(R.id.toolbar);
         setTitle(R.string.samagra_shiksha);
         setSupportActionBar(toolbar);
-       toolbar.setNavigationContentDescription("Hello");
+        toolbar.setNavigationContentDescription("Hello");
     }
 
     @Override
@@ -289,7 +285,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
                 getActivityContext().getResources().getString(R.string.about_us),
                 AppConstants.ABOUT_WEBSITE_LINK,
                 AppConstants.ABOOUT_FORUM_LINK,
-                R.drawable.saksham_haryana,
+                R.drawable.saksham_notif_icon,
                 R.string.samagra_shiksha,
                 R.string.about_us_summary);
     }
@@ -304,21 +300,21 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
             popupMenu.getMenuInflater().inflate(R.menu.home_screen_menu, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
-                    case R.id.change_lang:
-                        if (HomeActivity.this.findViewById(R.id.fragment_container) != null) {
-                            UpdateAppLanguageFragment firstFragment = UpdateAppLanguageFragment.newInstance(PreferenceManager.getDefaultSharedPreferences(HomeActivity.this.getActivityContext())
-                                    .getString(Constants.APP_LANGUAGE_KEY, "en"), language -> {
-                                SharedPreferences.Editor edit = PreferenceManager
-                                        .getDefaultSharedPreferences(getActivityContext()).edit();
-                                edit.putString(KEY_APP_LANGUAGE, language);
-                                edit.putString(Constants.APP_LANGUAGE_KEY, language);
-                                edit.apply();
-                                relaunchHomeScreen();
-                            });
-                            HomeActivity.this.addFragment(R.id.fragment_container, HomeActivity.this.getSupportFragmentManager(), firstFragment, "UpdateAppLanguageFragment");
-                            parentHome.setVisibility(View.GONE);
-                        }
-                        break;
+//                    case R.id.change_lang:
+//                        if (HomeActivity.this.findViewById(R.id.fragment_container) != null) {
+//                            UpdateAppLanguageFragment firstFragment = UpdateAppLanguageFragment.newInstance(PreferenceManager.getDefaultSharedPreferences(HomeActivity.this.getActivityContext())
+//                                    .getString(Constants.APP_LANGUAGE_KEY, "en"), language -> {
+//                                SharedPreferences.Editor edit = PreferenceManager
+//                                        .getDefaultSharedPreferences(getActivityContext()).edit();
+//                                edit.putString(KEY_APP_LANGUAGE, language);
+//                                edit.putString(Constants.APP_LANGUAGE_KEY, language);
+//                                edit.apply();
+//                                relaunchHomeScreen();
+//                            });
+//                            HomeActivity.this.addFragment(R.id.fragment_container, HomeActivity.this.getSupportFragmentManager(), firstFragment, "UpdateAppLanguageFragment");
+//                            parentHome.setVisibility(View.GONE);
+//                        }
+//                        break;
                     case R.id.about_us:
                         AncillaryScreensDriver.launchAboutActivity(HomeActivity.this, HomeActivity.this.provideAboutBundle());
                         break;
@@ -397,7 +393,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
 
     @Override
     public void launchSearchModule() {
-        CascadingModuleDriver.init((MainApplication) getApplicationContext(), AppConstants.FILE_PATH, AppConstants.ROOT);
+        CascadingModuleDriver.init((MainApplication) getApplicationContext(), AppConstants.FILE_PATH, Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath());
         CascadingModuleDriver.launchSearchView(getActivityContext(),
                 this, CascadingModuleDriver.SEARCH_ACTIVITY_REQUEST_CODE);
     }
@@ -499,7 +495,6 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
     @Override
     public void onViewTeacherAttendanceClicked() {
     }
-
 
 
     @Override

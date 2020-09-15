@@ -353,7 +353,7 @@ public class AndroidLocationClientTest {
 
         // W/out any Providers:
         when(locationManager.getProviders(true))
-                .thenReturn(ImmutableList.of());
+                .thenReturn(ImmutableList.<String>of());
 
         assertNull(androidLocationClient.getLastLocation());
     }

@@ -60,9 +60,9 @@ class StudentAdapter(
     private fun initializeAnimationView(holder: StudentAdapter.StudentViewHolder) {
         holder.itemView.findViewById<ImageView>(R.id.profile_pic).setImageDrawable(null)
         holder.itemView.findViewById<TextView>(R.id.name_srn).text = ""
-        holder.itemView.findViewById<TextView>(R.id.father_details).text= ""
-        holder.itemView.findViewById<TextView>(R.id.grade_section).text= ""
-        holder.itemView.findViewById<TextView>(R.id.mother_details).text= ""
+        holder.itemView.findViewById<TextView>(R.id.father_details).text = ""
+        holder.itemView.findViewById<TextView>(R.id.grade_section).text = ""
+        holder.itemView.findViewById<TextView>(R.id.mother_details).text = ""
     }
 
     inner class StudentViewHolder(private val itemAttendanceRowBinding: StudentItemLayoutBinding,
@@ -74,20 +74,24 @@ class StudentAdapter(
             val context = itemView.context
             itemView.name_srn.text = convert(studentData.name) + " (" + studentData.srn + ")"
             if (studentData.grade > 10) {
-                val content = SpannableString( studentData.grade.toString() + " - " + studentData.section + " (" + convert(studentData.stream) + ")")
+                val content = SpannableString(studentData.grade.toString() + " - " + studentData.section + " (" + convert(studentData.stream) + ")")
                 content.setSpan(UnderlineSpan(), 0, content.length, 0)
                 itemAttendanceRowBinding.gradeSection.text = content
             } else {
-                val content = SpannableString(studentData.grade.toString() + " - "+ studentData.section)
+                val content = SpannableString(studentData.grade.toString() + " - " + studentData.section)
                 content.setSpan(UnderlineSpan(), 0, content.length, 0)
                 itemAttendanceRowBinding.gradeSection.text = content
             }
-            if(studentData.fatherContactNumber != null && studentData.fatherContactNumber.length > 2) {
+            if (studentData.fatherContactNumber != null && studentData.fatherContactNumber.length > 2) {
                 itemView.father_details.text = """${convert(studentData.fatherName)} (${studentData.fatherContactNumber})"""
-            }else {
+            } else {
                 itemView.father_details.text = convert(studentData.fatherName)
             }
-            itemView.mother_details.text = convert(studentData.motherName)
+            if (studentData.motherName != null)
+                itemView.mother_details.text = convert(studentData.motherName)
+            else
+                itemView.mother_details.text = ""
+
             val gg = when (studentData.section) {
                 "A" -> 0
                 "B" -> 1
@@ -105,13 +109,13 @@ class StudentAdapter(
                 builder.setTitle("Choose Section")
                 builder.setSingleChoiceItems(listItems, gg, fun(_: DialogInterface, which: Int) {
                     changedValue = listItems[which]
-                    Grove.d( "Position: " + which + " Value: " + listItems[which])
+                    Grove.d("Position: " + which + " Value: " + listItems[which])
                 })
                 builder.setPositiveButton(
                         "Done",
                         fun(dialog: DialogInterface, _: Int) {
                             dialog.dismiss()
-                            if(changedValue != studentData.section) {
+                            if (changedValue != studentData.section) {
                                 markAttendanceViewModel.onSectionEdited(studentData, changedValue)
                             }
                         }
@@ -133,7 +137,7 @@ class StudentAdapter(
                         "Done",
                         fun(dialog: DialogInterface, which: Int) {
                             dialog.dismiss()
-                            if(changedValue != studentData.section) {
+                            if (changedValue != studentData.section) {
                                 markAttendanceViewModel.onSectionEdited(studentData, changedValue)
                             }
                         }

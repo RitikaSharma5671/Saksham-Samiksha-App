@@ -56,31 +56,34 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     @Override
     public void endSplashScreen() {
         Grove.d("Moving to next screen from Splash");
-        if (splashPresenter.getMvpInteractor().isLoggedIn()) {
-            if (splashPresenter.canLaunchHome()) {
-                if (splashPresenter.isJwtTokenValid()) {
-                    splashPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
-                        Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
-                       redirectToHomeScreen();
-                    });
-
-                } else {
-                    splashPresenter.updateJWT(getActivityContext().getResources().getString(R.string.fusionauth_api_key));
-                }
-            }
+        if (!splashPresenter.getIFormManagementContract().isScopedStorageUsed()) {
+            splashPresenter.getIFormManagementContract().observeStorageMigration(getActivityContext());
         } else {
-            new CountDownTimer(2500, 500) {
-                public void onTick(long millisUntilFinished) {
-                }
+            if (splashPresenter.getMvpInteractor().isLoggedIn()) {
+                if (splashPresenter.canLaunchHome()) {
+                    if (splashPresenter.isJwtTokenValid()) {
+                        splashPresenter.getIFormManagementContract().resetODKForms(getActivityContext(), failedResetActions -> {
+                            Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
+                            redirectToHomeScreen();
+                        });
 
-                public void onFinish() {
-                    launchLoginScreen();
+                    } else {
+                        splashPresenter.updateJWT(getActivityContext().getResources().getString(R.string.fusionauth_api_key));
+                    }
                 }
-            }.start();
-            Grove.d("Closing Splash Screen and Launching Login");
+            } else {
+                new CountDownTimer(2500, 500) {
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    public void onFinish() {
+                        launchLoginScreen();
+                    }
+                }.start();
+                Grove.d("Closing Splash Screen and Launching Login");
+            }
         }
     }
-
     /**
      * This function configures the Splash Screen
      * and renders it on screen. This includes the Splash screen image and other UI configurations.
@@ -140,22 +143,16 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                         }));
     }
 
-//    private void launchHomeScreen() {
-//        Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//        startActivity(intent);
-//        Grove.d("Closing Splash Screen");
-//        finishSplashScreen();
-//    }
-
     private void launchLoginScreen() {
-        splashPresenter.setInclompleteProfileCount();
-        Intent intent = new Intent(this, LoginActivity.class);
-        CommonUtilities.startActivityAsNewTask(intent, this);
-        finishSplashScreen();
+        splashPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
+            Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
+            splashPresenter.setInclompleteProfileCount();
+            Intent intent = new Intent(this, LoginActivity.class);
+            CommonUtilities.startActivityAsNewTask(intent, this);
+            finishSplashScreen();
+        });
+
     }
-
-
 
     @Override
     public void redirectToHomeScreen() {

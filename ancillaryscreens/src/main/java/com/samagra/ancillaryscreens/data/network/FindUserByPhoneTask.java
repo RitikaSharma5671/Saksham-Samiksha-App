@@ -55,7 +55,7 @@ public class FindUserByPhoneTask extends AsyncTask<String, Void, String> {
             Grove.e("Could not parse malformed JSON");
         }
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        RequestBody body = RequestBody.create( jsonObject.toString(),JSON);
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()

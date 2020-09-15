@@ -21,7 +21,7 @@ public void fetchStudentData(String code, ApolloQueryResponseListener<GetStudent
 
     void fetchSchoolInfo(String school_code, String school_name, EmployeeInfoListener employeeInfoListener);
 
-    ArrayList<ArrayList<String>> buildJSONArrayForEmployees(List<SchoolEmployeesInfo> employeeInfos);
+    ArrayList<ArrayList<String>> buildJSONArrayForEmployees();
 
     void removeRealsmDB();
 }

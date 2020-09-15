@@ -41,7 +41,7 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivContactItem10"
                 android:layout_toRightOf="@id/ivContactItem10"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121"
                 tools:text="Chakshu Gautam" />
 
@@ -102,7 +102,7 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivContactItem1"
                 android:layout_toRightOf="@id/ivContactItem1"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121"
                 tools:text="Chakshu Gautam" />
 
@@ -164,7 +164,7 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivContactItem2"
                 android:layout_toRightOf="@id/ivContactItem2"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121"
                 tools:text="(91) 94157-87824" />
 
@@ -230,7 +230,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="chaks.gautam@gmail.com"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <TextView
@@ -292,7 +292,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="10/11/2018"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <TextView
@@ -340,7 +340,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="Full time"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <TextView
@@ -409,7 +409,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="chaks"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <TextView
@@ -457,7 +457,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="2100608402"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <TextView
@@ -504,7 +504,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="2100608402"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <TextView

@@ -217,8 +217,7 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
 
     @Override
     public String fetchDesignation() {
-        String designation = defaultPreferences.getString("user.designation", "");
-        return designation;
+        return defaultPreferences.getString("user.designation", "");
     }
 
     @Override

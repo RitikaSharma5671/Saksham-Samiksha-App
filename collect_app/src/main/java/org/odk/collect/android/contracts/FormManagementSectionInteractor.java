@@ -7,35 +7,30 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import com.samagra.commons.Constants;
-import com.samagra.commons.MainApplication;
-import com.samagra.grove.logging.Grove;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.R;
-import org.odk.collect.android.activities.FormChooserList;
+import org.odk.collect.android.activities.FormChooserListActivity;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderListActivity;
-import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.activities.StorageMigrationActivity;
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.dao.helpers.ContentResolverHelper;
-import org.odk.collect.android.dto.Form;
-import org.odk.collect.android.listeners.ActionListener;
+import org.odk.collect.android.formmanagement.ServerFormDetails;
+import org.odk.collect.android.forms.Form;
 import org.odk.collect.android.listeners.DownloadFormsTaskListener;
-import org.odk.collect.android.logic.FormDetails;
-import org.odk.collect.android.preferences.AdminSharedPreferences;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceSaver;
 import org.odk.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.storage.StorageInitializer;
+import org.odk.collect.android.storage.StorageSubdirectory;
 import org.odk.collect.android.tasks.DownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
-import org.odk.collect.android.utilities.ResetUtility;
-import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.ApplicationResetter;
+import org.odk.collect.android.utilities.MultiClickGuard;
+import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -48,11 +43,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -69,25 +62,21 @@ import javax.xml.transform.stream.StreamResult;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.utilities.EncryptionUtils.UTF_8;
-
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class FormManagementSectionInteractor implements IFormManagementContract {
-
-    @Override
-    public void setODKModuleStyle(MainApplication mainApplication, int splashScreenDrawableID, int baseAppThemeStyleID,
-                                  int formActivityThemeID, int customThemeId_Settings, long toolbarIconResId) {
-        ODKDriver.init(mainApplication, splashScreenDrawableID, baseAppThemeStyleID, formActivityThemeID, customThemeId_Settings, toolbarIconResId);
-
-    }
 
     @Override
     public void resetPreviousODKForms(IResetActionListener iResetActionListener) {
         final List<Integer> resetActions = new ArrayList<>();
-        resetActions.add(ResetUtility.ResetAction.RESET_FORMS);
-        resetActions.add(ResetUtility.ResetAction.RESET_LAYERS);
-        resetActions.add(ResetUtility.ResetAction.RESET_INSTANCES);
-        resetActions.add(ResetUtility.ResetAction.RESET_CACHE);
-        resetActions.add(ResetUtility.ResetAction.RESET_OSM_DROID);
+        resetActions.add(ApplicationResetter.ResetAction.RESET_FORMS);
+        resetActions.add(ApplicationResetter.ResetAction.RESET_INSTANCES);
+        resetActions.add(ApplicationResetter.ResetAction.RESET_LAYERS);
+        resetActions.add(ApplicationResetter.ResetAction.RESET_CACHE);
+        resetActions.add(ApplicationResetter.ResetAction.RESET_OSM_DROID);
+//        Runnable runnable = () -> {
+//            new ApplicationResetter().reset(Collect1.getInstance().getAppContext(), resetActions);
+//        };
+//        new Thread(runnable).start();
         new InstancesDao().deleteInstancesDatabase();
         new AsyncTask<Void, Void, List<Integer>>() {
             @Override
@@ -97,7 +86,7 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
 
             @Override
             protected List<Integer> doInBackground(Void... voids) {
-                return new ResetUtility().reset(Collect.getInstance().getAppContext(), resetActions);
+                return new ApplicationResetter().reset(Collect1.getInstance().getAppContext(), resetActions);
             }
 
             @Override
@@ -109,45 +98,59 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
     }
 
     @Override
-    public void resetEverythingODK() {
+    public void resetEverythingODK(Context context,IResetActionListener iResetActionListener) {
         final List<Integer> resetActions = new ArrayList<>();
-        resetActions.add(ResetUtility.ResetAction.RESET_FORMS);
-        resetActions.add(ResetUtility.ResetAction.RESET_PREFERENCES);
-        resetActions.add(ResetUtility.ResetAction.RESET_INSTANCES);
-        resetActions.add(ResetUtility.ResetAction.RESET_LAYERS);
-        resetActions.add(ResetUtility.ResetAction.RESET_CACHE);
-        resetActions.add(ResetUtility.ResetAction.RESET_OSM_DROID);
+        resetActions.add(ApplicationResetter.ResetAction.RESET_FORMS);
+        resetActions.add(ApplicationResetter.ResetAction.RESET_INSTANCES);
+        resetActions.add(ApplicationResetter.ResetAction.RESET_PREFERENCES);
+        resetActions.add(ApplicationResetter.ResetAction.RESET_LAYERS);
+        resetActions.add(ApplicationResetter.ResetAction.RESET_CACHE);
+        resetActions.add(ApplicationResetter.ResetAction.RESET_OSM_DROID);
+        new AsyncTask<Void, Void, List<Integer>>() {
+            @Override
+            protected void onPreExecute() {
 
-        Runnable runnable = () ->  new ResetUtility().reset(Collect.getInstance().getAppContext(), resetActions);
-        new Thread(runnable).start();
-        Timber.e("Reset Complete for the ODK");
-
-        File dir = new File(Collect.INSTANCES_PATH);
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (String child : children) {
-                new File(dir, child).delete();
             }
-        }
-    }
 
-    public void startGetFormListCall() {
-    }
+            @Override
+            protected List<Integer> doInBackground(Void... voids) {
+                return new ApplicationResetter().reset(context, resetActions);
+            }
 
+            @Override
+            protected void onPostExecute(List<Integer> failedResetActions) {
+                iResetActionListener.onResetActionDone(failedResetActions);
+
+            }
+        }.execute();
+    }
 
     @Override
     public void createODKDirectories() {
-        Collect.createODKDirs();
+        new StorageInitializer().createOdkDirsOnStorage();
     }
 
     @Override
-    public void resetODKForms(Context context) {
+    public void resetODKForms(Context context, IResetActionListener al) {
         final List<Integer> resetActions = new ArrayList<>();
-        resetActions.add(ResetUtility.ResetAction.RESET_FORMS);
-        if (!resetActions.isEmpty()) {
-            Runnable runnable = () -> new ResetUtility().reset(context, resetActions);
-            new Thread(runnable).start();
-        }
+        resetActions.add(ApplicationResetter.ResetAction.RESET_FORMS);
+        new AsyncTask<Void, Void, List<Integer>>() {
+            @Override
+            protected void onPreExecute() {
+
+            }
+
+            @Override
+            protected List<Integer> doInBackground(Void... voids) {
+                return new ApplicationResetter().reset(context, resetActions);
+            }
+
+            @Override
+            protected void onPostExecute(List<Integer> failedResetActions) {
+                al.onResetActionDone(failedResetActions);
+
+            }
+        }.execute();
     }
 
     @Override
@@ -176,9 +179,9 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
 
     @Override
     public void initialiseODKProps() {
-        Collect.getInstance().initProperties();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void applyODKCollectSettings(Context context, int settingResId) {
         InputStream inputStream = context.getResources().openRawResource(settingResId);
@@ -190,8 +193,6 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
             while ((n = reader.read(buffer)) != -1) {
                 writer.write(buffer, 0, n);
             }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -201,24 +202,32 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
                 e.printStackTrace();
             }
         }
-        String content = writer.toString();
-        new PreferenceSaver(GeneralSharedPreferences.getInstance(), AdminSharedPreferences.getInstance()).fromJSON(content, new ActionListener() {
-            @Override
-            public void onSuccess() {
-                initialiseODKProps();
-                Grove.d("Data settings have been applied successfully.");
+        String settings = writer.toString();
+        if (settings != null) {
+            if (Collect1.getInstance().getSettingsImporter().fromJSON(settings)) {
+                Timber.d(Collect1.getInstance().getAppContext().getResources().getString(R.string.settings_successfully_loaded_file_notification));
+            } else {
+                Timber.d(Collect1.getInstance().getAppContext().getResources().getString(R.string.corrupt_settings_file_notification));
             }
+        }
 
-            @Override
-            public void onFailure(Exception exception) {
-                if (exception instanceof GeneralSharedPreferences.ValidationException) {
-                    ToastUtils.showLongToast("Failed to load settings");
-                    Grove.e("Failed to load settings");
-                } else {
-                    exception.printStackTrace();
-                }
-            }
-        });
+
+//        new PreferenceSaver(GeneralSharedPreferences.getInstance(), AdminSharedPreferences.getInstance()).fromJSON(content, new ActionListener() {
+//            @Override
+//            public void onSuccess() {
+//                initialiseODKProps();
+//                ToastUtils.showLongToast("Successfully loaded settings");
+//            }
+//
+//            @Override
+//            public void onFailure(Exception exception) {
+//                if (exception instanceof GeneralSharedPreferences.ValidationException) {
+//                    ToastUtils.showLongToast("Failed to load settings");
+//                } else {
+//                    exception.printStackTrace();
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -234,7 +243,7 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
 
     @Override
     public void launchFormChooserView(Context context, HashMap<String, Object> toolbarModificationObject) {
-        Intent i = new Intent(context, FormChooserList.class);
+        Intent i = new Intent(context, FormChooserListActivity.class);
         i.putExtra(Constants.KEY_CUSTOMIZE_TOOLBAR, toolbarModificationObject);
         i.putIntegerArrayListExtra(Constants.CUSTOM_TOOLBAR_ARRAYLIST_HIDE_IDS, null);
         context.startActivity(i);
@@ -295,17 +304,60 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
     }
 
     @Override
+    public void observeStorageMigration(Context context) {
+        if (!Collect1.getInstance().getStorageStateProvider().isScopedStorageUsed()) {
+            context.startActivity(new Intent(context, StorageMigrationActivity.class));
+        }
+    }
+
+    @Override
+    public boolean isScopedStorageUsed() {
+        return Collect1.getInstance().getStorageStateProvider().isScopedStorageUsed();
+    }
+
+    @Override
+    public boolean allowClick(String name) {
+        return MultiClickGuard.allowClick(name);
+    }
+
+    @Override
+    public int getBottomDialogTheme() {
+        return  new ThemeUtils(Collect1.getInstance().getAppContext()).getBottomDialogTheme();
+    }
+
+    @Override
+    public void enableUsingScopedStorage() {
+        Collect1.getInstance().getStorageStateProvider().enableUsingScopedStorage();
+    }
+
+    @Override
+    public String getFormsPath() {
+       return Collect1.getInstance().getStoragePathProvider().getDirPath(StorageSubdirectory.FORMS);
+    }
+
+    @Override
+    public String getRootPath() {
+        return Collect1.getInstance().getStoragePathProvider().getStorageRootDirPath();
+
+    }
+
+
+    @Override
     public void launchViewSubmittedFormsView(Context context, HashMap<String, Object> toolbarModificationObject) {
         Intent i = new Intent(context, InstanceChooserList.class);
-        i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.VIEW_SENT);
+        i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
+                ApplicationConstants.FormModes.VIEW_SENT);
         i.putExtra(Constants.KEY_CUSTOMIZE_TOOLBAR, toolbarModificationObject);
         context.startActivity(i);
+        HashMap<String, Object> extras = toolbarModificationObject;
+//                UtilityFunctions.generateT/d Forms", true);
+//        ODKDriver.launchInstanceUploaderListActivity(context, extras);
     }
 
     @Override
     public void launchViewUnsubmittedFormView(Context context, String className, HashMap<String, Object> toolbarModificationObject) {
 
-        if (Collect.allowClick(className)) {
+        if (MultiClickGuard.allowClick(className)) {
             Intent i = new Intent(context, InstanceUploaderListActivity.class);
             i.putExtra(Constants.KEY_CUSTOMIZE_TOOLBAR, toolbarModificationObject);
             context.startActivity(i);
@@ -317,7 +369,7 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
         List<Form> formsFromDB = getDownloadedFormsNamesFromDatabase();
         HashMap<Integer, String> hashMap = new HashMap<>();
         for (int i = 0; i < formsFromDB.size(); i++) {
-            hashMap.put(formsFromDB.get(i).getId(), formsFromDB.get(i).getDisplayName());
+            hashMap.put(Integer.valueOf(formsFromDB.get(i).getId().toString()), formsFromDB.get(i).getDisplayName());
         }
         for (Map.Entry<Integer, String> entry : hashMap.entrySet()) {
             if (entry.getValue().contains(formIdentifier))
@@ -335,19 +387,19 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
     public List<Form> getDownloadedFormsNamesFromDatabase() {
         FormsDao fd = new FormsDao();
         Cursor cursor = fd.getFormsCursor();
-        return fd.getFormsFromCursor(cursor);
+        return FormsDao.getFormsFromCursor(cursor);
     }
 
     @Override
     public boolean checkIfODKFormsMatch(String formsString) {
         HashMap<String, String> formsListToBeDownloaded = downloadFormList(formsString);
-        Timber.e("formsListToBeDownloaded: " + formsListToBeDownloaded.size() + " FormsFromDatabase: " + getDownloadedFormsNamesFromDatabase().size());
+        Timber.d("formsListToBeDownloaded from Firebase has size : " + formsListToBeDownloaded.size() + " FormsFromDatabase existing has size: " + getDownloadedFormsNamesFromDatabase().size());
         return getDownloadedFormsNamesFromDatabase().size() == formsListToBeDownloaded.size() && getDownloadedFormsNamesFromDatabase().size() != 0;
     }
 
     @Override
     public void startDownloadODKFormListTask(FormListDownloadResultCallback formListDownloadResultCallback) {
-        DownloadFormListTask downloadFormListTask = new DownloadFormListTask(ODKDriver.getDownloadFormListUtils());
+        DownloadFormListTask downloadFormListTask = new DownloadFormListTask(Collect1.getInstance().getDDon());
         downloadFormListTask.setDownloaderListener(value -> {
             if (value != null && !value.containsKey("dlerrormessage")) {
                 formListDownloadResultCallback.onSuccessfulFormListDownload(value);
@@ -364,9 +416,9 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
     }
 
     @Override
-    public HashMap<String, FormDetails> downloadNewFormsBasedOnDownloadedFormList(HashMap<String, String> userRoleBasedForms, HashMap<String, FormDetails> latestFormListFromServer) {
+    public HashMap<String, ServerFormDetails> downloadNewFormsBasedOnDownloadedFormList(HashMap<String, String> userRoleBasedForms, HashMap<String, ServerFormDetails> latestFormListFromServer) {
         HashMap<String, String> formsToBeDownloaded = new HashMap<>();
-        HashMap<String, FormDetails> formsToBeDownloadedABC = new HashMap<>();
+        HashMap<String, ServerFormDetails> formsToBeDownloadedABC = new HashMap<>();
 
         List<Form> formsFromDB = getDownloadedFormsNamesFromDatabase();
         Iterator it = latestFormListFromServer.entrySet().iterator();
@@ -381,32 +433,31 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
         // Adding new forms
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            FormDetails fd = (FormDetails) pair.getValue();
-            String formID = fd.getFormID();
+            ServerFormDetails fd = (ServerFormDetails) pair.getValue();
+            String formID = fd.getFormId();
             boolean foundFormInDB = false;
-            if (userRoleBasedForms.containsKey(fd.getFormID())) {
-
+            if (userRoleBasedForms.containsKey(fd.getFormId())) {
                 for (Form form : formsFromDB) {
                     // Check if forms needs to be updated
-                    if (form.getJrFormId().equals(fd.getFormID())) {
+                    if (form.getJrFormId().equals(fd.getFormId())) {
                         foundFormInDB = true;
                         boolean nullTest = false;
                         if (form.getJrVersion() == null && fd.getFormVersion() == null)
                             nullTest = true;
                         if (form.getJrVersion() == null && fd.getFormVersion() != null) {
-                            formsToBeDownloaded.put(fd.getFormID(), fd.getFormName());
-                            formsToBeDownloadedABC.put(fd.getFormID(), fd);
+                            formsToBeDownloaded.put(fd.getFormId(), fd.getFormName());
+                            formsToBeDownloadedABC.put(fd.getFormId(), fd);
                             formsToBeDeleted.add(form.getMD5Hash());
                         } else if (!nullTest && !form.getJrVersion().equals(fd.getFormVersion())) {
-                            formsToBeDownloaded.put(fd.getFormID(), fd.getFormName());
-                            formsToBeDownloadedABC.put(fd.getFormID(), fd);
+                            formsToBeDownloaded.put(fd.getFormId(), fd.getFormName());
+                            formsToBeDownloadedABC.put(fd.getFormId(), fd);
                             formsToBeDeleted.add(form.getMD5Hash());
                         }
                     }
                 }
                 if (!foundFormInDB) {
-                    formsToBeDownloaded.put(fd.getFormID(), fd.getFormName());
-                    formsToBeDownloadedABC.put(fd.getFormID(), fd);
+                    formsToBeDownloaded.put(fd.getFormId(), fd.getFormName());
+                    formsToBeDownloadedABC.put(fd.getFormId(), fd);
                 }
             }
         }
@@ -416,27 +467,29 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
         return formsToBeDownloadedABC;
     }
 
+
     @Override
     public void downloadODKForms(DataFormDownloadResultCallback dataFormDownloadResultCallback,
-                                 HashMap<String, FormDetails> forms) {
-        ArrayList<FormDetails> filesToDownload = new ArrayList<>();
+                                 HashMap<String, ServerFormDetails> forms, boolean isODKAggregate) {
+        ArrayList<ServerFormDetails> filesToDownload = new ArrayList<>();
         Iterator it = forms.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            String formID = ((FormDetails) pair.getValue()).getFormID();
-//                String fileName = Collect.FORMS_PATH + File.separator + formName + ".xml";
+            String formID = ((ServerFormDetails) pair.getValue()).getFormId();
+//                String fileName = Collect1.FORMS_PATH + File.separator + formName + ".xml";
             String serverURL = new WebCredentialsUtils().getServerUrlFromPreferences();
             String partURL = "/www/formXml?formId=";
             String downloadUrl = serverURL + partURL + formID;
             String manifestUrl = serverURL + "/xformsManifest?formId=" + formID;
-            FormDetails fm = new FormDetails(
-                    ((FormDetails) pair.getValue()).getFormName(),
+            ServerFormDetails fm = new ServerFormDetails(
+                    ((ServerFormDetails) pair.getValue()).getFormName(),
                     downloadUrl,
+//                    null,
                     manifestUrl,
                     formID,
-                    ((FormDetails) pair.getValue()).getFormVersion(),
-                    ((FormDetails) pair.getValue()).getHash(),
-                    ((FormDetails) pair.getValue()).getManifestFileHash(),
+                    ((ServerFormDetails) pair.getValue()).getFormVersion(),
+                    ((ServerFormDetails) pair.getValue()).getHash(),
+                    ((ServerFormDetails) pair.getValue()).getManifestFileHash(),
                     false,
                     false);
             filesToDownload.add(fm);
@@ -445,11 +498,11 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
         DownloadFormsTask downloadFormsTask = new DownloadFormsTask();
         downloadFormsTask.setDownloaderListener(new DownloadFormsTaskListener() {
             @Override
-            public void formsDownloadingComplete(HashMap<FormDetails, String> result) {
+            public void formsDownloadingComplete(HashMap<ServerFormDetails, String> result) {
                 if (result != null) {
                     int successCount = 0;
                     int totalExpected = result.size();
-                    for(Map.Entry<FormDetails, String> entry : result.entrySet()){
+                    for(Map.Entry<ServerFormDetails, String> entry : result.entrySet()){
                         if(entry.getValue() != null && entry.getValue().equals("Success"))
                             successCount+=1;
                     }

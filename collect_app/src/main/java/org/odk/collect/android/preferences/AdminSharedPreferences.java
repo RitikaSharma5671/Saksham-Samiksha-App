@@ -14,9 +14,14 @@
 
 package org.odk.collect.android.preferences;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 
-import org.odk.collect.android.application.Collect;
+
+import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.injection.DaggerUtils;
 
 import static org.odk.collect.android.preferences.AdminKeys.ALL_KEYS;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_ADMIN_PW;
@@ -24,24 +29,29 @@ import static org.odk.collect.android.preferences.AdminPreferencesFragment.ADMIN
 
 public class AdminSharedPreferences {
 
-    private static AdminSharedPreferences instance;
-    private final android.content.SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
-    private AdminSharedPreferences() {
-        sharedPreferences = Collect.getInstance().getAppContext().getSharedPreferences(ADMIN_PREFERENCES, 0);
+    public AdminSharedPreferences(Context context) {
+        sharedPreferences = context.getSharedPreferences(ADMIN_PREFERENCES, 0);
     }
 
+    /**
+     * Shouldn't use a static helper to inject instance into objects. Either use constructor
+     * injection or Dagger if needed.
+     */
+    @Deprecated
     public static synchronized AdminSharedPreferences getInstance() {
-        if (instance == null) {
-            instance = new AdminSharedPreferences();
-        }
-        return instance;
+        return DaggerUtils.getComponent(Collect1.getInstance().getAppContext()).adminSharedPreferences();
     }
 
     public Object get(String key) {
         if (key.equals(KEY_ADMIN_PW)) {
-            return sharedPreferences.getString(key, (String) getDefault(key));
+            Log.d("wercfewrf", key  + "    tyoe " + key.getClass().getName());
+            sharedPreferences.edit().remove(KEY_ADMIN_PW).apply();
+            sharedPreferences.edit().putString(KEY_ADMIN_PW, "").apply();
+            return "";
         } else {
+            Log.d("wercfewrf1111", key  + "    tyoe " + key.getClass().getName());
             return sharedPreferences.getBoolean(key, (Boolean) getDefault(key));
         }
     }
@@ -91,5 +101,9 @@ public class AdminSharedPreferences {
         for (String key : ALL_KEYS) {
             save(key, get(key));
         }
+    }
+
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
     }
 }

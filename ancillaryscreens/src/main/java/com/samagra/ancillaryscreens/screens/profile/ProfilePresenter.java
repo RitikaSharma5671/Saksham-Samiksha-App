@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -13,6 +14,8 @@ import androidx.annotation.NonNull;
 import com.google.gson.JsonObject;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelperImpl;
+import com.samagra.ancillaryscreens.data.network.UpdateUserTask;
+import com.samagra.ancillaryscreens.data.network.UserUpdatedListener;
 import com.samagra.ancillaryscreens.screens.login.LoginActivity;
 import com.samagra.commons.CommonUtilities;
 import com.samagra.commons.Constants;
@@ -22,11 +25,13 @@ import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.base.BasePresenter;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelper;
 
+import org.jetbrains.annotations.Async;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.contracts.IFormManagementContract;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +45,10 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileContract.Interactor> extends BasePresenter<V, I> implements ProfileContract.Presenter<V, I> {
+public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileContract.Interactor> extends BasePresenter<V, I>
+        implements ProfileContract.Presenter<V, I>, UserUpdatedListener {
+    private ArrayList<ProfileElementViewHolders.ProfileElementHolder> viewHolder1;
+
     /**
      * These dependencies are provided by the {@link com.samagra.ancillaryscreens.di.modules.CommonsActivityModule} and
      * {@link com.samagra.ancillaryscreens.di.modules.CommonsActivityAbstractProviders} and are required by the Presenter
@@ -54,7 +62,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
      */
     @Inject
     public ProfilePresenter(I mvpInteractor, BackendCallHelper apiHelper, CompositeDisposable compositeDisposable, IFormManagementContract iFormManagementContract) {
-        super(mvpInteractor, apiHelper, compositeDisposable,iFormManagementContract);
+        super(mvpInteractor, apiHelper, compositeDisposable, iFormManagementContract);
     }
 
     /**
@@ -97,81 +105,87 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
      *                              values of a user profile can be accessed.
      */
     @Override
-    public void updateUserProfileAtRemote(ArrayList<ProfileElementViewHolders.ProfileElementHolder> profileElementHolders, String fusionAuthKey){
+    public void updateUserProfileAtRemote(ArrayList<ProfileElementViewHolders.ProfileElementHolder> profileElementHolders, String fusionAuthKey) {
         getMvpView().showLoading("Updating User Profile...");
-
         String apiKey = AncillaryScreensDriver.API_KEY;
+        viewHolder1 = profileElementHolders;
         String userId = AncillaryScreensDriver.USER_ID;
         String oldPhone = getContentValueFromKey(profileElementHolders.get(1).getUserProfileElement().getContent());
         String updatedPhone = profileElementHolders.get(1).getUpdatedElementValue();
         String updatedAccountName = profileElementHolders.get(0).getUpdatedElementValue();
-
         String oldEmail = getContentValueFromKey(profileElementHolders.get(2).getUserProfileElement().getContent());
         String updatedEmail = profileElementHolders.get(2).getUpdatedElementValue();
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("email", updatedEmail);
+        hashMap.put("phone", updatedPhone);
+        hashMap.put("name", updatedAccountName);
+        new UpdateUserTask(this, AncillaryScreensDriver.USER_ID, hashMap)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 
 //        Single<JSONObject> usersForPhone = getApiHelper().performSearchUserByPhoneCall(updatedPhone, apiKey);
-//        Single<JSONObject> usersForEmail = getApiHelper().performSearchUserByEmailCall(updatedEmail, apiKey);
-        Single<JSONObject> updatedData = getApiHelper()
-                .performGetUserDetailsApiCall(userId, apiKey)
-                .flatMap(oldData -> {
-                    // Update the data with new fields
-                    Grove.d("Sending request to update the profile data");
-                    JSONObject user = oldData.getJSONObject("user");
-                    JSONObject internalData;
-                    if (user.has("data") && user.getJSONObject("data")!= null) {
-                        internalData = user.getJSONObject("data");
-                    } else {
-                        internalData = new JSONObject();
-                    }
-                    user.put("fullName",updatedAccountName);
-                    if(!updatedEmail.equals("") && validateEmailAddress(updatedEmail)){
-                        user.put("email", updatedEmail);
-                    }
-                    if(!updatedPhone.equals("") && validatePhoneNumber(updatedPhone)){
-                        user.put("mobilePhone", updatedPhone);
-                    }
-                    internalData.put("phone", updatedPhone);
-                    internalData.put("accountName", updatedAccountName);
-                    user.put("data", internalData);
-                    oldData.put("user", user);
-                    return getApiHelper().performPutUserDetailsApiCall(userId, apiKey, oldData);
-                });
-
-
-        if(oldPhone.equals(updatedPhone) && oldEmail.equals(updatedEmail)){
-            updateUserProfile(profileElementHolders, updatedData);
-        } else if (!oldPhone.equals(updatedPhone)) {
-            if (oldEmail.equals(updatedEmail)) {
-                updateUserProfile(profileElementHolders, updatedData);
-            } else {
-                getMvpView().hideLoading();
-                getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_email_not_simultaneous), 2000);
-            }
-        } else if (!oldEmail.equals(updatedEmail)) {
-            if (oldPhone.equals(updatedPhone)) {
-                updateUserProfile(profileElementHolders, updatedData);
-            } else {
-                getMvpView().hideLoading();
-                getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_email_not_simultaneous), 2000);
-            }
-        } else {
-            getMvpView().hideLoading();
-        }
+////        Single<JSONObject> usersForEmail = getApiHelper().performSearchUserByEmailCall(updatedEmail, apiKey);
+//        Single<JSONObject> updatedData = getApiHelper()
+//                .performGetUserDetailsApiCall(userId, apiKey)
+//                .flatMap(oldData -> {
+//                    // Update the data with new fields
+//                    Grove.d("Sending request to update the profile data");
+//                    JSONObject user = oldData.getJSONObject("user");
+//                    JSONObject internalData;
+//                    if (user.has("data") && user.getJSONObject("data")!= null) {
+//                        internalData = user.getJSONObject("data");
+//                    } else {
+//                        internalData = new JSONObject();
+//                    }
+//                    user.put("fullName",updatedAccountName);
+//                    if(!updatedEmail.equals("") && validateEmailAddress(updatedEmail)){
+//                        user.put("email", updatedEmail);
+//                    }
+//                    if(!updatedPhone.equals("") && validatePhoneNumber(updatedPhone)){
+//                        user.put("mobilePhone", updatedPhone);
+//                    }
+//                    internalData.put("phone", updatedPhone);
+//                    internalData.put("accountName", updatedAccountName);
+//                    user.put("data", internalData);
+//                    oldData.put("user", user);
+//                    return getApiHelper().performPutUserDetailsApiCall(userId, apiKey, oldData);
+//                });
+//
+//
+//        if(oldPhone.equals(updatedPhone) && oldEmail.equals(updatedEmail)){
+//            updateUserProfile(profileElementHolders, updatedData);
+//        } else if (!oldPhone.equals(updatedPhone)) {
+//            if (oldEmail.equals(updatedEmail)) {
+//                updateUserProfile(profileElementHolders, updatedData);
+//            } else {
+//                getMvpView().hideLoading();
+//                getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_email_not_simultaneous), 2000);
+//            }
+//        } else if (!oldEmail.equals(updatedEmail)) {
+//            if (oldPhone.equals(updatedPhone)) {
+//                updateUserProfile(profileElementHolders, updatedData);
+//            } else {
+//                getMvpView().hideLoading();
+//                getMvpView().showSnackbar(getMvpView().getActivityContext().getResources().getString(R.string.phone_number_email_not_simultaneous), 2000);
+//            }
+//        } else {
+//            getMvpView().hideLoading();
+//        }
     }
-
-    private void updateUserProfile(ArrayList<ProfileElementViewHolders.ProfileElementHolder> profileElementHolders, Single<JSONObject> updatedData) {
-        getCompositeDisposable().add(updatedData.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(newData -> {
-                    Grove.d("Success API. Response %s", newData);
-                    updateUserProfileLocally(profileElementHolders);
-                    getMvpView().hideLoading();
-                    getMvpView().showSnackbar("User Details successfully updated.", 5000);
-                }, t -> {
-                    Grove.e(t);
-                    getMvpView().showSnackbar("Failed to update user profile.", 3000);
-                    getMvpView().hideLoading();
-                }));
-    }
+//
+//    private void updateUserProfile(ArrayList<ProfileElementViewHolders.ProfileElementHolder> profileElementHolders, Single<JSONObject> updatedData) {
+//        getCompositeDisposable().add(updatedData.subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread()).subscribe(newData -> {
+//                    Grove.d("Success API. Response %s", newData);
+//                    updateUserProfileLocally(profileElementHolders);
+//                    getMvpView().hideLoading();
+//                    getMvpView().showSnackbar("User Details successfully updated.", 5000);
+//                }, t -> {
+//                    Grove.e(t);
+//                    getMvpView().showSnackbar("Failed to update user profile.", 3000);
+//                    getMvpView().hideLoading();
+//                }));
+//    }
 
     @Override
     public boolean validatePhoneNumber(String phoneNumber) {
@@ -241,12 +255,17 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
 
     public boolean isTeacherAccount() {
         String designation = getMvpInteractor().getPreferenceHelper().fetchDesignation();
-        return designation.contains("TGT") ||designation.contains("Clerk")
+        return designation.contains("TGT") || designation.contains("Clerk")
                 || designation.contains("Tabla Player") ||
-                designation.contains("Vocational Instructor")||
-                designation.contains("Vocational PGT")||
+                designation.contains("Vocational Instructor") ||
+                designation.contains("Vocational PGT") ||
                 designation.contains("Classical & Vernacular Teacher") ||
                 designation.contains("JBT") || designation.contains("PGT");
+    }
+
+    public boolean isSchoolAccount() {
+        String designation = getMvpInteractor().getPreferenceHelper().fetchDesignation();
+        return designation.contains("School Head");
     }
 
     public void performUpdateSchoolCode(Context activityContext, String apiKey, InstitutionInfo institutionInfo) {
@@ -271,7 +290,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
 
                     @Override
                     public void onError(Throwable e) {
-                        if(getMvpView() != null)
+                        if (getMvpView() != null)
                             getMvpView().onErrorUpdateSchoolData();
                         Grove.e("onError() called while fetching user data to update the school details with error Exception: " + e.getMessage());
                     }
@@ -295,7 +314,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
                             JSONObject roleData = jsonObject.getJSONObject("user").getJSONObject("data").getJSONObject("roleData");
                             InstitutionInfo institutionInfo = new InstitutionInfo(roleData.getString("district"), roleData.getString("block"),
                                     roleData.getString("schoolName"), Integer.parseInt(roleData.getString("schoolCode")));
-                            if(getMvpView() != null)
+                            if (getMvpView() != null)
                                 getMvpView().onSuccessDone(institutionInfo);
                             getMvpInteractor().getPreferenceHelper().updateSchoolDetails(institutionInfo);
                             Grove.d("Successfully changed the school district details ");
@@ -307,7 +326,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
 
                     @Override
                     public void onError(Throwable e) {
-                        if(getMvpView() != null)
+                        if (getMvpView() != null)
                             getMvpView().onErrorUpdateSchoolData();
                         Grove.e("onError for school district details called " + e.getMessage());
                     }
@@ -331,5 +350,23 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
             e.printStackTrace();
         }
         return jsonObject;
+    }
+
+    @Override
+    public void onSuccess(HashMap<String, String> hashMap) {
+        updateUserProfileLocally(viewHolder1);
+        getMvpView().hideLoading();
+        getMvpView().showSnackbar("Success", 5000);
+    }
+
+    @Override
+    public void onFailure(String exception) {
+            Grove.e("Failed to update user profile with the exception:  " + exception);
+            if(exception.equals("Multiple Users")) {
+                getMvpView().hideLoading();
+                getMvpView().showSnackbar("Multiple Users", 5000);
+            }
+            getMvpView().showSnackbar("Failed to update user profile.", 3000);
+            getMvpView().hideLoading();
     }
 }

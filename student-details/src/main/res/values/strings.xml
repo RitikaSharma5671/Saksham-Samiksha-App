@@ -2,7 +2,7 @@
 <resources>
     <string name="filter_title">Select Appropriate Filter</string>
     <string name="mark_attendance_title">FILL DATA</string>
-    <string name="view_attendance_title">VIEW ATTENDNACE HISTORY</string>
+    <string name="view_attendance_title">VIEW ATTENDANCE HISTORY</string>
     <string name="select_grade">SELECT GRADE </string>
     <string name="mandatory">(MANDATORY)</string>
     <string name="select_class_section">SELECT SECTION</string>
@@ -12,7 +12,7 @@
     <string name="select_subject_stream">Select Subject Stream</string>
     <string name="valid_class_11_12">(Valid for Grades 11 and 12)</string>
     <string name="no_grade_selected">No Grade Selected</string>
-    <string name="please_select_atleast_one_grade">Please select atleast one grade to upload data</string>
+    <string name="please_select_atleast_one_grade">Please select at least one grade to upload data</string>
     <string name="fetching_student_data">We are fetching student information</string>
     <string name="please_wait">Please wait ...</string>
     <string name="temp_value">%s &#xb0;F</string>

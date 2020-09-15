@@ -25,13 +25,11 @@ public class ApplicationConstants {
     // based on http://www.sqlite.org/limits.html
     public static final int SQLITE_MAX_VARIABLE_NUMBER = 999;
 
-    static final String[] TRANSLATIONS_AVAILABLE = {"af", "am", "ar",
-            "bn", "ca", "cs", "de", "en", "es", "et", "fa", "fi", "fr",
-            "hi", "in", "it", "ja", "ka", "km", "ln", "lo_LA", "lt",
-            "mg", "ml", "mr", "ms", "my", "ne_NP", "nl", "no", "pl", "ps",
-            "pt", "ro", "ru", "si", "sl", "so", "sq", "sr", "sv_SE", "sw",
-            "sw_KE", "th_TH", "ti", "tl", "tr", "uk", "ur", "ur_PK",
-            "vi", "zh", "zu"};
+    static final String[] TRANSLATIONS_AVAILABLE = {"af", "am", "ar", "bn", "ca", "cs", "de", "en",
+            "es", "et", "fa", "fi", "fr", "hi", "in", "it", "ja", "ka", "km", "ln", "lo_LA", "lt",
+            "mg", "ml", "mr", "ms", "my", "ne_NP", "nl", "no", "pl", "ps", "pt", "ro", "ru", "si",
+            "sl", "so", "sq", "sr", "sv_SE", "sw", "sw_KE", "te", "th_TH", "ti", "tl", "tr", "uk",
+            "ur", "ur_PK", "vi", "zh", "zu"};
 
     private ApplicationConstants() {
 
@@ -73,7 +71,6 @@ public class ApplicationConstants {
         public static final int BY_DATE_ASC = 3;
         public static final int BY_STATUS_ASC = 4;
         public static final int BY_STATUS_DESC = 5;
-        public static final int BY_STATUS_DEFAULT = 6;
     }
 
     public abstract static class RequestCodes {
@@ -106,7 +103,7 @@ public class ApplicationConstants {
     }
 
     public abstract static class Namespaces {
-        static final String XML_OPENROSA_NAMESPACE = "http://openrosa.org/xforms";
+        public static final String XML_OPENROSA_NAMESPACE = "http://openrosa.org/xforms";
         public static final String XML_OPENDATAKIT_NAMESPACE = "http://www.opendatakit.org/xforms";
     }
 }

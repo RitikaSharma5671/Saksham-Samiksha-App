@@ -4,10 +4,13 @@
     <string name="btn_backspace">बैकस्पेस</string>
     <string name="btn_clear">हटाएं</string>
     <string name="confirm_password">पासवर्ड की पुष्टि कीजिये</string>
+    <string name="update_failed">उपयोगकर्ता विवरण अपडेट करने में विफल रहे। कृपया अपना इंटरनेट जांचें</string>
     <string name="contact_admin_for_this">ऐसा लगता है कि इस मोबाइल नंबर के साथ कोई उपयोगकर्ता पंजीकृत नहीं है।\nपासवर्ड रीसेट के लिए कृपया हेल्पलाइन से संपर्क करें।</string>
     <string name="empty_otp">ओटीपी खाली नहीं हो सकता</string>
     <string name="empty_password_error">पासवर्ड खाली नहीं हो सकता</string>
     <string name="enter_new_password1"> नया पासवर्ड दर्ज करें</string>
+    <string name="successful_update"> यूजर का विवरण अपडेट हो गया है</string>
+    <string name="mulitple_users_same_phone_found">समान संपर्क नंबर वाले एकाधिक उपयोगकर्ता मिले। कृपया सुनिश्चित करें कि उसी संपर्क नंबर का उपयोग अन्य खातों द्वारा नहीं किया गया है। कृपया व्यवस्थापक से संपर्क करें</string>
     <string name="enter_otp">ओटीपी दर्ज करें</string>
     <string name="enter_the_registered_mobile_number_associated_with_your_account">अपने खाते से संबद्ध पंजीकृत मोबाइल नंबर दर्ज करें।</string>
     <string name="enter_valid_number">कृपया एक मान्य मोबाइल नंबर दर्ज करें।</string>
@@ -91,4 +94,5 @@
     <string name="school_name_label">नाम: %s</string>
     <string name="school_block_label">ब्लॉक: %s</string>
     <string name="school_district_label">जिला: %s</string>
+    <string name="if_your_school_details_are_incorrect_please_click_here_to_edit">यदि आपके स्कूल का विवरण गलत है, तो कृपया संपादित करने के लिए यहां क्लिक करें।</string>
 </resources>

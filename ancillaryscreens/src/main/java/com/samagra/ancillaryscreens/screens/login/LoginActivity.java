@@ -1,6 +1,7 @@
 package com.samagra.ancillaryscreens.screens.login;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -126,7 +127,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
     @Override
     public void onLoginSuccess(LoginResponse loginResponse) {
         mProgress.dismiss();
-        loginPresenter.finishAndMoveToHomeScreen();
+        loginPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
+            Grove.d("Failure to reset actions at Login screen " + failedResetActions);
+            Grove.d("Moving to Home Screen");
+            loginPresenter.finishAndMoveToHomeScreen();
+        });
     }
 
     /**

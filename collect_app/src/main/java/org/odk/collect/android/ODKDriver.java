@@ -1,15 +1,8 @@
 package org.odk.collect.android;
 
 import android.content.Context;
-import android.content.Intent;
 
-import com.samagra.commons.Constants;
 import com.samagra.commons.MainApplication;
-
-import org.odk.collect.android.activities.InstanceUploaderListActivity;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.utilities.ApplicationConstants;
-import org.odk.collect.android.utilities.DownloadFormListUtils;
 
 import java.util.HashMap;
 
@@ -37,18 +30,19 @@ public class ODKDriver {
         init(applicationInstance, splashScreenImageRes);
     }
 
-    public static void init(MainApplication applicationInstance, int splashScreenImageRes, int customThemeId, int customThemeId_FormEntry, int customThemeId_Settings, long toolbarIconResId) {
+    public static void init(MainApplication applicationInstance, int splashScreenImageRes,
+                            int customThemeId, int customThemeId_FormEntry, int customThemeId_Settings, long toolbarIconResId) {
         init(applicationInstance, splashScreenImageRes, customThemeId, customThemeId_FormEntry, customThemeId_Settings);
         modifyToolbarIcon = true;
         ODKDriver.toolbarIconResId = toolbarIconResId;
     }
 
     public static void launchInstanceUploaderListActivity(Context context, HashMap<String, Object> extras) {
-        Intent intent = new Intent(context, InstanceUploaderListActivity.class);
-        intent.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
-        intent.putExtra(Constants.KEY_CUSTOMIZE_TOOLBAR, extras);
-        intent.putIntegerArrayListExtra(Constants.CUSTOM_TOOLBAR_ARRAYLIST_HIDE_IDS, null);
-        context.startActivity(intent);
+//        Intent intent = new Intent(context, InstanceUploaderListActivity.class);
+//        intent.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+//        intent.putExtra(Constants.KEY_CUSTOMIZE_TOOLBAR, extras);
+//        intent.putIntegerArrayListExtra(Constants.CUSTOM_TOOLBAR_ARRAYLIST_HIDE_IDS, null);
+//        context.startActivity(intent);
     }
 
     public static int getSplashScreenImageRes() {
@@ -79,5 +73,4 @@ public class ODKDriver {
         return modifyToolbarIcon;
     }
 
-    public static DownloadFormListUtils getDownloadFormListUtils() {return Collect.getInstance().getComponent().downloadFormListUtils();}
 }

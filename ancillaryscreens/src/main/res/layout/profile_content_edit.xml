@@ -33,7 +33,7 @@
                 android:layout_toRightOf="@id/ivContactItem11"
                 android:inputType="text"
                 android:text=""
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <ImageView
@@ -65,7 +65,7 @@
                 android:layout_toRightOf="@id/ivContactItem1"
                 android:inputType="text"
                 android:text="Chakshu Gautam"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <ImageView
@@ -97,7 +97,7 @@
                 android:layout_toRightOf="@id/ivContactItem2"
                 android:inputType="number"
                 android:text="9415787824"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <ImageView
@@ -141,7 +141,7 @@
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:text="chaks.gautam@gmail.com"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
         </RelativeLayout>
@@ -176,7 +176,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="01/11/2018"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <TextView
@@ -280,7 +280,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="chaks"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <TextView
@@ -326,7 +326,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="District Inspection Officer"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <TextView
@@ -373,7 +373,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="2100608402"
-                android:textAppearance="@style/AppTheme.TextAppearance.Medium"
+                style="@style/LabelStyle2"
                 android:textColor="#212121" />
 
             <TextView

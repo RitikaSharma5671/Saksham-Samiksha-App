@@ -26,12 +26,8 @@ import com.samagra.commons.InstitutionInfo;
 import com.samagra.grove.logging.Grove;
 
 import java.util.ArrayList;
-
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * View part of the Search Screen. This class only handles the UI operations, all the business logic is simply
@@ -41,26 +37,15 @@ import butterknife.Unbinder;
  */
 public class SearchActivity extends BaseActivity implements SearchMvpView {
 
-    @BindView(R2.id.level_1_spinner)
     public Spinner districtSpinner;
-    @BindView(R2.id.level_2_spinner)
     public Spinner blockSpinner;
-    @BindView(R2.id.level_4_spinner)
     public Spinner schoolNameSpinner;
-    @BindView(R2.id.next_button)
     public Button nextButton;
-    @BindView(R2.id.rootView)
     public ConstraintLayout rootView;
-    @BindView(R2.id.search_layout)
     public ConstraintLayout searchLayout;
-    @BindView(R2.id.lottie_loader_search)
     public LottieAnimationView lottie_loader;
-
-    @BindView(R2.id.select_school_cta)
     public LinearLayout select_school_cta;
-    @BindView(R2.id.select_button)
     public Button select_button;
-    @BindView(R2.id.cancel_button)
     public Button cancelButton;
 
     private String selectedDistrict ="";
@@ -73,7 +58,6 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
     String lastScreen = "";
     @Inject
     SearchPresenter<SearchMvpView, SearchMvpInteractor> searchPresenter;
-    private Unbinder unbinder;
     SharedPreferences sharedPreferences;
     String schoolInfoFromPreferences;
     InstitutionInfo schoolGeoDataFromPreferences;
@@ -83,8 +67,18 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         getActivityComponent().inject(this);
-        unbinder = ButterKnife.bind(this);
         searchPresenter.onAttach(this);
+        districtSpinner = findViewById(R.id.level_1_spinner);
+        blockSpinner = findViewById(R.id.level_2_spinner);
+        schoolNameSpinner = findViewById(R.id.level_4_spinner);
+        nextButton = findViewById(R.id.next_button);
+        rootView = findViewById(R.id.rootView);
+        searchLayout = findViewById(R.id.search_layout);
+        lottie_loader = findViewById(R.id.lottie_loader_search);
+        select_school_cta = findViewById(R.id.select_school_cta);
+        select_button = findViewById(R.id.select_button);
+        cancelButton = findViewById(R.id.cancel_button);
+
         if(getIntent() != null){
             lastScreen = getIntent().getStringExtra("fromScreen");
         }
@@ -94,7 +88,6 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         schoolInfoFromPreferences = sharedPreferences.getString("studentGeoData", "");
-
         schoolGeoDataFromPreferences = TextUtils.isEmpty(schoolInfoFromPreferences) ? null : searchPresenter.fetchObjectFromPreferenceString(schoolInfoFromPreferences);
         if (schoolGeoDataFromPreferences != null && lastScreen.equals("home")) {
             Grove.d("Data saved in Preferences for Cascading Module, District %s Block %s School %s",
@@ -167,7 +160,8 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
                 false, null, SearchActivity.this);
     }
 
-    private void initSpinners() {
+    @Override
+    public void initSpinners() {
         addValuesToSpinner(districtSpinner, searchPresenter.getLevel1Values());
         setListenerOnDistrictSpinner();
         setListenerOnBlockSpinner();
@@ -384,7 +378,6 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbinder.unbind();
         searchPresenter.onDetach();
     }
 }

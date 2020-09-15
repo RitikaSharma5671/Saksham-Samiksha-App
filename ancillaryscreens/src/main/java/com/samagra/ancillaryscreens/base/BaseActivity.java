@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.di.component.ActivityComponent;
 import com.samagra.ancillaryscreens.di.component.DaggerActivityComponent;
 import com.samagra.ancillaryscreens.di.modules.CommonsActivityModule;
@@ -84,6 +85,17 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
 
     @Override
     public void showSnackbar(String message, int duration) {
-        Snackbar.make(findViewById(android.R.id.content), message, duration).show();
+        if(message.equals("Multiple Users")) {
+            Snackbar.make(findViewById(android.R.id.content),
+                    getActivityContext().getResources().getString(R.string.mulitple_users_same_email_found), duration).show();
+        }else if(message.equals("Success")) {
+            Snackbar.make(findViewById(android.R.id.content),
+                    getActivityContext().getResources().getString(R.string.successful_update), duration).show();
+        }else if(message.equals("Failed to update user profile.")) {
+            Snackbar.make(findViewById(android.R.id.content),
+                    getActivityContext().getResources().getString(R.string.update_failed), duration).show();
+        }else {
+            Snackbar.make(findViewById(android.R.id.content), message, duration).show();
+        }
     }
 }

@@ -17,8 +17,9 @@ package org.odk.collect.android.utilities;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
-import androidx.annotation.Nullable;
 import android.util.Base64;
+
+import androidx.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
 import org.kxml2.io.KXmlSerializer;
@@ -26,10 +27,11 @@ import org.kxml2.kdom.Document;
 import org.kxml2.kdom.Element;
 import org.kxml2.kdom.Node;
 import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
+
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.exception.EncryptionException;
-import org.odk.collect.android.logic.FormController.InstanceMetadata;
+import org.odk.collect.android.javarosawrapper.FormController.InstanceMetadata;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 
@@ -42,7 +44,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -69,7 +70,7 @@ import timber.log.Timber;
 import static org.odk.collect.android.utilities.ApplicationConstants.Namespaces.XML_OPENROSA_NAMESPACE;
 
 /**
- * Utility class for encrypting submissions during the SaveToDiskTask.
+ * Utility class for encrypting submissions during the SaveFormToDisk.
  *
  * @author mitchellsundt@gmail.com
  */
@@ -134,14 +135,14 @@ public class EncryptionUtils {
             // this is the md5 hash of the instanceID and the symmetric key
             try {
                 MessageDigest md = MessageDigest.getInstance("MD5");
-                md.update(instanceMetadata.instanceId.getBytes(StandardCharsets.UTF_8));
+                md.update(instanceMetadata.instanceId.getBytes(UTF_8));
                 md.update(key);
                 byte[] messageDigest = md.digest();
                 ivSeedArray = new byte[IV_BYTE_LENGTH];
                 for (int i = 0; i < IV_BYTE_LENGTH; ++i) {
                     ivSeedArray[i] = messageDigest[i % messageDigest.length];
                 }
-            } catch (NoSuchAlgorithmException e) {
+            } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
                 Timber.e(e, "Unable to set md5 hash for instanceid and symmetric key.");
                 throw new IllegalArgumentException(e.getMessage());
             }
@@ -200,9 +201,9 @@ public class EncryptionUtils {
             byte[] messageDigest;
             try {
                 MessageDigest md = MessageDigest.getInstance("MD5");
-                md.update(elementSignatureSource.toString().getBytes(StandardCharsets.UTF_8));
+                md.update(elementSignatureSource.toString().getBytes(UTF_8));
                 messageDigest = md.digest();
-            } catch (NoSuchAlgorithmException e) {
+            } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
                 Timber.e(e, "Exception thrown while constructing md5 hash.");
                 throw new IllegalArgumentException(e.getMessage());
             }
@@ -249,12 +250,19 @@ public class EncryptionUtils {
     /**
      * Retrieve the encryption information for this uri.
      *
-     * @param uri either an instance URI (if previously saved) or a form URI
+     * @param   uri either an instance URI (if previously saved) or a form URI
+     * @param   instanceMetadata the metadata for this instance used to check if the form definition
+     *                           defines an instanceID
+     * @return  an {@link EncryptedFormInformation} object if the form definition requests encryption
+     *          and the record can be encrypted. {@code null} if the form definition does not request
+     *          encryption or if the BouncyCastle implementation is not present.
+     *
+     * @throws  EncryptionException if the form definition requests encryption but the record can't
+     *                              be encrypted
      */
     public static EncryptedFormInformation getEncryptedFormInformation(Uri uri,
             InstanceMetadata instanceMetadata) throws EncryptionException {
-
-        ContentResolver cr = Collect.getInstance().getApplicationVal().getContentResolver();
+        ContentResolver cr = Collect1.getInstance().getApplicationVal().getContentResolver();
 
         // fetch the form information
         String formId;
@@ -271,7 +279,7 @@ public class EncryptionUtils {
                 try {
                     instanceCursor = cr.query(uri, null, null, null, null);
                     if (instanceCursor.getCount() != 1) {
-                        String msg = Collect.getInstance().getAppContext().getResources().getString(R.string.not_exactly_one_record_for_this_instance);
+                        String msg = Collect1.getInstance().getAppContext().getResources().getString(R.string.not_exactly_one_record_for_this_instance);
                         Timber.e(msg);
                         throw new EncryptionException(msg, null);
                     }
@@ -298,16 +306,16 @@ public class EncryptionUtils {
                 formCursor = new FormsDao().getFormsCursor(selection, selectionArgs);
 
                 if (formCursor.getCount() != 1) {
-                    String msg = Collect.getInstance().getAppContext().getResources().getString(R.string.not_exactly_one_blank_form_for_this_form_id);
-                    Timber.e(msg);
+                    String msg = Collect1.getInstance().getAppContext().getResources().getString(R.string.not_exactly_one_blank_form_for_this_form_id);
+                    Timber.d(msg);
                     throw new EncryptionException(msg, null);
                 }
                 formCursor.moveToFirst();
             } else if (FormsColumns.CONTENT_ITEM_TYPE.equals(cr.getType(uri))) {
                 formCursor = cr.query(uri, null, null, null, null);
                 if (formCursor.getCount() != 1) {
-                    String msg = Collect.getInstance().getAppContext().getResources().getString(R.string.not_exactly_one_blank_form_for_this_form_id);
-                    Timber.e(msg);
+                    String msg = Collect1.getInstance().getAppContext().getResources().getString(R.string.not_exactly_one_blank_form_for_this_form_id);
+                    Timber.d(msg);
                     throw new EncryptionException(msg, null);
                 }
                 formCursor.moveToFirst();
@@ -315,8 +323,8 @@ public class EncryptionUtils {
 
             formId = formCursor.getString(formCursor.getColumnIndex(FormsColumns.JR_FORM_ID));
             if (formId == null || formId.length() == 0) {
-                String msg = Collect.getInstance().getAppContext().getResources().getString(R.string.no_form_id_specified);
-                Timber.e(msg);
+                String msg = Collect1.getInstance().getAppContext().getResources().getString(R.string.no_form_id_specified);
+                Timber.d(msg);
                 throw new EncryptionException(msg, null);
             }
             int idxVersion = formCursor.getColumnIndex(FormsColumns.JR_VERSION);
@@ -336,15 +344,15 @@ public class EncryptionUtils {
             try {
                 kf = KeyFactory.getInstance(RSA_ALGORITHM);
             } catch (NoSuchAlgorithmException e) {
-                String msg = Collect.getInstance().getAppContext().getResources().getString(R.string.phone_does_not_support_rsa);
-                Timber.e(e, "%s due to %s ", msg, e.getMessage());
+                String msg = Collect1.getInstance().getAppContext().getResources().getString(R.string.phone_does_not_support_rsa);
+                Timber.d(e, "%s due to %s ", msg, e.getMessage());
                 throw new EncryptionException(msg, e);
             }
             try {
                 pk = kf.generatePublic(publicKeySpec);
             } catch (InvalidKeySpecException e) {
-                String msg = Collect.getInstance().getAppContext().getResources().getString(R.string.invalid_rsa_public_key);
-                Timber.e(e, "%s due to %s ", msg, e.getMessage());
+                String msg = Collect1.getInstance().getAppContext().getResources().getString(R.string.invalid_rsa_public_key);
+                Timber.d(e, "%s due to %s ", msg, e.getMessage());
                 throw new EncryptionException(msg, e);
             }
         } finally {
@@ -353,11 +361,9 @@ public class EncryptionUtils {
             }
         }
 
-        // submission must have an OpenRosa metadata block with a non-null
-        // instanceID value.
+        // submission must have an OpenRosa metadata block with a non-null instanceID
         if (instanceMetadata.instanceId == null) {
-            Timber.e("No OpenRosa metadata block or no instanceId defined in that block");
-            return null;
+            throw new EncryptionException("This form does not specify an instanceID. You must specify one to enable encryption.", null);
         }
 
         // For now, prevent encryption if the BouncyCastle implementation is not present.
@@ -373,7 +379,7 @@ public class EncryptionUtils {
             } else {
                 msg = "No BouncyCastle provider for padding implementation of symmetric algorithm!";
             }
-            Timber.e(msg);
+            Timber.d(msg);
             return null;
         }
 
@@ -471,7 +477,7 @@ public class EncryptionUtils {
         // encrypt files that do not end with ".enc", and do not start with ".";
         // ignore directories
         File[] allFiles = instanceDir.listFiles();
-        List<File> filesToProcess = new ArrayList<File>();
+        List<File> filesToProcess = new ArrayList<>();
         for (File f : allFiles) {
             if (f.equals(instanceXml)) {
                 continue; // don't touch restore file
@@ -582,7 +588,7 @@ public class EncryptionUtils {
         OutputStreamWriter writer = null;
         try {
             fout = new FileOutputStream(submissionXml);
-            writer = new OutputStreamWriter(fout, StandardCharsets.UTF_8);
+            writer = new OutputStreamWriter(fout, UTF_8);
 
             KXmlSerializer serializer = new KXmlSerializer();
             serializer.setOutput(writer);

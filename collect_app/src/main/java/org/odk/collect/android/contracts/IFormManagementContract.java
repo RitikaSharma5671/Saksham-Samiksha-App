@@ -2,11 +2,10 @@ package org.odk.collect.android.contracts;
 
 import android.content.Context;
 
-import com.samagra.commons.MainApplication;
 
 import org.json.JSONArray;
-import org.odk.collect.android.dto.Form;
-import org.odk.collect.android.logic.FormDetails;
+import org.odk.collect.android.formmanagement.ServerFormDetails;
+import org.odk.collect.android.forms.Form;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,8 +23,8 @@ public interface IFormManagementContract {
      * @param customThemeId_Settings- Custom Theme Id for Settings
      * @param toolbarIconResId- Toolbar Icon Resource Id
      */
-    void setODKModuleStyle(MainApplication mainApplication, int splashScreenDrawableID, int baseAppThemeStyleID,
-                           int formActivityThemeID, int customThemeId_Settings, long toolbarIconResId);
+//    void setODKModuleStyle(MainApplication mainApplication, int splashScreenDrawableID, int baseAppThemeStyleID,
+//                           int formActivityThemeID, int customThemeId_Settings, long toolbarIconResId);
 
     /**
      * This method resets  a) Saved forms (instances folder, instances database); b) Blank forms (forms folder, forms database, itemsets database);
@@ -33,11 +32,13 @@ public interface IFormManagementContract {
      */
     void resetPreviousODKForms(IResetActionListener iResetActionListener);
 
+    public List<Form> getDownloadedFormsNamesFromDatabase();
+
     /**
      * This will delete a) Saved forms (instances folder, instances database); b) Blank forms (forms folder, forms database, itemsets database);
      * c) Form load cache (.cache folder); d) All settings (internal settings, saved settings), preference data
      */
-    void resetEverythingODK();
+    void resetEverythingODK(Context context, IResetActionListener iResetActionListener);
 
     /**
      * This method creates Storage directories, invoked one time after the storage permissions have been granted.
@@ -48,7 +49,7 @@ public interface IFormManagementContract {
      *  This method resets  previously downloaded only Blank forms (forms folder, forms database, item-sets database).
      * @param context Context Instance
      */
-    void resetODKForms(Context context);
+    void resetODKForms(Context context, IResetActionListener aa);
 
     /**
      *
@@ -69,14 +70,14 @@ public interface IFormManagementContract {
      * @param latestFormListFromServer - Response received from Form List Download Network Call
      * @return HashMap<String, FormDetails> Hash map with keys corresponding to the Form ID and Value being Form Details for the forms specific to the user.
      */
-    HashMap<String, FormDetails> downloadNewFormsBasedOnDownloadedFormList(HashMap<String, String> userRoleBasedForms, HashMap<String, FormDetails> latestFormListFromServer);
+    HashMap<String, ServerFormDetails> downloadNewFormsBasedOnDownloadedFormList(HashMap<String, String> userRoleBasedForms, HashMap<String, ServerFormDetails> latestFormListFromServer);
 
     /**
      * This method triggers download of specific ODK Forms for the user,
      * @param dataFormDownloadResultCallback Callback for the download process result.
      * @param formsToBeDownloaded HashMap<String, FormDetails> Hash map with keys corresponding to the Form ID and Value being Form Details for the forms specific to the user.
      */
-    void downloadODKForms(DataFormDownloadResultCallback dataFormDownloadResultCallback, HashMap<String, FormDetails> formsToBeDownloaded);
+    void downloadODKForms(DataFormDownloadResultCallback dataFormDownloadResultCallback, HashMap<String, ServerFormDetails> formsToBeDownloaded, boolean isODKAggregate);
 
     /**
      *
@@ -115,13 +116,8 @@ public interface IFormManagementContract {
      * Launches UI with all the forms saved but not sent by the user.
      * @param context Context Instance
      * @param className Invoking class name
-     * @param toolbarModificationObject The contents of Hash Map are as follows
-     * and are used to modify the UI of toolbar of this View.
-     * navigationIconDisplay - Boolean (true or false) navigationIconResId -
-     * Integer (Resource ID for Navigation(Back) Icon in toolbar)
-     * title - String (Title of toolbar) goBackOnNavIconPress - * Boolean (enables or disables back icon)
      */
-    void launchViewUnsubmittedFormView(Context context, String className,HashMap<String, Object> toolbarModificationObject);
+    void launchViewUnsubmittedFormView(Context context, String className, HashMap<String, Object> toolbarModificationObject);
 
     /**
      * Launches UI with all the forms saved and sent by the user.
@@ -171,6 +167,17 @@ public interface IFormManagementContract {
      */
     void buildCSV(CSVBuildStatusListener csvBuildStatusListener, ArrayList<String> mediaDirectoriesNames, JSONArray inputData, String mediaFileName);
 
+    void observeStorageMigration(Context context);
 
-    List<Form> getDownloadedFormsNamesFromDatabase();
-    }
+    boolean isScopedStorageUsed();
+
+    boolean allowClick(String name);
+
+    int getBottomDialogTheme();
+
+    void enableUsingScopedStorage();
+
+    String getFormsPath();
+
+    String getRootPath();
+}

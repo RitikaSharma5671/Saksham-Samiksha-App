@@ -19,9 +19,9 @@
         android:id="@+id/school_image"
         android:layout_width="65dp"
         android:layout_height="65dp"
+        android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="25dp"
-        android:layout_centerVertical="true"
         android:layout_marginBottom="12dp"
         android:src="@drawable/school_black"
         app:tint="@color/color_primary" />
@@ -29,73 +29,98 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
-        android:layout_toEndOf="@+id/school_image">
+        android:layout_toEndOf="@+id/school_image"
+        app:layout_constraintEnd_toEndOf="parent">
 
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/school_code"
-            android:text="School Code"
-            android:textColor="@color/color_primary"
             style="@style/LabelStyle6"
-            android:textStyle="bold"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/change_details"
-            android:text="@string/change_details"
-            style="@style/LabelStyle2"
-            android:textStyle="bold"
-            android:textSize="13sp"
-            android:gravity="end"
-            android:padding="5dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignBottom="@id/school_district"
-            android:textAllCaps="true"
-            />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="School Code"
+            android:textColor="@color/color_primary"
+            android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/school_name"
+            style="@style/LabelStyle8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="School Code"
-            style="@style/LabelStyle8"
-            android:textStyle="normal"
-            android:textColor="@color/color_primary"
-            android:id="@+id/school_name"
-            android:layout_marginTop="4dp"
             android:layout_below="@id/school_code"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="4dp"
+            android:text="School Code"
+            android:textColor="@color/color_primary"
+            android:textStyle="normal" />
 
         <TextView
             android:id="@+id/school_block"
-            android:layout_marginTop="4dp"
+            style="@style/LabelStyle8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Block"
-            style="@style/LabelStyle8"
-            android:textStyle="normal"
-            android:textColor="@color/color_primary"
             android:layout_below="@id/school_name"
-            android:layout_alignParentStart="true"/>
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="4dp"
+            android:text="Block"
+            android:textColor="@color/color_primary"
+            android:textStyle="normal" />
 
         <TextView
             android:id="@+id/school_district"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_height="wrap_content"
-            android:text="District"
-            android:layout_below="@id/school_block"
-            android:textColor="@color/color_primary"
-            android:layout_marginBottom="5dp"
             style="@style/LabelStyle8"
-            android:textStyle="normal"
-            android:layout_alignParentStart="true" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/school_block"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
+            android:text="District"
+            android:textColor="@color/color_primary"
+            android:textStyle="normal" />
+
+        <LinearLayout
+            android:id="@+id/change_details_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/school_district"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            android:weightSum="2">
+            <TextView
+                android:id="@+id/school_change_message"
+                style="@style/LabelStyle8"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:maxLines="3"
+                android:text="@string/if_your_school_details_are_incorrect_please_click_here_to_edit"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/change_details"
+                style="@style/LabelStyle2"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:textColor="@color/color_primary"
+                android:layout_height="match_parent"
+                android:gravity="center|center_vertical"
+                android:padding="5dp"
+                android:text="@string/change_details"
+                android:textAllCaps="true"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
     </RelativeLayout>
 </RelativeLayout>

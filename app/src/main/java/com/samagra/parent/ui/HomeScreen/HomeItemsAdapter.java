@@ -107,7 +107,7 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
                     relativeLayout.setOnClickListener(v -> listener.onViewSchoolAttendanceClicked());
                     break;
                 case "Edit Student Data":
-                    textView.setText("VIEW\nSTUDENT\nDETAILS");
+                    textView.setText("EDIT\nSTUDENT\nSECTION");
                     imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_student_details));
                     relativeLayout.setOnClickListener(v -> listener.onEditStudentDataClicked());
                     break;

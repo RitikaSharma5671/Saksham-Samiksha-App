@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -21,6 +22,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.di.FormManagementCommunicator;
+import com.samagra.ancillaryscreens.screens.login.LoginActivity;
 import com.samagra.commons.CommonUtilities;
 import com.samagra.commons.EventBus;
 import com.samagra.commons.ExchangeObject;
@@ -43,7 +45,7 @@ import com.samagra.parent.di.component.DaggerApplicationComponent;
 import com.samagra.parent.di.modules.ApplicationModule;
 import com.samagra.parent.helper.OkHttpClientProvider;
 
-import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.application.FormManagmentModuleInitialisationListener;
 import org.odk.collect.android.contracts.ComponentManager;
 import org.odk.collect.android.contracts.FormManagementSectionInteractor;
@@ -87,7 +89,7 @@ public class MyApplication extends Application implements MainApplication, Lifec
         super.onCreate();
         eventBus = new RxBus();
         initialiseLoggingComponent();
-        Collect.getInstance().init(this, getApplicationContext(), new FormManagmentModuleInitialisationListener() {
+        Collect1.getInstance().init(this, getApplicationContext(), new FormManagmentModuleInitialisationListener() {
             @Override
             public void onSuccess() {
                 Grove.d("Form Module has been initialised correctly");
@@ -98,7 +100,8 @@ public class MyApplication extends Application implements MainApplication, Lifec
                 Grove.d("Form Module could not be initialised correctly");
                 AlertDialogUtils.createErrorDialog(getApplicationContext(), "Could not start app as Form Module couldn't be initialised properly.", true);
             }
-        }, this);
+        }, this, R.drawable.login_bg, R.style.BaseAppTheme,
+                R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
         setupRemoteConfig();
         setupActivityLifecycleListeners();
         InternetMonitor.init(this);
@@ -140,8 +143,8 @@ public class MyApplication extends Application implements MainApplication, Lifec
         Grove.d("Initialising Form Management Module >>>>");
         ComponentManager.registerFormManagementPackage(new FormManagementSectionInteractor());
         FormManagementCommunicator.setContract(ComponentManager.iFormManagementContract);
-        ComponentManager.iFormManagementContract.setODKModuleStyle(this, R.drawable.login_bg, R.style.BaseAppTheme,
-                R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
+//        ComponentManager.iFormManagementContract.setODKModuleStyle(this, R.drawable.login_bg, R.style.BaseAppTheme,
+//                R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
         Grove.d("Form Management Module initialised >>>>");
     }
 
@@ -167,6 +170,19 @@ public class MyApplication extends Application implements MainApplication, Lifec
                                 if(currentActivity != null)
                                 CommonUtilities.startActivityAsNewTask(signalExchangeObject.intentToLaunch, currentActivity);
                             } else
+                                startActivity(signalExchangeObject.intentToLaunch);
+                        } else if (((ExchangeObject) exchangeObject).to == Modules.MAIN_APP
+                                && ((ExchangeObject) exchangeObject).from == Modules.COLLECT_APP
+                                && isSignalExchangeType((ExchangeObject) exchangeObject)) {
+                            ExchangeObject.SignalExchangeObject signalExchangeObject = (ExchangeObject.SignalExchangeObject) exchangeObject;
+                            if (signalExchangeObject.shouldStartAsNewTask) {
+                                if (currentActivity != null) {
+                                    Intent intent =  new Intent(currentActivity, LoginActivity.class);
+                                    CommonUtilities.startActivityAsNewTask(intent, currentActivity);
+                                }  else
+                                    CommonUtilities.startActivityAsNewTask(signalExchangeObject.intentToLaunch, getApplicationContext());
+                            }
+                            else
                                 startActivity(signalExchangeObject.intentToLaunch);
                         } else if (exchangeObject instanceof ExchangeObject.EventExchangeObject) {
                             // TODO : Remove this just for test
@@ -355,7 +371,7 @@ public class MyApplication extends Application implements MainApplication, Lifec
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Collect.defaultSysLanguage = newConfig.locale.getLanguage();
+        Collect1.defaultSysLanguage = newConfig.locale.getLanguage();
         boolean isUsingSysLanguage = GeneralSharedPreferences.getInstance().get(KEY_APP_LANGUAGE).equals("");
         if (!isUsingSysLanguage) {
             Grove.d("Changing App language to: " + newConfig.locale.getLanguage());

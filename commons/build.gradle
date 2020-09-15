@@ -40,13 +40,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "androidx.preference:preference:1.1.0"
 
-    api (project(":customworkmanager")) {
-        exclude group: 'com.google.guava', module: 'listenablefuture'
-    }
-
     api 'androidx.constraintlayout:constraintlayout:1.1.3'
     api 'androidx.appcompat:appcompat:1.1.0-rc01'
     api "com.google.android.material:material:1.1.0-alpha08"
+    implementation 'androidx.work:work-runtime:2.4.0'
 
     //Google Services
     api "com.google.android.gms:play-services-maps:17.0.0"
@@ -93,12 +90,11 @@ dependencies {
     // Porgress snackbar
     api 'com.github.tingyik90:snackprogressbar:6.2.0'
 
-    implementation 'com.google.firebase:firebase-analytics:17.2.0'
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
-    implementation 'com.google.firebase:firebase-database:19.1.0'
-    implementation "com.google.firebase:firebase-storage:19.1.0"
-    implementation 'com.google.firebase:firebase-config:19.0.2'
-
+    implementation 'com.google.firebase:firebase-analytics:17.4.4'
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    implementation 'com.google.firebase:firebase-database:19.3.1'
+    implementation "com.google.firebase:firebase-storage:19.1.1"
+    implementation 'com.google.firebase:firebase-config:19.2.0'
     androidTestImplementation 'androidx.test:core:1.2.0'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

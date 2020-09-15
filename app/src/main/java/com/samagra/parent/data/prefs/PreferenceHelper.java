@@ -69,4 +69,10 @@ public interface PreferenceHelper {
     boolean hasSeenDialog();
 
     void updateCountFlag(boolean flag);
+
+    void prefillSchoolInfo();
+
+    void downloadedStudentData(boolean flag);
+
+    boolean hasDownloadedStudentData();
 }

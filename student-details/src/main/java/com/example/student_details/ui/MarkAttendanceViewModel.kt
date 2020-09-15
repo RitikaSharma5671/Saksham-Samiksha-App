@@ -22,6 +22,7 @@ class MarkAttendanceViewModel : ViewModel() {
     val isEmptyListMessageVisible = ObservableBoolean(false)
     val showIncompleteAlertDialog: MutableLiveData<Boolean> = MutableLiveData(false)
     val showCompleteDialog: MutableLiveData<Boolean> = MutableLiveData(false)
+    val highTemp: MutableLiveData<Boolean> = MutableLiveData(false)
     val attendanceUploadSuccessful: MutableLiveData<String> = MutableLiveData("false")
     val selectedGrades : MutableLiveData<ArrayList<Int>> = MutableLiveData()
     var selectedSections: MutableLiveData<ArrayList<String>> = MutableLiveData()
@@ -166,6 +167,12 @@ class MarkAttendanceViewModel : ViewModel() {
 
     fun onSendAttendanceClicked() {
         if (checkIfAllDataFilled()) {
+            val list = studentsList.value!!
+            for( student in list){
+                if(student.temp > 100) {
+                    highTemp.postValue(true)
+                }
+            }
             showCompleteDialog.postValue(true)
         } else {
             showIncompleteAlertDialog.postValue(true)

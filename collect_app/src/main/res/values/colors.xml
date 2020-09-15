@@ -25,6 +25,16 @@ the License.
     <color name="colorSecondary">#4CAF50</color>
 
     <!-- Dark Theme Palette -->
+
+    <color name="color_primary">#014d3f</color>
+    <color name="color_primary_light">#014d3f</color>
+    <color name="color_primary_dark">#002519</color>
+    <color name="color_secondary">#007560</color>
+    <color name="color_secondary_light">#4aaf96</color>
+    <color name="color_secondary_dark">#00523e</color>
+    <color name="primary_text_color">#ffffff</color>
+    <color name="secondary_text_color">#ffffff</color>
+
     <color name="darkPrimaryTextColor">#deffffff</color>
     <color name="darkSecondaryTextColor">#99ffffff</color>
     <color name="darkPopupDialogColor">#3f3f3f</color>
@@ -63,5 +73,6 @@ the License.
     <color name="mapPointCircle">#ffff0000</color>
     <color name="mapPointFill">#ffffffff</color>
     <color name="mapLine">#ffff0000</color>
-    <color name="colorButton">#014D3F</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
 </resources>

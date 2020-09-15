@@ -8,6 +8,7 @@ import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.samagra.commons.Constants;
+import com.samagra.commons.InstitutionInfo;
 import com.samagra.commons.LocaleManager;
 import com.samagra.commons.PreferenceKeys;
 import com.samagra.parent.di.ApplicationContext;
@@ -119,6 +120,35 @@ public class AppPreferenceHelper implements PreferenceHelper {
         SharedPreferences.Editor editor = defaultPreferences.edit();
         editor.putBoolean("isIncompleteDialogShown", flag);
         editor.apply();
+    }
+
+    @Override
+    public void prefillSchoolInfo() {
+        String district = defaultPreferences.getString("user.district", "");
+        String block = defaultPreferences.getString("user.block", "");
+        String schoolName = defaultPreferences.getString("user.schoolName", "");
+        String schoolCode = defaultPreferences.getString("user.schoolCode", "");
+        InstitutionInfo selectedSchoolData = new InstitutionInfo(district, block, schoolName, Integer.parseInt(schoolCode));
+        defaultPreferences.edit().putString("studentGeoData", generateObjectForStudentData(selectedSchoolData)).apply();
+    }
+
+    @Override
+    public void downloadedStudentData(boolean flag) {
+        defaultPreferences.edit().putBoolean("downloadedStudentData", flag).apply();
+    }
+
+    @Override
+    public boolean hasDownloadedStudentData() {
+       return defaultPreferences.getBoolean("downloadedStudentData", false);
+    }
+
+    private String generateObjectForStudentData(InstitutionInfo inputObject) {
+        try {
+            Gson gson = new Gson();
+            return gson.toJson(inputObject);
+        } catch ( Exception e) {
+            return "";
+        }
     }
 
     @Override

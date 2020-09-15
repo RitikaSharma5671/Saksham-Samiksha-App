@@ -1,3 +1,4 @@
 include ':student-details'
 include ':assets'
-include ':app', ':commons', ':customworkmanager', ':grove',':ancillaryscreens', ':collect_app', ':user-profile', ':cascading_module', ':update_module'
+include ':nbi-stubs'
+include ':app', ':commons', ':grove',':ancillaryscreens', ':collect_app', ':user-profile', ':cascading_module', ':update_module'

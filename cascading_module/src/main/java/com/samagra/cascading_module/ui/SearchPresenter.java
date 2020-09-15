@@ -60,6 +60,7 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
             }.getType();
             listOfHostpitals = gson.fromJson(jsonReader, type);
             addDummySchoolAtTheStart();
+            getMvpView().initSpinners();
             jsonReader.close();
         } catch (Exception e) {
             e.printStackTrace();

@@ -34,6 +34,8 @@ import com.samagra.commons.InstitutionInfo;
 import com.samagra.commons.MainApplication;
 import com.samagra.grove.logging.Grove;
 
+import org.odk.collect.android.application.Collect1;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,16 +98,20 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     @SuppressLint("SetTextI18n")
     private void attachListenersForSchoolLayout() {
         RelativeLayout schoolLayout = findViewById(R.id.school_layout);
-        if(profilePresenter.isTeacherAccount()) {
+        if(profilePresenter.isTeacherAccount() || profilePresenter.isSchoolAccount()) {
             schoolLayout.setVisibility(View.VISIBLE);
             change_details = findViewById(R.id.change_details);
+            LinearLayout changeDetailsLL = findViewById(R.id.change_details_label);
+            if(profilePresenter.isSchoolAccount()){
+                changeDetailsLL.setVisibility(View.GONE);
+            }else if(profilePresenter.isTeacherAccount()) {
+                changeDetailsLL.setVisibility(View.VISIBLE);
+            }
             SpannableString content = new SpannableString(getText(R.string.change_details));
             content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
             change_details.setText(content);
-            String ROOT = Environment.getExternalStorageDirectory()
-                    + File.separator + "odk";
-            String FILE_PATH =  Environment.getExternalStorageDirectory()
-                    + File.separator + "odk" + "/saksham_data_json.json";
+            String ROOT = Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath();
+            String FILE_PATH =  Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath() + "/saksham_data_json.json";
             InstitutionInfo institutionInfo = profilePresenter.fetchSchoolDetails();
             schoolDistrict = findViewById(R.id.school_district);
             schoolBlock = findViewById(R.id.school_block);
@@ -209,12 +215,20 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
 
     @Override
     public void onProfileEditButtonClicked() {
-
         if (profilePresenter.isNetworkConnected()) {
             // save if already in edit mode prior to click.
             if (isInEditMode) {
                 if (profilePresenter.validateUpdatedFields(dynamicHolders)) {
-                    profilePresenter.updateUserProfileAtRemote(dynamicHolders, "");
+                    String updatedPhone = dynamicHolders.get(1).getUpdatedElementValue();
+                    if (!updatedPhone.equals("") && isValidPhoneNumber(updatedPhone)) {
+                        if (profilePresenter.isNetworkConnected()) {
+                            profilePresenter.updateUserProfileAtRemote(dynamicHolders, "");
+                        } else {
+                            showSnackbar(getActivityContext().getResources().getString(R.string.internet_not_connected_profile_screen), 3000);
+                        }
+                    } else {
+                        showSnackbar(getString(R.string.try_otp_for_no_phone), 3000);
+                    }
                     isInEditMode = !isInEditMode; // update the edit mode flag (accounting for the click)
                 }
             } else {
@@ -236,7 +250,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     private boolean isValidPhoneNumber(String phoneNumber) {
         Pattern p = Pattern.compile("[6-9][0-9]{9}");
         Matcher m = p.matcher(phoneNumber);
-        return !m.find() || m.group() != phoneNumber;
+        return !m.find() || !m.group().equals(phoneNumber);
     }
 
 
@@ -245,7 +259,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         showLoading("Sending OTP");
         if(profilePresenter.isNetworkConnected()){
             String phoneNumber= profilePresenter.getContentValueFromKey(dynamicHolders.get(1).getUserProfileElement().getContent());
-            if(!phoneNumber.isEmpty() && isValidPhoneNumber(phoneNumber)) {
+            if(!phoneNumber.isEmpty() && !isValidPhoneNumber(phoneNumber)) {
             new SendOTPTask(new ChangePasswordActionListener() {
                 @Override
                 public void onSuccess() {
@@ -263,9 +277,10 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber);
         }else{
             hideLoading();
-            showSnackbar(getActivityContext().getResources().getString(R.string.internet_not_connected_otp), 3000);
+                showSnackbar(getString(R.string.try_otp_for_no_phone), 3000);
+
         }}else{
-            showSnackbar(getString(R.string.try_otp_for_no_phone), 3000);
+            showSnackbar(getActivityContext().getResources().getString(R.string.internet_not_connected_otp), 3000);
         }
 
     }

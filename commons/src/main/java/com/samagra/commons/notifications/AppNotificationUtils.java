@@ -78,7 +78,7 @@ public class AppNotificationUtils {
     }
 
         private static int getNotificationAppIcon() {
-            return R.drawable.saksham_haryana ;
+            return R.drawable.saksham_notif_icon;
         }
 
 

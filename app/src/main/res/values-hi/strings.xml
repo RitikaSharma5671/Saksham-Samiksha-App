@@ -6,7 +6,7 @@
     <string name="on_internet_saving_complete"> डेटा सुरक्षित हो चुका है। 48 घंटों में एसएमएस चला जाएगा। </string>
     <string name="no_internet_saving_complete"> डेटा सुरक्षित हो चुका है। डाटा ऑन करने के बाद एसएमएस चला जाएगा। </string>
     <string name="coming_soon"> जल्द आ रहा है…</string>
-    <string name="welcome"> आप का स्वागत है, </string>
+    <string name="welcome"> आप का स्वागत है,\n</string>
     <string name="track_sms_delivery"> एसएमएस की स्थिति</string>
     <string name="fill_assessment_data"> आकलन के परिणाम भरें </string>
     <string name="support"> हेल्पलाइन</string>

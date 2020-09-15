@@ -43,12 +43,12 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
     }
 
     @SuppressLint("DefaultLocale")
-    fun fetchEmployeeData() {
+    fun fetchEmployeeData(schoolCode: String, schoolName: String) {
         isEmployeesListVisible.set(false)
         isEmptyListMessageVisible.set(false)
         isProgressBarVisible.set(true)
         CompositeDisposable().add(BackendCallHelperImpl.getInstance()
-                .performLoginApiCall("2", "Government High School Panjlassa")
+                .performLoginApiCall(schoolCode, schoolName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ employeeData: EmployeeInfo ->

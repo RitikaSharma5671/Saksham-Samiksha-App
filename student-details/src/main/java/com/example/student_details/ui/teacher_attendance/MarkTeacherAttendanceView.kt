@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import com.example.student_details.R
 import com.example.student_details.databinding.FragmentMarkTeacherAttendanceBinding
 import com.example.student_details.getViewModelProvider
 import com.example.student_details.models.realm.SchoolEmployeesInfo
-import com.example.student_details.models.realm.StudentInfo
 import com.example.student_details.ui.SamagraAlertDialog1
 
 class MarkTeacherAttendanceView : Fragment() {
@@ -35,7 +35,10 @@ class MarkTeacherAttendanceView : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        markAttendanceViewModel.fetchEmployeeData()
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context!!);
+        val schoolCode: String = sharedPreferences.getString("user.schoolCode", "")!!
+        val schoolName:String =sharedPreferences.getString("user.schoolName", "")!!
+        markAttendanceViewModel.fetchEmployeeData(schoolCode, schoolName)
         layoutBinding.vffv.setOnClickListener {
             markAttendanceViewModel.onSendAttendanceClicked()
         }
@@ -71,7 +74,7 @@ class MarkTeacherAttendanceView : Fragment() {
             if (it != null) {
                 if (it == "Success") {
                     mProgress.dismiss()
-                    SamagraAlertDialog1.Builder(context!!).setTitle("DATA SUBMITTED SUCCESSFULLY").setMessage("The student data has been successfully submitted.\n Click OK to go back to Home Screen.")
+                    SamagraAlertDialog1.Builder(context!!).setTitle("DATA SUBMITTED SUCCESSFULLY").setMessage("The employee data has been successfully submitted.\n Click OK to go back to Home Screen.")
                             .setAction2("YES, PLEASE", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {
                                 override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                     alertDialog.dismiss()
@@ -81,7 +84,7 @@ class MarkTeacherAttendanceView : Fragment() {
                             }).show()
                 } else if (it == "Failure") {
                     mProgress.dismiss()
-                    SamagraAlertDialog1.Builder(context!!).setTitle("DATA SUBMISSION FAILED").setMessage("The student data could not be submitted.\n Click OK to try sending data again.")
+                    SamagraAlertDialog1.Builder(context!!).setTitle("DATA SUBMISSION FAILED").setMessage("The employee data could not be submitted.\n Click OK to try sending data again.")
                             .setAction2("OK", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {
                                 override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                     alertDialog.dismiss()

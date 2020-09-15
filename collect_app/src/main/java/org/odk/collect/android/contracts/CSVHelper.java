@@ -2,7 +2,8 @@ package org.odk.collect.android.contracts;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.storage.StorageSubdirectory;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
@@ -40,7 +41,7 @@ public class CSVHelper {
      * @return {{@link ArrayList <String>}} List of names of media directories for all the forms containing to be modified reference File.
      */
     public static ArrayList<String> fetchFormMediaDirectoriesWithMedia(String referenceFileName) {
-        File dir = new File(Collect.FORMS_PATH);
+        File dir = new File(Collect1.getInstance().getStoragePathProvider().getDirPath(StorageSubdirectory.FORMS));
         File[] files;
         ArrayList<String> directoriesNames = new ArrayList<>();
         FileFilter fileFilter = File::isDirectory;
@@ -84,7 +85,7 @@ public class CSVHelper {
             csvBuildStatusListener.onFailure(exception, BuildFailureType.COPY_NOT_FOUND);
             return;
         }
-        String fileDir = Collect.FORMS_PATH + File.separator + mediaDirectoriesNames.get(0) + File.separator + mediaFileName;
+       String fileDir = Collect1.getInstance().getStoragePathProvider().getDirPath(StorageSubdirectory.FORMS) + File.separator + mediaDirectoriesNames.get(0) + File.separator + mediaFileName;
         try {
             File file = new File(fileDir);
             reader = new CSVReader(new FileReader(file));
@@ -207,11 +208,11 @@ public class CSVHelper {
     private static boolean checkFilesAvailability(ArrayList<String> mediaDirectoriesNames, String mediaFileName) {
         ArrayList<Boolean> flags = new ArrayList<>();
         for(String mediaDir : mediaDirectoriesNames){
-            String fileDir = Collect.FORMS_PATH + File.separator + mediaDir + File.separator + mediaFileName;
+            String fileDir = Collect1.getInstance().getStoragePathProvider().getDirPath(StorageSubdirectory.FORMS) + File.separator + mediaDir + File.separator + mediaFileName;
             File file = new File(fileDir);
             if (!file.exists()) {
                 Timber.e("Media file doesn't exist as expected in the folder..... Replacing it with copy.");
-                boolean flag = copySourceFile(mediaFileName, Collect.FORMS_PATH + File.separator + mediaDir + File.separator);
+                boolean flag = copySourceFile(mediaFileName, Collect1.getInstance().getStoragePathProvider().getDirPath(StorageSubdirectory.FORMS) + File.separator + mediaDir + File.separator);
                flags.add(flag);
             }else{
                 flags.add(true);
@@ -232,7 +233,7 @@ public class CSVHelper {
      * @return - Return flag if copy operation is successful or nor
      */
     private static boolean copySourceFile(String mediaFileName, String destinationFolder) {
-        String sourcePath = Collect.ODK_ROOT + "/"+mediaFileName;
+        String sourcePath = Collect1.getInstance().getStoragePathProvider().getStorageRootDirPath() + "/"+mediaFileName;
         File source = new File(sourcePath);
         if(source.exists()) {
             String destinationPath = destinationFolder + mediaFileName;
@@ -253,7 +254,6 @@ public class CSVHelper {
     /**
      * Write data into the reference CSVs in the Media Folder
      *
-     * @param studentCSVData           - {{@link ArrayList<ArrayList>}}
      * @param csvBuildStatusListener - {{@link CSVBuildStatusListener}} CSV Build Operation Listener
      * @param mediaDirectoriesNames  - {{@link ArrayList<String>}} List of the forms' names for which the operation is to be done. (Given that same format of CSV is needed for all the forms), just the path is different.
      * @param mediaFileName          {{@link String}} Media File to be updated with extension
@@ -268,7 +268,7 @@ public class CSVHelper {
                 String teacher = "teacher";
                 String COVID = "covid";
                 if(formName.contains(student) && formName.contains(COVID)){
-                String fileDir = Collect.FORMS_PATH + File.separator + form + File.separator + mediaFileName;
+                String fileDir = Collect1.getInstance().getStoragePathProvider().getDirPath(StorageSubdirectory.FORMS) + File.separator + mediaDirectoriesNames.get(0) + File.separator + mediaFileName;
                 File outputFile = new File(fileDir);
                 writer = new CSVWriter(new FileWriter(outputFile), ',');
                 for (ArrayList<String> list : studentCSVData) {
@@ -280,7 +280,7 @@ public class CSVHelper {
                 storeCSVFileCopy(studentCSVData, mediaFileName, csvBuildStatusListener);
                 csvBuildStatusListener.onSuccess();
             }else if(formName.contains(teacher) && formName.contains(COVID)) {
-                    String fileDir = Collect.FORMS_PATH + File.separator + form + File.separator + mediaFileName;
+                    String fileDir = Collect1.getInstance().getStoragePathProvider().getDirPath(StorageSubdirectory.FORMS) + File.separator + mediaDirectoriesNames.get(0) + File.separator + mediaFileName;
                     File outputFile = new File(fileDir);
                     writer = new CSVWriter(new FileWriter(outputFile), ',');
                     for (ArrayList<String> list : teacherCSVData) {
@@ -302,7 +302,7 @@ public class CSVHelper {
     private static void storeCSVFileCopy(ArrayList<ArrayList<String>> finalCSVData, String mediaFileName, CSVBuildStatusListener csvBuildStatusListener) {
         CSVWriter writer;
         try {
-            String fileDir = Collect.ODK_ROOT + "/"+ mediaFileName;
+            String fileDir =  Collect1.getInstance().getStoragePathProvider().getStorageRootDirPath() + "/"+ mediaFileName;
             File outputFile = new File(fileDir);
             writer = new CSVWriter(new FileWriter(outputFile), ',');
             for (ArrayList<String> list : finalCSVData) {
@@ -324,7 +324,8 @@ public class CSVHelper {
      * @param mediaFileName         {{@link String}} Media File to be updated with extension
      */
     private static void readCsv(ArrayList<String> mediaDirectoriesNames, String mediaFileName) {
-        String fileDir = Collect.FORMS_PATH + File.separator + mediaDirectoriesNames.get(0) + File.separator + mediaFileName;
+        String fileDir = Collect1.getInstance().getStoragePathProvider().getDirPath(StorageSubdirectory.FORMS)
+                 + File.separator + mediaDirectoriesNames.get(0) + File.separator + mediaFileName;
         ArrayList<ArrayList<String>> result = new ArrayList<>();
         CSVReader reader;
         try {

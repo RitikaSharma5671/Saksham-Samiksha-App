@@ -17,8 +17,9 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.samagra.commons.R;
-import com.samagra.commons.utils.AlertDialogUtils;
+
+import org.odk.collect.android.R;
+import org.odk.collect.android.utilities.AlertDialogUtils;
 
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class PermissionsHelper {
                 showAdditionalExplanation(activity, R.string.storage_runtime_permission_denied_title,
                         R.string.storage_runtime_permission_denied_desc, R.drawable.sd, action);
             }
-        }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE);
     }
 
 

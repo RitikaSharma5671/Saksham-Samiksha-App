@@ -7,10 +7,11 @@
     <dimen name="padding_extra_large">24dp</dimen>
 
     <!-- margin -->
-    <dimen name="margin_small">4dp</dimen>
-    <dimen name="margin_medium">8dp</dimen>
-    <dimen name="margin_large">16dp</dimen>
-    <dimen name="margin_extra_large">24dp</dimen>
+    <dimen name="margin_extra_small">4dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_standard">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_extra_large">32dp</dimen>
 
     <!-- fontSize -->
     <dimen name="text_size_extra_small">12sp</dimen>
@@ -18,7 +19,6 @@
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_large">24sp</dimen>
     <dimen name="text_size_extra_large">28sp</dimen>
-    <dimen name="text_size_app_name">40sp</dimen>
 
     <!-- elevation -->
     <dimen name="elevation_switch">1dp</dimen>

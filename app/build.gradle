@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.sentry.android.gradle'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
@@ -53,12 +54,11 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-analytics:17.2.0'
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
-    implementation 'com.google.firebase:firebase-database:19.1.0'
-
-    implementation "com.google.firebase:firebase-storage:19.1.0"
-    implementation 'com.google.firebase:firebase-config:19.0.2'
+    implementation 'com.google.firebase:firebase-analytics:17.4.4'
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    implementation 'com.google.firebase:firebase-database:19.3.1'
+    implementation "com.google.firebase:firebase-storage:19.1.1"
+    implementation 'com.google.firebase:firebase-config:19.2.0'
     implementation "androidx.preference:preference:1.1.0"
     androidTestImplementation 'androidx.test:rules:1.2.0-beta01'
 
@@ -70,6 +70,8 @@ dependencies {
     // Keyboard visibility listeners
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.3.0'
 
+    api 'com.amitshekhar.android:rx2-android-networking:1.0.2'
+    api 'com.amitshekhar.android:jackson-android-networking:1.0.2'
     // Fuzzy search backend
     implementation 'me.xdrop:fuzzywuzzy:1.2.0'
 

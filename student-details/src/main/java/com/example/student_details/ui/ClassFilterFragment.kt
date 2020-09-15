@@ -64,7 +64,7 @@ class ClassFilterFragment : Fragment() {
         val sections = ArrayList<String>()
         sections.addAll(arrayOf("A", "B", "C", "D"))
         val streams = ArrayList<String>()
-        streams.addAll(arrayOf("ARTS", "SCIENCE", "COMMERCE", "VOCATIONAL"))
+        streams.addAll(arrayOf("ARTS", "SCIENCE", "COMMERCE"))
         filterAttributes.allGrades = grades
         filterAttributes.allSections = sections
         filterAttributes.allStreams = streams

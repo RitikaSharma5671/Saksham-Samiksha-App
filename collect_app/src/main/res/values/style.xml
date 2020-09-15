@@ -63,4 +63,5 @@
         <item name="android:textColor">?secondaryTextColor</item>
     </style>
 
+    <color name="primaryTextColor">#014d3f</color>
 </resources>

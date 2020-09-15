@@ -16,8 +16,6 @@
     <string name="error_sending_otp">ओ.टी.पी. भेजने में त्रुटि| कृपया एडमिन से संपर्क करें।</string>
     <string name="errorlogin">आपको एप्लिकेशन में लॉग इन करने में त्रुटि हुई है। कृपया पुन: प्रयास करें।</string>
     <string name="forgot_pass">ऐप पासवर्ड रीसेट</string>
-    <string name="forgot_password">पासवर्ड भूल गए?</string>
-
     <string name="incorrect_credentials"> यूजरनाम और पासवर्ड का मेल नहीं हुआ, पुनः कोशिश करें.</string>
     <string name="internet_not_connected">ऐसा लगता है कि आप इंटरनेट से नहीं जुड़े हैं। पासवर्ड बदलने के लिए कृपया अपने मोबाइल डेटा को ऑन करें। </string>
     <string name="internet_not_connected_error_login">ऐसा लगता है कि आप इंटरनेट से नहीं जुड़े हैं। कृपया लॉगिन करने के लिए अपने मोबाइल डेटा को ऑन करें। </string>

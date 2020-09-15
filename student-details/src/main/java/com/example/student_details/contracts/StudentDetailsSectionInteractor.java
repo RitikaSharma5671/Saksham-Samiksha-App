@@ -94,7 +94,10 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
     }
 
     @Override
-    public ArrayList<ArrayList<String>> buildJSONArrayForEmployees(List<SchoolEmployeesInfo> employeeInfos) {
+    public ArrayList<ArrayList<String>> buildJSONArrayForEmployees() {
+        Realm realm = Realm.getDefaultInstance();
+        List<SchoolEmployeesInfo> employeeInfos =  realm.copyFromRealm(realm
+                .where(SchoolEmployeesInfo.class).findAll());
         ArrayList<ArrayList<String>> jsonArray = new ArrayList<ArrayList<String>>();
         ArrayList<String> first = new ArrayList<>();
         first.add("list_name");

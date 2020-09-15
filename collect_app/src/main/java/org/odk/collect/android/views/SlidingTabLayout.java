@@ -60,7 +60,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private boolean distributeEvenly;
 
     private ViewPager viewPager;
-    private final SparseArray<String> contentDescriptions = new SparseArray<String>();
+    private final SparseArray<String> contentDescriptions = new SparseArray<>();
     private ViewPager.OnPageChangeListener viewPagerPageChangeListener;
     private int titleFontSize = -1;
     private int titleFontColor = -1;
@@ -189,7 +189,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 tabView = createDefaultTabView(getContext());
             }
 
-            if (tabTitleView == null && tabView instanceof TextView) {
+            if (tabTitleView == null && TextView.class.isInstance(tabView)) {
                 tabTitleView = (TextView) tabView;
             }
 

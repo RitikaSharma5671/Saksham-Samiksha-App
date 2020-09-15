@@ -21,4 +21,5 @@ public interface SearchMvpView extends MvpView {
      * @param spinner - The {@link Spinner} widget to disable
      */
     void makeSpinnerDefault(Spinner spinner);
+    void initSpinners();
 }

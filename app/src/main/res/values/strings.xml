@@ -3,13 +3,13 @@
     <string name="view_issues" translatable="false">View Forms</string>
     <string name="submit_form">Submit Form</string>
     <string name="inspect_school">Fill Forms</string>
-    <string name="my_visits">My Visits</string>
+    <string name="my_visits">My Submissions</string>
     <string name="on_internet_saving_complete" translatable="false">Data has been captured. SMS will be sent within 48 hours.</string>
     <string name="no_internet_saving_complete" translatable="false">Data has been captured. SMS will be sent after syncing with the internet. </string>
     <string name="server_2_base_url_local"  translatable="false">http://192.168.1.14:8080</string>
     <string name="change_app_language_title">Change Language</string>
     <string name="coming_soon">Coming Soon...</string>
-    <string name="welcome" translatable="true">WELCOME,</string>
+    <string name="welcome" translatable="true">WELCOME,\n</string>
     <string name="track_sms_delivery">Track SMS \nDelivery</string>
     <string name="fill_assessment_data">Fill Assessment \nData</string>
     <string name="support">Support</string>
@@ -77,7 +77,7 @@
     <string name="product_image">back</string>
     <string name="select_language_hindi">कृपया अपनी भाषा चुनें</string>
     <string name="please_select_forms">Choose Forms</string>
-    <string name="submit_saved_forms">Submit Saved forms</string>
+    <string name="submit_saved_forms">Submit Saved Forms</string>
     <string name="click_on_the_pdf_icon_to_download_the_pdf_report">Click on the PDF Icon to download the PDF Report</string>
     <string name="pdf_not_generated_error">The PDF report has not been generated yet. Please check again after some time.</string>
     <string name="file_download_start">File will start downloading now.</string>
@@ -88,8 +88,8 @@
     <string name="error_submission_api">There has been error in fetching data of your submissions. Hence showing the last fetched data.</string>
     <string name="internet_error_submission_screen">Seems like you are not connected to internet, please try to connect to wifi/ switch on your mobile data connection and try again by clicking on the button below.</string>
     <string name="samagra_shiksha">Saksham Samiksha</string>
-    <string name="form_submitted_online">Thanks for filling the inspection report. Your report has been submitted.</string>
-    <string name="form_submitted_offline">Thank you for filling the inspection report.\nSince you have filled the report in offline mode, the report is save under \'Un-submitted Forms\'.\n Please submit your forms manually by going to the \'Un-submitted Forms\' section when connected to internet.</string>
+    <string name="form_submitted_online">Thanks for filling the form. Your response/input(s) has been submitted.</string>
+    <string name="form_submitted_offline">Thank you for filling the form.\nSince you have filled the report in offline mode, the form is saved under \'Un-submitted Forms\'.\n Please submit your forms manually by going to the \'Un-submitted Forms\' section when connected to internet.</string>
     <string name="view_submissions">View Submissions in Offline Mode</string>
     <string name="logging_out_message">Logging you out…Please wait.</string>
     <string name="call_helpline">If facing any issues, please send a WhatsApp message to +91 9780431345. Please do not call this number.</string>

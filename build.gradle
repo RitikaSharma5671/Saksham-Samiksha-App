@@ -14,13 +14,14 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         /*classpath 'org.ow2.asm:asm:6.2' // https://github.com/jacoco/jacoco/issues/639#issuecomment-355424756
         classpath 'org.jacoco:org.jacoco.core:0.8.0'
         classpath 'io.fabric.tools:gradle:1.28.1'*/
         /*classpath 'io.fabric.tools:gradle:1.28.1'*/
         classpath 'io.sentry:sentry-android-gradle-plugin:1.7.23'
         classpath 'com.google.gms:google-services:4.3.0'
+        classpath 'io.fabric.tools:gradle:1.28.1'
         classpath 'com.jakewharton:butterknife-gradle-plugin:10.1.0'
         classpath("com.apollographql.apollo:apollo-gradle-plugin:2.2.0")
         classpath "io.realm:realm-gradle-plugin:6.0.2"
@@ -75,6 +76,7 @@ ext {
     okhttp3Version = '3.12.3'
     lifecycle_version = "2.2.0"
     arch_version = "2.1.0"
+    fragmentVersion = '1.2.4'
 }
 
 

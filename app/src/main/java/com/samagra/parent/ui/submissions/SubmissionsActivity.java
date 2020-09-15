@@ -193,9 +193,6 @@ public class SubmissionsActivity extends BaseActivity implements SubmissionsMvpV
 
     /**
      * Only set the title and action bar here; do not make further modifications.
-     * Any further modifications done to the toolbar here will be overwritten if you
-     * use {@link ODKDriver}. If you wish to prevent modifications
-     * from being overwritten, do them after onCreate is complete.
      * This method should be called in onCreate of your activity.
      */
     @Override
@@ -204,8 +201,7 @@ public class SubmissionsActivity extends BaseActivity implements SubmissionsMvpV
         toolbar.setTitle(this.getResources().getString(R.string.my_visits));
         setSupportActionBar(toolbar);
     }
-
-
+    
     @Override
     public void onRefreshButtonPressed() {
         showLoadingView();

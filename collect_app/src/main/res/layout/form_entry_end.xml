@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
 Copyright (C) 2009 University of Washington Licensed under the Apache
 License, Version 2.0 (the "License"); you may not use this file except in
 compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -17,9 +18,9 @@ the specific language governing permissions and limitations under the License.
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="vertical"
         android:padding="10dp">
 
         <View
@@ -28,83 +29,76 @@ the specific language governing permissions and limitations under the License.
             android:layout_weight="1.0" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
             android:lineSpacingMultiplier="1.2"
-            android:paddingTop="10dp"
             android:paddingBottom="20dp"
-            android:textColor="?primaryTextColor"
+            android:paddingTop="10dp"
+            android:textColor="@color/colorPrimary"
             android:textSize="21sp"
-            android:textStyle="bold"
-            android:visibility="visible" />
+            android:textStyle="bold" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/save_form_as"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
+            android:textColor="@color/black"
             android:lineSpacingMultiplier="1.2"
             android:text="@string/save_form_as"
-            android:textColor="?primaryTextColor"
-            android:textSize="21sp"
-            android:visibility="gone" />
+            android:textSize="21sp" />
 
         <EditText
+            android:textColor="@color/black"
+            android:visibility="gone"
             android:id="@+id/save_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
-            android:textAlignment="center"
-            android:textSize="21sp"
-            android:visibility="gone"
-            android:gravity="center_horizontal" />
+            android:textSize="21sp" />
 
         <CheckBox
+            android:visibility="gone"
             android:id="@+id/mark_finished"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginBottom="10dp"
             android:text="@string/mark_finished"
-            android:textSize="21sp"
-            android:visibility="gone" />
+            android:textSize="21sp" />
 
         <ImageView
-            android:layout_width="150dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
             android:layout_marginBottom="70dp"
-            android:src="@drawable/send">
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_send_sms"
+            android:layout_width="220dp"
+            android:layout_height="200dp">
 
         </ImageView>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/save_exit_button"
             android:layout_width="match_parent"
-            android:layout_height="68dp"
+            android:layout_height="64dp"
             android:layout_gravity="center_horizontal"
-            android:backgroundTint="@color/colorButton"
-            android:padding="10dp"
+            android:padding="4dp"
+            style="@style/ButtonStyle1"
             android:text="@string/quit_entry"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="17sp" />
+            android:textAllCaps="true" />
 
         <TextView
             android:id="@+id/offline_msg_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:textSize="15sp"
-            android:text="@string/please_check_your_data_before_submitting_the_form"
-            android:textAppearance="@style/AppTheme.TextAppearance.Medium"
-            android:textColor="@color/colorButton" />
+            android:textAppearance="@style/Widget.MaterialComponents.TextView"
+            android:textColor="#212121" />
 
 
         <View

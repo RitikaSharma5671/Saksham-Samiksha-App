@@ -24,6 +24,7 @@ import com.samagra.parent.base.BasePresenter;
 import com.samagra.parent.helper.BackendNwHelper;
 
 import org.odk.collect.android.BuildConfig;
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.contracts.AppPermissionUserActionListener;
 import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.contracts.PermissionsHelper;
@@ -44,8 +45,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class SplashPresenter<V extends SplashContract.View, I extends SplashContract.Interactor> extends BasePresenter<V, I> implements SplashContract.Presenter<V, I> {
 
-    private static final String ROOT = Environment.getExternalStorageDirectory()
-            + File.separator + "odk";
+    private static final String ROOT = Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath();
     private static final boolean EXIT = true;
 
     public boolean isJwtTokenValid() {
@@ -75,18 +75,6 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
      */
     @Override
     public void moveToNextScreen() {
-        if (!getMvpInteractor().getRefreshToken().equals("") && getMvpInteractor().isLoggedIn()) {
-            isJWTTokenValid();
-        } else {
-            launchLoginScreen();
-        }
-    }
-
-    private void launchLoginScreen() {
-        getIFormManagementContract().resetEverythingODK();
-        Grove.d("Launching Login");
-        AncillaryScreensDriver.launchLoginScreen(getMvpView().getActivityContext());
-        getMvpView().finishSplashScreen();
     }
 
     public boolean isNetworkConnected() {
@@ -138,7 +126,6 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(updatedToken -> {
                             if (updatedToken != null && updatedToken.has("jwt")) {
-                                SplashPresenter.this.getIFormManagementContract().resetODKForms(SplashPresenter.this.getMvpView().getActivityContext());
                                 getMvpView().redirectToHomeScreen();
                                 Grove.e(updatedToken.toString());
                             } else {
@@ -265,7 +252,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         int previousSavedVersion = getMvpInteractor().getPreferenceHelper().getPreviousVersion();
         if (previousSavedVersion < currentVersion) {
             getMvpInteractor().getPreferenceHelper().updateAppVersion(currentVersion);
-            getIFormManagementContract().resetEverythingODK();
+//            getIFormManagementContract().resetEverythingODK();
             Grove.e("Up version detected");
         }
     }
