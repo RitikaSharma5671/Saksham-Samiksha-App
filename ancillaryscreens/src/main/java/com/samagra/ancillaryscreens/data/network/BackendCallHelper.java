@@ -24,5 +24,7 @@ public interface BackendCallHelper {
 
     Single<JSONObject> performGetUserDetailsApiCall(String userId, String apiKey);
 
+    Single<JSONObject> performVerifyPhoneNumberCall(String phoneNumber, String otp);
+
     Single<JSONObject> performPutUserDetailsApiCall(String userId, String apiKey, JSONObject jsonObject);
 }

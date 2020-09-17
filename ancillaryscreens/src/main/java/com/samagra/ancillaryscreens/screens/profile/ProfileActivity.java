@@ -274,7 +274,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
                 public void onFailure(Exception exception) {
                     showSnackbar(getActivityContext().getResources().getString(R.string.error_sending_otp), 3000);
                 }
-            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber);
+            },AncillaryScreensDriver.SEND_OTP_URL).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber);
         }else{
             hideLoading();
                 showSnackbar(getString(R.string.try_otp_for_no_phone), 3000);

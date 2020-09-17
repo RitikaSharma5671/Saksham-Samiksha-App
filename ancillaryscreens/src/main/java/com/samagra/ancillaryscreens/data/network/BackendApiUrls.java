@@ -17,4 +17,5 @@ public final class BackendApiUrls {
     static final String USER_DETAILS_ENDPOINT = AncillaryScreensDriver.BASE_API_URL + "/api/user/{user_id}/";
     static final String REFRESH_JWT_ENDPOINT = AncillaryScreensDriver.BASE_API_URL + "/api/jwt/refresh";
     public static final String VALIDATE_ENDPOINT = AncillaryScreensDriver.BASE_API_URL + "/api/jwt/validate";
+    public static final String SEND_OTP_VERIFY_PHONE = "http://142.93.208.135:8080/ams/verify-OTP";
 }

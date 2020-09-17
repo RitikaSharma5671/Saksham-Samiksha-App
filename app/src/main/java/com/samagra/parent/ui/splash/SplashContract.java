@@ -1,5 +1,6 @@
 package com.samagra.parent.ui.splash;
 
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
@@ -62,11 +63,11 @@ public interface SplashContract {
          * @see com.samagra.ancillaryscreens.data.prefs.CommonsPrefsHelperImpl
          */
         void moveToNextScreen();
-        void startUnzipTask();
+        void startUnzipTask(Context context);
         void downloadFirebaseRemoteStorageConfigFile();
         boolean canLaunchHome();
         void updateJWT(String apiKey);
         void verifyJWTTokenValidity(String apiKey);
-        void requestStoragePermissions(String packageName, PackageManager packageManager);
+        void requestStoragePermissions(String packageName, PackageManager packageManager, Context context);
     }
 }

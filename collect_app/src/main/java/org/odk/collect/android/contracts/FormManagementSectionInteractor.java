@@ -33,7 +33,10 @@ import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,6 +45,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -54,6 +58,8 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -270,17 +276,28 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
         String fileName = ContentResolverHelper.getFormPath(formUri);
         FileOutputStream fos = null;
         try {
+//            SAXParserFactory factory = SAXParserFactory.newInstance();
+//            factory.setNamespaceAware(true);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(fileName));
-            prefillFormBasedOnTags(document, tag, tagValue);
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(document);
-            fos = new FileOutputStream(new File(fileName));
-            StreamResult result = new StreamResult(fos);
-            transformer.transform(source, result);
-        } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
+            Document document = null;
+//            document = factory.newSAXParser().parse(new File(fileName), new MySAXHandler());
+            try {
+                document = builder.parse(new File(fileName));
+                document.getDocumentElement().normalize();
+            }catch (Exception e) {
+                Timber.d(" Exception for form " + formIdentifier + " exception is " + e.getMessage());
+            }
+            if(document != null) {
+                prefillFormBasedOnTags(document, tag, tagValue);
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                DOMSource source = new DOMSource(document);
+                fos = new FileOutputStream(new File(fileName));
+                StreamResult result = new StreamResult(fos);
+                transformer.transform(source, result);
+            }
+        } catch (ParserConfigurationException | IOException | TransformerException  e) {
             e.printStackTrace();
         } finally {
             if (fos != null) {

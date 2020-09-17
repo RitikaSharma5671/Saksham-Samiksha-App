@@ -22,6 +22,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
+            android:padding="12dp"
             android:contentDescription="@string/reset_password"
             android:scaleType="fitStart"
             android:backgroundTint="@color/white"
@@ -81,6 +82,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="20dp"
+                    android:textSize="13.5sp"
                     android:layout_below="@id/ivBusiness"
                     android:gravity="center"
                     android:text="@string/enter_the_registered_mobile_number_associated_with_your_account" />
@@ -88,7 +90,7 @@
                 <EditText
                     android:id="@+id/etResult"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="67dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
@@ -98,8 +100,8 @@
                     android:layout_marginTop="12dp"
                     android:maxLines="2"
                     android:textColor="@color/black"
-                    android:textSize="26sp"
-                    android:textStyle="bold"
+                    android:textSize="21sp"
+                    android:textStyle="normal"
                     android:layout_centerHorizontal="true"
                     android:visibility="visible"
                     android:layout_below="@id/reset_password_label"
@@ -109,7 +111,7 @@
                     android:id="@+id/btnCollect"
                     style="@style/ButtonStyle1"
                     android:layout_width="match_parent"
-                    android:layout_height="75dp"
+                    android:layout_height="64dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="10dp"
@@ -118,6 +120,7 @@
                     android:focusable="false"
                     android:gravity="center"
                     android:maxLines="2"
+                    android:textSize="14sp"
                     android:layout_below="@id/etResult"
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -218,4 +221,9 @@
             </TableLayout>
         </RelativeLayout>
     </ScrollView>
+    <FrameLayout
+        android:id="@+id/mobile_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"/>
 </RelativeLayout>

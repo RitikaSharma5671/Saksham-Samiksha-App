@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.assets.uielements.SamagraAlertDialog
 import com.example.assets.uielements.deleteBoldText
-import com.samagra.ancillaryscreens.AncillaryScreensDriver
+import com.samagra.ancillaryscreens.AncillaryScreensDriver.VERIFY_PHONE_OTP_URL
 import com.samagra.ancillaryscreens.R
 import com.samagra.ancillaryscreens.data.network.FindUserByPhoneTask
 import com.samagra.commons.CommonUtilities.isNetworkAvailable
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.enter_mobile_number_otp.*
 import org.odk.collect.android.utilities.SnackbarUtils
 import java.util.regex.Pattern
 
-class EnterMobileNumberFragment : Fragment(), View.OnClickListener, OnUserFound, ChangePasswordActionListener {
+class EnterMobileNumberFragment_NewUser : Fragment(), View.OnClickListener, OnUserFound, ChangePasswordActionListener {
 
     private lateinit var phoneNumber: String
     private lateinit var mProgress: ProgressDialog
@@ -46,7 +46,7 @@ class EnterMobileNumberFragment : Fragment(), View.OnClickListener, OnUserFound,
                 t9_key_3, t9_key_0,
                 t9_key_backspace
         ).forEach { it.setOnClickListener(this) }
-
+        reset_password_label.text = getString(R.string.enter_phone_register)
         t9_key_backspace.setOnLongClickListener {
             if (it.id == R.id.t9_key_backspace) {
                 resetAmount()
@@ -78,7 +78,7 @@ class EnterMobileNumberFragment : Fragment(), View.OnClickListener, OnUserFound,
         mProgress.setCancelable(false)
         mProgress.isIndeterminate = true
         ttb_close_button.setOnClickListener {
-            fragmentManager!!.popBackStack()
+            requireActivity().finish()
         }
     }
 
@@ -171,13 +171,13 @@ class EnterMobileNumberFragment : Fragment(), View.OnClickListener, OnUserFound,
     }
 
     override fun onSuccessUserFound(numberOfUsers: String) {
-        if (numberOfUsers.toInt() > 0 && phoneNumber.isNotEmpty()) {
-            SendOTPTask(this,AncillaryScreensDriver.SEND_OTP_URL).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber)
+        if (numberOfUsers.toInt() == 0 && phoneNumber.isNotEmpty()) {
+            SendOTPTask(this,VERIFY_PHONE_OTP_URL).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber)
         } else {
             btnCollect.isClickable = true
             mProgress.dismiss()
             SamagraAlertDialog.Builder(requireContext()).setImageTitle(ContextCompat.getDrawable(requireContext(),
-                    R.drawable.ic_browser_error)!!).setTitle(getText(R.string.no_users_found)).setMessage(getText(R.string.contact_admin_for_this)).setAction2(getText(R.string.ok),
+                    R.drawable.ic_browser_error)!!).setTitle(getText(R.string.multiple_users_found)).setMessage(getText(R.string.mulitple_users_same_phone_found)).setAction2(getText(R.string.ok),
                     object : SamagraAlertDialog.CaastleAlertDialogActionListener {
                         override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog) {
                             alertDialog.dismiss()
@@ -199,16 +199,17 @@ class EnterMobileNumberFragment : Fragment(), View.OnClickListener, OnUserFound,
 
     override fun onSuccess() {
         if (otp_parent != null) {
-            SnackbarUtils.showShortSnackbar(otp_parent, getString(R.string.otp_sent_successfully, phoneNumber))
+            val cased = "+91-" + phoneNumber.substring(0,3) + "xxxx" + phoneNumber.substring(7)
+            SnackbarUtils.showShortSnackbar(otp_parent, getString(R.string.otp_sent_successfully, cased))
         }
         mProgress.dismiss()
         btnCollect.isClickable = true
-        val otpFragment = OTPFragment()
+        val otpFragment = OTPViewFragment()
         val arguments = Bundle()
         arguments.putString("phoneNumber", phoneNumber)
         otpFragment.arguments = arguments
-        removeFragment(this, fragmentManager!!)
-        addFragment(R.id.login_fragment_container, fragmentManager!!, otpFragment, "OTPFragment")
+        removeFragment(this,parentFragmentManager)
+        addFragment(R.id.fragment_container, parentFragmentManager, otpFragment, "OTPViewFragment")
     }
 
 
@@ -264,9 +265,4 @@ class EnterMobileNumberFragment : Fragment(), View.OnClickListener, OnUserFound,
             }
         }).show()
     }
-}
-
-interface OnUserFound {
-    fun onSuccessUserFound(numberOfUsers: String)
-    fun onFailureUserFound(e: Exception)
 }

@@ -25,6 +25,9 @@ import com.example.update.UpdateApp;
 import com.google.android.material.snackbar.Snackbar;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.models.AboutBundle;
+import com.samagra.ancillaryscreens.screens.passReset.EnterMobileNumberFragment_NewUser;
+import com.samagra.ancillaryscreens.screens.passReset.OTPActivity;
+import com.samagra.ancillaryscreens.screens.profile.ProfileActivity;
 import com.samagra.ancillaryscreens.screens.profile.UserProfileElement;
 import com.samagra.cascading_module.CascadingModuleDriver;
 import com.samagra.commons.Constants;
@@ -75,7 +78,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
     private static CompositeDisposable formSentDisposable = new CompositeDisposable();
     private PopupMenu popupMenu;
     private Snackbar messageView = null;
-    UpdateApp mUpdateApp;
+//    UpdateApp mUpdateApp;
 
     @Inject
     HomePresenter<HomeMvpView, HomeMvpInteractor> homePresenter;
@@ -105,7 +108,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         InternetMonitor.startMonitoringInternet(((MainApplication) getApplicationContext()));
         homePresenter.updateLanguageSettings();
         AppNotificationUtils.updateFirebaseToken(getActivityContext(), AppConstants.BASE_API_URL, getActivityContext().getResources().getString(R.string.fusionauth_api_key));
-        mUpdateApp = new UpdateApp(this);
+//        mUpdateApp = new UpdateApp(this);
         homePresenter.fetchStudentData();
         homePresenter.fetchSchoolEmployeeData();
         renderLayoutInvisible();
@@ -116,9 +119,16 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
             new SamagraAlertDialog.Builder(getActivityContext()).setTitle(getText(R.string.profile_incomplete)).
                     setMessage(getText(R.string.please_update_the_password_and_details_of_the_school_in_charge))
                     .setAction2(getText(R.string.update_details), (actionIndex, alertDialog) -> {
-                        ArrayList<UserProfileElement> profileElements = homePresenter.getProfileConfig();
-                        AncillaryScreensDriver.launchProfileActivity(this, profileElements, homePresenter.fetchUserID());
+//                        ArrayList<UserProfileElement> profileElements = homePresenter.getProfileConfig();
+//                        AncillaryScreensDriver.launchProfileActivity(this, profileElements, homePresenter.fetchUserID());
                         alertDialog.dismiss();
+                        Intent otpIntent = new Intent(this, OTPActivity.class);
+//                        otpIntent.putExtra("phoneNumber", phoneNumber);
+                        otpIntent.putExtra("last", "home");
+                        startActivity(otpIntent);
+//                        EnterMobileNumberFragment_NewUser enterMobileNumberFragment_newUser = new EnterMobileNumberFragment_NewUser();
+//                        addFragment(R.id.fragment_container, getSupportFragmentManager(), enterMobileNumberFragment_newUser, "EnterMobileNumberFragment_NewUser");
+//                            parentHome.setVisibility(View.GONE);
                     }).show();
             homePresenter.updateSeenDialogCount();
         }
@@ -163,7 +173,9 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.getBackStackEntryAt(0);
-            if (fm.getBackStackEntryAt(0).getName() != null && fm.getBackStackEntryAt(0).getName().equals("UpdateAppLanguageFragment")) {
+            if (fm.getBackStackEntryAt(0).getName() != null && (fm.getBackStackEntryAt(0).getName().equals("UpdateAppLanguageFragment")
+            ||  fm.getBackStackEntryAt(0).getName().equals("OTPViewFragment") ||
+                    fm.getBackStackEntryAt(0).getName().equals("EnterMobileNumberFragment_NewUser"))) {
                 fm.popBackStackImmediate();
                 parentHome.setVisibility(View.VISIBLE);
             } else {
@@ -180,6 +192,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         parentHome.setVisibility(View.VISIBLE);
         startWalletLoader(false);
         progressBarLayout.setVisibility(View.GONE);
+        if(!homePresenter.isProfileComplete())
+            showUpdateMobileNumberDialog();
     }
 
 

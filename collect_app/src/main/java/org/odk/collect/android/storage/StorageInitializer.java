@@ -37,7 +37,7 @@ public class StorageInitializer {
             if (!dir.exists()) {
                 if (!dir.mkdirs()) {
                     String message = context.getString(R.string.cannot_create_directory, dirPath);
-                    Timber.w(message);
+                    Timber.d("Error while creating directories : " + message);
                     throw new RuntimeException(message);
                 }
             } else {

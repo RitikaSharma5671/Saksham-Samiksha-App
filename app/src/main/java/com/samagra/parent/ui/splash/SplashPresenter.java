@@ -5,12 +5,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Environment;
 
 import com.androidnetworking.error.ANError;
-import com.example.student_details.contracts.IStudentDetailsContract;
-import com.example.student_details.contracts.StudentDetailsComponentManager;
-import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.commons.MainApplication;
 import com.samagra.commons.ScreenChangeEvent;
 import com.samagra.commons.firebase.FirebaseUtilitiesWrapper;
@@ -29,8 +25,6 @@ import org.odk.collect.android.contracts.AppPermissionUserActionListener;
 import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.contracts.PermissionsHelper;
 
-import java.io.File;
-
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -43,6 +37,7 @@ import io.reactivex.schedulers.Schedulers;
  *
  * @author Pranav Sharma
  */
+@SuppressWarnings("deprecation")
 public class SplashPresenter<V extends SplashContract.View, I extends SplashContract.Interactor> extends BasePresenter<V, I> implements SplashContract.Presenter<V, I> {
 
     private static final String ROOT = Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath();
@@ -97,7 +92,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(updatedToken -> {
-                        if (updatedToken != null && updatedToken.has("jwt")) {
+                        if (updatedToken != null && updatedToken.has("jwt") && getMvpView() != null) {
                             jwtTokenValid = true;
                             getMvpView().endSplashScreen();
                             Grove.e("JWT Token found to be valid for this user with value: " + updatedToken.toString());
@@ -116,40 +111,13 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         }
     }
 
-    private void isJWTTokenValid() {
-        if (getMvpInteractor().isLoggedIn()) {
-            if (isNetworkConnected()) {
-                String jwtToken = getMvpInteractor().getPreferenceHelper().getToken();
-                getCompositeDisposable().add(getApiHelper()
-                        .validateToken(jwtToken)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(updatedToken -> {
-                            if (updatedToken != null && updatedToken.has("jwt")) {
-                                getMvpView().redirectToHomeScreen();
-                                Grove.e(updatedToken.toString());
-                            } else {
-                                updateJWT(AncillaryScreensDriver.API_KEY);
-                            }
-
-                        }, throwable -> {
-                            updateJWT(AncillaryScreensDriver.API_KEY);
-                            Grove.e(throwable);
-                        }));
-            } else {
-                getMvpView().redirectToHomeScreen();
-            }
-        }
-    }
-
 
     /**
      * This function initialises the {@link SplashActivity} by setting up the layout and updating necessary flags in
      * the {@link android.content.SharedPreferences}.
      */
-    private void init(String packageName, PackageManager packageManager) {
-        startUnzipTask();
-//        getMvpView().showActivityLayout();
+    private void init(String packageName, PackageManager packageManager, Context context) {
+        startUnzipTask(context);
         PackageInfo packageInfo = null;
         try {
             packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA);
@@ -172,20 +140,21 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
     }
 
     @Override
-    public void requestStoragePermissions(String packageName, PackageManager packageManager) {
+    public void requestStoragePermissions(String packageName, PackageManager packageManager, Context context) {
+        getIFormManagementContract().enableUsingScopedStorage();
         PermissionsHelper permissionUtils = new PermissionsHelper();
-        if (!PermissionsHelper.areStoragePermissionsGranted(getMvpView().getActivityContext())) {
-            permissionUtils.requestStoragePermissions((SplashActivity) getMvpView().getActivityContext(), new AppPermissionUserActionListener() {
+        if (!PermissionsHelper.areStoragePermissionsGranted(context)) {
+            permissionUtils.requestStoragePermissions((SplashActivity) context, new AppPermissionUserActionListener() {
                 @Override
                 public void granted() {
                     try {
                         getIFormManagementContract().createODKDirectories();
                     } catch (RuntimeException e) {
                         AlertDialogUtils.showDialog(AlertDialogUtils.createErrorDialog((SplashActivity) getMvpView().getActivityContext(),
-                                e.getMessage(), EXIT), (SplashActivity) getMvpView().getActivityContext());
+                                e.getMessage(), EXIT), (SplashActivity) context);
                         return;
                     }
-                    init(packageName, packageManager);
+                    init(packageName, packageManager, context);
                 }
 
                 @Override
@@ -194,7 +163,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                 }
             });
         } else {
-            init(packageName, packageManager);
+            init(packageName, packageManager, context);
         }
     }
 
@@ -205,8 +174,8 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
 
     @Override
-    public void startUnzipTask() {
-        FileUnzipper fileUnzipper = new FileUnzipper(getMvpView().getActivityContext(), ROOT + "/saksham_data_json.json", R.raw.saksham_data_json, new UnzipTaskListener() {
+    public void startUnzipTask(Context context) {
+        FileUnzipper fileUnzipper = new FileUnzipper(context, ROOT + "/saksham_data_json.json", R.raw.saksham_data_json, new UnzipTaskListener() {
             @Override
             public void unZipSuccess() {
                 Grove.d("Data file has been unzipped successfully.");
@@ -220,7 +189,6 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
             }
         });
         fileUnzipper.unzipFile();
-//        getMvpView().renderLayoutVisible();
     }
 
     @Override
@@ -229,8 +197,8 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
             @Override
             public void onFirebaseRemoteStorageFileDownloadFailure(Exception exception) {
-                Grove.d("Remote file from Firebase failed with error. " + exception.getMessage() + " Using local file only, ");
-                startUnzipTask();
+//                Grove.d("Remote file from Firebase failed with error. " + exception.getMessage() + " Using local file only, ");
+//                startUnzipTask();
             }
 
             @Override
@@ -240,8 +208,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
             @Override
             public void onFirebaseRemoteStorageFileDownloadSuccess() {
-//                getMvpView().showSnackbar("Remote file from Firebase has been downloaded successfully", Snackbar.LENGTH_LONG);
-                startUnzipTask();
+
             }
         });
     }

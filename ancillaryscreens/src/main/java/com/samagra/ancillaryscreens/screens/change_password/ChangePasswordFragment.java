@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.screens.passReset.ChangePasswordActionListener;
 import com.samagra.ancillaryscreens.screens.passReset.OTPFragment;
@@ -57,7 +58,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     public void onClick(View v) {
         if (v.getId() == R.id.phone_submit) {
             if (validate(phoneNumber.getText().toString()))
-                new SendOTPTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber.getText().toString());
+                new SendOTPTask(this, AncillaryScreensDriver.SEND_OTP_URL).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber.getText().toString());
             else {
                 SnackbarUtils.showLongSnackbar(parent, getActivity().getResources().getString(R.string.invalid_phone_number));
                 phoneNumber.setText("");

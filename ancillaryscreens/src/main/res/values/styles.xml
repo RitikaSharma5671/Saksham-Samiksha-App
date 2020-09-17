@@ -17,6 +17,7 @@
         <item name="android:scrollbarThumbHorizontal">@drawable/thumb</item>
         <item name="android:scrollbarThumbVertical">@drawable/thumb</item>
         <item name="android:scrollbarSize">1.75mm</item>
+        <item name="otpViewStyle">@style/OtpWidget.OtpView</item>
         <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
         <item name="android:windowExitTransition" tools:targetApi="lollipop">@transition/main_exit</item>
         <item name="android:windowReenterTransition" tools:targetApi="lollipop">@transition/main_reenter</item>

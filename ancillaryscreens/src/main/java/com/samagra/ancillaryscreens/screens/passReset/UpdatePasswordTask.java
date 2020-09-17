@@ -21,7 +21,6 @@ public class UpdatePasswordTask extends AsyncTask<String, Void, String> {
     private ChangePasswordActionListener listener;
     private String TAG = UpdatePasswordTask.class.getName();
     private boolean isSuccessful = false;
-
     UpdatePasswordTask(ChangePasswordActionListener listener){
         this.listener = listener;
     }
@@ -40,9 +39,8 @@ public class UpdatePasswordTask extends AsyncTask<String, Void, String> {
             requestJson.put("otp", otp);
             requestJson.put("password", password);
             requestJson.put("applicationId", AncillaryScreensDriver.APPLICATION_ID);
-
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(JSON, requestJson.toString());
+            RequestBody body = RequestBody.create(requestJson.toString(),JSON);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(serverURL + "change-password")

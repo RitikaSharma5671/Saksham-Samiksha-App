@@ -29,6 +29,7 @@
         <item name="textAppearanceSubtitle1">@style/TextAppearance.Collect.Subtitle1</item>
         <!--/Material theme attributes-->
         <item name="windowNoTitle">true</item>
+        <item name="otpViewStyle">@style/OtpWidget.OtpView</item>
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/color_primary</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>

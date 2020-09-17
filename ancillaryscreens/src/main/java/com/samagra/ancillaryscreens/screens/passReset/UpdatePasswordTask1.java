@@ -2,8 +2,6 @@ package com.samagra.ancillaryscreens.screens.passReset;
 
 import android.os.AsyncTask;
 
-import com.google.gson.JsonObject;
-import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.grove.logging.Grove;
 
 import org.json.JSONException;
@@ -11,57 +9,50 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
+@SuppressWarnings("ConstantConditions")
 public class UpdatePasswordTask1 extends AsyncTask<String, Void, String> {
 
     private ChangePasswordActionListener listener;
     private String TAG = UpdatePasswordTask1.class.getName();
     private boolean isSuccessful = false;
 
-    public UpdatePasswordTask1(){
+    UpdatePasswordTask1(ChangePasswordActionListener listener){
+        this.listener = listener;
     }
+
 
     @Override
     protected String doInBackground(String[] strings) {
-        String serverURL = "https://www.auth.saksham.staging.samagra.io/api/user/{user_id}/";
         String phoneNo = strings[0];
-        serverURL = serverURL.replace("{user_id}", phoneNo);
         String otp = strings[1];
-        String bodt = strings[2];
-
+        String serverURL = "http://142.93.208.135:8080/ams/verify-OTP/?phoneNo="+phoneNo + "&otp=" + otp;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(serverURL)
+                .get()
+                .build();
+        Response response;
         try {
-            JSONObject requestJson = new JSONObject(bodt);
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(JSON, requestJson.toString());
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .header("Authorization", otp)
-                    .url(serverURL)
-                    .put(body)
-                    .build();
-
-            Response response;
-            try {
-                response = client.newCall(request).execute();
-                if(response.isSuccessful()){
+            response = client.newCall(request).execute();
+            if(response.isSuccessful()){
+                if(response.body().string().contains("Success")) {
                     isSuccessful = true;
-                    Grove.d(TAG, "Successful Response, for Password API, sending control back to user");
                     return response.body().string();
-                }else{
+                }else if(response.body().string().contains("This OTP does not exis")) {
                     isSuccessful = false;
                     return response.body().string();
                 }
-            } catch (IOException e) {
-                Grove.e(e);
-                e.printStackTrace();
-                return e.getMessage();
+                Grove.d(TAG, "Successful Response, for Password API, sending control back to user");
+            }else{
+                isSuccessful = false;
+                return null;
             }
-        } catch (JSONException e) {
+            return null;
+        } catch (IOException e) {
             Grove.e(e);
             e.printStackTrace();
             return e.getMessage();

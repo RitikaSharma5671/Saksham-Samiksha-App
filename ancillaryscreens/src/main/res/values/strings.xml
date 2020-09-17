@@ -63,8 +63,12 @@
     <string name="next">NEXT</string>
     <string name="no_internet_saving_complete" translatable="false">Thank you for filling the inspection report for. Since you have filled the report in offline mode, please manually submit the form when connected to the internet from the "Submit form" option</string>
     <string name="no_users_found">No Users Found.</string>
+    <string name="multiple_users_found">Multiple Users Found.</string>
     <string name="not_connected_to_internet">It seems you are not connected to the Internet. Please switch on your Mobile Data to login.</string>
     <string name="not_unique_email">Email Address is not unique </string>
+    <string name="verification_code_subtext">Please type the verification code sent to +91-xxxxxxxx</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="validate">VALIDATE</string>
     <string name="not_unique_phone">Phone number is not unique </string>
     <string name="number_eight">8</string>
     <string name="number_five">5</string>
@@ -117,6 +121,7 @@
     <string name="resend_otp_profile">Resend OTP</string>
     <string name="reset_here">Reset here</string>
     <string name="reset_password">Reset Password</string>
+    <string name="verify_phone">Verify Phone number</string>
     <string name="retake_test">RETAKE TEST</string>
     <string name="school">SCHOOL</string>
     <string name="seconds_remaining" tools:ignore="MissingTranslation">Seconds Remaining:&#032;&#032;</string>
@@ -160,4 +165,5 @@
     <string name="school_block_label">Block: %s</string>
     <string name="school_district_label">District: %s</string>
     <string name="if_your_school_details_are_incorrect_please_click_here_to_edit">If your school details are incorrect, Please click here to edit.</string>
+    <string name="enter_phone_register">Enter your mobile number to receive One time password for verification</string>
 </resources>

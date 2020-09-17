@@ -47,7 +47,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         splashImage.setImageResource(R.drawable.login_bg);
         splashImage.setVisibility(View.VISIBLE);
         splashPresenter.initialise((MainApplication) getApplicationContext());
-        splashPresenter.requestStoragePermissions(getActivityContext().getPackageName(), getActivityContext().getPackageManager());
+        splashPresenter.requestStoragePermissions(getActivityContext().getPackageName(), getActivityContext().getPackageManager(), getActivityContext());
         screenChangeDisposable = new CompositeDisposable();
         setDisposable();
     }
@@ -144,6 +144,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     }
 
     private void launchLoginScreen() {
+        splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
         splashPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
             Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
             splashPresenter.setInclompleteProfileCount();
@@ -156,6 +157,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
     @Override
     public void redirectToHomeScreen() {
+        splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
         Grove.d("Redirecting to Home screen from Splash screen >>> ");
         splashPresenter.setInclompleteProfileCount();
         Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);

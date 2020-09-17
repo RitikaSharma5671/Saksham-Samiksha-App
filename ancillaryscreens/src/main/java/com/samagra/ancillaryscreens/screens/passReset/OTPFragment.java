@@ -29,6 +29,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.assets.uielements.MultiTextWatcher;
 import com.example.assets.uielements.SamagraAlertDialog;
 import com.google.android.material.textfield.TextInputLayout;
+import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.utils.SnackbarUtils;
 import com.samagra.grove.logging.Grove;
@@ -125,7 +126,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Chang
                             SnackbarUtils.showLongSnackbar(parent, OTPFragment.this.getActivity().getResources().getString(R.string.error_sending_otp));
                         }
                     }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber);
+                }, AncillaryScreensDriver.SEND_OTP_URL).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber);
             }
         };
 

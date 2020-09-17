@@ -102,9 +102,10 @@ public class AppPreferenceHelper implements PreferenceHelper {
             userAccountName = defaultPreferences.getString("user.fullName", "");
         }
         if (phoneNumber != null) {
-            if (userAccountName != null) {
-                return !phoneNumber.equals("") && !userAccountName.equals("");
-            }
+//            if (userAccountName != null) {
+                return !phoneNumber.equals("");
+//                        && !userAccountName.equals("");
+//            }
         }
         return true;
     }

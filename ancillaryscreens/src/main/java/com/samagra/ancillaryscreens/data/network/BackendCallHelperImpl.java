@@ -12,6 +12,7 @@ import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.commons.Constants;
 import com.samagra.grove.logging.Grove;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.reactivex.Single;
@@ -94,6 +95,33 @@ public class BackendCallHelperImpl implements BackendCallHelper {
                     LoginResponse loginResponse;
                     loginResponse = new Gson().fromJson(jsonObject.toString(), LoginResponse.class);
                     return loginResponse;
+                });
+    }
+
+    private JSONObject getVerifyPhoneNumberJSONObject(String phoneNumber, String otp) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("phoneNo", phoneNumber);
+            jsonObject.put("otp", otp);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Grove.d("Sending Login request for the user");
+        return jsonObject;
+    }
+
+    @Override
+    public Single<JSONObject> performVerifyPhoneNumberCall(String phoneNumber, String otp) {
+        return Rx2AndroidNetworking.get(BackendApiUrls.SEND_OTP_VERIFY_PHONE)
+                .addQueryParameter("phoneNo", phoneNumber)
+                .addQueryParameter("otp", otp)
+                .addHeaders("Content-Type", "application/json")
+                .build()
+                .getJSONObjectSingle()
+                .map(jsonObject -> {
+//                    JSONObject loginResponse;
+//                    loginResponse = new Gson().fromJson(jsonObject.toString(), JSONObject.class);
+                    return jsonObject;
                 });
     }
 

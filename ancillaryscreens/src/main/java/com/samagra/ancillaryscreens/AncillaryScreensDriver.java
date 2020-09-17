@@ -52,6 +52,7 @@ public class AncillaryScreensDriver {
     public static String APPLICATION_ID;
     public static String API_KEY;
     public static String USER_ID;
+    public static String VERIFY_PHONE_OTP_URL = "http://142.93.208.135:8080/ams/";
 
     /**
      *

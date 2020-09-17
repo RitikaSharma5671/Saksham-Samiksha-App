@@ -78,6 +78,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
+    implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "androidx.core:core-ktx:+"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02"

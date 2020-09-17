@@ -35,6 +35,7 @@
     <string name="updating_details">स्कूल विवरण अद्यतन हो रहा है</string>
     <string name="login_failed_error">उपयोगकर्ता नाम या पासवर्ड मेल नहीं खाता। कृपया पुन: प्रयास करें।</string>
     <string name="no_users_found">कोई उपयोग्कर्ता नहीं मिले।</string>
+    <string name="multiple_users_found">एक से अधिक उपयोगकर्ता पाए गए</string>
     <string name="not_connected_to_internet"> ऐसा प्रतीत होता है कि आप इन्टरनेट से जुड़े नहीं हैं, कृपया मोबाइल डाटा को ऑन करें.</string>
     <string name="number_eight">8</string>
     <string name="number_five">5</string>
@@ -71,7 +72,9 @@
     <string name="reset_here">यहां से पासवर्ड रीसेट करें</string>
     <string name="reset_password">पासवर्ड रीसेट करें</string>
     <string name="seconds_remaining">सेकंड शेष: </string>
-
+    <string name="verification_code_subtext">कृपया + xxxxxxxxxx को भेजा गया सत्यापन कोड टाइप करें</string>
+    <string name="verification_code">सत्यापन कोड</string>
+    <string name="validate">सत्यापित करें</string>
     <string name="send_otp">अपने मोबाइल पर ओटीपी भेजें</string>
     <string name="sending_otp"> OTP भेज रहें हैं</string>
     <string name="sending_the_request">ओटीपी भेजा जा रहा है</string>
@@ -95,4 +98,5 @@
     <string name="school_block_label">ब्लॉक: %s</string>
     <string name="school_district_label">जिला: %s</string>
     <string name="if_your_school_details_are_incorrect_please_click_here_to_edit">यदि आपके स्कूल का विवरण गलत है, तो कृपया संपादित करने के लिए यहां क्लिक करें।</string>
+    <string name="enter_phone_register">सत्यापन के लिए वन टाइम पासवर्ड प्राप्त करने के लिए अपना मोबाइल नंबर दर्ज करें</string>
 </resources>
