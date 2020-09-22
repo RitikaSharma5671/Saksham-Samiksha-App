@@ -92,10 +92,10 @@
     <string name="otp_successfully_sent">OTP successfully sent to this number</string>
 
     <string name="pass_cannot_be_empty">Password cannot be empty</string>
-    <string name="pass_change_successful">The password has been successfully changed. You need to login again to continue. Redirecting you to login page</string>
+    <string name="pass_change_successful">The password has been successfully changed. You need to login again to continue.\nClick OK to go to login page</string>
 
 
-    <string name="pass_changed_redirecting">The password has been successfully changed. Redirecting you to profile page</string>
+    <string name="pass_changed_redirecting">The password has been successfully changed. Click OK to go back to profile page</string>
     <string name="pass_did_not_match">Passwords didn\'t match.</string>
 
     <string name="pass_less_than_8_error">Password has to be at least 8 characters</string>

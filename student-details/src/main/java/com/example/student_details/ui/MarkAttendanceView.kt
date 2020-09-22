@@ -8,13 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import com.example.student_details.R
 import com.example.student_details.databinding.FragmentMarkAttendanceBinding
 import com.example.student_details.getViewModelProvider
 import com.example.student_details.models.realm.StudentInfo
 
 class MarkAttendanceView : Fragment() {
-
+    private var  userName : String = ""
     private lateinit var layoutBinding: FragmentMarkAttendanceBinding
     private lateinit var attendanceAdapter: AttendanceAdapter
     private val studentList: ArrayList<StudentInfo> = ArrayList()
@@ -36,6 +37,10 @@ class MarkAttendanceView : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         markAttendanceViewModel.fetchStudents(arguments)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context!!);
+        val schoolCode: String = sharedPreferences.getString("user.schoolCode", "")!!
+        val schoolName:String =sharedPreferences.getString("user.schoolName", "")!!
+        userName  = sharedPreferences.getString("user.username", "")!!
         layoutBinding.markAllPresent.setOnClickListener {
             markAttendanceViewModel.onMarkAllPresentClicked(layoutBinding.markAllPresent.isChecked)
 
@@ -103,7 +108,7 @@ class MarkAttendanceView : Fragment() {
                             override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                 alertDialog.dismiss()
                                 mProgress.show()
-                                markAttendanceViewModel.uploadAttendanceData()
+                                markAttendanceViewModel.uploadAttendanceData(userName)
                             }
 
                         }).setAction3("CANCEL, WANT TO RECHECK", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {

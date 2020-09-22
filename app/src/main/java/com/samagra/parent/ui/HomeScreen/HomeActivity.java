@@ -189,9 +189,9 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
 
     @Override
     public void renderLayoutVisible() {
-        parentHome.setVisibility(View.VISIBLE);
         startWalletLoader(false);
         progressBarLayout.setVisibility(View.GONE);
+        parentHome.setVisibility(View.VISIBLE);
         if(!homePresenter.isProfileComplete())
             showUpdateMobileNumberDialog();
     }

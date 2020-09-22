@@ -54,13 +54,14 @@ public class StudentDataModel {
         });
     }
 
-    public void uploadAttendanceData(String userName, List<StudentInfo> list,
+    public void uploadAttendanceData(String date, String userName, List<StudentInfo> list,
                                      ApolloQueryResponseListener<SendAttendanceMutation.Data> apolloQueryResponseListener) {
         List<Attendance_insert_input> dfde = new ArrayList<>();
         for (StudentInfo studentInfo : list) {
             Attendance_insert_input attendance_insert_input =
                     Attendance_insert_input.builder().taken_by(userName).
                             student(studentInfo.getSrn()).isPresent(studentInfo.isPresent()).
+                            date(date).
                             temperature(studentInfo.getTemp()).build();
             dfde.add(attendance_insert_input);
         }
@@ -88,7 +89,7 @@ public class StudentDataModel {
                 });
     }
 
-    public void uploadEmployeeAttendanceData(String userName, List<SchoolEmployeesInfo> schoolEmployeesInfoList,
+    public void uploadEmployeeAttendanceData(String date, String userName, List<SchoolEmployeesInfo> schoolEmployeesInfoList,
                                              ApolloQueryResponseListener<SendTeacherAttendanceMutation.Data> apolloQueryResponseListener) {
         List<Teacher_attendance_insert_input> teacher_attendance_insert_inputs = new ArrayList<>();
         for (SchoolEmployeesInfo schoolEmployeesInfo : schoolEmployeesInfoList) {
@@ -99,6 +100,7 @@ public class StudentDataModel {
                             .employee_name(schoolEmployeesInfo.getName())
                             .employee_designation(schoolEmployeesInfo.getDesignation())
                             .isPresent(schoolEmployeesInfo.isPresent())
+                            .date(date)
                             .temperature(schoolEmployeesInfo.getTemp()).build();
             teacher_attendance_insert_inputs.add(attendance_insert_input);
         }

@@ -3,6 +3,7 @@
 package com.example.student_details.ui.teacher_attendance
 
 import android.annotation.SuppressLint
+import android.text.format.DateFormat
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -130,10 +131,12 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
         employeeList.postValue(lisss)
     }
 
-    fun uploadAttendanceData() {
+    fun uploadAttendanceData(userName : String) {
         val list = employeeList.value!!
+        val calendar : Calendar = Calendar.getInstance()
+        val currentSelectedDate: String =  DateFormat.format("yyyy-MM-dd",calendar).toString()
         val model = StudentDataModel()
-        model.uploadEmployeeAttendanceData("Umang Bhola", list, object : ApolloQueryResponseListener<SendTeacherAttendanceMutation.Data> {
+        model.uploadEmployeeAttendanceData(currentSelectedDate, userName, list, object : ApolloQueryResponseListener<SendTeacherAttendanceMutation.Data> {
             override fun onResponseReceived(response: Response<SendTeacherAttendanceMutation.Data>?) {
                 attendanceUploadSuccessful.postValue("Success")
             }

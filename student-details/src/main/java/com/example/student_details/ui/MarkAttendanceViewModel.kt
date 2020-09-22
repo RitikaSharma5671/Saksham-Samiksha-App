@@ -4,6 +4,7 @@ package com.example.student_details.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.format.DateFormat
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,8 @@ import com.example.student_details.models.realm.StudentInfo
 import com.example.student_details.modules.StudentDataModel
 import com.hasura.model.SendAttendanceMutation
 import io.realm.Realm
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MarkAttendanceViewModel : ViewModel() {
     var filterText: MutableLiveData<String> = MutableLiveData()
@@ -207,12 +210,13 @@ class MarkAttendanceViewModel : ViewModel() {
         studentsList.postValue(lisss)
     }
 
-    fun uploadAttendanceData() {
+    fun uploadAttendanceData(userName : String) {
         val list = studentsList.value!!
         val model = StudentDataModel()
-        model.uploadAttendanceData("Umang Bhola", list, object: ApolloQueryResponseListener<SendAttendanceMutation.Data> {
+        val calendar : Calendar = Calendar.getInstance()
+        val currentSelectedDate: String =  DateFormat.format("yyyy-MM-dd",calendar).toString()
+        model.uploadAttendanceData(currentSelectedDate, userName, list, object: ApolloQueryResponseListener<SendAttendanceMutation.Data> {
             override fun onResponseReceived(response: Response<SendAttendanceMutation.Data>?) {
-//                storeGradeSectionStreamCombination()
                 attendanceUploadSuccessful.postValue("Success")
             }
 

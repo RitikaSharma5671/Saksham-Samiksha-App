@@ -20,6 +20,7 @@ class MarkTeacherAttendanceView : Fragment() {
     private lateinit var attendanceAdapter: TeacherAttendanceAdapter
     private val studentList: ArrayList<SchoolEmployeesInfo> = ArrayList()
     private lateinit var mProgress: ProgressDialog
+    private var  userName : String = ""
     private val markAttendanceViewModel: MarkTeacherAttendanceViewModel by lazy {
         getViewModelProvider(this).get(
                 MarkTeacherAttendanceViewModel::class.java
@@ -38,6 +39,7 @@ class MarkTeacherAttendanceView : Fragment() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context!!);
         val schoolCode: String = sharedPreferences.getString("user.schoolCode", "")!!
         val schoolName:String =sharedPreferences.getString("user.schoolName", "")!!
+        userName  = sharedPreferences.getString("user.username", "")!!
         markAttendanceViewModel.fetchEmployeeData(schoolCode, schoolName)
         layoutBinding.vffv.setOnClickListener {
             markAttendanceViewModel.onSendAttendanceClicked()
@@ -102,7 +104,7 @@ class MarkTeacherAttendanceView : Fragment() {
                             override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                 alertDialog.dismiss()
                                 mProgress.show()
-                                markAttendanceViewModel.uploadAttendanceData()
+                                markAttendanceViewModel.uploadAttendanceData(userName)
                             }
 
                         }).setAction3("CANCEL, WANT TO RECHECK", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {

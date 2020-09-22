@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.student_details.R
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private var selectedGradePosition: Int = 0
     private lateinit var selectedGrade: String
     private  lateinit var selectedSection : String
+    private var  userName : String = ""
     private val viewStudentAttendanceViewModel: ViewStudentAttendanceViewModel by lazy {
         getViewModelProvider(this).get(
                 ViewStudentAttendanceViewModel::class.java
@@ -68,6 +70,10 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.filterCloseCross.setOnClickListener {
            finish()
         }
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        val schoolCode: String = sharedPreferences.getString("user.schoolCode", "")!!
+        val schoolName:String =sharedPreferences.getString("user.schoolName", "")!!
+        userName  = sharedPreferences.getString("user.username", "")!!
         activityMainBinding.calendarView.visibility = View.VISIBLE
         horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {
             override fun onDateSelected(date: Calendar, position: Int) {
@@ -78,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                 selectedDay = selectedDateStr.split(",")[0]
 
                 viewStudentAttendanceViewModel.selectedDay.postValue(selectedDateStr.split(",")[0])
-                viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate)
+                viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate, userName)
 //                Timber.i("onDateSelected, " + $selectedDateStr + " + " -  Position = "+  $position")
             }
         }
@@ -107,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Unable to fetch Attendance History for this selection", Toast.LENGTH_LONG).show()
             }
         })
-        activityMainBinding.applySelection.setOnClickListener { viewStudentAttendanceViewModel.fetchRelevantStudentData("Mon", currentSelectedDate) }
+        activityMainBinding.applySelection.setOnClickListener { viewStudentAttendanceViewModel.fetchRelevantStudentData("Mon", currentSelectedDate, userName) }
         viewStudentAttendanceViewModel.attendanceList.observe(this , androidx.lifecycle.Observer {
             val attendanceList = viewStudentAttendanceViewModel.attendanceList.value
             when {
