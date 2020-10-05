@@ -74,7 +74,7 @@ public class StudentDataModel {
                     public void onResponse(@NotNull Response<SendAttendanceMutation.Data> response) {
                         Grove.d("Attendance uploaded by " + userName + " for " + dfde.size() + " students with affected rows" +
                                 response.getData().insert_attendance().affected_rows() + " and error fields as " + response.getErrors());
-                        if (response.getErrors() == null) {
+                        if (response.getData() != null && response.getErrors() == null) {
                             apolloQueryResponseListener.onResponseReceived(response);
                         } else {
                             apolloQueryResponseListener.onFailureReceived(new ApolloException(response.getErrors().toString()));
@@ -113,7 +113,7 @@ public class StudentDataModel {
                     public void onResponse(@NotNull Response<SendTeacherAttendanceMutation.Data> response) {
                         Grove.d("Attendance uploaded by " + userName + " for " + schoolEmployeesInfoList.size() + " employees with affected rows" +
                                 response.getData().insert_teacher_attendance().affected_rows() + " and error fields as " + response.getErrors());
-                        if (response.getErrors() == null) {
+                        if (response.getData() != null && response.getErrors() == null) {
                             apolloQueryResponseListener.onResponseReceived(response);
                         } else {
                             apolloQueryResponseListener.onFailureReceived(new ApolloException(response.getErrors().toString()));
@@ -138,7 +138,7 @@ public class StudentDataModel {
                     public void onResponse(@NotNull Response<UpdateStudentSectionMutation.Data> response) {
                         Grove.d("Section update request with response " +
                                 response.getData().update_student().affected_rows() + " and error fields as " + response.getErrors() + " new section as " + response.getData().update_student());
-                        if (response.getErrors() == null) {
+                        if (response.getData() != null && response.getErrors() == null) {
                             apolloQueryResponseListener.onResponseReceived(response);
                         } else {
                             apolloQueryResponseListener.onFailureReceived(new ApolloException(response.getErrors().toString()));

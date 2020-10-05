@@ -18,6 +18,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
@@ -30,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.work.WorkManager;
 
 import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryPrompt;
@@ -40,6 +42,7 @@ import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.audio.AudioHelper;
 import org.odk.collect.android.formentry.media.AudioHelperFactory;
+import org.odk.collect.android.formentry.media.ScreenContextAudioHelperFactory;
 import org.odk.collect.android.formentry.questions.AudioVideoImageTextLabel;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.QuestionTextSizeHelper;
@@ -56,6 +59,8 @@ import org.odk.collect.android.utilities.StringUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ViewUtils;
 import org.odk.collect.android.widgets.interfaces.Widget;
+import org.odk.collect.async.CoroutineAndWorkManagerScheduler;
+import org.odk.collect.async.Scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,11 +104,16 @@ public abstract class QuestionWidget
     @Inject
     public ReferenceManager referenceManager;
 
-    @Inject
     public AudioHelperFactory audioHelperFactory;
 
     @Inject
     public Analytics analytics;
+
+    @Inject
+    public WorkManager workManager;
+
+    @Inject
+    public Scheduler scheduler;
 
     public QuestionWidget(Context context, QuestionDetails questionDetails) {
         this(context, questionDetails, true);
@@ -113,6 +123,7 @@ public abstract class QuestionWidget
         super(context);
         getComponent(context).inject(this);
         setId(View.generateViewId());
+        audioHelperFactory = new ScreenContextAudioHelperFactory(scheduler, MediaPlayer::new);
         this.audioHelper = audioHelperFactory.create(context);
 
         themeUtils = new ThemeUtils(context);
@@ -183,11 +194,11 @@ public abstract class QuestionWidget
                 getReferenceManager()
         );
 
-        String playableAudioURI = getPlayableAudioURI(prompt, referenceManager);
-        if (playableAudioURI != null) {
-            label.setAudio(playableAudioURI, audioHelper);
-            analytics.logEvent(AUDIO_QUESTION, "AudioLabel", questionDetails.getFormAnalyticsID());
-        }
+//        String playableAudioURI = getPlayableAudioURI(prompt, referenceManager);
+//        if (playableAudioURI != null) {
+//            label.setAudio(playableAudioURI, audioHelper);
+//            analytics.logEvent(AUDIO_QUESTION, "AudioLabel", questionDetails.getFormAnalyticsID());
+//        }
 
         label.setPlayTextColor(getPlayColor(formEntryPrompt, themeUtils));
     }

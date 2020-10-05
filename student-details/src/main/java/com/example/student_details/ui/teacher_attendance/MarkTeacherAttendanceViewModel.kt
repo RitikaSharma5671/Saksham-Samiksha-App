@@ -21,6 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import org.odk.collect.android.application.Collect1
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
@@ -131,17 +132,28 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
         employeeList.postValue(lisss)
     }
 
-    fun uploadAttendanceData(userName : String) {
+    fun uploadAttendanceData(userName: String, schoolCode: String, schoolName: String, district: String, block: String) {
         val list = employeeList.value!!
         val calendar : Calendar = Calendar.getInstance()
         val currentSelectedDate: String =  DateFormat.format("yyyy-MM-dd",calendar).toString()
         val model = StudentDataModel()
         model.uploadEmployeeAttendanceData(currentSelectedDate, userName, list, object : ApolloQueryResponseListener<SendTeacherAttendanceMutation.Data> {
             override fun onResponseReceived(response: Response<SendTeacherAttendanceMutation.Data>?) {
+                try {
+                    Collect1.getInstance().analytics.logEvent("teacher_attendance_mark", "teacher_attendance_upload_successful",
+                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
+                }catch (e:Exception) {
+                }
                 attendanceUploadSuccessful.postValue("Success")
             }
 
             override fun onFailureReceived(e: ApolloException?) {
+                try {
+                    Collect1.getInstance().analytics.logEvent("teacher_attendance_mark", "teacher_attendance_upload_failure",
+                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
+                }catch (e:Exception) {
+
+                }
                 attendanceUploadSuccessful.postValue("Failure")
             }
 

@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 
-import com.samagra.commons.MainApplication;
 import com.samagra.parent.base.MvpInteractor;
 import com.samagra.parent.base.MvpPresenter;
 import com.samagra.parent.base.MvpView;
@@ -67,7 +66,7 @@ public interface SplashContract {
         void downloadFirebaseRemoteStorageConfigFile();
         boolean canLaunchHome();
         void updateJWT(String apiKey);
-        void verifyJWTTokenValidity(String apiKey);
+        void verifyJWTTokenValidity(String apiKey, Context activityContext);
         void requestStoragePermissions(String packageName, PackageManager packageManager, Context context);
     }
 }

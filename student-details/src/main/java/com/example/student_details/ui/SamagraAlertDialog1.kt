@@ -8,7 +8,6 @@ import androidx.appcompat.app.AlertDialog
 import com.example.student_details.R
 import kotlinx.android.synthetic.main.dialog_layout_1.view.*
 
-
 /**
  * Created by Umang Bhola on 26/5/20.
  * Samagra- Transforming Governance

@@ -4,10 +4,12 @@
     <application>
         <activity
         android:name=".contracts.HHH"
+            android:screenOrientation="portrait"
         android:theme="@style/MyMaterialTheme"/>
         <activity
             android:name="com.example.student_details.ui.teacher_aggregate.MainActivity"
             android:label="rfvrfvftv"
+            android:screenOrientation="portrait"
             android:theme="@style/MyMaterialTheme"/>
     </application>
 

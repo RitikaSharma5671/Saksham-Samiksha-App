@@ -12,6 +12,7 @@ import com.samagra.commons.MainApplication;
 
 import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.R;
+import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.initialization.ApplicationInitializer;
 import org.odk.collect.android.configure.SettingsImporter;
 import org.odk.collect.android.dao.FormsDao;
@@ -73,11 +74,18 @@ public class Collect1 {
         return storagePathProvider;
     }
 
+    public Analytics getAnalytics() {
+        return analytics;
+    }
+
     @Inject
     StoragePathProvider storagePathProvider;
 
     @Inject
     FormListDownloader formListDownloader;
+
+    @Inject
+    Analytics analytics;
 
     @Nullable
     private FormController formController;

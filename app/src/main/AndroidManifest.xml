@@ -26,6 +26,7 @@
         <activity
             android:name="com.samagra.parent.ui.HomeScreen.HomeActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/BaseAppTheme">
             <intent-filter>
                 <action android:name="com.samagra.sakshamsamiksha.LAUNCH_HOME" />
@@ -41,6 +42,7 @@
 
         <activity
             android:name="com.samagra.parent.ui.splash.SplashActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

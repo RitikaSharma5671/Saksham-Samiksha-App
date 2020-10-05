@@ -25,10 +25,9 @@
                 android:layout_height="140dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="32dp"
-                android:scaleType="fitCenter"
                 android:maxHeight="150dp"
                 android:maxWidth="150dp"
-                android:src="@drawable/saksham_haryana"
+                android:src="@drawable/sks_2"
                 android:layout_centerHorizontal="true"
                 tools:ignore="ContentDescription" />
 

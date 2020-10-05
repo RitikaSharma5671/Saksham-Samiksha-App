@@ -210,12 +210,12 @@ public class AudioWidget extends QuestionWidget implements FileWidget, ButtonCli
     }
 
     private void updatePlayerMedia() {
-        if (binaryName != null) {
-            audioHelper.setAudio(audioController, new Clip(String.valueOf(ViewCompat.generateViewId()), getAudioFile().getAbsolutePath()));
-            audioController.showPlayer();
-        } else {
+//        if (binaryName != null) {
+//            audioHelper.setAudio(audioController, new Clip(String.valueOf(ViewCompat.generateViewId()), getAudioFile().getAbsolutePath()));
+//            audioController.showPlayer();
+//        } else {
             audioController.hidePlayer();
-        }
+//        }
     }
 
     private String getSourcePathFromUri(@NonNull Uri uri) {

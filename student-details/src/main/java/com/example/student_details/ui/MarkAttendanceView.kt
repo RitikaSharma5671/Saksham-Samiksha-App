@@ -37,9 +37,11 @@ class MarkAttendanceView : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         markAttendanceViewModel.fetchStudents(arguments)
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context!!);
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         val schoolCode: String = sharedPreferences.getString("user.schoolCode", "")!!
         val schoolName:String =sharedPreferences.getString("user.schoolName", "")!!
+        val district: String = sharedPreferences.getString("user.district", "")!!
+        val block:String =sharedPreferences.getString("user.block", "")!!
         userName  = sharedPreferences.getString("user.username", "")!!
         layoutBinding.markAllPresent.setOnClickListener {
             markAttendanceViewModel.onMarkAllPresentClicked(layoutBinding.markAllPresent.isChecked)
@@ -61,7 +63,7 @@ class MarkAttendanceView : Fragment() {
         }
         markAttendanceViewModel.showIncompleteAlertDialog.observe(viewLifecycleOwner, Observer {
             if (it) {
-                SamagraAlertDialog1.Builder(context!!).setTitle("INCOMPLETE DATA").setMessage("Please check there are some incomplete entries for the student list.\n Click Ok to fill the data")
+                SamagraAlertDialog1.Builder(requireContext()).setTitle("INCOMPLETE DATA").setMessage("Please check there are some incomplete entries for the student list.\n Click Ok to fill the data")
                         .setAction2("OK", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {
                             override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                 alertDialog.dismiss()
@@ -75,7 +77,7 @@ class MarkAttendanceView : Fragment() {
             if (it != null) {
                 if (it == "Success") {
                     mProgress.dismiss()
-                    SamagraAlertDialog1.Builder(context!!).setTitle("DATA SUBMITTED SUCCESSFULLY").setMessage("The student data has been successfully submitted.\n Click OK to go back to Home Screen.")
+                    SamagraAlertDialog1.Builder(requireContext()).setTitle("DATA SUBMITTED SUCCESSFULLY").setMessage("The student data has been successfully submitted.\n Click OK to go back to Home Screen.")
                             .setAction2("YES, PLEASE", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {
                                 override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                     alertDialog.dismiss()
@@ -85,7 +87,7 @@ class MarkAttendanceView : Fragment() {
                             }).show()
                 } else if (it == "Failure") {
                     mProgress.dismiss()
-                    SamagraAlertDialog1.Builder(context!!).setTitle("DATA SUBMISSION FAILED").setMessage("The student data could not be submitted.\n Click OK to try sending data again.")
+                    SamagraAlertDialog1.Builder(requireContext()).setTitle("DATA SUBMISSION FAILED").setMessage("The student data could not be submitted.\n Click OK to try sending data again.")
                             .setAction2("OK", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {
                                 override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                     alertDialog.dismiss()
@@ -103,12 +105,12 @@ class MarkAttendanceView : Fragment() {
                 }else{
                  "Please ensure that you have entered correct data for the students."
              }
-                SamagraAlertDialog1.Builder(context!!).setTitle("SEND STUDENT DATA").setMessage(message)
+                SamagraAlertDialog1.Builder(requireContext()).setTitle("SEND STUDENT DATA").setMessage(message)
                         .setAction2("YES, PLEASE", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {
                             override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                 alertDialog.dismiss()
                                 mProgress.show()
-                                markAttendanceViewModel.uploadAttendanceData(userName)
+                                markAttendanceViewModel.uploadAttendanceData(userName, schoolName, schoolCode, district,block)
                             }
 
                         }).setAction3("CANCEL, WANT TO RECHECK", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {

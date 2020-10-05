@@ -139,6 +139,16 @@ public class AppPreferenceHelper implements PreferenceHelper {
     }
 
     @Override
+    public String getBlock() {
+        return  defaultPreferences.getString("user.block", "");
+    }
+
+    @Override
+    public String getDistrict() {
+        return defaultPreferences.getString("user.district", "");
+    }
+
+    @Override
     public boolean hasDownloadedStudentData() {
        return defaultPreferences.getBoolean("downloadedStudentData", false);
     }

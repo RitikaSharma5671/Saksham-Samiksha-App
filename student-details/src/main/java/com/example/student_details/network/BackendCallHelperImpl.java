@@ -45,6 +45,7 @@ public class BackendCallHelperImpl implements BackendCallHelper {
     public Single<EmployeeInfo> performLoginApiCall(String schoolCode, String schoolName) {
         String json = "{\n" +
                 "    \"search\": {\n" +
+                "        \"numberOfResults\":500,\n"+
                 "        \"queryString\": \"(registrations.applicationId: " + StudentDetailsComponentManager.APPLICATION_ID
                 + ") AND (data.roleData.schoolCode: " + schoolCode + ") AND (data.roleData.schoolName : " + schoolName + ")\",\n" +
                 "        \"sortFields\": [\n" +

@@ -290,8 +290,8 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
     private void addValuesToSpinner(Spinner spinner, ArrayList<String> values) {
         String[] val = values.toArray(new String[0]);
         ArrayAdapter<String> spinnerAdapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, val);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                new ArrayAdapter<>(this, R.layout.simple_spinner_dropdown_item, val);
+        spinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnTouchListener((v, event) -> {
             keyboardHandler.spinner = spinner;

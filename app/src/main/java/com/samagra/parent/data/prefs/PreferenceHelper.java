@@ -74,5 +74,9 @@ public interface PreferenceHelper {
 
     void downloadedStudentData(boolean flag);
 
+    String getBlock();
+
+    String getDistrict();
+
     boolean hasDownloadedStudentData();
 }

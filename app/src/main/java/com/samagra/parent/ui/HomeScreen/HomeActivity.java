@@ -1,11 +1,11 @@
 package com.samagra.parent.ui.HomeScreen;
 
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,7 +15,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.androidnetworking.AndroidNetworking;
 import com.example.assets.uielements.SamagraAlertDialog;
 import com.example.student_details.contracts.IStudentDetailsContract;
@@ -25,9 +24,7 @@ import com.example.update.UpdateApp;
 import com.google.android.material.snackbar.Snackbar;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.models.AboutBundle;
-import com.samagra.ancillaryscreens.screens.passReset.EnterMobileNumberFragment_NewUser;
 import com.samagra.ancillaryscreens.screens.passReset.OTPActivity;
-import com.samagra.ancillaryscreens.screens.profile.ProfileActivity;
 import com.samagra.ancillaryscreens.screens.profile.UserProfileElement;
 import com.samagra.cascading_module.CascadingModuleDriver;
 import com.samagra.commons.Constants;
@@ -47,6 +44,7 @@ import com.samagra.parent.base.BaseActivity;
 
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.utilities.LocaleHelper;
+import org.odk.collect.android.utilities.PermissionUtils;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -69,17 +67,16 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
     private RelativeLayout parent;
     private RelativeLayout progressBarLayout;
     private TextView progressBarText;
-    private LottieAnimationView lottie_loader;
+    private ProgressBar lottie_loader;
     private RelativeLayout parentHome;
     private TextView welcomeText;
     private RecyclerView homeRecyclerView;
-
+    private boolean shouldShow = true;
     private Disposable logoutListener = null;
     private static CompositeDisposable formSentDisposable = new CompositeDisposable();
     private PopupMenu popupMenu;
     private Snackbar messageView = null;
-//    UpdateApp mUpdateApp;
-
+    UpdateApp mUpdateApp;
     @Inject
     HomePresenter<HomeMvpView, HomeMvpInteractor> homePresenter;
 
@@ -108,7 +105,6 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         InternetMonitor.startMonitoringInternet(((MainApplication) getApplicationContext()));
         homePresenter.updateLanguageSettings();
         AppNotificationUtils.updateFirebaseToken(getActivityContext(), AppConstants.BASE_API_URL, getActivityContext().getResources().getString(R.string.fusionauth_api_key));
-//        mUpdateApp = new UpdateApp(this);
         homePresenter.fetchStudentData();
         homePresenter.fetchSchoolEmployeeData();
         renderLayoutInvisible();
@@ -161,7 +157,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         renderLayoutInvisible();
         homePresenter.fetchWelcomeText();
         homePresenter.resetProgressVariables();
-        homePresenter.checkForFormUpdates();
+        boolean isStoragePermissionAvailable = PermissionUtils.areStoragePermissionsGranted(getActivityContext());
+        homePresenter.checkForFormUpdates(isStoragePermissionAvailable, getActivityContext());
         homePresenter.checkForDownloadStudentData();
         customizeToolbar();
         setDisposable();
@@ -194,6 +191,11 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         parentHome.setVisibility(View.VISIBLE);
         if(!homePresenter.isProfileComplete())
             showUpdateMobileNumberDialog();
+        if(shouldShow) {
+            mUpdateApp = UpdateApp.Builder(this);
+            mUpdateApp = new UpdateApp(this);
+            shouldShow = false;
+        }
     }
 
 
@@ -207,12 +209,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
     private void startWalletLoader(boolean b) {
         if (b) {
             lottie_loader.setVisibility(View.VISIBLE);
-            lottie_loader.setAnimation("loader.json");
-            lottie_loader.setRepeatCount(ValueAnimator.INFINITE);
-            lottie_loader.playAnimation();
         } else {
-            lottie_loader.cancelAnimation();
-            lottie_loader.setVisibility(View.INVISIBLE);
+            lottie_loader.setVisibility(View.GONE);
         }
     }
 

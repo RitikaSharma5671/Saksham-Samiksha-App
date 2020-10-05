@@ -1,5 +1,7 @@
 package com.samagra.parent.ui.HomeScreen;
 
+import android.content.Context;
+
 import com.samagra.commons.InstitutionInfo;
 import com.samagra.parent.base.MvpPresenter;
 import com.samagra.parent.di.PerActivity;
@@ -34,7 +36,7 @@ public interface HomeMvpPresenter<V extends HomeMvpView, I extends HomeMvpIntera
 
     void applySettings();
 
-    void checkForFormUpdates();
+    void checkForFormUpdates(boolean isStoragePermissionAvailable, Context context);
 
     ArrayList<UserProfileElement> getProfileConfig();
 

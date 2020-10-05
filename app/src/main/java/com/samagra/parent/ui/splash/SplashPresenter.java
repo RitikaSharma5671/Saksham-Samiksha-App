@@ -84,7 +84,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
     }
 
     @Override
-    public void verifyJWTTokenValidity(String apiKey) {
+    public void verifyJWTTokenValidity(String apiKey, Context activityContext) {
         if (getMvpInteractor().isLoggedIn() && !getMvpInteractor().getRefreshToken().equals("") && isNetworkConnected()) {
             String jwtToken = getMvpInteractor().getPreferenceHelper().getToken();
             getCompositeDisposable().add(getApiHelper()
@@ -92,14 +92,10 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(updatedToken -> {
-                        if (updatedToken != null && updatedToken.has("jwt") && getMvpView() != null) {
+                        if (updatedToken != null && updatedToken.has("jwt")) {
                             jwtTokenValid = true;
-                            getMvpView().endSplashScreen();
+                            ((SplashActivity)activityContext).endSplashScreen();
                             Grove.e("JWT Token found to be valid for this user with value: " + updatedToken.toString());
-                        } else {
-                            Grove.d("JWT Token expired for this user, trying to update the JWT Token");
-                            jwtTokenValid = false;
-                            updateJWT(apiKey);
                         }
 
                     }, throwable -> {
@@ -108,6 +104,8 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                         updateJWT(apiKey);
                         Grove.e(throwable);
                     }));
+        }else{
+            ((SplashActivity)activityContext).launchLoginScreen();
         }
     }
 
@@ -135,7 +133,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
         if (firstRun || showSplash)
             getMvpInteractor().updateFirstRunFlag(false);
-        getMvpView().showSimpleSplash();
+        ((SplashActivity)context).showSimpleSplash();
         updateCurrentVersion();
     }
 
@@ -150,7 +148,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                     try {
                         getIFormManagementContract().createODKDirectories();
                     } catch (RuntimeException e) {
-                        AlertDialogUtils.showDialog(AlertDialogUtils.createErrorDialog((SplashActivity) getMvpView().getActivityContext(),
+                        AlertDialogUtils.showDialog(AlertDialogUtils.createErrorDialog(context,
                                 e.getMessage(), EXIT), (SplashActivity) context);
                         return;
                     }
@@ -159,7 +157,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
                 @Override
                 public void denied() {
-                    getMvpView().finishSplashScreen();
+                    ((SplashActivity)context).finishSplashScreen();
                 }
             });
         } else {

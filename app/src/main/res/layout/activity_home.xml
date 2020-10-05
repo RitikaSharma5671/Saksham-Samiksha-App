@@ -28,16 +28,15 @@
         android:layout_centerInParent="true"
         android:visibility="gone">
 
-        <com.airbnb.lottie.LottieAnimationView
+        <ProgressBar
             android:id="@+id/lottie_loader"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:layout_gravity="center"
             android:gravity="center"
             android:visibility="visible"
-            app:circleSize="20"
-            app:duration="@android:integer/config_mediumAnimTime"
-            app:endColor="@color/colorPrimary" />
+            android:layout_centerHorizontal="true"
+            style="@style/Widget.AppCompat.ProgressBar" />
 
         <TextView
             android:id="@+id/progress_bar_text"

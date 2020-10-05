@@ -180,4 +180,6 @@ public interface IFormManagementContract {
     String getFormsPath();
 
     String getRootPath();
+
+    void sendAnalyticsAdoptionEvent(String s, boolean b);
 }

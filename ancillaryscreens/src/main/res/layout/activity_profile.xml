@@ -37,7 +37,7 @@
                 android:adjustViewBounds="true"
                 android:background="@android:color/white"
                 android:padding="10dp"
-                android:src="@drawable/saksham_haryana"
+                android:src="@drawable/sks_2"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.7" />
 

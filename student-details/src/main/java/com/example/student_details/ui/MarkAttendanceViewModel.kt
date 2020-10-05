@@ -15,6 +15,7 @@ import com.example.student_details.models.realm.StudentInfo
 import com.example.student_details.modules.StudentDataModel
 import com.hasura.model.SendAttendanceMutation
 import io.realm.Realm
+import org.odk.collect.android.application.Collect1
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -27,7 +28,7 @@ class MarkAttendanceViewModel : ViewModel() {
     val showCompleteDialog: MutableLiveData<Boolean> = MutableLiveData(false)
     val highTemp: MutableLiveData<Boolean> = MutableLiveData(false)
     val attendanceUploadSuccessful: MutableLiveData<String> = MutableLiveData("false")
-    val selectedGrades : MutableLiveData<ArrayList<Int>> = MutableLiveData()
+    val selectedGrades: MutableLiveData<ArrayList<Int>> = MutableLiveData()
     var selectedSections: MutableLiveData<ArrayList<String>> = MutableLiveData()
     var selectedStreams: MutableLiveData<ArrayList<String>> = MutableLiveData()
     fun onMarkAllPresentClicked(checked: Boolean) {
@@ -171,8 +172,8 @@ class MarkAttendanceViewModel : ViewModel() {
     fun onSendAttendanceClicked() {
         if (checkIfAllDataFilled()) {
             val list = studentsList.value!!
-            for( student in list){
-                if(student.temp > 100) {
+            for (student in list) {
+                if (student.temp > 100) {
                     highTemp.postValue(true)
                 }
             }
@@ -210,42 +211,30 @@ class MarkAttendanceViewModel : ViewModel() {
         studentsList.postValue(lisss)
     }
 
-    fun uploadAttendanceData(userName : String) {
+    fun uploadAttendanceData(userName: String, schoolName: String, schoolCode: String, district: String, block: String) {
         val list = studentsList.value!!
         val model = StudentDataModel()
-        val calendar : Calendar = Calendar.getInstance()
-        val currentSelectedDate: String =  DateFormat.format("yyyy-MM-dd",calendar).toString()
-        model.uploadAttendanceData(currentSelectedDate, userName, list, object: ApolloQueryResponseListener<SendAttendanceMutation.Data> {
+        val calendar: Calendar = Calendar.getInstance()
+        val currentSelectedDate: String = DateFormat.format("yyyy-MM-dd", calendar).toString()
+        model.uploadAttendanceData(currentSelectedDate, userName, list, object : ApolloQueryResponseListener<SendAttendanceMutation.Data> {
             override fun onResponseReceived(response: Response<SendAttendanceMutation.Data>?) {
+                try {
+                    Collect1.getInstance().analytics.logEvent("student_attendance_mark", "student_attendance_upload_successful",
+                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
+                } catch (e: Exception) {
+
+                }
                 attendanceUploadSuccessful.postValue("Success")
             }
 
-            private fun storeGradeSectionStreamCombination() {
-                val listOfCombinations = ArrayList<String>()
-                if(selectedStreams.value!!.size == 0 && selectedSections.value!!.size == 0) {
-                    for(grade in selectedGrades.value!!) {
-                        listOfCombinations.add(grade.toString() + "_All_Sections")
-                    }
-                }else if(selectedStreams.value!!.size == 0) {
-                    for(grade in selectedGrades.value!!) {
-                        for (section in selectedGrades.value!!) {
-                            listOfCombinations.add("$grade-$section")
-                        }
-                    }
-                }else {
-                    for(grade in selectedGrades.value!!) {
-                        for (section in selectedGrades.value!!) {
-                            for (stream in selectedStreams.value!!) {
-                                listOfCombinations.add("$grade-$section-$stream")
-                            }
-                        }
-                    }
-                }
-            }
-
             override fun onFailureReceived(e: ApolloException?) {
-                attendanceUploadSuccessful.postValue("Failure")
+                try {
+                    Collect1.getInstance().analytics.logEvent("student_attendance_mark", "student_attendance_upload_failure",
+                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
+                } catch (e: Exception) {
 
+                }
+                attendanceUploadSuccessful.postValue("Failure")
             }
 
         })

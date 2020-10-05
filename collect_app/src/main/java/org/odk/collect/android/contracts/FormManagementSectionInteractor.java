@@ -33,9 +33,6 @@ import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 
 import java.io.BufferedReader;
@@ -45,7 +42,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -58,8 +54,6 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -356,6 +350,15 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
     public String getRootPath() {
         return Collect1.getInstance().getStoragePathProvider().getStorageRootDirPath();
 
+    }
+
+    @Override
+    public void sendAnalyticsAdoptionEvent(String s, boolean b) {
+        if(b) {
+            Collect1.getInstance().getAnalytics().logEvent("app_installed_school_teacher", "install_info", s);
+        }else {
+            Collect1.getInstance().getAnalytics().logEvent("app_installed_mentor_monitor", "install_info", s);
+        }
     }
 
 

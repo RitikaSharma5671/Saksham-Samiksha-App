@@ -35,7 +35,6 @@ import org.odk.collect.android.contracts.FormListDownloadResultCallback;
 import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.formmanagement.ServerFormDetails;
 import org.odk.collect.android.forms.Form;
-import org.odk.collect.android.utilities.PermissionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +57,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     private FormDownloadStatus formsDownloadStatus = FormDownloadStatus.FAILURE;
     private FormDownloadStatus studentDownloadStatus = FormDownloadStatus.FAILURE;
     private int currentProgress = 0;
+    private boolean isPermissionGiven = true;
 
     @Inject
     public HomePresenter(I mvpInteractor, CompositeDisposable compositeDisposable, BackendNwHelper backendNwHelper, IFormManagementContract iFormManagementContract) {
@@ -79,10 +79,11 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void fetchStudentData() {
+        //TODO Add forced download check
         long ff = System.currentTimeMillis();
-        if(!getMvpInteractor().getPreferenceHelper().hasDownloadedStudentData()) {
+        if (!getMvpInteractor().getPreferenceHelper().hasDownloadedStudentData()) {
             studentDownloadStatus = FormDownloadStatus.DOWNLOADING;
-            Grove.d("Starting time at fetching School Data is %s", ff);
+            Grove.d("Starting time at fetching School Data is "+ ff);
             int schoolCode = getMvpInteractor().getPreferenceHelper().fetchSchoolCode();
             String code = String.valueOf(schoolCode);
             if (schoolCode != 0 && (getMvpInteractor().getPreferenceHelper().isTeacher() || getMvpInteractor().getPreferenceHelper().isSchool())) {
@@ -94,20 +95,25 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                         studentDownloadStatus = FormDownloadStatus.SUCCESS;
                         getMvpInteractor().getPreferenceHelper().downloadedStudentData(true);
                         long gg = System.currentTimeMillis();
-                        if(getMvpView() != null) {
-                            if(formsDownloadStatus ==FormDownloadStatus.SUCCESS)
+                        if (getMvpView() != null) {
+                            if (formsDownloadStatus == FormDownloadStatus.SUCCESS)
                                 getMvpView().renderLayoutVisible();
                         }
-                        Grove.d("Size of student data is " + response.getData().student().size());
+                        if(response != null) {
+                            Grove.d("Size of student data is " + response.getData().student().size());
+                        }
                         long timeTaken = gg - ff;
-                        Timber.d("ending time at fetching School Data is  " + gg + "   tine for n/w call  " + timeTaken);
+                        Timber.d("ending time at fetching School Data is  " + gg + "   time for n/w call  " + timeTaken);
                     }
-
                     @Override
                     public void onFailureReceived(ApolloException e) {
                         studentDownloadStatus = FormDownloadStatus.SUCCESS;
-                        Grove.d("Failed to download student data %s", e.getLocalizedMessage());
-                    }}); }}}
+                        Grove.d("Failed to download student data " + e.getLocalizedMessage());
+                    }
+                });
+            }
+        }
+    }
 
     @Override
     public void onViewSubmittedFormsOptionsClicked() {
@@ -255,13 +261,23 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     }
 
     @Override
-    public void checkForFormUpdates() {
+    public void checkForFormUpdates(boolean isStoragePermissionAvailable, Context context) {
+        if (isTeacherAccount() || isSchoolAccount())
+            getIFormManagementContract().sendAnalyticsAdoptionEvent(getMvpInteractor().getPreferenceHelper().getCurrentUserName() + "_" +
+                    getMvpInteractor().getPreferenceHelper().fetchSchoolName() + "_" +
+                    getMvpInteractor().getPreferenceHelper().fetchSchoolCode() + "_" +
+                    getMvpInteractor().getPreferenceHelper().getDistrict() + "_"
+                    + getMvpInteractor().getPreferenceHelper().getBlock(), true);
+        else {
+            getIFormManagementContract().sendAnalyticsAdoptionEvent(getMvpInteractor().getPreferenceHelper().getCurrentUserName(), false);
+        }
         Grove.d("Checking for form updates");
-        getMvpView().renderLayoutInvisible();
+        ((HomeActivity) context).renderLayoutInvisible();
         String latestFormVrsion = MyApplication.getmFirebaseRemoteConfig().getString("version");
         String previousVersion = getMvpInteractor().getPreferenceHelper().getFormVersion();
         String formsString = MyApplication.getmFirebaseRemoteConfig().getString(getRoleFromRoleMappingFirebase(getUserRoleFromPref()));
         formsDownloadStatus = FormDownloadStatus.DOWNLOADING;
+        isPermissionGiven = isStoragePermissionAvailable;
         Grove.e("Checking if the forms are matching: %s", getIFormManagementContract().checkIfODKFormsMatch(formsString));
         if (isNetworkConnected()) {
             if (isUpversioned(latestFormVrsion, previousVersion) ||
@@ -269,31 +285,23 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 Grove.d("Forms have been up-versioned/ odk forms don't match with one needed for the user...");
                 getMvpInteractor().getPreferenceHelper().updateFormVersion(latestFormVrsion);
                 // Downloading new forms list.
-                if (getMvpView() != null)
-                    getMvpView().setDownloadProgress(10);
                 Grove.d("Starting Form List Download Task");
-                getIFormManagementContract().startDownloadODKFormListTask(new FormListDownloadListener());
+                getIFormManagementContract().startDownloadODKFormListTask(new FormListDownloadListener(context));
                 formsDownloadStatus = FormDownloadStatus.DOWNLOADING;
             } else {
                 Grove.d("Network Available, forms are matching, rendering the layout");
                 if (getMvpView() != null) {
                     Grove.d("Rendering UI Visible as forms already downloaded");
                     if (getMvpInteractor().getPreferenceHelper().isSchool()) {
-                        buildCSV();
-                        buildCSVForTeachers();
+                        buildCSV(context);
+                        buildCSVForTeachers(context);
                     }
-                    if (getMvpInteractor().getPreferenceHelper().isTeacher()) {
-                        buildCSV();
-                    }
-                    renderLayoutVisible();
+                    renderLayoutVisible(context);
 
                 } else {
                     if (getMvpInteractor().getPreferenceHelper().isSchool()) {
-                        buildCSV();
-                        buildCSVForTeachers();
-                    }
-                    if (getMvpInteractor().getPreferenceHelper().isTeacher()) {
-                        buildCSV();
+                        buildCSV(context);
+                        buildCSVForTeachers(context);
                     }
                 }
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
@@ -302,8 +310,8 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             Grove.d("Network not available, can't download forms/ check versions, rendering layou");
             if (getMvpView() != null) {
                 Grove.d("Rendering UI Visible as forms already downloaded");
-                renderLayoutVisible();
-                getMvpView().showNoInternetMessage();
+                renderLayoutVisible(context);
+                ((HomeActivity) context).showNoInternetMessage();
             }
         }
     }
@@ -387,8 +395,11 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     }
 
     public void checkForDownloadStudentData() {
-        if (getMvpInteractor().getPreferenceHelper().isSchoolUpdated() || !getMvpInteractor().getPreferenceHelper().hasDownloadedStudentData())
+        if ((getMvpInteractor().getPreferenceHelper().isSchoolUpdated() ||
+                !getMvpInteractor().getPreferenceHelper().hasDownloadedStudentData()) && studentDownloadStatus != FormDownloadStatus.DOWNLOADING) {
+            getMvpInteractor().getPreferenceHelper().downloadedStudentData(false);
             fetchStudentData();
+        }
     }
 
     public void fetchSchoolEmployeeData() {
@@ -421,6 +432,12 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     }
 
     class FormListDownloadListener implements FormListDownloadResultCallback {
+        Context context;
+
+        public FormListDownloadListener(Context context) {
+            this.context = context;
+        }
+
         @Override
         public void onSuccessfulFormListDownload(HashMap<String, ServerFormDetails> latestFormListFromServer) {
             Grove.d("FormList download complete %s, is the form list size", latestFormListFromServer.size());
@@ -432,89 +449,61 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 Grove.d("Number of forms to be downloaded are %d", formsToBeDownloaded.size());
                 formsDownloadStatus = FormDownloadStatus.DOWNLOADING;
                 currentProgress = 2;
-                if (getMvpView() != null)
-                    getMvpView().setDownloadProgress(30);
                 currentProgress = 30;
             } else {
                 Grove.d("No new forms to be downloaded");
                 if (getMvpInteractor().getPreferenceHelper().isSchool()) {
-                    buildCSV();
-                    buildCSVForTeachers();
+                    buildCSV(context);
+                    buildCSVForTeachers(context);
                 }
-                if (getMvpInteractor().getPreferenceHelper().isTeacher()) {
-                    buildCSV();
-                }
-                if (getMvpView() != null)
-                    getMvpView().setDownloadProgress(100);
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
-                if (getMvpView() != null){
-                   renderLayoutVisible();
-                }
+                renderLayoutVisible(context);
             }
             if (formsDownloadStatus == FormDownloadStatus.DOWNLOADING)
-                getIFormManagementContract().downloadODKForms(new FormDownloadListener(), formsToBeDownloaded, true);
+                getIFormManagementContract().downloadODKForms(new FormDownloadListener(context), formsToBeDownloaded, true);
         }
 
         @Override
         public void onFailureFormListDownload(boolean isAPIFailure) {
             if (isAPIFailure) {
                 Grove.e("There has been an error in downloading the forms from ODK Server");
-                if (getMvpView() != null)
-                    getMvpView().showDownloadFailureMessage();
+                ((HomeActivity) context).showDownloadFailureMessage();
                 formsDownloadStatus = FormDownloadStatus.FAILURE;
             }
-            if (getMvpView() != null){
-              renderLayoutVisible();
-            }
+            ((HomeActivity) context).renderLayoutVisible();
+
             if (!isNetworkConnected()) {
-                if (getMvpView() != null)
-                    getMvpView().showFailureDownloadMessage();
+                ((HomeActivity) context).showNoInternetMessage();
             } else {
-                if (getMvpView() != null)
-                    getMvpView().showNoInternetMessage();
+                ((HomeActivity) context).showFailureDownloadMessage();
             }
         }
 
         class FormDownloadListener implements DataFormDownloadResultCallback {
+            Context context;
+
+            public FormDownloadListener(Context context) {
+                this.context = context;
+            }
+
             @Override
             public void formsDownloadingSuccessful(HashMap<ServerFormDetails, String> result) {
                 Grove.d("Form Download Complete %s", result);
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
-                if (getMvpView() != null) {
-                    getMvpView().setDownloadProgress(97);
-                    if (getMvpInteractor().getPreferenceHelper().isSchool()) {
-                        buildCSV();
-                        buildCSVForTeachers();
-                    }
-                    if (getMvpInteractor().getPreferenceHelper().isTeacher()) {
-                        buildCSV();
-                    }
-                    if (!getMvpInteractor().getPreferenceHelper().isSchool()) {
-                        getMvpView().setDownloadProgress(100);
-                        getMvpView().renderLayoutVisible();
-                    }
-                } else {
-                    if (getMvpInteractor().getPreferenceHelper().isSchool()) {
-                        buildCSV();
-                        buildCSVForTeachers();
-                    }
-                    if (getMvpInteractor().getPreferenceHelper().isTeacher()) {
-                        buildCSV();
-                    }
-                    if (!getMvpInteractor().getPreferenceHelper().isSchool()) {
-                        if (getMvpView() != null)
-                            getMvpView().renderLayoutVisible();
-                    }
+                if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+                    buildCSV(context);
+                    buildCSVForTeachers(context);
+                }
+                if (!getMvpInteractor().getPreferenceHelper().isSchool()) {
+                    ((HomeActivity) context).renderLayoutVisible();
                 }
             }
 
             @Override
             public void formsDownloadingFailure() {
                 Grove.d("Unable to download the forms");
-                if (getMvpView() != null) {
-                    getMvpView().showSnackbar("Could not download the forms", Snackbar.LENGTH_LONG);
-                    getMvpView().renderLayoutVisible();
-                }
+                ((HomeActivity) context).showSnackbar("Could not download the forms", Snackbar.LENGTH_LONG);
+                ((HomeActivity) context).renderLayoutVisible();
             }
 
             @Override
@@ -525,41 +514,31 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 int formProgress = (progress * 100) / total;
                 Grove.d("Form Download Progress: %s", formProgress);
                 currentProgress = currentProgress + 70 / 9;
-                if (getMvpView() != null)
-                    getMvpView().setDownloadProgress(currentProgress);
                 if (formProgress == 100) {
-                    if (getMvpView() != null) {
-                        currentProgress = 100;
-                        getMvpView().setDownloadProgress(currentProgress);
-                        Grove.d("Rendering UI Visible as forms already downloaded not, but now downloaded");
-                    }
+                    currentProgress = 100;
+                    Grove.d("Rendering UI Visible as forms already downloaded not, but now downloaded");
                     formsDownloadStatus = FormDownloadStatus.SUCCESS;
                 }
             }
 
             @Override
             public void formsDownloadingCancelled() {
-                if (getMvpView() != null) {
-                    getMvpView().renderLayoutVisible();
-                    getMvpView().showFailureDownloadMessage();
-                }
+                ((HomeActivity) context).renderLayoutVisible();
+                ((HomeActivity) context).showFailureDownloadMessage();
                 Grove.e("Form Download Cancelled >> API Cancelled callback received");
             }
         }
     }
 
-    private void renderLayoutVisible() {
-        if(isTeacherAccount() &&(getMvpInteractor().getPreferenceHelper().hasDownloadedStudentData() || studentDownloadStatus == FormDownloadStatus.SUCCESS))
-            getMvpView().renderLayoutVisible();
-        else if(!isTeacherAccount())
-            getMvpView().renderLayoutVisible();
+    private void renderLayoutVisible(Context context) {
+        ((HomeActivity) context).renderLayoutVisible();
     }
 
-    private void buildCSVForTeachers() {
+    private void buildCSVForTeachers(Context context) {
         String referenceFileName = "itemsets.csv";
         IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
         ArrayList<ArrayList<String>> list = iStudentDetailsContract.buildJSONArrayForEmployees();
-        ArrayList<String> mediaDirectoriesNames = (PermissionUtils.areStoragePermissionsGranted(getMvpView().getActivityContext())) ? CSVHelper.fetchFormMediaDirectoriesWithMedia(referenceFileName) : new ArrayList<>();
+        ArrayList<String> mediaDirectoriesNames = isPermissionGiven ? CSVHelper.fetchFormMediaDirectoriesWithMedia(referenceFileName) : new ArrayList<>();
         if (mediaDirectoriesNames.size() > 0 && list.size() > 0) {
             String direcName = "";
             for (String name : mediaDirectoriesNames) {
@@ -576,8 +555,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             CSVHelper.buildCSVForODK1(new CSVBuildStatusListener() {
                 @Override
                 public void onSuccess() {
-                    getMvpView().setDownloadProgress(100);
-                    getMvpView().renderLayoutVisible();
+                    ((HomeActivity) context).renderLayoutVisible();
                 }
 
                 @Override
@@ -653,11 +631,11 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     }
 
 
-    private void buildCSV() {
+    private void buildCSV(Context context) {
         String referenceFileName = "itemsets.csv";
         IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
         ArrayList<ArrayList<String>> list = iStudentDetailsContract.buildJSONArray();
-        ArrayList<String> mediaDirectoriesNames = (PermissionUtils.areStoragePermissionsGranted(getMvpView().getActivityContext())) ? CSVHelper.fetchFormMediaDirectoriesWithMedia(referenceFileName) : new ArrayList<>();
+        ArrayList<String> mediaDirectoriesNames = isPermissionGiven ? CSVHelper.fetchFormMediaDirectoriesWithMedia(referenceFileName) : new ArrayList<>();
         if (mediaDirectoriesNames.size() > 0 && list.size() > 0) {
             String direcName = "";
             for (String name : mediaDirectoriesNames) {
@@ -674,7 +652,6 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             CSVHelper.buildCSVForODK1(new CSVBuildStatusListener() {
                 @Override
                 public void onSuccess() {
-                    getMvpView().setDownloadProgress(99);
 
                 }
 
@@ -685,5 +662,4 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             }, studentReportingMediaFileList, list, referenceFileName, null);
         }
     }
-
 }

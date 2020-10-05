@@ -103,7 +103,7 @@ class StudentAdapter(
             val drawable: Drawable = TextDrawable.builder().round().build(findFirstLetterPosition(studentData.name), getColor(context, R.color.color_primary))
             itemView.profile_pic.setImageDrawable(drawable)
             itemAttendanceRowBinding.gradeSection.setOnClickListener {
-                val listItems = arrayOf("A", "B", "C", "D", "E")
+                val listItems = arrayOf("A", "B", "C", "D", "E", "F", "G", "H")
 
                 val builder: AlertDialog.Builder = AlertDialog.Builder(context)
                 builder.setTitle("Choose Section")
@@ -126,12 +126,12 @@ class StudentAdapter(
                 dialog.show()
             }
             itemAttendanceRowBinding.editSection.setOnClickListener {
-                val listItems = arrayOf("A", "B", "C", "D", "E")
+                val listItems = arrayOf("A", "B", "C", "D", "E", "F", "G", "H")
                 val builder: AlertDialog.Builder = AlertDialog.Builder(context)
                 builder.setTitle("Choose Section")
                 builder.setSingleChoiceItems(listItems, gg, fun(dialog: DialogInterface, which: Int) {
                     changedValue = listItems[which]
-                    Toast.makeText(context, "Position: " + which + " Value: " + listItems[which], Toast.LENGTH_LONG).show()
+                   Grove.d("Student section change: >>>> Position: $which Value: ")
                 })
                 builder.setPositiveButton(
                         "Done",

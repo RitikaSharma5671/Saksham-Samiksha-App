@@ -12,7 +12,7 @@ class AttendanceItemViewModel(
 
 
     val title: String by lazy {
-        Utilities.convert(garmentInfo.name) + " ( " + garmentInfo.srn + ")"
+        Utilities.convert(garmentInfo.name) + " (" + garmentInfo.srn + ")"
     }
 
 //    val srn: String by lazy {

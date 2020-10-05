@@ -19,6 +19,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import com.example.assets.uielements.SamagraAlertDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
@@ -89,7 +90,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         editPassword.setOnClickListener(v -> onEditPasswordButtonClicked());
         attachListenersForSchoolLayout();
         mProgress = new ProgressDialog(this);
-        mProgress.setTitle(getString(R.string.logging_in));
+        mProgress.setTitle("Updating Details");
         mProgress.setMessage(getString(R.string.please_wait));
         mProgress.setCancelable(false);
         mProgress.setIndeterminate(true);
@@ -111,7 +112,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
             change_details.setText(content);
             String ROOT = Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath();
-            String FILE_PATH =  Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath() + "/saksham_data_json.json";
+            String FILE_PATH = Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath() + "/saksham_data_json.json";
             InstitutionInfo institutionInfo = profilePresenter.fetchSchoolDetails();
             schoolDistrict = findViewById(R.id.school_district);
             schoolBlock = findViewById(R.id.school_block);
@@ -257,29 +258,40 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     @Override
     public void onEditPasswordButtonClicked() {
         showLoading("Sending OTP");
-        if(profilePresenter.isNetworkConnected()){
-            String phoneNumber= profilePresenter.getContentValueFromKey(dynamicHolders.get(1).getUserProfileElement().getContent());
-            if(!phoneNumber.isEmpty() && !isValidPhoneNumber(phoneNumber)) {
-            new SendOTPTask(new ChangePasswordActionListener() {
-                @Override
-                public void onSuccess() {
-                    hideLoading();
-                    Intent otpIntent = new Intent(ProfileActivity.this, OTPActivity.class);
-                    otpIntent.putExtra("phoneNumber", phoneNumber);
-                    otpIntent.putExtra("last", "profile");
-                    startActivity(otpIntent);
-                }
+        if (profilePresenter.isNetworkConnected()) {
+            String phoneNumber = "";
+            if (dynamicHolders.size() > 1) {
+                phoneNumber = profilePresenter.getContentValueFromKey(dynamicHolders.get(1).getUserProfileElement().getContent());
+            } else {
+                phoneNumber = profilePresenter.getMvpInteractor().getPreferenceHelper().getProfileContentValueForKey("user.mobilePhone");
+            }
+            if (!phoneNumber.isEmpty() && !isValidPhoneNumber(phoneNumber)) {
+                String finalPhoneNumber = phoneNumber;
+                new SendOTPTask(new ChangePasswordActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        hideLoading();
+                        Intent otpIntent = new Intent(ProfileActivity.this, OTPActivity.class);
+                        otpIntent.putExtra("phoneNumber", finalPhoneNumber);
+                        otpIntent.putExtra("last", "profile");
+                        startActivity(otpIntent);
+                    }
 
-                @Override
-                public void onFailure(Exception exception) {
-                    showSnackbar(getActivityContext().getResources().getString(R.string.error_sending_otp), 3000);
-                }
-            },AncillaryScreensDriver.SEND_OTP_URL).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber);
-        }else{
-            hideLoading();
-                showSnackbar(getString(R.string.try_otp_for_no_phone), 3000);
-
-        }}else{
+                    @Override
+                    public void onFailure(Exception exception) {
+                        showSnackbar(getActivityContext().getResources().getString(R.string.error_sending_otp), 3000);
+                    }
+                }, AncillaryScreensDriver.SEND_OTP_URL).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber);
+            } else {
+                hideLoading();
+                new SamagraAlertDialog.Builder(getActivityContext()).
+                        setTitle("No Mobile Number Registered.").
+                        setMessage(getString(R.string.try_otp_for_no_phone))
+                        .setAction2(getText(R.string.ok), (actionIndex, alertDialog) -> {
+                        alertDialog.dismiss();
+                        }).show();
+            }
+        } else {
             showSnackbar(getActivityContext().getResources().getString(R.string.internet_not_connected_otp), 3000);
         }
 

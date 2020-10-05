@@ -57,8 +57,8 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     public void endSplashScreen() {
         Grove.d("Moving to next screen from Splash");
         if (!splashPresenter.getIFormManagementContract().isScopedStorageUsed()) {
-            splashPresenter.getIFormManagementContract().observeStorageMigration(getActivityContext());
-        } else {
+            splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
+        }
             if (splashPresenter.getMvpInteractor().isLoggedIn()) {
                 if (splashPresenter.canLaunchHome()) {
                     if (splashPresenter.isJwtTokenValid()) {
@@ -81,7 +81,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                     }
                 }.start();
                 Grove.d("Closing Splash Screen and Launching Login");
-            }
+
         }
     }
     /**
@@ -103,7 +103,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
             }.start();
 
         } else {
-            splashPresenter.verifyJWTTokenValidity(getActivityContext().getResources().getString(R.string.fusionauth_api_key));
+            splashPresenter.verifyJWTTokenValidity(getActivityContext().getResources().getString(R.string.fusionauth_api_key), getActivityContext());
         }
     }
 
@@ -143,7 +143,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                         }));
     }
 
-    private void launchLoginScreen() {
+    public void launchLoginScreen() {
         splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
         splashPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
             Grove.d("Failure to reset actions at Splash screen " + failedResetActions);

@@ -28,6 +28,7 @@ public class FirebaseAnalytics implements Analytics {
         Bundle bundle = new Bundle();
         bundle.putString("action", action);
         bundle.putString("label", label);
+        if(firebaseAnalytics !=null)
         firebaseAnalytics.logEvent(category, bundle);
     }
 
