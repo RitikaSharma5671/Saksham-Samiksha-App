@@ -127,11 +127,15 @@ public class UpdateUserTask extends AsyncTask<String, Void, LoginResponse> {
                 JsonObject jsonObject = new Gson().toJsonTree(responseData).getAsJsonObject();
                 Grove.e(TAG, "User1" + jsonObject.get("user"));
                 JsonObject user = jsonObject.get("user").getAsJsonObject();
-                if(userData.get("email") != null){user.addProperty("email", userData.get("email")); }
-                user.addProperty("fullName",userData.get("name"));
-                if(!userData.get("phone").equals(""))user.addProperty("mobilePhone", userData.get("phone"));
+                if (userData.get("email") != null && !userData.get("email").equals("")) {
+                    user.addProperty("email", userData.get("email"));
+                }
+                user.addProperty("fullName", userData.get("name"));
+                if (!userData.get("phone").equals(""))
+                    user.addProperty("mobilePhone", userData.get("phone"));
                 JsonObject data = user.get("data").getAsJsonObject();
-                if(!userData.get("phone").equals(""))data.addProperty("phone", userData.get("phone"));
+                if (!userData.get("phone").equals(""))
+                    data.addProperty("phone", userData.get("phone"));
                 data.addProperty("accountName",userData.get("name"));
                 user.add("data", data);
                 responseData.put("user", user);

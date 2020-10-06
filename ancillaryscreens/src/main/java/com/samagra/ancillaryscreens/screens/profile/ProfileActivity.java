@@ -249,9 +249,24 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     }
 
     private boolean isValidPhoneNumber(String phoneNumber) {
-        Pattern p = Pattern.compile("[6-9][0-9]{9}");
-        Matcher m = p.matcher(phoneNumber);
-        return !m.find() || !m.group().equals(phoneNumber);
+//        Pattern p = Pattern.compile("[6-9][0-9]{9}");
+//        Matcher m = p.matcher(phoneNumber);
+//        return !m.find() || !m.group().equals(phoneNumber);
+
+            // The given argument to compile() method
+            // is regular expression. With the help of
+            // regular expression we can validate mobile
+            // number.
+            // 1) Begins with 0 or 91
+            // 2) Then contains 7 or 8 or 9.
+            // 3) Then contains 9 digits
+            Pattern p = Pattern.compile("(0/91)?[7-9][0-9]{9}");
+
+            // Pattern class contains matcher() method
+            // to find matching between given number
+            // and regular expression
+            Matcher m = p.matcher(phoneNumber);
+            return (m.find() && m.group().equals(phoneNumber));
     }
 
 
@@ -265,7 +280,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             } else {
                 phoneNumber = profilePresenter.getMvpInteractor().getPreferenceHelper().getProfileContentValueForKey("user.mobilePhone");
             }
-            if (!phoneNumber.isEmpty() && !isValidPhoneNumber(phoneNumber)) {
+            if (!phoneNumber.isEmpty() && isValidPhoneNumber(phoneNumber)) {
                 String finalPhoneNumber = phoneNumber;
                 new SendOTPTask(new ChangePasswordActionListener() {
                     @Override
