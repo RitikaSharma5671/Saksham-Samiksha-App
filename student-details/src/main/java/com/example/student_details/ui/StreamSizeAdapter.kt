@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
 
@@ -18,8 +19,7 @@ class StreamSizeAdapter(private val filterCollectionViewModel: ClassFilterViewMo
 
     override fun getItemCount(): Int {
         val totalSize = filterCollectionViewModel.dataFilterAttributes.value?.allStreams!!.size
-        totalSize?.let { return totalSize }
-        return 0
+        totalSize.let { return totalSize }
     }
 
     override fun onBindViewHolder(holder: SizeViewHolder, position: Int) {
@@ -38,11 +38,11 @@ class StreamSizeAdapter(private val filterCollectionViewModel: ClassFilterViewMo
             sizeView.isSelected = selectedStreams != null && selectedStreams.contains(size)
 
             if (sizeView.isSelected) {
-                sizeView.setTextColor(itemView.context.resources.getColor(R.color.color4))
+                sizeView.setTextColor(ContextCompat.getColor(itemView.context, R.color.color4))
                 sizeView.background = itemView.context.resources.getDrawable(R.drawable.buttonstyle4_background_selected)
 
             } else {
-                sizeView.setTextColor(itemView.context.resources.getColor(R.color.color1))
+                sizeView.setTextColor(ContextCompat.getColor(itemView.context, R.color.color1))
                 sizeView.background = itemView.context.resources.getDrawable(R.drawable.buttonstyle4_background)
             }
 //

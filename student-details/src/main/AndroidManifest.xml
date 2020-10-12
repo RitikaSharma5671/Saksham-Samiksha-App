@@ -11,6 +11,11 @@
             android:label="rfvrfvftv"
             android:screenOrientation="portrait"
             android:theme="@style/MyMaterialTheme"/>
+        <activity
+            android:name="com.example.student_details.ui.employee_aggregate.ViewEmployeeAttendance"
+            android:label="fvfr"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyMaterialTheme"/>
     </application>
 
 </manifest>

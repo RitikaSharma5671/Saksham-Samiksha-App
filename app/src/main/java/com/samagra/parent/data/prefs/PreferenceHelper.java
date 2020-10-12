@@ -60,6 +60,8 @@ public interface PreferenceHelper {
 
     boolean isSchool();
 
+    boolean isUserSchoolHead();
+
     boolean isSchoolUpdated();
 
     String fetchSchoolName();

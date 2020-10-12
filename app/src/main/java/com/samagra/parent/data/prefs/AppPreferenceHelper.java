@@ -71,17 +71,30 @@ public class AppPreferenceHelper implements PreferenceHelper {
     @Override
     public boolean isTeacher() {
         String designation = defaultPreferences.getString("user.designation", "");
-        return designation.contains("TGT") || designation.contains("Clerk")
-                || designation.contains("Tabla Player") ||
-                designation.contains("Vocational Instructor") ||
-                designation.contains("Vocational PGT") ||
+        return designation.contains("TGT") ||
+                designation.contains("Clerk") ||
+                designation.contains("Tabla") ||
+                designation.contains("Vocation") ||
+                designation.contains("Librarian") ||
+                designation.contains("Laboratory") ||
                 designation.contains("Classical & Vernacular Teacher") ||
-                designation.contains("JBT") || designation.contains("PGT");
+                designation.contains("PRT") ||
+                designation.contains("JBT") ||
+                designation.contains("PGT");
     }
 
     @Override
     public boolean isSchool() {
         return defaultPreferences.getString("user.designation", "").equals("School Head");
+    }
+
+    @Override
+    public boolean isUserSchoolHead() {
+        String designation = defaultPreferences.getString("user.designation", "");
+        return designation.contains("Head Master")
+                || designation.contains("Head Master High School")
+                || designation.contains("Head Teacher")
+                || designation.equals("Principal");
     }
 
     @Override
@@ -103,7 +116,7 @@ public class AppPreferenceHelper implements PreferenceHelper {
         }
         if (phoneNumber != null) {
 //            if (userAccountName != null) {
-                return !phoneNumber.equals("");
+            return !phoneNumber.equals("");
 //                        && !userAccountName.equals("");
 //            }
         }
@@ -140,7 +153,7 @@ public class AppPreferenceHelper implements PreferenceHelper {
 
     @Override
     public String getBlock() {
-        return  defaultPreferences.getString("user.block", "");
+        return defaultPreferences.getString("user.block", "");
     }
 
     @Override
@@ -150,14 +163,14 @@ public class AppPreferenceHelper implements PreferenceHelper {
 
     @Override
     public boolean hasDownloadedStudentData() {
-       return defaultPreferences.getBoolean("downloadedStudentData", false);
+        return defaultPreferences.getBoolean("downloadedStudentData", false);
     }
 
     private String generateObjectForStudentData(InstitutionInfo inputObject) {
         try {
             Gson gson = new Gson();
             return gson.toJson(inputObject);
-        } catch ( Exception e) {
+        } catch (Exception e) {
             return "";
         }
     }

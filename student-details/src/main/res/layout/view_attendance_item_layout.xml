@@ -7,7 +7,7 @@
 
         <variable
             name="studentItemViewModel"
-            type="com.example.student_details.ui.StudentItemViewModel" />
+            type="com.example.student_details.ui.employee_aggregate.EmployeeItemViewModel" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,7 +17,7 @@
         android:background="@color/white">
 
         <ImageView
-            android:id="@+id/profile_pic"
+            android:id="@+id/profile_pic_employee"
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_centerVertical="true"
@@ -26,15 +26,15 @@
             tools:src="@drawable/heart_blank_small" />
 
         <RelativeLayout
-            android:id="@+id/student_details_box"
-            android:layout_width="wrap_content"
+            android:id="@+id/student_details_box_employee"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
-            android:layout_toEndOf="@id/profile_pic">
+            android:layout_toEndOf="@id/profile_pic_employee">
 
             <TextView
-                android:id="@+id/name_student"
+                android:id="@+id/name_student_employee"
                 style="@style/LabelStyle4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,11 +45,11 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/srn_number"
+                android:id="@+id/srn_number_employee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/name_student"
-                android:layout_marginTop="5dp"
+                android:layout_below="@id/name_student_employee"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical|left"
                 android:singleLine="true"
@@ -59,34 +59,43 @@
         </RelativeLayout>
 
 
-            <android.widget.Button
-                android:layout_width="85dp"
-                android:layout_height="32dp"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/attendance_status_absent"
-                android:background="@drawable/round_btn"
-                android:letterSpacing="0.052"
-                android:text="ABSENT"
-                android:layout_marginEnd="12dp"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/color2"
-                android:textSize="11sp"
-                android:layout_centerVertical="true"
-                android:textStyle="normal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_below="@id/student_details_box_employee"
+            android:layout_toEndOf="@id/profile_pic_employee"
+            android:layout_alignStart="@id/student_details_box_employee"
+            android:layout_marginTop="8dp"
+            android:id="@+id/attendance_status_label_employee"
+            android:letterSpacing="0.052"
+            android:textAllCaps="true"
+            android:layout_marginEnd="6dp"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/color_primary"
+            android:text="@string/attendance_status"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:ignore="RtlSymmetry" />
 
-            <android.widget.Button
-                android:layout_width="85dp"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="32dp"
+                android:layout_below="@id/student_details_box_employee"
+                android:layout_marginTop="8dp"
+                android:minWidth="135dp"
                 android:layout_alignParentEnd="true"
-                android:id="@+id/attendance_status_present"
-                android:background="@drawable/round_btn"
+                android:id="@+id/attendance_status_present_employee"
+                android:background="@drawable/button_border_blue"
                 android:letterSpacing="0.052"
-                android:layout_marginEnd="12dp"
-                android:textColor="@color/white"
-                android:layout_centerVertical="true"
-                android:text="PRESENT"
-                android:textSize="11sp"
-                android:textStyle="normal" />
+                android:layout_marginEnd="8dp"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="@color/color_primary"
+                android:textSize="11.5sp"
+                android:textStyle="bold" />
 
 
 
@@ -94,10 +103,10 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1.5dp"
-            android:layout_below="@id/student_details_box"
-            android:layout_alignStart="@+id/student_details_box"
+            android:layout_below="@id/attendance_status_present_employee"
+            android:layout_alignStart="@+id/student_details_box_employee"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="6dp"
             android:layout_marginBottom="4dp"
             android:background="@color/green" />
 

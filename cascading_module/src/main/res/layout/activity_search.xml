@@ -149,16 +149,14 @@
 </LinearLayout>
 
 
-            <com.airbnb.lottie.LottieAnimationView
+            <ProgressBar
                 android:id="@+id/lottie_loader_search"
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
                 android:gravity="center"
                 android:visibility="invisible"
-                app:circleSize="22"
-                app:duration="@android:integer/config_mediumAnimTime"
-                app:endColor="@color/colorPrimary"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                style="@style/Widget.AppCompat.ProgressBar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/next_button"
                 app:layout_constraintEnd_toEndOf="parent"

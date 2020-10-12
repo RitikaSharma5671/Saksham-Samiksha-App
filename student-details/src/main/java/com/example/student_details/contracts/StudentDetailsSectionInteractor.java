@@ -15,6 +15,8 @@ import com.example.student_details.models.realm.SchoolEmployeesInfo;
 import com.example.student_details.models.realm.StudentInfo;
 import com.example.student_details.modules.AuthorizationInterceptor;
 import com.example.student_details.network.BackendCallHelperImpl;
+import com.example.student_details.ui.employee_aggregate.ViewEmployeeAttendance;
+import com.example.student_details.ui.teacher_aggregate.MainActivity;
 import com.example.student_details.ui.teacher_attendance.data.Employees;
 import com.hasura.model.GetStudentsForSchoolQuery;
 import com.samagra.grove.logging.Grove;
@@ -79,20 +81,18 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
                     List<SchoolEmployeesInfo> employees = realm.copyFromRealm(realm
                             .where(SchoolEmployeesInfo.class).findAll());
                     employeeInfoListener.onSuccess(employees);
-
                 }, throwable -> {
                     if (throwable instanceof ANError) {
                     } else {
                     }
-
-                    Grove.e("Fetch Employee data error " + throwable.getMessage() + ", with error code: " + throwable.getCause().toString());
+                    Grove.e("Fetch Employee data error " + throwable.getMessage() + ", with error code: " + throwable.getCause());
                 }));
     }
 
     @Override
     public ArrayList<ArrayList<String>> buildJSONArrayForEmployees() {
         Realm realm = Realm.getDefaultInstance();
-        List<SchoolEmployeesInfo> employeeInfos =  realm.copyFromRealm(realm
+        List<SchoolEmployeesInfo> employeeInfos = realm.copyFromRealm(realm
                 .where(SchoolEmployeesInfo.class).findAll());
         ArrayList<ArrayList<String>> jsonArray = new ArrayList<>();
         ArrayList<String> first = new ArrayList<>();
@@ -119,9 +119,15 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
         Realm realm = Realm.getDefaultInstance();
         try {
             realm.deleteAll();
-        }catch (Exception illegalStateException) {
+        } catch (Exception illegalStateException) {
             Timber.d("Unable to delete the realm DB:--  %s", illegalStateException.getMessage());
         }
+    }
+
+    @Override
+    public void launchTeacherAttendanceView(Context activityContext) {
+        Intent i = new Intent(activityContext, ViewEmployeeAttendance.class);
+        activityContext.startActivity(i);
     }
 
     @Override
@@ -148,16 +154,17 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
                         .build()
                 ).build();
 
-        GetStudentsForSchoolQuery getStudentsForSchoolQuery = GetStudentsForSchoolQuery.builder().query_param(code).build();
+        GetStudentsForSchoolQuery getStudentsForSchoolQuery = GetStudentsForSchoolQuery.builder().school_code(code).build();
         apolloClient.query(getStudentsForSchoolQuery).enqueue(new ApolloCall.Callback<GetStudentsForSchoolQuery.Data>() {
             @Override
             public void onResponse(@NotNull Response<GetStudentsForSchoolQuery.Data> response) {
                 Realm realm = Realm.getDefaultInstance();
-                realm.beginTransaction();
-                if (realm.getSchema().contains("StudentInfo"))
-                    realm.delete(StudentInfo.class);
-                if(response.getData() != null && response.getErrors() == null && response.getData().student() != null) {
+                if (response.getData() != null && response.getErrors() == null && response.getData().student() != null &&
+                        response.getData().student().size() > 0) {
                     List<GetStudentsForSchoolQuery.Student> jj = response.getData().student();
+                    realm.beginTransaction();
+                    if (realm.getSchema().contains("StudentInfo"))
+                        realm.delete(StudentInfo.class);
                     for (GetStudentsForSchoolQuery.Student student : jj) {
                         StudentInfo studentInfo = new StudentInfo(student.srn(), student.name(), student.grade(),
                                 student.section(), student.stream(), student.fatherName(), student.motherName(),
@@ -166,7 +173,7 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
                     }
                     realm.commitTransaction();
                     apolloQueryResponseListener.onResponseReceived(response);
-                }else {
+                } else {
                     apolloQueryResponseListener.onResponseReceived(null);
                 }
             }

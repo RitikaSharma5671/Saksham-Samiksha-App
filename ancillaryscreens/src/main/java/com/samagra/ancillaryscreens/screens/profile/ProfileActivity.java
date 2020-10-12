@@ -99,14 +99,16 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     @SuppressLint("SetTextI18n")
     private void attachListenersForSchoolLayout() {
         RelativeLayout schoolLayout = findViewById(R.id.school_layout);
-        if(profilePresenter.isTeacherAccount() || profilePresenter.isSchoolAccount()) {
+        if(profilePresenter.isTeacherAccount() || profilePresenter.isSchoolAccount()|| profilePresenter.isUserSchoolHead()) {
             schoolLayout.setVisibility(View.VISIBLE);
             change_details = findViewById(R.id.change_details);
             LinearLayout changeDetailsLL = findViewById(R.id.change_details_label);
             if(profilePresenter.isSchoolAccount()){
                 changeDetailsLL.setVisibility(View.GONE);
-            }else if(profilePresenter.isTeacherAccount()) {
+            }else if(profilePresenter.isTeacherAccount() || profilePresenter.isUserSchoolHead()) {
                 changeDetailsLL.setVisibility(View.VISIBLE);
+            }else {
+                changeDetailsLL.setVisibility(View.GONE);
             }
             SpannableString content = new SpannableString(getText(R.string.change_details));
             content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
@@ -174,7 +176,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
     @Override
     public void initUserDetails(ArrayList<UserProfileElement> userProfileElements) {
         Collections.sort(userProfileElements, (userProfileElement, t1) -> userProfileElement.getSection() - t1.getSection());
-        int currentSection = -1;
+        int currentSection;
         int prevSection = -1;
         boolean sectionChanged;
         for (UserProfileElement profileElement : userProfileElements) {

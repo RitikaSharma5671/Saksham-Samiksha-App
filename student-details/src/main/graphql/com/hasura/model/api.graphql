@@ -19,20 +19,26 @@ mutation sendTeacherAttendance($query_param: [teacher_attendance_insert_input!]!
         affected_rows
     }
 }
-
-query getStudentsForSchool($query_param : String) {
-  student(where: {school_code: {_eq: $query_param}}) {
-    fatherContactNumber
-    grade
-    fatherName
-    motherName
-    name
-    school_code
-    srn
-    section
-    stream
-  }
+mutation sendTeacherAttendanceNewFormat($query_param: [teacher_attendance_updated_insert_input!]!) {
+    insert_teacher_attendance_updated(objects: $query_param) {
+        affected_rows
+    }
 }
+
+query getStudentsForSchool($school_code: String) {
+    student(where: {school_code: {_eq: $school_code}, isActive: {_eq: true}}) {
+        fatherContactNumber
+        grade
+        fatherName
+        motherName
+        name
+        school_code
+        srn
+        section
+        stream
+    }
+}
+
 
 
 mutation updateStudentSection($srn: String, $changedSection: String) {  update_student(
@@ -82,5 +88,18 @@ query FetchAttendanceByGradeSectionStream($date: date, $taken_by: String, $grade
             isPresent
         }
 
+    }
+}
+
+query FetchTeacherAttendance($school_code:String, $date:date) {
+    teacher_attendance_updated_aggregate(where: {school_code: {_eq: $school_code}, date_of_attendance : {_eq : $date}}) {
+        nodes {
+            employee_id
+            isPresentInSchool
+            employee_name
+            employee_designation
+            attendance_status
+            other_reason
+        }
     }
 }

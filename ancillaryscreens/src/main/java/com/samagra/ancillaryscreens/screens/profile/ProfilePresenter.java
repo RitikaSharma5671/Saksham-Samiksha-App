@@ -253,6 +253,14 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
         return networkInfo != null && networkInfo.isConnected();
     }
 
+    public boolean isUserSchoolHead() {
+        String designation = getMvpInteractor().getPreferenceHelper().fetchDesignation();
+        return designation.contains("Head Master")
+                || designation.contains("Head Master High School")
+                || designation.contains("Head Teacher")
+                || designation.equals("Principal");
+    }
+
     public boolean isTeacherAccount() {
         String designation = getMvpInteractor().getPreferenceHelper().fetchDesignation();
         return designation.contains("TGT") || designation.contains("Clerk")

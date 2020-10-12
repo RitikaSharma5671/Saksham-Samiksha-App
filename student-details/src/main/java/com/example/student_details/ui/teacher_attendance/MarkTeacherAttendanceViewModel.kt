@@ -7,27 +7,20 @@ import android.text.format.DateFormat
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.androidnetworking.error.ANError
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.example.student_details.contracts.ApolloQueryResponseListener
+import com.example.student_details.models.realm.SchoolEmployeesAttendanceData
 import com.example.student_details.models.realm.SchoolEmployeesInfo
 import com.example.student_details.modules.StudentDataModel
-import com.example.student_details.network.BackendCallHelperImpl
-import com.example.student_details.ui.teacher_attendance.data.EmployeeInfo
-import com.example.student_details.ui.teacher_attendance.data.Employees
-import com.hasura.model.SendTeacherAttendanceMutation
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.hasura.model.SendTeacherAttendanceNewFormatMutation
 import io.realm.Realm
 import org.odk.collect.android.application.Collect1
-import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
 class MarkTeacherAttendanceViewModel : ViewModel() {
-    var employeeList: MutableLiveData<List<SchoolEmployeesInfo>> = MutableLiveData()
+    var employeeList: MutableLiveData<List<SchoolEmployeesAttendanceData>> = MutableLiveData()
     val renderToast: MutableLiveData<String> = MutableLiveData()
     val isEmployeesListVisible = ObservableBoolean(false)
     val isEmptyListMessageVisible = ObservableBoolean(false)
@@ -40,6 +33,11 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
         val list = employeeList.value!!
         for (employeeData in list) {
             employeeData.isPresent = checked
+            if(checked) {
+                employeeData.attendanceStatus = "Present in School"
+            }else {
+                employeeData.attendanceStatus = "Mark Attendance"
+            }
         }
         employeeList.postValue(list)
     }
@@ -49,47 +47,59 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
         isEmployeesListVisible.set(false)
         isEmptyListMessageVisible.set(false)
         isProgressBarVisible.set(true)
-        CompositeDisposable().add(BackendCallHelperImpl.getInstance()
-                .performLoginApiCall(schoolCode, schoolName)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ employeeData: EmployeeInfo ->
-                    run {
-                        isProgressBarVisible.set(false)
-                        if (employeeData.total > 0) {
-                            isEmployeesListVisible.set(true)
-                            isEmptyListMessageVisible.set(false)
-                            fetchEmployeeList(employeeData.userInformation)
-                        } else {
-                            isEmployeesListVisible.set(false)
-                            isEmptyListMessageVisible.set(true)
-                            employeeList.postValue(ArrayList())
-                        }
-                    }
-
-                }, { throwable: Throwable ->
-                    run {
-                        isEmployeesListVisible.set(false)
-                        isEmptyListMessageVisible.set(false)
-                        isProgressBarVisible.set(false)
-                        employeeList.postValue(ArrayList())
-                        renderToast.postValue("Call Failure")
-                        if (throwable is ANError) {
-                            Timber.d("ve1111ve")
-                        } else {
-                            Timber.d("131313556ve(((((((ve")
-                        }
-                    }
-
-                }))
+        fetchEmployeeList()
     }
+//        CompositeDisposable().add(BackendCallHelperImpl.getInstance()
+//                .performLoginApiCall(schoolCode, schoolName)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ employeeData: EmployeeInfo ->
+//                    run {
+//                        isProgressBarVisible.set(false)
+//                        if (employeeData.total > 0) {
+//                            isEmployeesListVisible.set(true)
+//                            isEmptyListMessageVisible.set(false)
+//                        } else {
+//                            isEmployeesListVisible.set(false)
+//                            isEmptyListMessageVisible.set(true)
+//                            employeeList.postValue(ArrayList())
+//                        }
+//                    }
+//
+//                }, { throwable: Throwable ->
+//                    run {
+//                        isEmployeesListVisible.set(false)
+//                        isEmptyListMessageVisible.set(false)
+//                        isProgressBarVisible.set(false)
+//                        employeeList.postValue(ArrayList())
+//                        renderToast.postValue("Call Failure")
+//                        if (throwable is ANError) {
+//                            Timber.d("ve1111ve")
+//                        } else {
+//                            Timber.d("131313556ve(((((((ve")
+//                        }
+//                    }
+//
+//                }))
+//    }
 
-    fun onPrioritySwitchClicked(priorityState: Int, empInfo: SchoolEmployeesInfo) {
-        val attendance = priorityState == 1
+    fun onPrioritySwitchClicked(priorityState: String, empInfo: SchoolEmployeesAttendanceData) {
         val list = employeeList.value!!
         for (employeesInfo in list) {
             if (employeesInfo.employeeId == empInfo.employeeId) {
-                employeesInfo.isPresent = attendance
+                employeesInfo.isPresent = priorityState == "Present in School"
+                employeesInfo.attendanceStatus = priorityState
+                break
+            }
+        }
+        employeeList.postValue(list)
+    }
+
+    fun onOtherReasonChanged(priorityState: String, empInfo: SchoolEmployeesAttendanceData) {
+        val list = employeeList.value!!
+        for (employeesInfo in list) {
+            if (employeesInfo.employeeId == empInfo.employeeId) {
+                employeesInfo.otherReason = priorityState
                 break
             }
         }
@@ -108,7 +118,7 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
         var flag = true
         val list = employeeList.value!!
         for (employee in list) {
-            if (employee.temp < 90 && employee.isPresent) {
+            if (employee.temp < 90 || employee.attendanceStatus == "") {
                 flag = false
                 break
             }
@@ -116,10 +126,10 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
         return flag
     }
 
-    fun onTemperatureUpdated(user: SchoolEmployeesInfo, ff: String) {
+    fun onTemperatureUpdated(user: SchoolEmployeesAttendanceData, ff: String) {
         val temp = ff.toFloat()
         val list = employeeList.value!!
-        val lisss = ArrayList<SchoolEmployeesInfo>()
+        val lisss = ArrayList<SchoolEmployeesAttendanceData>()
         for (employees in list) {
             if (employees.employeeId == user.employeeId) {
                 val ddd = employees
@@ -134,15 +144,15 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
 
     fun uploadAttendanceData(userName: String, schoolCode: String, schoolName: String, district: String, block: String) {
         val list = employeeList.value!!
-        val calendar : Calendar = Calendar.getInstance()
-        val currentSelectedDate: String =  DateFormat.format("yyyy-MM-dd",calendar).toString()
+        val calendar: Calendar = Calendar.getInstance()
+        val currentSelectedDate: String = DateFormat.format("yyyy-MM-dd", calendar).toString()
         val model = StudentDataModel()
-        model.uploadEmployeeAttendanceData(currentSelectedDate, userName, list, object : ApolloQueryResponseListener<SendTeacherAttendanceMutation.Data> {
-            override fun onResponseReceived(response: Response<SendTeacherAttendanceMutation.Data>?) {
+        model.uploadEmployeeAttendanceData(currentSelectedDate, userName, list, object : ApolloQueryResponseListener<SendTeacherAttendanceNewFormatMutation.Data> {
+            override fun onResponseReceived(response: Response<SendTeacherAttendanceNewFormatMutation.Data>?) {
                 try {
                     Collect1.getInstance().analytics.logEvent("teacher_attendance_mark", "teacher_attendance_upload_successful",
                             """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
-                }catch (e:Exception) {
+                } catch (e: Exception) {
                 }
                 attendanceUploadSuccessful.postValue("Success")
             }
@@ -151,7 +161,7 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
                 try {
                     Collect1.getInstance().analytics.logEvent("teacher_attendance_mark", "teacher_attendance_upload_failure",
                             """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
-                }catch (e:Exception) {
+                } catch (e: Exception) {
 
                 }
                 attendanceUploadSuccessful.postValue("Failure")
@@ -160,36 +170,51 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
         })
     }
 
-    private fun fetchEmployeeList(userInformation: List<Employees>) {
+    private fun fetchEmployeeList() {
         val realm = Realm.getDefaultInstance()
-        realm.beginTransaction()
-        if (realm.schema.contains("SchoolEmployeesInfo"))
-            realm.delete(SchoolEmployeesInfo::class.java)
-        for (employeeData in userInformation) {
-            if (employeeData.data.roleData.designation != "School Head") {
-                val schoolEmployeesInfo = SchoolEmployeesInfo(employeeData.username, employeeData.data.accountName,
-                        employeeData.data.phone, employeeData.data.roleData.designation, employeeData.data.roleData.schoolCode,
-                        employeeData.data.roleData.schoolName, employeeData.data.roleData.district)
-                realm.copyToRealmOrUpdate(schoolEmployeesInfo)
-            }
-        }
-        realm.commitTransaction()
+//        realm.beginTransaction()
+//        if (realm.schema.contains("SchoolEmployeesInfo"))
+//            realm.delete(SchoolEmployeesInfo::class.java)
+//        for (employeeData in userInformation) {
+//            if (employeeData.data.roleData.designation != "School Head") {
+//                val schoolEmployeesInfo = SchoolEmployeesInfo(employeeData.username, employeeData.data.accountName,
+//                        employeeData.data.phone, employeeData.data.roleData.designation, employeeData.data.roleData.schoolCode,
+//                        employeeData.data.roleData.schoolName, employeeData.data.roleData.district)
+//                realm.copyToRealmOrUpdate(schoolEmployeesInfo)
+//            }
+//        }
+//        realm.commitTransaction()
         val employees = realm.copyFromRealm(realm
                 .where(SchoolEmployeesInfo::class.java).findAll())
-        if (employees.size > 0) {
+        if (employees != null && employees.size > 0) {
+            val finalList = convertToLocal(employees)
             isEmployeesListVisible.set(true)
+            isProgressBarVisible.set(false)
             isEmptyListMessageVisible.set(false)
+            employeeList.postValue(sortEmployeeList(finalList))
         } else {
+            employeeList.postValue(ArrayList())
             isEmployeesListVisible.set(false)
+            isProgressBarVisible.set(false)
             isEmptyListMessageVisible.set(true)
         }
-        employeeList.postValue(sortEmployeeList(employees))
+    }
+
+    private fun convertToLocal(employees: List<SchoolEmployeesInfo>): List<SchoolEmployeesAttendanceData> {
+        val list = ArrayList<SchoolEmployeesAttendanceData>()
+        for (employeeData in employees) {
+            val temp = SchoolEmployeesAttendanceData(employeeData.employeeId, employeeData.name,
+                    employeeData.contactNumber, employeeData.designation, employeeData.schoolCode,
+                    employeeData.schoolName, employeeData.district)
+            list.add(temp)
+        }
+        return list
     }
 
 
-    fun sortEmployeeList(list: List<SchoolEmployeesInfo>): ArrayList<SchoolEmployeesInfo> {
+    private fun sortEmployeeList(list: List<SchoolEmployeesAttendanceData>): ArrayList<SchoolEmployeesAttendanceData> {
         Collections.sort(list, SortByName())
-        val temp = ArrayList<SchoolEmployeesInfo>()
+        val temp = ArrayList<SchoolEmployeesAttendanceData>()
         temp.addAll(list)
         return temp
     }

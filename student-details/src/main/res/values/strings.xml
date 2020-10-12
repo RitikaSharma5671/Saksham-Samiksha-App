@@ -18,4 +18,16 @@
     <string name="temp_value">%s &#xb0;F</string>
     <string name="sending_the_request">Uploading the Data</string>
     <string name="empty_t">___ &#xb0;F</string>
+    <string name="no_data_filled_for_this_grade_section_filter_by_you_on_this_data">No data filled for this grade section filter by you on this data.</string>
+    <string name="no_data_filled_for_this_grade_section_filter_by_you_on_this_data_1">No data found for this date.</string>
+    <string name="day_selected_is_sunday_d">DAY SELECTED IS SUNDAY! :D</string>
+    <string name="present">Present</string>
+    <string name="absent">Absent</string>
+    <string name="leave">Leave</string>
+    <string name="present_on_duty">Present (On Duty)</string>
+    <string name="working_from_home">Working From Home</string>
+    <string name="on_training">On Training</string>
+    <string name="others">Others</string>
+    <string name="choose_employee_attendance_status">Choose Employee Attendance Status</string>
+    <string name="attendance_status">Attendance Status</string>
 </resources>

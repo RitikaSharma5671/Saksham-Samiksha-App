@@ -15,23 +15,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
 import com.example.student_details.Utilities.convert
 import com.example.student_details.Utilities.findFirstLetterPosition
-import com.example.student_details.databinding.ViewAttendanceItemLayoutBinding
+import com.example.student_details.databinding.ViewStudentAttendanceItemLayoutBinding
 import com.example.student_details.ui.TextDrawable
-import kotlinx.android.synthetic.main.student_item_layout.view.profile_pic
-import kotlinx.android.synthetic.main.view_attendance_item_layout.view.*
+import kotlinx.android.synthetic.main.view_student_attendance_item_layout.view.*
 
 class ViewAttendanceAdapter(
         private var studentDetailsViewModel: ViewStudentAttendanceViewModel
 ) : ListAdapter<AttendanceData, ViewAttendanceAdapter.ViewAttendanceViewHolder>(
         OnStudentDataDiffCallback()) {
 
-    private lateinit var binding: ViewAttendanceItemLayoutBinding
+    private lateinit var binding: ViewStudentAttendanceItemLayoutBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewAttendanceViewHolder {
 
         binding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
-                R.layout.view_attendance_item_layout, parent, false
+                R.layout.view_student_attendance_item_layout, parent, false
         )
         return ViewAttendanceViewHolder(
                 binding,
@@ -57,7 +56,7 @@ class ViewAttendanceAdapter(
         holder.itemView.findViewById<TextView>(R.id.name_student).text = ""
     }
 
-    inner class ViewAttendanceViewHolder(viewAttendanceItemLayoutBinding: ViewAttendanceItemLayoutBinding,
+    inner class ViewAttendanceViewHolder(viewAttendanceItemLayoutBinding: ViewStudentAttendanceItemLayoutBinding,
                                          val application: Application,
                                          val markAttendanceViewModel: ViewStudentAttendanceViewModel) :
             RecyclerView.ViewHolder(viewAttendanceItemLayoutBinding.root) {

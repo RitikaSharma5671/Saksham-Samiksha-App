@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewAteftendanceViewModel"
+            type="com.example.student_details.ui.employee_aggregate.ViewEmployeeAttendanceViewModel" />
+        <import type="android.view.View" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="true"
+        android:focusable="true">
+
+        <RelativeLayout
+            android:id="@+id/employee_attendance_header"
+            android:layout_width="match_parent"
+            android:layout_height="64dp">
+
+            <ImageView
+                android:id="@+id/employee_attendance_close_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/filter_close_button_margin_left"
+                android:contentDescription="@string/filter_cross_content_desc"
+                android:padding="10dp"
+                android:scaleType="center"
+                android:src="@drawable/filter_close_icon" />
+
+            <!--android:onClick="@{filterCollectionViewModel.onClose()}"-->
+            <TextView
+                android:id="@+id/employee_attendance_header_title"
+                style="@style/filter_screen_header_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:letterSpacing="0.052"
+                android:text="@string/view_attendance_title"
+                android:textColor="@color/color1"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/employee_attendance_header_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/employee_attendance_header"
+            android:background="@color/color3" />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/employee_attendance_appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/employee_attendance_header_divider">
+
+            <devs.mulham.horizontalcalendar.HorizontalCalendarView
+                android:id="@+id/employee_attendance_calendar_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_primary"
+                app:sizeBottomText="14sp"
+                app:sizeMiddleText="20sp"
+                android:visibility="invisible"
+                app:textColorSelected="#FFFF" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+
+        <ProgressBar
+            android:id="@+id/employee_attendance_progress_bar"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_below="@id/employee_attendance_divider_view_attendance1"
+            android:layout_marginTop="175dp"
+            android:layout_centerHorizontal="true"
+            android:visibility="@{viewAteftendanceViewModel.isProgressBarVisible ? View.VISIBLE : View.GONE}"
+        style="@style/Widget.AppCompat.ProgressBar"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginTop="24dp"
+            android:layout_height="1.5dp"
+            android:id="@+id/employee_attendance_divider_view_attendance"
+            android:background="@color/color_primary"
+            android:layout_below="@id/employee_attendance_appBar"/>
+
+        <TextView
+            android:id="@+id/employee_attendance_attendance_summary"
+            style="@style/LabelStyle2"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/color3"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:visibility="@{viewAteftendanceViewModel.isStudentListVisible() ? View.VISIBLE : View.GONE}"
+            android:layout_below="@id/employee_attendance_divider_view_attendance"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:id="@+id/employee_attendance_divider_view_attendance1"
+            android:background="@color/color_primary"
+            android:layout_below="@id/employee_attendance_attendance_summary"/>
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/employee_attendance_emp_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/employee_attendance_divider_view_attendance1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="12dp"
+            android:visibility="@{viewAteftendanceViewModel.isStudentListVisible() ? View.VISIBLE : View.GONE}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/employee_attendance_header_today_sunday"
+            android:layout_height="wrap_content"
+            android:text="@string/day_selected_is_sunday_d"
+            style="@style/LabelStyle2"
+            android:textSize="17sp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="@{viewAteftendanceViewModel.isSundayMessageVisible() ? View.VISIBLE : View.GONE}"
+            android:gravity="center"
+            android:layout_marginBottom="240dp"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_data_filled_for_this_grade_section_filter_by_you_on_this_data_1"
+            style="@style/LabelStyle2"
+            android:textSize="17sp"
+            android:id="@+id/employee_attendance_header_no_data_available"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:visibility="@{viewAteftendanceViewModel.isNoStudentDataMessageVisible() ? View.VISIBLE : View.GONE}"
+            android:layout_marginBottom="240dp"/>
+
+
+    </RelativeLayout>
+</layout>

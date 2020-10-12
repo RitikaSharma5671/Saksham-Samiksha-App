@@ -1,0 +1,1027 @@
+{
+  "status": {
+    "message": "",
+    "code": 0
+  },
+  "closetGarmentsInfo": {
+    "dontShowMsgForWantNext": true,
+    "dontShowMsgForMayBeNot": true,
+    "closetMinimumToShip": 12,
+    "referralId": "C31D5F88D4DD2FC7C180EABDEBA9762E81781F2D2BB02F4D08E65ED4E0A515557A459FC023DCB85D36ECBD5D2522AEFAF7FE019BE434C7A1B9C16FD828C27C749E209EDDF50092E8D240C98260C5D76C538E9C2EEE925562DE9949C51F5542C9",
+    "atHome": [
+      {
+        "id": 25115334,
+        "sku": "10800-MUL-20W",
+        "state": "At_Home",
+        "store_id": 1,
+        "user_uuid": "34665f9e-a6e0-369a-903a-59efe16624e7",
+        "state_id": 1,
+        "date_added": "2018-05-23 05:48:58.0",
+        "last_updated_time": "2019-03-18 10:02:09.0",
+        "date_shipped": "2018-05-23 16:00:00.0",
+        "date_returned": "2019-03-18 10:02:09.0",
+        "customer_date_return_notification": "2019-03-18 10:02:09.0",
+        "return_tracking_number": "12121212212121221212121221",
+        "initiator_type_id": 2,
+        "ttbQuote": {
+          "memberPrice": "",
+          "expiryDate": null,
+          "discountMessage": "",
+          "total": "46",
+          "retailPrice": "154",
+          "priceQuoteId": "87f878d2-d982-48b9-8dfb-92df9074f6c0",
+          "priceSignature": "$2a$04$ayx8ZCkiQ4IloeHO9dK82OG6d5B9/rNg41rGhJ9o3EhNeX0IpR4FK",
+          "userDiscount": 0,
+          "priceAvailableDate": "",
+          "totalPercentDiscountOverRetail": "70",
+          "totalDollarDiscountOverRetail": "108",
+          "userDollarDiscount": "",
+          "priceChangeUnit": "",
+          "discountType": "SKU_RETIRED",
+          "discountValue": null,
+          "redemptionQuote": [
+            {
+              "points": 2500,
+              "rewardQuantity": 5,
+              "rewardUnit": "$",
+              "enabled": true,
+              "priceAfterRewardDiscount": "41",
+              "totalDollarDiscount": "113",
+              "totalPercentDiscount": "73.38"
+            },
+            {
+              "points": 4500,
+              "rewardQuantity": 10,
+              "rewardUnit": "$",
+              "enabled": true,
+              "priceAfterRewardDiscount": "36",
+              "totalDollarDiscount": "118",
+              "totalPercentDiscount": "76.62"
+            },
+            {
+              "points": 6000,
+              "rewardQuantity": 15,
+              "rewardUnit": "$",
+              "enabled": true,
+              "priceAfterRewardDiscount": "31",
+              "totalDollarDiscount": "123",
+              "totalPercentDiscount": "79.87"
+            }
+          ],
+          "active": false
+        },
+        "feedback": {
+          "rating_id": 4,
+          "vendor_response": "{\"cluster\":\"app.android\",\"data\":[{\"page_id\":\"50838567\",\"question_index\":0,\"question_value\":\"Did you wear it?\",\"page_index\":0,\"answers\":[{\"row_index\":0,\"row_value\":\"Yes\",\"row_id\":\"1267603508\"}],\"question_id\":\"182171583\"},{\"page_id\":\"50838568\",\"question_index\":0,\"question_value\":\"Why didn't you wear it?\",\"page_index\":1,\"answers\":[],\"question_id\":\"182171589\"},{\"page_id\":\"50838569\",\"question_index\":0,\"question_value\":\"Why didn't you try it on?\",\"page_index\":2,\"answers\":[],\"question_id\":\"182171588\"},{\"page_id\":\"50838570\",\"question_index\":0,\"question_value\":\"Was there anything wrong with it?\",\"page_index\":3,\"answers\":[],\"question_id\":\"182171587\"},{\"page_id\":\"50838571\",\"question_index\":0,\"question_value\":\"How did it fit?\",\"page_index\":4,\"answers\":[{\"row_index\":0,\"row_value\":\"Great - everything was perfect!\",\"row_id\":\"1267603559\"}],\"question_id\":\"182171590\"},{\"page_id\":\"50838572\",\"question_index\":0,\"question_value\":\"Please let us know about the overall fit of this item\",\"page_index\":5,\"answers\":[],\"question_id\":\"182171603\"},{\"page_id\":\"50838572\",\"question_index\":1,\"question_value\":\"Please let us know more about the fit of this item (optional)\",\"page_index\":5,\"answers\":[],\"question_id\":\"182171585\"},{\"page_id\":\"50838573\",\"question_index\":0,\"question_value\":\"Please let us know about the overall fit of this item\",\"page_index\":6,\"answers\":[],\"question_id\":\"182171600\"},{\"page_id\":\"50838573\",\"question_index\":1,\"question_value\":\"Please let us know more about the fit of this item (Optional)\",\"page_index\":6,\"answers\":[],\"question_id\":\"182171599\"},{\"page_id\":\"50838574\",\"question_index\":0,\"question_value\":\"Please let us know about the overall fit of this item\",\"page_index\":7,\"answers\":[],\"question_id\":\"182171605\"},{\"page_id\":\"50838574\",\"question_index\":1,\"question_value\":\"Please let us know more about the fit of this item (Optional)\",\"page_index\":7,\"answers\":[],\"question_id\":\"182171595\"},{\"page_id\":\"50838575\",\"question_index\":0,\"question_value\":\"Please let us know about the overall fit of this item\",\"page_index\":8,\"answers\":[],\"question_id\":\"182171606\"},{\"page_id\":\"50838575\",\"question_index\":1,\"question_value\":\"Please let us know more about the fit of this item (Optional)\",\"page_index\":8,\"answers\":[],\"question_id\":\"182171597\"},{\"page_id\":\"50838576\",\"question_index\":0,\"question_value\":\"How would you rate this item?\",\"page_index\":9,\"answers\":[{\"column_id\":\"1267603515\",\"row_index\":0,\"row_value\":\"\",\"row_id\":\"1267603511\",\"column_value\":\"\",\"column_index\":3}],\"question_id\":\"182171584\"},{\"page_id\":\"50838576\",\"question_index\":1,\"question_value\":\"Anything else we should know?\",\"page_index\":9,\"answers\":[],\"question_id\":\"182171586\"}]}",
+          "responses": {
+            "vendorFormId": "162227703",
+            "questions": [
+              {
+                "vendorQuestionId": "182171583",
+                "gbQuestionId": 1,
+                "answers": [
+                  {
+                    "answerText": "Yes",
+                    "gbAnswerId": 2,
+                    "vendorAnswerId": "1267603508"
+                  }
+                ],
+                "type": "single_choice",
+                "questionText": "Did you wear it?"
+              },
+              {
+                "vendorQuestionId": "182171590",
+                "gbQuestionId": 2,
+                "answers": [
+                  {
+                    "answerText": "Great - everything was perfect!",
+                    "gbAnswerId": 2,
+                    "vendorAnswerId": "1267603559"
+                  }
+                ],
+                "type": "single_choice",
+                "questionText": "How did it fit?"
+              },
+              {
+                "vendorQuestionId": "182171584",
+                "gbQuestionId": 3,
+                "answers": [
+                  {
+                    "answerText": "4",
+                    "gbAnswerId": 4,
+                    "vendorAnswerId": "1267603515"
+                  }
+                ],
+                "type": "rating",
+                "questionText": "How would you rate this item?"
+              }
+            ],
+            "gbFormId": "RN-V5-SM",
+            "source": "SMReturnNotify",
+            "version": 5
+          },
+          "sku": "10800-MUL-20W"
+        },
+        "trackingUrl": null,
+        "returnTrackingUrl": "https://tools.usps.com/go/TrackConfirmAction.action?tLabels=12121212212121221212121221",
+        "productInfo": {
+          "id": 225857110034,
+          "title": "Asymmetrical Hem Striped Dress",
+          "vendor": "Vince Camuto",
+          "handle": "vince-camuto-asymmetrical-hem-striped-dress",
+          "type": "Dress",
+          "images": [
+            {
+              "position": 1,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/10800-MUL_180419_026_retouched.jpg?v=1526910763",
+              "type": "FULL",
+              "altText": "Asymmetrical Hem Striped Dress"
+            },
+            {
+              "position": 1,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/10800-MUL_180419_026_retouched_medium.jpg?v=1526910763",
+              "type": "MEDIUM",
+              "altText": "Asymmetrical Hem Striped Dress"
+            },
+            {
+              "position": 1,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/10800-MUL_180419_026_retouched_compact.jpg?v=1526910763",
+              "type": "COMPACT",
+              "altText": "Asymmetrical Hem Striped Dress"
+            },
+            {
+              "position": 2,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/10800-MUL_180419_010_retouched.jpg?v=1526910763",
+              "type": "FULL",
+              "altText": "Asymmetrical Hem Striped Dress"
+            },
+            {
+              "position": 2,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/10800-MUL_180419_010_retouched_medium.jpg?v=1526910763",
+              "type": "MEDIUM",
+              "altText": "Asymmetrical Hem Striped Dress"
+            },
+            {
+              "position": 2,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/10800-MUL_180419_010_retouched_compact.jpg?v=1526910763",
+              "type": "COMPACT",
+              "altText": "Asymmetrical Hem Striped Dress"
+            },
+            {
+              "position": 3,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/10800-MUL_180419_034_retouched.jpg?v=1526910763",
+              "type": "FULL",
+              "altText": "Asymmetrical Hem Striped Dress"
+            },
+            {
+              "position": 3,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/10800-MUL_180419_034_retouched_medium.jpg?v=1526910763",
+              "type": "MEDIUM",
+              "altText": "Asymmetrical Hem Striped Dress"
+            },
+            {
+              "position": 3,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/10800-MUL_180419_034_retouched_compact.jpg?v=1526910763",
+              "type": "COMPACT",
+              "altText": "Asymmetrical Hem Striped Dress"
+            }
+          ],
+          "skus": [
+            {
+              "sku": "10800-MUL-0",
+              "position": 1,
+              "available": false,
+              "size": "0",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "0",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-2",
+              "position": 2,
+              "available": false,
+              "size": "2",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "2",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-4",
+              "position": 3,
+              "available": false,
+              "size": "4",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "4",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-6",
+              "position": 4,
+              "available": false,
+              "size": "6",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "6",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-8",
+              "position": 5,
+              "available": false,
+              "size": "8",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "8",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-10",
+              "position": 6,
+              "available": false,
+              "size": "10",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "10",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-12",
+              "position": 7,
+              "available": false,
+              "size": "12",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "12",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-14",
+              "position": 8,
+              "available": false,
+              "size": "14",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "14",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-16",
+              "position": 9,
+              "available": false,
+              "size": "16",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "16",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-14W",
+              "position": 10,
+              "available": false,
+              "size": "14W",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "14W",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-16W",
+              "position": 11,
+              "available": false,
+              "size": "16W",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "16W",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-18W",
+              "position": 12,
+              "available": false,
+              "size": "18W",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "18W",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-20W",
+              "position": 13,
+              "available": false,
+              "size": "20W",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "20W",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            },
+            {
+              "sku": "10800-MUL-22W",
+              "position": 14,
+              "available": false,
+              "size": "22W",
+              "color": "MUL",
+              "style": "10800",
+              "variantSize": "22W",
+              "variantColor": "MUL",
+              "variantStyle": "10800"
+            }
+          ]
+        }
+      },
+      {
+        "id": 22993985,
+        "sku": "11001-MUL-20W",
+        "state": "At_Home",
+        "store_id": 1,
+        "user_uuid": "34665f9e-a6e0-369a-903a-59efe16624e7",
+        "state_id": 1,
+        "date_added": "2018-01-15 12:01:29.0",
+        "last_updated_time": "2019-02-11 08:48:07.0",
+        "date_shipped": "2018-01-15 02:49:28.0",
+        "date_returned": "2019-02-11 08:48:07.0",
+        "customer_date_return_notification": "2019-02-11 08:48:07.0",
+        "return_tracking_number": "12121222222222222222222222",
+        "initiator_type_id": 2,
+        "ttbQuote": {
+          "memberPrice": "",
+          "expiryDate": null,
+          "discountMessage": "",
+          "total": "16",
+          "retailPrice": "61.95",
+          "priceQuoteId": "b9ff930f-f6f0-4fff-a68b-9e083dc1c6fd",
+          "priceSignature": "$2a$04$byOQOxvgZdsZyehwohnU7OjTqkY8LmrQ.zOtYncLtnqxPYE3Z.fHe",
+          "userDiscount": 0,
+          "priceAvailableDate": "",
+          "totalPercentDiscountOverRetail": "74",
+          "totalDollarDiscountOverRetail": "45.95",
+          "userDollarDiscount": "",
+          "priceChangeUnit": "",
+          "discountType": "SKU_RETIRED",
+          "discountValue": null,
+          "redemptionQuote": [
+            {
+              "points": 2500,
+              "rewardQuantity": 5,
+              "rewardUnit": "$",
+              "enabled": true,
+              "priceAfterRewardDiscount": "11",
+              "totalDollarDiscount": "50.95",
+              "totalPercentDiscount": "82.24"
+            },
+            {
+              "points": 4500,
+              "rewardQuantity": 10,
+              "rewardUnit": "$",
+              "enabled": true,
+              "priceAfterRewardDiscount": "6",
+              "totalDollarDiscount": "55.95",
+              "totalPercentDiscount": "90.31"
+            },
+            {
+              "points": 6000,
+              "rewardQuantity": 15,
+              "rewardUnit": "$",
+              "enabled": true,
+              "priceAfterRewardDiscount": "1",
+              "totalDollarDiscount": "60.95",
+              "totalPercentDiscount": "98.39"
+            }
+          ],
+          "active": false
+        },
+        "feedback": {
+          "rating_id": 3,
+          "vendor_response": "{\"cluster\":\"web.desktop\",\"data\":[{\"answers\":[{\"choice_id\":\"1267603510\"}],\"id\":\"182171583\"},{\"answers\":[{\"choice_id\":\"1267603549\"},{\"choice_id\":\"1267603540\"}],\"id\":\"182171588\"},{\"answers\":[{\"choice_id\":\"1267603533\"}],\"id\":\"182171587\"},{\"answers\":[{\"row_id\":\"1267603511\",\"choice_id\":\"1267603514\"}],\"id\":\"182171584\"}]}",
+          "responses": {
+            "vendorFormId": "162227703",
+            "questions": [
+              {
+                "vendorQuestionId": "182171583",
+                "gbQuestionId": 1,
+                "answers": [
+                  {
+                    "answerText": "Not at all",
+                    "gbAnswerId": 3,
+                    "vendorAnswerId": "1267603510"
+                  }
+                ],
+                "type": "single_choice",
+                "questionText": "Did you wear it?"
+              },
+              {
+                "vendorQuestionId": "182171588",
+                "gbQuestionId": 5,
+                "answers": [
+                  {
+                    "answerText": "Didn't appear in good condition",
+                    "gbAnswerId": 6,
+                    "vendorAnswerId": "1267603549"
+                  },
+                  {
+                    "answerText": "Visibly too small",
+                    "gbAnswerId": 1,
+                    "vendorAnswerId": "1267603540"
+                  }
+                ],
+                "type": "multiple_choice",
+                "questionText": "Why didn't you try it on?"
+              },
+              {
+                "vendorQuestionId": "182171587",
+                "gbQuestionId": 6,
+                "answers": [
+                  {
+                    "answerText": "Damaged",
+                    "gbAnswerId": -1,
+                    "vendorAnswerId": "1267603533"
+                  }
+                ],
+                "type": "multiple_choice",
+                "questionText": "Was there anything wrong with it?"
+              },
+              {
+                "vendorQuestionId": "182171584",
+                "gbQuestionId": 3,
+                "answers": [
+                  {
+                    "answerText": "3",
+                    "gbAnswerId": 3,
+                    "vendorAnswerId": "1267603514"
+                  }
+                ],
+                "type": "rating",
+                "questionText": "How would you rate this item?"
+              }
+            ],
+            "gbFormId": "RN-V5-SM",
+            "source": "SMReturnNotify",
+            "version": 5
+          },
+          "sku": "11001-MUL-20W"
+        },
+        "trackingUrl": null,
+        "returnTrackingUrl": "https://tools.usps.com/go/TrackConfirmAction.action?tLabels=12121222222222222222222222",
+        "productInfo": {
+          "id": 136754757650,
+          "title": "Charcoal And Rose Color Block Dress",
+          "vendor": "eShakti",
+          "handle": "eshakti-colorblock-dress-in-black-and-charcoal-and-mahogany-rose",
+          "type": "Dress",
+          "images": [
+            {
+              "position": 1,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/11001-MUL-0024_retouched.jpg?v=1515689144",
+              "type": "FULL",
+              "altText": "Charcoal And Rose Color Block Dress"
+            },
+            {
+              "position": 1,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/11001-MUL-0024_retouched_medium.jpg?v=1515689144",
+              "type": "MEDIUM",
+              "altText": "Charcoal And Rose Color Block Dress"
+            },
+            {
+              "position": 1,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/11001-MUL-0024_retouched_compact.jpg?v=1515689144",
+              "type": "COMPACT",
+              "altText": "Charcoal And Rose Color Block Dress"
+            },
+            {
+              "position": 2,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/11001-MUL-0016_retouched.jpg?v=1515689144",
+              "type": "FULL",
+              "altText": "Charcoal And Rose Color Block Dress"
+            },
+            {
+              "position": 2,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/11001-MUL-0016_retouched_medium.jpg?v=1515689144",
+              "type": "MEDIUM",
+              "altText": "Charcoal And Rose Color Block Dress"
+            },
+            {
+              "position": 2,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/11001-MUL-0016_retouched_compact.jpg?v=1515689144",
+              "type": "COMPACT",
+              "altText": "Charcoal And Rose Color Block Dress"
+            },
+            {
+              "position": 3,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/11001-MUL-0041_retouched.jpg?v=1515689144",
+              "type": "FULL",
+              "altText": "Charcoal And Rose Color Block Dress"
+            },
+            {
+              "position": 3,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/11001-MUL-0041_retouched_medium.jpg?v=1515689144",
+              "type": "MEDIUM",
+              "altText": "Charcoal And Rose Color Block Dress"
+            },
+            {
+              "position": 3,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/11001-MUL-0041_retouched_compact.jpg?v=1515689144",
+              "type": "COMPACT",
+              "altText": "Charcoal And Rose Color Block Dress"
+            }
+          ],
+          "skus": [
+            {
+              "sku": "11001-MUL-0",
+              "position": 1,
+              "available": true,
+              "size": "0",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "0",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-2",
+              "position": 2,
+              "available": true,
+              "size": "2",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "2",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-4",
+              "position": 3,
+              "available": false,
+              "size": "4",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "4",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-6",
+              "position": 4,
+              "available": true,
+              "size": "6",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "6",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-8",
+              "position": 5,
+              "available": true,
+              "size": "8",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "8",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-10",
+              "position": 6,
+              "available": true,
+              "size": "10",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "10",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-12",
+              "position": 7,
+              "available": true,
+              "size": "12",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "12",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-14",
+              "position": 8,
+              "available": false,
+              "size": "14",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "14",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-16",
+              "position": 9,
+              "available": true,
+              "size": "16",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "16",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-14W",
+              "position": 10,
+              "available": false,
+              "size": "14W",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "14W",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-16W",
+              "position": 11,
+              "available": false,
+              "size": "16W",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "16W",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-18W",
+              "position": 12,
+              "available": false,
+              "size": "18W",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "18W",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-20W",
+              "position": 13,
+              "available": false,
+              "size": "20W",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "20W",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-22W",
+              "position": 14,
+              "available": false,
+              "size": "22W",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "22W",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-24W",
+              "position": 15,
+              "available": false,
+              "size": "24W",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "24W",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-26W",
+              "position": 16,
+              "available": false,
+              "size": "26W",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "26W",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-28W",
+              "position": 17,
+              "available": false,
+              "size": "28W",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "28W",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-30W",
+              "position": 18,
+              "available": true,
+              "size": "30W",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "30W",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            },
+            {
+              "sku": "11001-MUL-32W",
+              "position": 19,
+              "available": false,
+              "size": "32W",
+              "color": "MUL",
+              "style": "11001",
+              "variantSize": "32W",
+              "variantColor": "MUL",
+              "variantStyle": "11001"
+            }
+          ]
+        }
+      },
+      {
+        "id": 22075673,
+        "sku": "8619-BLU-3X",
+        "state": "At_Home",
+        "store_id": 1,
+        "user_uuid": "34665f9e-a6e0-369a-903a-59efe16624e7",
+        "state_id": 1,
+        "date_added": "2017-10-30 06:16:32.0",
+        "last_updated_time": "2019-02-11 07:14:03.0",
+        "date_shipped": "2017-10-15 00:00:00.0",
+        "date_returned": "2019-02-11 07:14:03.0",
+        "customer_date_return_notification": "2019-02-11 07:14:03.0",
+        "return_tracking_number": "11111111111111111111111111",
+        "initiator_type_id": 1,
+        "ttbQuote": {
+          "memberPrice": "",
+          "expiryDate": null,
+          "discountMessage": "",
+          "total": "15",
+          "retailPrice": "104",
+          "priceQuoteId": "d1bf3902-d513-4abe-942f-de810723609e",
+          "priceSignature": "$2a$04$vtC3CFX33P5/hpEqOVIQ.uvW2PcnojWJzr1yFGZwb34wmmD/yEYa2",
+          "userDiscount": 0,
+          "priceAvailableDate": "",
+          "totalPercentDiscountOverRetail": "85",
+          "totalDollarDiscountOverRetail": "89",
+          "userDollarDiscount": "",
+          "priceChangeUnit": "",
+          "discountType": "SKU_RETIRED",
+          "discountValue": null,
+          "redemptionQuote": [
+            {
+              "points": 2500,
+              "rewardQuantity": 5,
+              "rewardUnit": "$",
+              "enabled": true,
+              "priceAfterRewardDiscount": "10",
+              "totalDollarDiscount": "94",
+              "totalPercentDiscount": "90.38"
+            },
+            {
+              "points": 4500,
+              "rewardQuantity": 10,
+              "rewardUnit": "$",
+              "enabled": true,
+              "priceAfterRewardDiscount": "5",
+              "totalDollarDiscount": "99",
+              "totalPercentDiscount": "95.19"
+            },
+            {
+              "points": 6000,
+              "rewardQuantity": 15,
+              "rewardUnit": "$",
+              "enabled": true,
+              "priceAfterRewardDiscount": "0",
+              "totalDollarDiscount": "104",
+              "totalPercentDiscount": "100"
+            }
+          ],
+          "active": false
+        },
+        "feedback": {
+          "rating_id": 3,
+          "vendor_response": "{\"cluster\":\"web.desktop\",\"data\":[{\"answers\":[{\"choice_id\":\"1267603509\"}],\"id\":\"182171583\"},{\"answers\":[{\"choice_id\":\"1267603550\"}],\"id\":\"182171589\"},{\"answers\":[{\"choice_id\":\"1267603559\"}],\"id\":\"182171590\"},{\"answers\":[{\"row_id\":\"1267603602\",\"choice_id\":\"1267603603\"}],\"id\":\"182171600\"},{\"answers\":[{\"row_id\":\"1267603595\",\"choice_id\":\"1267603599\"},{\"row_id\":\"1267603596\",\"choice_id\":\"1267603599\"},{\"row_id\":\"1267603598\",\"choice_id\":\"1267603600\"},{\"row_id\":\"1267603601\",\"choice_id\":\"1267603597\"}],\"id\":\"182171599\"},{\"answers\":[{\"row_id\":\"1267603511\",\"choice_id\":\"1267603514\"}],\"id\":\"182171584\"}]}",
+          "responses": {
+            "vendorFormId": "162227703",
+            "questions": [
+              {
+                "vendorQuestionId": "182171583",
+                "gbQuestionId": 1,
+                "answers": [
+                  {
+                    "answerText": "Just tried it on",
+                    "gbAnswerId": 3,
+                    "vendorAnswerId": "1267603509"
+                  }
+                ],
+                "type": "single_choice",
+                "questionText": "Did you wear it?"
+              },
+              {
+                "vendorQuestionId": "182171589",
+                "gbQuestionId": 4,
+                "answers": [
+                  {
+                    "answerText": "Didn't fit me well",
+                    "gbAnswerId": 1,
+                    "vendorAnswerId": "1267603550"
+                  }
+                ],
+                "type": "multiple_choice",
+                "questionText": "Why didn't you wear it?"
+              },
+              {
+                "vendorQuestionId": "182171590",
+                "gbQuestionId": 2,
+                "answers": [
+                  {
+                    "answerText": "Great - everything was perfect!",
+                    "gbAnswerId": 2,
+                    "vendorAnswerId": "1267603559"
+                  }
+                ],
+                "type": "single_choice",
+                "questionText": "How did it fit?"
+              },
+              {
+                "vendorQuestionId": "182171600",
+                "gbQuestionId": 11,
+                "answers": [
+                  {
+                    "answerText": "Too Small",
+                    "gbAnswerId": -1,
+                    "vendorSubQuestionId": "1267603602",
+                    "subQuestionText": "Overall",
+                    "vendorAnswerId": "1267603603",
+                    "gbSubQuestionId": -1
+                  }
+                ],
+                "type": "matrix",
+                "questionText": "Please let us know about the overall fit of this item top"
+              },
+              {
+                "vendorQuestionId": "182171599",
+                "gbQuestionId": 12,
+                "answers": [
+                  {
+                    "answerText": "Tight FitÂ ",
+                    "gbAnswerId": -1,
+                    "vendorSubQuestionId": "1267603595",
+                    "subQuestionText": "Bust",
+                    "vendorAnswerId": "1267603599",
+                    "gbSubQuestionId": -1
+                  },
+                  {
+                    "answerText": "Tight FitÂ ",
+                    "gbAnswerId": -1,
+                    "vendorSubQuestionId": "1267603596",
+                    "subQuestionText": "Waist",
+                    "vendorAnswerId": "1267603599",
+                    "gbSubQuestionId": -1
+                  },
+                  {
+                    "answerText": "Loose Fit",
+                    "gbAnswerId": -1,
+                    "vendorSubQuestionId": "1267603598",
+                    "subQuestionText": "Hips",
+                    "vendorAnswerId": "1267603600",
+                    "gbSubQuestionId": -1
+                  },
+                  {
+                    "answerText": "Great Fit",
+                    "gbAnswerId": -1,
+                    "vendorSubQuestionId": "1267603601",
+                    "subQuestionText": "Arms",
+                    "vendorAnswerId": "1267603597",
+                    "gbSubQuestionId": -1
+                  }
+                ],
+                "type": "matrix",
+                "questionText": "Please let us know more about the fit of this item top"
+              },
+              {
+                "vendorQuestionId": "182171584",
+                "gbQuestionId": 3,
+                "answers": [
+                  {
+                    "answerText": "3",
+                    "gbAnswerId": 3,
+                    "vendorAnswerId": "1267603514"
+                  }
+                ],
+                "type": "rating",
+                "questionText": "How would you rate this item?"
+              }
+            ],
+            "gbFormId": "RN-V5-SM",
+            "source": "SMReturnNotify",
+            "version": 5
+          },
+          "sku": "8619-BLU-3X"
+        },
+        "trackingUrl": null,
+        "returnTrackingUrl": "https://tools.usps.com/go/TrackConfirmAction.action?tLabels=11111111111111111111111111",
+        "productInfo": {
+          "id": 10869190930,
+          "title": "Pullover Sweater With X Stitching Detail In Blue Jean",
+          "vendor": "Design History",
+          "handle": "design-history-pullover-sweater-with-x-stitching-detail-in-blue-jean",
+          "type": "Cardigan",
+          "images": [
+            {
+              "position": 1,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/complianceImage2780831037003639306.jpg?v=1556103686",
+              "type": "FULL",
+              "altText": "Pullover Sweater With X Stitching Detail In Blue Jean"
+            },
+            {
+              "position": 1,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/complianceImage2780831037003639306_medium.jpg?v=1556103686",
+              "type": "MEDIUM",
+              "altText": "Pullover Sweater With X Stitching Detail In Blue Jean"
+            },
+            {
+              "position": 1,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/complianceImage2780831037003639306_compact.jpg?v=1556103686",
+              "type": "COMPACT",
+              "altText": "Pullover Sweater With X Stitching Detail In Blue Jean"
+            },
+            {
+              "position": 2,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/complianceImage2430484532685626082.jpg?v=1556103686",
+              "type": "FULL",
+              "altText": "Pullover Sweater With X Stitching Detail In Blue Jean"
+            },
+            {
+              "position": 2,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/complianceImage2430484532685626082_medium.jpg?v=1556103686",
+              "type": "MEDIUM",
+              "altText": "Pullover Sweater With X Stitching Detail In Blue Jean"
+            },
+            {
+              "position": 2,
+              "url": "https://cdn.shopify.com/s/files/1/0110/6032/products/complianceImage2430484532685626082_compact.jpg?v=1556103686",
+              "type": "COMPACT",
+              "altText": "Pullover Sweater With X Stitching Detail In Blue Jean"
+            }
+          ],
+          "skus": [
+            {
+              "sku": "8619-BLU-1X",
+              "position": 1,
+              "available": false,
+              "size": "1X",
+              "color": "BLU",
+              "style": "8619",
+              "variantSize": "1X",
+              "variantColor": "BLU",
+              "variantStyle": "8619"
+            },
+            {
+              "sku": "8619-BLU-2X",
+              "position": 2,
+              "available": false,
+              "size": "2X",
+              "color": "BLU",
+              "style": "8619",
+              "variantSize": "2X",
+              "variantColor": "BLU",
+              "variantStyle": "8619"
+            },
+            {
+              "sku": "8619-BLU-3X",
+              "position": 3,
+              "available": false,
+              "size": "3X",
+              "color": "BLU",
+              "style": "8619",
+              "variantSize": "3X",
+              "variantColor": "BLU",
+              "variantStyle": "8619"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "eventInfo": {
+    "baseEventId": "81495018-80a6-4591-8eb2-d9dbb05ae3e4",
+    "baseEventTs": "2019-05-20 06:11:59",
+    "sourceEventId": "19299465-6b23-4d3f-81b9-b7074caad894"
+  }
+}

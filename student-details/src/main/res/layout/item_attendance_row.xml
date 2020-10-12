@@ -23,8 +23,8 @@
             android:id="@+id/list_avatar"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_centerVertical="true"
             android:layout_alignBottom="@id/ll"
+            android:layout_centerVertical="true"
             android:layout_marginStart="6dp"
             android:scaleType="fitCenter"
             tools:src="@drawable/heart_blank_small" />
@@ -40,10 +40,10 @@
             <TextView
                 android:id="@+id/list_title"
                 style="@style/LabelStyle2"
-                android:textSize="14sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{attendanceItemViewModel.title}"
+                android:textSize="14sp"
                 android:textStyle="bold"
 
                 tools:text="Name_SRN" />
@@ -72,93 +72,99 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/cdc"
             android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
-            android:layout_toEndOf="@id/list_avatar"
-            android:orientation="horizontal"
             android:layout_marginBottom="12dp"
-            android:id="@+id/ll"
+            android:layout_toEndOf="@id/list_avatar"
             android:minHeight="40dp"
+            android:orientation="horizontal"
             android:weightSum="2">
 
 
-
             <RelativeLayout
+                android:id="@+id/attendance_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="4dp"
-                android:id="@+id/attendance_button"
-                android:background="@drawable/border_black_1"
-                android:layout_weight="1">
+                android:layout_marginEnd="3dp"
+                android:layout_weight="1.1"
+                android:background="@drawable/border_black_1">
 
                 <TextView
                     android:id="@+id/heading"
+                    style="@style/LabelStyle3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:layout_marginStart="4dp"
+                    android:layout_marginStart="4.5dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
                     android:gravity="center_vertical"
+                    android:text="Attendance"
                     android:textAllCaps="true"
-                    style="@style/LabelStyle3"
                     android:textSize="11sp"
-                    android:text="Attendance"/>
+                    android:textStyle="bold" />
+
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/attendance_switch"
                     style="@style/SwitchStyle1"
-                    android:layout_width="wrap_content"
-                    android:textColor="@color/color_primary"
-                    android:layout_alignParentEnd="true"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toEndOf="@id/heading"
                     android:layout_centerVertical="true"
-                    android:layout_weight="0.7"
                     android:gravity="center"
-                    android:textStyle="bold"
-                    android:padding="6dp"
-                    app:showText="true" />
+                    android:textOn="P"
+                    android:textOff="A"
+                    app:showText="true"
+                    android:layout_gravity="center_vertical"
+                    android:padding="5dp"
+                    android:textColor="@color/color_primary"
+                    android:textStyle="normal"/>
             </RelativeLayout>
 
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="4dp"
-                android:background="@drawable/border_black_1"
-                android:layout_weight="1">
+                android:layout_marginStart="3dp"
+                android:layout_weight="0.9"
+                android:background="@drawable/border_black_1">
 
                 <TextView
+                    android:id="@+id/temp_button"
+                    style="@style/LabelStyle3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:textStyle="bold"
-                    android:padding="2dp"
-                    android:id="@+id/temp_button"
-                    android:gravity="center_vertical"
-                    style="@style/LabelStyle3"
-                    android:textSize="12.5sp"
-                    android:layout_weight="1"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:padding="2dp"
+                    android:text="T in &#xb0;F"
                     android:textAllCaps="true"
-                    android:text="T in &#xb0;F"/>
+                    android:textSize="12.5sp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/temp_value"
                     style="@style/SwitchStyle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="10dp"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:text="___ &#xb0;F"
                     android:layout_alignParentEnd="true"
-                    android:textSize="12.5sp"
-                    android:padding="6dp"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:textColor="@color/color_primary" />
+                    android:layout_marginEnd="5dp"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="___ &#xb0;F"
+                    android:textColor="@color/color_primary"
+                    android:textSize="12.5sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
 <!--            <Spinner-->

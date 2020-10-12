@@ -71,8 +71,6 @@ class MainActivity : AppCompatActivity() {
            finish()
         }
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        val schoolCode: String = sharedPreferences.getString("user.schoolCode", "")!!
-        val schoolName:String =sharedPreferences.getString("user.schoolName", "")!!
         userName  = sharedPreferences.getString("user.username", "")!!
         activityMainBinding.calendarView.visibility = View.VISIBLE
         horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {

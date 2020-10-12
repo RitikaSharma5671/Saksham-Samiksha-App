@@ -23,6 +23,7 @@ import com.samagra.parent.R;
 import com.samagra.parent.UtilityFunctions;
 import com.samagra.parent.base.BasePresenter;
 import com.samagra.parent.helper.BackendNwHelper;
+import com.samagra.parent.helper.KeyboardHandler;
 import com.samagra.parent.ui.submissions.SubmissionsActivity;
 
 import org.json.JSONArray;
@@ -78,15 +79,15 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     }
 
     @Override
-    public void fetchStudentData() {
+    public void fetchStudentData(Context activityContext) {
         //TODO Add forced download check
         long ff = System.currentTimeMillis();
         if (!getMvpInteractor().getPreferenceHelper().hasDownloadedStudentData()) {
             studentDownloadStatus = FormDownloadStatus.DOWNLOADING;
-            Grove.d("Starting time at fetching School Data is "+ ff);
+            Grove.d("Starting time at fetching School Data is " + ff);
             int schoolCode = getMvpInteractor().getPreferenceHelper().fetchSchoolCode();
             String code = String.valueOf(schoolCode);
-            if (schoolCode != 0 && (getMvpInteractor().getPreferenceHelper().isTeacher() || getMvpInteractor().getPreferenceHelper().isSchool())) {
+            if (schoolCode != 0 && (isTeacherAccount() || isSchoolAccount() || isUserSchoolHead())) {
                 Grove.d("School code is " + code);
                 IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
                 iStudentDetailsContract.fetchStudentData(code, new ApolloQueryResponseListener<GetStudentsForSchoolQuery.Data>() {
@@ -95,16 +96,16 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                         studentDownloadStatus = FormDownloadStatus.SUCCESS;
                         getMvpInteractor().getPreferenceHelper().downloadedStudentData(true);
                         long gg = System.currentTimeMillis();
-                        if (getMvpView() != null) {
-                            if (formsDownloadStatus == FormDownloadStatus.SUCCESS)
-                                getMvpView().renderLayoutVisible();
-                        }
-                        if(response != null) {
+                        if (formsDownloadStatus == FormDownloadStatus.SUCCESS)
+                            ((HomeActivity) activityContext).renderLayoutVisible();
+
+                        if (response != null) {
                             Grove.d("Size of student data is " + response.getData().student().size());
                         }
                         long timeTaken = gg - ff;
                         Timber.d("ending time at fetching School Data is  " + gg + "   time for n/w call  " + timeTaken);
                     }
+
                     @Override
                     public void onFailureReceived(ApolloException e) {
                         studentDownloadStatus = FormDownloadStatus.SUCCESS;
@@ -119,7 +120,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     public void onViewSubmittedFormsOptionsClicked() {
         Grove.d("User selects the option View Submitted Forms...");
         if (getMvpView() != null) {
-            if (isSchoolAccount() || isTeacherAccount()) {
+            if (isSchoolAccount() || isTeacherAccount() || isUserSchoolHead()) {
                 getIFormManagementContract().launchViewSubmittedFormsView(getMvpView().getActivityContext(), UtilityFunctions.generateToolbarModificationObject(true,
                         R.drawable.ic_arrow_back_white_24dp,
                         getMvpView().getActivityContext().getResources().getString(R.string.my_visits), true));
@@ -215,6 +216,12 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         //Viewing and download of forms is based on User's role, you can configure it via Preferences when logging in as per User's Login response
     }
 
+
+    private boolean isUserSchoolHead() {
+        return getMvpInteractor().getPreferenceHelper().isUserSchoolHead();
+        //Viewing and download of forms is based on User's role, you can configure it via Preferences when logging in as per User's Login response
+    }
+
     private String getRoleFromRoleMappingFirebase(String userRole) {
         if (userRole.equals("")) return "all_grades";
         class RoleMapping {
@@ -227,8 +234,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             }
         }
 
-
-        String roleMapping = MyApplication.getmFirebaseRemoteConfig().getString("role_mapping");
+        String roleMapping = MyApplication.getmFirebaseRemoteConfig().getString("role_mapping_1");
         Grove.d("Finding the remote Role Mapping for the user:");
         String role = "";
         ArrayList<RoleMapping> roleMappings = new ArrayList<>();
@@ -262,7 +268,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
     @Override
     public void checkForFormUpdates(boolean isStoragePermissionAvailable, Context context) {
-        if (isTeacherAccount() || isSchoolAccount())
+        if (isTeacherAccount() || isSchoolAccount() || isUserSchoolHead())
             getIFormManagementContract().sendAnalyticsAdoptionEvent(getMvpInteractor().getPreferenceHelper().getCurrentUserName() + "_" +
                     getMvpInteractor().getPreferenceHelper().fetchSchoolName() + "_" +
                     getMvpInteractor().getPreferenceHelper().fetchSchoolCode() + "_" +
@@ -292,14 +298,14 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 Grove.d("Network Available, forms are matching, rendering the layout");
                 if (getMvpView() != null) {
                     Grove.d("Rendering UI Visible as forms already downloaded");
-                    if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+                    if (isSchoolAccount() || isUserSchoolHead()) {
                         buildCSV(context);
                         buildCSVForTeachers(context);
                     }
                     renderLayoutVisible(context);
 
                 } else {
-                    if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+                    if (isSchoolAccount() || isUserSchoolHead()) {
                         buildCSV(context);
                         buildCSVForTeachers(context);
                     }
@@ -320,6 +326,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     public ArrayList<UserProfileElement> getProfileConfig() {
         Grove.d("Fetching the User Profile Params");
         String configString = MyApplication.getmFirebaseRemoteConfig().getString("profileConfig");
+        if (configString.equals("")) configString = KeyboardHandler.config;
         ArrayList<UserProfileElement> userProfileElements = new ArrayList<>();
         try {
             JSONArray config = new JSONArray(configString);
@@ -387,23 +394,23 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     @Override
     public void searchmodule() {
         if (getMvpView() != null) {
-            if (isSchoolAccount() || isTeacherAccount()) {
+            if (isSchoolAccount() || isTeacherAccount() || isUserSchoolHead()) {
                 getMvpInteractor().getPreferenceHelper().prefillSchoolInfo();
             }
             getMvpView().launchSearchModule();
         }
     }
 
-    public void checkForDownloadStudentData() {
+    public void checkForDownloadStudentData(Context activityContext) {
         if ((getMvpInteractor().getPreferenceHelper().isSchoolUpdated() ||
                 !getMvpInteractor().getPreferenceHelper().hasDownloadedStudentData()) && studentDownloadStatus != FormDownloadStatus.DOWNLOADING) {
             getMvpInteractor().getPreferenceHelper().downloadedStudentData(false);
-            fetchStudentData();
+            fetchStudentData(activityContext);
         }
     }
 
-    public void fetchSchoolEmployeeData() {
-        if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+    public void fetchSchoolEmployeeData(Context activityContext) {
+        if (isSchoolAccount() || isUserSchoolHead()) {
             IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
             iStudentDetailsContract.fetchSchoolInfo(String.valueOf(getMvpInteractor().getPreferenceHelper().fetchSchoolCode())
                     , getMvpInteractor().getPreferenceHelper().fetchSchoolName(), new EmployeeInfoListener() {
@@ -452,7 +459,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 currentProgress = 30;
             } else {
                 Grove.d("No new forms to be downloaded");
-                if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+                if (isSchoolAccount() || isUserSchoolHead()) {
                     buildCSV(context);
                     buildCSVForTeachers(context);
                 }
@@ -490,11 +497,11 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             public void formsDownloadingSuccessful(HashMap<ServerFormDetails, String> result) {
                 Grove.d("Form Download Complete %s", result);
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
-                if (getMvpInteractor().getPreferenceHelper().isSchool()) {
+                if (isSchoolAccount() || isUserSchoolHead()) {
                     buildCSV(context);
                     buildCSVForTeachers(context);
                 }
-                if (!getMvpInteractor().getPreferenceHelper().isSchool()) {
+                if (!isSchoolAccount() && !isUserSchoolHead()) {
                     ((HomeActivity) context).renderLayoutVisible();
                 }
             }
@@ -571,20 +578,32 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     public ArrayList<String> fetchHomeItemList() {
         ArrayList<String> atHomeItemsList = new ArrayList<>();
         if (isSchoolAccount()) {
-            atHomeItemsList.add("Fill Forms");
             atHomeItemsList.add("Mark Teacher Attendance");
+            atHomeItemsList.add("View Teacher Attendance");
+            atHomeItemsList.add("Fill Forms");
             atHomeItemsList.add("View Forms");
-            atHomeItemsList.add("Submit Forms");
             atHomeItemsList.add("Helpline");
+            atHomeItemsList.add("Submit Forms");
             return atHomeItemsList;
         } else if (isTeacherAccount()) {
-            atHomeItemsList.add("Fill Forms");
-            atHomeItemsList.add("Edit Student Data");
             atHomeItemsList.add("Mark Student Attendance");
             atHomeItemsList.add("View Student Attendance");
+            atHomeItemsList.add("Edit Student Data");
+            atHomeItemsList.add("Helpline");
+            atHomeItemsList.add("Fill Forms");
             atHomeItemsList.add("View Forms");
             atHomeItemsList.add("Submit Forms");
+            return atHomeItemsList;
+        } else if (isUserSchoolHead()) {
+            atHomeItemsList.add("Mark Teacher Attendance");
+            atHomeItemsList.add("View Teacher Attendance");
+            atHomeItemsList.add("Mark Student Attendance");
+            atHomeItemsList.add("View Student Attendance");
+            atHomeItemsList.add("Edit Student Data");
+            atHomeItemsList.add("Fill Forms");
+            atHomeItemsList.add("View Forms");
             atHomeItemsList.add("Helpline");
+            atHomeItemsList.add("Submit Forms");
             return atHomeItemsList;
         }
         String role = getRoleFromRoleMappingFirebase(getUserRoleFromPref());

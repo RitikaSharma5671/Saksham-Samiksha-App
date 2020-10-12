@@ -52,7 +52,7 @@ public interface HomeMvpPresenter<V extends HomeMvpView, I extends HomeMvpIntera
 
     void fetchWelcomeText();
 
-    void fetchStudentData();
+    void fetchStudentData(Context activityContext);
 
     ArrayList<String> fetchHomeItemList();
 

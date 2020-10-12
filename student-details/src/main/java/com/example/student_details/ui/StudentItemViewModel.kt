@@ -15,10 +15,6 @@ class StudentItemViewModel(
         Utilities.convert(garmentInfo.name) + " ( " + garmentInfo.srn + ")"
     }
 
-//    val srn: String by lazy {
-//       garmentInfo.srn
-//    }
-
     val subtitle: String by lazy {
         if (garmentInfo.grade <= 10) {
             garmentInfo.grade.toString() + " - " + garmentInfo.section + ""

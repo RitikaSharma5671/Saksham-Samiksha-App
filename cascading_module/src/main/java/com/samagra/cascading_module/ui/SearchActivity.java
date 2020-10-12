@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import androidx.appcompat.widget.Toolbar;
@@ -43,7 +44,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
     public Button nextButton;
     public ConstraintLayout rootView;
     public ConstraintLayout searchLayout;
-    public LottieAnimationView lottie_loader;
+    public ProgressBar lottie_loader;
     public LinearLayout select_school_cta;
     public Button select_button;
     public Button cancelButton;
@@ -351,9 +352,6 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
 
     private void startAnimation() {
         lottie_loader.setVisibility(View.VISIBLE);
-        lottie_loader.setAnimation("loader.json");
-        lottie_loader.setRepeatCount(ValueAnimator.INFINITE);
-        lottie_loader.playAnimation();
     }
 
     @SuppressWarnings("PointlessNullCheck")

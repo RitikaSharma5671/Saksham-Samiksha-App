@@ -66,7 +66,6 @@ class StudentDetailsViewModel(private val applicationValue: Application, private
 
     fun onSectionEdited(studentData: StudentInfo, changedValue: String) {
         progressBarVisible.postValue("true")
-        val list = studentsList.value!!
         val model = StudentDataModel()
         model.updateStudentSection(studentData.srn, changedValue, object : ApolloQueryResponseListener<UpdateStudentSectionMutation.Data> {
             override fun onResponseReceived(response: Response<UpdateStudentSectionMutation.Data>?) {

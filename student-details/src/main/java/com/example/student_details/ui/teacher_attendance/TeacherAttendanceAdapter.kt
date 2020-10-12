@@ -1,25 +1,27 @@
 package com.example.student_details.ui.teacher_attendance
 
+import android.app.Activity
 import android.app.Application
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.SwitchCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
 import com.example.student_details.databinding.ItemTeacherAttendanceRowBinding
-import com.example.student_details.models.realm.SchoolEmployeesInfo
+import com.example.student_details.models.realm.SchoolEmployeesAttendanceData
 
 
 class TeacherAttendanceAdapter(
-        private var markAttendanceView: LifecycleOwner,
+        private var markAttendanceView: Fragment,
         private var markAttendanceViewModel: MarkTeacherAttendanceViewModel
-) : ListAdapter<SchoolEmployeesInfo, TeacherAttendanceViewHolder>(
+) : ListAdapter<SchoolEmployeesAttendanceData, TeacherAttendanceViewHolder>(
         OnTeacherAttendanceDataDiffCallback()) {
 
     private lateinit var binding: ItemTeacherAttendanceRowBinding
@@ -32,21 +34,24 @@ class TeacherAttendanceAdapter(
         return TeacherAttendanceViewHolder(
                 binding,
                 parent.context.applicationContext as Application,
-                markAttendanceViewModel
+                markAttendanceViewModel,
+                markAttendanceView
         )    }
 
     override fun onBindViewHolder(holder: TeacherAttendanceViewHolder, position: Int) {
         val studentInfo = getItem(position)
         initializeAnimationView(holder)
-        holder.bind(studentInfo, position)
+        holder.bind(studentInfo)
     }
 
     private fun initializeAnimationView(holder: TeacherAttendanceViewHolder) {
         holder.itemView.findViewById<ImageView>(R.id.list_avatar).setImageDrawable(null)
         holder.itemView.findViewById<TextView>(R.id.list_title).text = ""
         holder.itemView.findViewById<TextView>(R.id.list_desc).text= ""
-        holder.itemView.findViewById<SwitchCompat>(R.id.attendance_switch).isChecked = false
         holder.itemView.findViewById<TextView>(R.id.temp_value).text = holder.itemView.context.resources.getString(R.string.empty_t)
+        holder.itemView.findViewById<TextView>(R.id.attendance_status).text = ""
+        holder.itemView.findViewById<EditText>(R.id.other_status).setText("")
+
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
@@ -57,17 +62,17 @@ class TeacherAttendanceAdapter(
 }
 
 private class OnTeacherAttendanceDataDiffCallback :
-        DiffUtil.ItemCallback<SchoolEmployeesInfo>() {
+        DiffUtil.ItemCallback<SchoolEmployeesAttendanceData>() {
     override fun areContentsTheSame(
-            oldItem: SchoolEmployeesInfo,
-            newItem: SchoolEmployeesInfo
+            oldItem: SchoolEmployeesAttendanceData,
+            newItem: SchoolEmployeesAttendanceData
     ): Boolean {
         return (oldItem.employeeId == newItem.employeeId) && (oldItem.isPresent == newItem.isPresent) && (oldItem.temp == newItem.temp)
     }
 
     override fun areItemsTheSame(
-            oldItem: SchoolEmployeesInfo,
-            newItem: SchoolEmployeesInfo
+            oldItem: SchoolEmployeesAttendanceData,
+            newItem: SchoolEmployeesAttendanceData
     ): Boolean {
         return (oldItem.employeeId == newItem.employeeId)&& (oldItem.isPresent == newItem.isPresent) && (oldItem.temp == newItem.temp)
     }

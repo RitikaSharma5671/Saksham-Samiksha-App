@@ -105,8 +105,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         InternetMonitor.startMonitoringInternet(((MainApplication) getApplicationContext()));
         homePresenter.updateLanguageSettings();
         AppNotificationUtils.updateFirebaseToken(getActivityContext(), AppConstants.BASE_API_URL, getActivityContext().getResources().getString(R.string.fusionauth_api_key));
-        homePresenter.fetchStudentData();
-        homePresenter.fetchSchoolEmployeeData();
+        homePresenter.fetchStudentData(getActivityContext());
+        homePresenter.fetchSchoolEmployeeData(getActivityContext());
         renderLayoutInvisible();
     }
 
@@ -159,7 +159,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         homePresenter.resetProgressVariables();
         boolean isStoragePermissionAvailable = PermissionUtils.areStoragePermissionsGranted(getActivityContext());
         homePresenter.checkForFormUpdates(isStoragePermissionAvailable, getActivityContext());
-        homePresenter.checkForDownloadStudentData();
+        homePresenter.checkForDownloadStudentData(getActivityContext());
         customizeToolbar();
         setDisposable();
     }
@@ -506,6 +506,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
 
     @Override
     public void onViewTeacherAttendanceClicked() {
+        IStudentDetailsContract iStudentDetailsContract1 = StudentDetailsComponentManager.iStudentDetailsContract;
+        iStudentDetailsContract1.launchTeacherAttendanceView(getActivityContext());
     }
 
 

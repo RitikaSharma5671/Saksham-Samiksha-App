@@ -12,13 +12,13 @@ import androidx.preference.PreferenceManager
 import com.example.student_details.R
 import com.example.student_details.databinding.FragmentMarkTeacherAttendanceBinding
 import com.example.student_details.getViewModelProvider
-import com.example.student_details.models.realm.SchoolEmployeesInfo
+import com.example.student_details.models.realm.SchoolEmployeesAttendanceData
 import com.example.student_details.ui.SamagraAlertDialog1
 
 class MarkTeacherAttendanceView : Fragment() {
     private lateinit var layoutBinding: FragmentMarkTeacherAttendanceBinding
     private lateinit var attendanceAdapter: TeacherAttendanceAdapter
-    private val studentList: ArrayList<SchoolEmployeesInfo> = ArrayList()
+    private val employeeList: ArrayList<SchoolEmployeesAttendanceData> = ArrayList()
     private lateinit var mProgress: ProgressDialog
     private var  userName : String = ""
     private val markAttendanceViewModel: MarkTeacherAttendanceViewModel by lazy {
@@ -148,7 +148,7 @@ class MarkTeacherAttendanceView : Fragment() {
              showToast()
          }
         })
-        attendanceAdapter.submitList(studentList)
+        attendanceAdapter.submitList(employeeList)
         layoutBinding.markAllPresent.setOnClickListener {
             markAttendanceViewModel.onMarkAllPresentClicked(layoutBinding.markAllPresent.isChecked)
 
@@ -161,7 +161,7 @@ class MarkTeacherAttendanceView : Fragment() {
 
     private fun initializeAdapter(binding: FragmentMarkTeacherAttendanceBinding) {
         attendanceAdapter = TeacherAttendanceAdapter(
-                viewLifecycleOwner,
+                this,
                 markAttendanceViewModel
         )
         binding.studentsList.adapter = attendanceAdapter
