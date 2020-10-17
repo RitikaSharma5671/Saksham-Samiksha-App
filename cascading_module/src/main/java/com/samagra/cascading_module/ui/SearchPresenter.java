@@ -152,9 +152,11 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
         }
     }
 
-    public int fetchSchoolCode(String selectedSchoolName) {
+    public int fetchSchoolCode(String schoolName, String selectedDistrict, String block) {
         for (int i = 0; i < listOfHostpitals.size(); i++) {
-            if (listOfHostpitals.get(i).getSchoolName().equals(selectedSchoolName)) {
+            if (listOfHostpitals.get(i).getSchoolName().equals(schoolName) &&
+                    listOfHostpitals.get(i).getDistrict().equals(selectedDistrict) &&
+                    listOfHostpitals.get(i).getBlock().equals(block)) {
                 return  listOfHostpitals.get(i).getSchoolCode();
             }
         }

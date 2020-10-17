@@ -258,17 +258,18 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
         return designation.contains("Head Master")
                 || designation.contains("Head Master High School")
                 || designation.contains("Head Teacher")
-                || designation.equals("Principal");
+                || designation.equals("Principal")
+                || designation.contains("DDO");
     }
 
     public boolean isTeacherAccount() {
         String designation = getMvpInteractor().getPreferenceHelper().fetchDesignation();
-        return designation.contains("TGT") || designation.contains("Clerk")
+        return !designation.contains("DDO")&&(designation.contains("TGT") || designation.contains("Clerk")
                 || designation.contains("Tabla Player") ||
                 designation.contains("Vocational Instructor") ||
                 designation.contains("Vocational PGT") ||
                 designation.contains("Classical & Vernacular Teacher") ||
-                designation.contains("JBT") || designation.contains("PGT");
+                designation.contains("JBT") || designation.contains("PGT"));
     }
 
     public boolean isSchoolAccount() {

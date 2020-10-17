@@ -71,7 +71,7 @@ public class AppPreferenceHelper implements PreferenceHelper {
     @Override
     public boolean isTeacher() {
         String designation = defaultPreferences.getString("user.designation", "");
-        return designation.contains("TGT") ||
+        return !designation.contains("DDO") &&(designation.contains("TGT") ||
                 designation.contains("Clerk") ||
                 designation.contains("Tabla") ||
                 designation.contains("Vocation") ||
@@ -80,7 +80,7 @@ public class AppPreferenceHelper implements PreferenceHelper {
                 designation.contains("Classical & Vernacular Teacher") ||
                 designation.contains("PRT") ||
                 designation.contains("JBT") ||
-                designation.contains("PGT");
+                designation.contains("PGT"));
     }
 
     @Override
@@ -94,7 +94,8 @@ public class AppPreferenceHelper implements PreferenceHelper {
         return designation.contains("Head Master")
                 || designation.contains("Head Master High School")
                 || designation.contains("Head Teacher")
-                || designation.equals("Principal");
+                || designation.equals("Principal")
+                || designation.contains("School Head");
     }
 
     @Override

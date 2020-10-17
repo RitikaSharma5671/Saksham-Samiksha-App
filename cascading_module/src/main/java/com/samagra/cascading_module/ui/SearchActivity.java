@@ -341,7 +341,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
                 intent.putExtra("selectedDistrict", selectedDistrict);
                 intent.putExtra("selectedBlock", selectedBlock);
                 intent.putExtra("selectedSchool", selectedSchoolName);
-                intent.putExtra("selectedSchoolCode", searchPresenter.fetchSchoolCode(selectedSchoolName));
+                intent.putExtra("selectedSchoolCode", searchPresenter.fetchSchoolCode(selectedSchoolName, selectedDistrict, selectedBlock));
                 Grove.d("Setting result, sending back to Home Screen");
                 setResult(RESULT_OK, intent);
                 finish();

@@ -193,7 +193,6 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
             showUpdateMobileNumberDialog();
         if(shouldShow) {
             mUpdateApp = UpdateApp.Builder(this);
-            mUpdateApp = new UpdateApp(this);
             shouldShow = false;
         }
     }
