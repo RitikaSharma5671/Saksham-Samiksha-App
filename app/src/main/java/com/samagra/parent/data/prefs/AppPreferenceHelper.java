@@ -95,7 +95,7 @@ public class AppPreferenceHelper implements PreferenceHelper {
                 || designation.contains("Head Master High School")
                 || designation.contains("Head Teacher")
                 || designation.equals("Principal")
-                || designation.contains("School Head");
+        || designation.contains("DDO");
     }
 
     @Override

@@ -299,14 +299,14 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 if (getMvpView() != null) {
                     Grove.d("Rendering UI Visible as forms already downloaded");
                     if (isSchoolAccount() || isUserSchoolHead()) {
-                        buildCSV(context);
+                        buildCSV();
                         buildCSVForTeachers(context);
                     }
                     renderLayoutVisible(context);
 
                 } else {
                     if (isSchoolAccount() || isUserSchoolHead()) {
-                        buildCSV(context);
+                        buildCSV();
                         buildCSVForTeachers(context);
                     }
                 }
@@ -460,7 +460,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             } else {
                 Grove.d("No new forms to be downloaded");
                 if (isSchoolAccount() || isUserSchoolHead()) {
-                    buildCSV(context);
+                    buildCSV();
                     buildCSVForTeachers(context);
                 }
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
@@ -498,7 +498,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                 Grove.d("Form Download Complete %s", result);
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
                 if (isSchoolAccount() || isUserSchoolHead()) {
-                    buildCSV(context);
+                    buildCSV();
                     buildCSVForTeachers(context);
                 }
                 if (!isSchoolAccount() && !isUserSchoolHead()) {
@@ -650,7 +650,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     }
 
 
-    private void buildCSV(Context context) {
+    private void buildCSV() {
         String referenceFileName = "itemsets.csv";
         IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
         ArrayList<ArrayList<String>> list = iStudentDetailsContract.buildJSONArray();
