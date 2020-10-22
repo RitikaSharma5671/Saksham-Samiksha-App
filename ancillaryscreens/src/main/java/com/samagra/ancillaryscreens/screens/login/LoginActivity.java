@@ -1,7 +1,9 @@
 package com.samagra.ancillaryscreens.screens.login;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -22,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.base.BaseActivity;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
@@ -32,9 +35,13 @@ import com.samagra.ancillaryscreens.utils.SnackbarUtils;
 import com.samagra.commons.CommonUtilities;
 import com.samagra.grove.logging.Grove;
 
+import org.odk.collect.android.activities.WebViewActivity;
+
 import java.util.Objects;
 
 import javax.inject.Inject;
+
+import static com.samagra.commons.CustomTabHelper.OPEN_URL;
 
 /**
  * The View Part for the Login Screen, must implement {@link LoginContract.View}
@@ -50,6 +57,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
     private TextInputEditText passwordEditText;
     private Button button;
     private ProgressDialog mProgress;
+    private Button helpBtton;
 
 
     @Inject
@@ -65,11 +73,16 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
         textInputEmail = findViewById(R.id.text_input_email);
         textInputPassword = findViewById(R.id.text_input_password);
         userNameEditText = findViewById(R.id.edit_user_email);
+        helpBtton = findViewById(R.id.help_button);
         TextView forgotPasswordCTA = findViewById(R.id.forgot_password_cta);
         parentLoginLayout = findViewById(R.id.login_parent);
         SpannableString content = new SpannableString(getText(R.string.reset_here));
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         forgotPasswordCTA.setText(content);
+
+        SpannableString content1 = new SpannableString("NEED HELP?");
+        content1.setSpan(new UnderlineSpan(), 0, content1.length(), 0);
+        helpBtton.setText(content1);
         passwordEditText = findViewById(R.id.pwd_field);
         button = findViewById(R.id.login_button);
         new MultiTextWatcher()
@@ -202,6 +215,23 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
         } else {
             SnackbarUtils.showLongSnackbar(parentLoginLayout, LoginActivity.this.getResources().getString(R.string.not_connected_to_internet));
         }
+    }
+
+    @Override
+    public void onHelpButtonClicked(View v) {
+        String urlFromConfig = AncillaryScreensDriver.mainApplication.getConfig().getString("help_url");
+        if(urlFromConfig.isEmpty())
+            urlFromConfig = "http://bit.ly/samiksha-helpline";
+        Uri websiteUri = Uri.parse(urlFromConfig);
+            try {
+                //open in external browser
+                getActivityContext().startActivity(new Intent(Intent.ACTION_VIEW, websiteUri));
+            } catch (ActivityNotFoundException | SecurityException e) {
+                //open in webview
+                Intent intent = new Intent(getActivityContext(), WebViewActivity.class);
+                intent.putExtra(OPEN_URL, websiteUri.toString());
+                getActivityContext().startActivity(intent);
+            }
     }
 
     @Override

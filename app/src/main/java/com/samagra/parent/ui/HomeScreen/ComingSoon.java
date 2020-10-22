@@ -8,22 +8,22 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.samagra.commons.CustomTabHelper;
+import com.samagra.parent.MyApplication;
 import com.samagra.parent.R;
 import com.samagra.parent.base.BaseActivity;
 
 import static com.samagra.commons.CustomTabHelper.OPEN_URL;
 
 public class ComingSoon extends BaseActivity {
-
-
+    public Button documentation_link1;
     public TextView documentation_link;
-
     private CustomTabHelper websiteTabHelper;
     private Uri websiteUri;
     private static final String SAMAGRA_DOC_WEBSITE = "";
@@ -35,38 +35,32 @@ public class ComingSoon extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coming_soon);
         setupToolbar();
-        SpannableString content = new SpannableString(this.getResources().getString(R.string.check_out_the_documentation_here));
+        documentation_link1 = findViewById(R.id.helpline_title);
         documentation_link = findViewById(R.id.documentation_link);
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-        documentation_link.setText(content);
         websiteTabHelper = new CustomTabHelper();
-        websiteUri = Uri.parse(SAMAGRA_DOC_WEBSITE);
-        documentation_link.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        String urlFromConfig = MyApplication.mFirebaseRemoteConfig.getString("help_url");
+        if(urlFromConfig.isEmpty())
+            urlFromConfig = "http://bit.ly/samiksha-helpline";
+        websiteUri = Uri.parse(urlFromConfig);
 
-                if(!websiteTabHelper.openUri(v.getContext(), websiteUri)){
-                    try {
-                        //open in external browser
-                        getActivityContext().startActivity(new Intent(Intent.ACTION_VIEW, websiteUri));
-                    } catch (ActivityNotFoundException | SecurityException e) {
-                        //open in webview
-                        Intent intent = new Intent(getActivityContext(), WebViewActivity.class);
-                        intent.putExtra(OPEN_URL, websiteUri.toString());
-                        getActivityContext().startActivity(intent);
-                    }
+        SpannableString content1 = new SpannableString(urlFromConfig);
+        content1.setSpan(new UnderlineSpan(), 0, content1.length(), 0);
+        documentation_link.setText(content1);
+
+        documentation_link1.setOnClickListener(v -> {
+
+//            if(!websiteTabHelper.openUri(v.getContext(), websiteUri)){
+                try {
+                    //open in external browser
+                    getActivityContext().startActivity(new Intent(Intent.ACTION_VIEW, websiteUri));
+                } catch (ActivityNotFoundException | SecurityException e) {
+                    //open in webview
+                    Intent intent = new Intent(getActivityContext(), WebViewActivity.class);
+                    intent.putExtra(OPEN_URL, websiteUri.toString());
+                    getActivityContext().startActivity(intent);
                 }
-            }
+//            }
         });
-
-        boolean isHelpline = getIntent().getBooleanExtra("helpline", false);
-        if(isHelpline){
-            TextView title = findViewById(R.id.helpline_title);
-            title.setText(getString(R.string.call_helpline));
-            title.setTypeface(Typeface.DEFAULT_BOLD);
-            title.setTextColor(ContextCompat.getColor(this, R.color.appBlue));
-        }
-
     }
 
 

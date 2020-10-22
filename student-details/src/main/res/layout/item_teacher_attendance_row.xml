@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -12,64 +12,74 @@
 
     </data>
 
-    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         android:background="@color/white"
         android:padding="5dp">
 
-        <ImageView
-            android:id="@+id/list_avatar"
-            android:layout_width="74dp"
-            android:layout_height="74dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="4dp"
-            android:scaleType="fitCenter"
-            tools:src="@drawable/heart_blank_small" />
-
-        <LinearLayout
-            android:id="@+id/cdc"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/ll22"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/list_avatar"
-            android:orientation="vertical">
+            android:background="@color/white">
 
-            <TextView
-                android:id="@+id/list_title"
-                style="@style/LabelStyle2"
+            <ImageView
+                android:id="@+id/list_avatar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="2.5dp"
+                android:contentDescription="@string/teacher_name_image"
+                android:scaleType="fitCenter"
+                tools:src="@drawable/heart_blank_small" />
+
+            <LinearLayout
+                android:id="@+id/cdc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{teacherAttendanceItemViewModel.title}"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                tools:text="Name_SRN" />
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/list_avatar"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/list_desc"
-                style="@style/LabelStyle3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@{teacherAttendanceItemViewModel.subtitle}"
-                android:textColor="@color/color_primary"
-                android:textSize="11.5sp"
-                tools:text="Class_section" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/list_title"
+                    style="@style/LabelStyle2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{teacherAttendanceItemViewModel.title}"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    tools:text="Name_SRN" />
 
+                <TextView
+                    android:id="@+id/list_desc"
+                    style="@style/LabelStyle3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@{teacherAttendanceItemViewModel.subtitle}"
+                    android:textColor="@color/color_primary"
+                    android:textSize="11.5sp"
+                    tools:ignore="SmallSp"
+                    tools:text="Class_section" />
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/ll"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_below="@id/cdc"
-            android:layout_alignEnd="@id/attendance_layout"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="4dp"
-            android:layout_toEndOf="@id/list_avatar"
-            android:background="@drawable/border_black_1">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll22"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/border_black_1"
+            android:minHeight="45dp">
 
             <TextView
                 android:id="@+id/temp_button"
@@ -79,7 +89,6 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:layout_marginStart="4dp"
-                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:padding="2dp"
                 android:text="Temperature in &#xb0;F"
@@ -90,13 +99,15 @@
             <TextView
                 android:id="@+id/temp_value"
                 style="@style/SwitchStyle1"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
-                android:gravity="center"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_toEndOf="@+id/temp_button"
+                android:gravity="end"
                 android:padding="6dp"
                 android:text="_____ &#xb0;F"
                 android:textColor="@color/color_primary"
@@ -109,9 +120,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/list_avatar"
-            android:background="@drawable/border_black_1">
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:background="@drawable/border_black_1"
+            android:minHeight="45dp">
 
             <TextView
                 android:id="@+id/attendnace_btn"
@@ -123,8 +135,7 @@
                 android:layout_marginStart="4dp"
                 android:gravity="center_vertical"
                 android:maxLines="3"
-                android:padding="3dp"
-                android:text="ATTENDANCE"
+                android:text="@string/attendance"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -134,72 +145,74 @@
                 android:layout_height="42dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="4dp"
-                android:textAllCaps="true"
                 android:layout_toStartOf="@+id/edit_icon"
                 android:layout_toEndOf="@id/attendnace_btn"
-                android:gravity="center_vertical"
-                android:paddingStart="3dp"
-                android:paddingEnd="3dp"
-                android:text="Mark Attendance"
+                android:gravity="center"
+                android:paddingStart="2.5dp"
+                android:paddingEnd="1.5dp"
+                android:text="@string/mark_attendance"
+                android:textAlignment="center"
+                android:textAllCaps="true"
                 android:textColor="@color/color3"
-                android:textSize="11.5sp"
+                android:textSize="14sp"
                 android:textStyle="normal"
-                android:visibility="visible" />
+                android:visibility="visible"
+                tools:ignore="SmallSp" />
 
             <ImageView
                 android:id="@+id/edit_icon"
                 android:layout_width="40dp"
-                android:layout_height="42dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="8dp"
                 android:padding="6dp"
                 android:src="@drawable/ic_edit_student__icon" />
 
             <LinearLayout
+                android:id="@+id/other_layout"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_below="@+id/edit_icon"
-                android:id="@+id/other_layout"
                 android:layout_marginStart="4dp"
-                android:weightSum="2.5"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
                 android:visibility="gone"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="3dp">
+                android:weightSum="2.5">
 
-            <EditText
-                android:id="@+id/other_status"
-                android:background="@drawable/edit_text1"
-                android:layout_width="0dp"
-                android:imeOptions="actionDone"
-                android:layout_height="match_parent"
-                android:textColor="@color/black"
-                android:ellipsize="end"
-                android:padding="8dp"
-                android:hint="Enter Status"
-                android:autofillHints="Enter Status"
-                android:singleLine="true"
-                android:textColorHint="@color/color3"
-                android:textSize="11.5sp"
-                android:layout_weight="1.7"
-                android:visibility="visible" />
+                <EditText
+                    android:id="@+id/other_status"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.7"
+                    android:autofillHints="Enter Status"
+                    android:background="@drawable/edit_text1"
+                    android:ellipsize="end"
+                    android:hint="@string/enter_status"
+                    android:imeOptions="actionDone"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/color3"
+                    android:textSize="11.5sp"
+                    android:visibility="visible" />
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_weight="0.8"
-                android:layout_height="28dp"
-                android:background="@drawable/round_btn"
-                android:layout_marginTop="3dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:textSize="11sp"
-                android:id="@+id/other_btn"
-                android:layout_gravity="center_vertical"
-                android:textColor="@color/white"
-                android:layout_marginBottom="4dp"
-                android:padding="5dp"
-                android:textStyle="normal"
-                android:text="SAVE"/>
+                <Button
+                    android:id="@+id/other_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="0.8"
+                    android:background="@drawable/round_btn"
+                    android:padding="5dp"
+                    android:text="@string/save"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="normal" />
             </LinearLayout>
 
             <!--            <Spinner-->
@@ -218,7 +231,9 @@
             android:layout_below="@id/attendance_layout"
             android:layout_alignStart="@id/list_avatar"
             android:layout_alignEnd="@id/ll"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="3dp"
             android:background="@color/color_primary" />
     </RelativeLayout>

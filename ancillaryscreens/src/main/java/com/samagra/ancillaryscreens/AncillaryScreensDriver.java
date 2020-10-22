@@ -1,6 +1,5 @@
 package com.samagra.ancillaryscreens;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +16,7 @@ import com.samagra.ancillaryscreens.screens.login.LoginActivity;
 import com.samagra.ancillaryscreens.screens.profile.ProfileActivity;
 import com.samagra.ancillaryscreens.screens.profile.UserProfileElement;
 import com.samagra.ancillaryscreens.screens.tutorials.TutorialActivity;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.samagra.commons.CommonUtilities;
 import com.samagra.commons.Constants;
 import com.samagra.commons.CustomEvents;
@@ -39,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * The driver class for this module, any screen that needs to be launched from outside this module, should be
  * launched using this class.
- * Note: It is essential that you call the {@link AncillaryScreensDriver#init(MainApplication, String, String, String, String, String)} to initialise
+ * Note: It is essential that you call the {@link AncillaryScreensDriver#init(MainApplication, String, String, String, String, String, FirebaseRemoteConfig)} to initialise
  * the class prior to using it else an {@link InvalidConfigurationException} will be thrown.
  *
  * @author Pranav Sharma
@@ -55,8 +55,7 @@ public class AncillaryScreensDriver {
     public static String VERIFY_PHONE_OTP_URL = "http://142.93.208.135:8080/ams/";
 
     /**
-     *
-     * @param mainApplication MainApplication Instance
+     *  @param mainApplication MainApplication Instance
      * @param BASE_URL - String Base API URL
      * @param SEND_OTP_URL - String SEND OTP URL
      * @param UPDATE_PASSWORD_URL - String Update Password URL
@@ -295,7 +294,7 @@ public class AncillaryScreensDriver {
     }
 
     /**
-     * Function to check if the mainApplication is initialised indicating if {@link AncillaryScreensDriver#init(MainApplication, String, String, String, String, String)} is called or not.
+     * Function to check if the mainApplication is initialised indicating if {@link AncillaryScreensDriver#init(MainApplication, String, String, String, String, String, FirebaseRemoteConfig)} is called or not.
      * If not, it throws {@link InvalidConfigurationException}
      *
      * @throws InvalidConfigurationException - This Exception means that the module is not configured by the user properly. The exception generates

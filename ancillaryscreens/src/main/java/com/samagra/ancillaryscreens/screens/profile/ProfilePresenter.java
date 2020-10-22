@@ -265,10 +265,14 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
     public boolean isTeacherAccount() {
         String designation = getMvpInteractor().getPreferenceHelper().fetchDesignation();
         return !designation.contains("DDO")&&(designation.contains("TGT") || designation.contains("Clerk")
-                || designation.contains("Tabla Player") ||
-                designation.contains("Vocational Instructor") ||
+                || designation.contains("Tabla") ||
+                designation.contains("Vocation") ||
+                designation.contains("Computer")||
+                designation.contains("Laboratory")||
+                designation.contains("Librarian") ||
                 designation.contains("Vocational PGT") ||
                 designation.contains("Classical & Vernacular Teacher") ||
+                designation.contains("PRT") ||
                 designation.contains("JBT") || designation.contains("PGT"));
     }
 

@@ -5,6 +5,8 @@ import android.app.Application;
 
 import androidx.lifecycle.LifecycleOwner;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+
 import okhttp3.OkHttpClient;
 
 /**
@@ -46,4 +48,6 @@ public interface MainApplication extends LifecycleOwner {
     void teardownModule(Modules module);
 
     EventBus eventBusInstance();
+
+    FirebaseRemoteConfig getConfig();
 }

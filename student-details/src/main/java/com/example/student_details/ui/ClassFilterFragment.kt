@@ -72,7 +72,7 @@ class ClassFilterFragment : Fragment() {
         filterViewModel.selectedGrades.value = ArrayList()
         setupAdapter()
         view.findViewById<ImageView>(R.id.filter_close_cross).setOnClickListener {
-            activity!!.finish()
+            requireActivity().finish()
         }
 //
         view.findViewById<TextView>(R.id.apply_button).setOnClickListener {
@@ -152,7 +152,7 @@ class ClassFilterFragment : Fragment() {
                 SizeFilterAdapter(filterViewModel)
         val size = Point()
         (context as FragmentActivity).windowManager.defaultDisplay.getSize(size)
-        val itemWidth = context!!.resources.getDimensionPixelSize(R.dimen.filter_size_item_diameter_size)
+        val itemWidth = requireContext().resources.getDimensionPixelSize(R.dimen.filter_size_item_diameter_size)
         val parentWidth = size.x
         val spanCount = Math.min(parentWidth / itemWidth, 6)
         class_recycler_view.layoutManager = GridLayoutManager(context, spanCount)
@@ -164,10 +164,9 @@ class ClassFilterFragment : Fragment() {
         section_recycler_view.setHasFixedSize(true)
         section_recycler_view.adapter =
                 SectionSizeAdapter(filterViewModel)
-        val itemWidth2 = convertDpToPixel(48.0f, context!!).toInt()
-        val parentWidth2 = size.x
-        var spanCount2 = Math.min(parentWidth2 / itemWidth2, 6)
-        spanCount2 = Math.min(spanCount2, filterViewModel.dataFilterAttributes.value!!.allSections!!.size)
+        val itemWidth3 = 40
+        var spanCount2 = Math.min(parentWidth / itemWidth3, 5)
+        if(spanCount2 == 0)spanCount2 = 5
         section_recycler_view.layoutManager = GridLayoutManager(context, spanCount2)
         filterViewModel.dataFilterAttributes.observe(viewLifecycleOwner, Observer {
             section_recycler_view.adapter?.notifyDataSetChanged()

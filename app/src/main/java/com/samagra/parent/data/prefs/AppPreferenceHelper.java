@@ -76,6 +76,7 @@ public class AppPreferenceHelper implements PreferenceHelper {
                 designation.contains("Tabla") ||
                 designation.contains("Vocation") ||
                 designation.contains("Librarian") ||
+                designation.contains("Computer")||
                 designation.contains("Laboratory") ||
                 designation.contains("Classical & Vernacular Teacher") ||
                 designation.contains("PRT") ||

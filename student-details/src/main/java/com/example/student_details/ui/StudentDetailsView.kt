@@ -141,6 +141,9 @@ class StudentDetailsView : Fragment(), OnSelectListener, EditListener {
         sections.add("Section C")
         sections.add("Section D")
         sections.add("Section E")
+        sections.add("Section F")
+        sections.add("Section G")
+        sections.add("Section H")
         val adapter1 = ArrayAdapter(
                 context!!,
                 R.layout.spinner_item, sections

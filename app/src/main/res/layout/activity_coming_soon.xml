@@ -20,21 +20,27 @@
 
 
 
-    <TextView
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:layout_centerInParent="true"
         android:text="@string/coming_soon"
         android:gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:textAllCaps="false"
         android:id="@+id/helpline_title"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimary"/>
+        style="@style/ButtonStyle1"
+        android:textSize="17sp"
+        android:maxLines="3"
+        android:textStyle="normal"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"
+        android:layout_below="@id/helpline_title"
+        android:layout_marginTop="20dp"
+        android:visibility="visible"
         android:orientation="vertical">
 
         <TextView
@@ -43,23 +49,25 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:gravity="center"
-            android:text="Please visit our documentation website to check out how you can implement a similar app in an easy and configurable manner."
-            android:textSize="16sp" />
+            android:text="If you are unable to be redirected to help section via above button, Please copy and paste the following link in your browser."
+            android:letterSpacing="0.062"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/documentation_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
+            android:textIsSelectable="true"
             android:layout_marginStart="20dp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
             android:layout_marginEnd="20dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
+            android:letterSpacing="0.062"
             android:gravity="center"
-            android:text="@string/check_out_the_documentation_here"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout

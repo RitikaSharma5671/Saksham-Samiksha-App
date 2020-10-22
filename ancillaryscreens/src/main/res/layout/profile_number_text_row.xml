@@ -54,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|start"
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
+                android:imeOptions="actionDone"
                 android:textStyle="bold"
                 tools:text="Pranav Sharma" />
 

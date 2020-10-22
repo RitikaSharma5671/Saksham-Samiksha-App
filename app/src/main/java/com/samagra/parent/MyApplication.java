@@ -108,7 +108,8 @@ public class MyApplication extends Application implements MainApplication, Lifec
         initializeFormManagementPackage();
         AppNotificationUtils.createNotificationChannel(this);
         Grove.d("Initialising Ancillary Screens Module >>>>");
-        AncillaryScreensDriver.init(this, AppConstants.BASE_API_URL,
+        AncillaryScreensDriver.
+                init(this, AppConstants.BASE_API_URL,
                 AppConstants.SEND_OTP_URL,
                 AppConstants.UPDATE_PASSWORD_URL,
                 getApplicationId(), getApplicationContext().getResources().getString(R.string.fusionauth_api_key));
@@ -301,6 +302,11 @@ public class MyApplication extends Application implements MainApplication, Lifec
     @Override
     public EventBus eventBusInstance() {
         return rxEventBus;
+    }
+
+    @Override
+    public FirebaseRemoteConfig getConfig() {
+        return mFirebaseRemoteConfig;
     }
 
     private void setupActivityLifecycleListeners() {

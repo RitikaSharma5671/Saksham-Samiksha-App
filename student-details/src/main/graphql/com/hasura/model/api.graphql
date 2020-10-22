@@ -60,8 +60,8 @@ mutation updateStudentSection($srn: String, $changedSection: String) {  update_s
 
 
 
-query FetchAttendanceByGradeSection($date: date, $taken_by: String, $grade: Int, $section: String) {
-    attendance_aggregate(where: {date: {_eq: $date}, taken_by: {_eq: $taken_by}, studentByStudent: {grade: {_eq: $grade}, section: {_eq: $section}}}) {
+query FetchAttendanceByGradeSection($date: date, $grade: Int, $section: String) {
+    attendance_aggregate(where: {date: {_eq: $date}, studentByStudent: {grade: {_eq: $grade}, section: {_eq: $section}}}) {
         nodes {
             studentByStudent {
                 name

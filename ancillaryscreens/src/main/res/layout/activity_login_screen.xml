@@ -20,9 +20,9 @@
             <ImageView
                 android:id="@+id/login_samiksha_logo"
                 android:layout_width="match_parent"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_height="140dp"
+                android:layout_marginStart="52dp"
+                android:layout_marginEnd="52dp"
+                android:layout_height="120dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="32dp"
                 android:maxHeight="150dp"
@@ -160,6 +160,28 @@
                         android:text="@string/reset_here"
                         app:layout_constraintEnd_toEndOf="parent" />
                 </LinearLayout>
+
+                <android.widget.Button
+                    android:id="@+id/help_button"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="58dp"
+                    android:paddingTop="4dp"
+                    android:drawableStart="@drawable/ic_faq"
+                    android:paddingBottom="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="12dp"
+                    android:drawablePadding="10dp"
+                    android:textColor="@color/color_primary"
+                    android:stateListAnimator="@null"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:onClick="onHelpButtonClicked"
+                    android:layout_below="@id/linearLayout2"
+                    android:paddingStart="6dp"
+                    android:background="@color/trans"
+                    android:paddingEnd="6dp"
+                    android:text="NEED HELP?" />
 
             </RelativeLayout>
 

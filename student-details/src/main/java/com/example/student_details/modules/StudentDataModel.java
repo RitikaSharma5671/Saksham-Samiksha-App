@@ -140,9 +140,9 @@ public class StudentDataModel {
                 });
     }
 
-    public void fetchAttendanceByGradeSection(String date, int grade, String section, String userName,
+    public void fetchAttendanceByGradeSection(String date, int grade, String section,
                                               ApolloQueryResponseListener<FetchAttendanceByGradeSectionQuery.Data> apolloQueryResponseListener) {
-        FetchAttendanceByGradeSectionQuery fetchAttendanceByGradeSectionQuery = FetchAttendanceByGradeSectionQuery.builder().date(date).taken_by(userName).grade(grade)
+        FetchAttendanceByGradeSectionQuery fetchAttendanceByGradeSectionQuery = FetchAttendanceByGradeSectionQuery.builder().date(date).grade(grade)
                 .section(section).build();
         apolloClient
                 .query(fetchAttendanceByGradeSectionQuery)

@@ -118,7 +118,7 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
         var flag = true
         val list = employeeList.value!!
         for (employee in list) {
-            if (employee.temp < 90 || employee.attendanceStatus == "") {
+            if ((employee.attendanceStatus == "Present in School" && employee.temp < 90) || (employee.attendanceStatus == "" )|| (employee.attendanceStatus == "Mark Attendance" )) {
                 flag = false
                 break
             }

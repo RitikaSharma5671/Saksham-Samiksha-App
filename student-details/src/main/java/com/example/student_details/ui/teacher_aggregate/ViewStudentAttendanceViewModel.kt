@@ -58,7 +58,7 @@ class ViewStudentAttendanceViewModel : ViewModel() {
         isStudentListVisible.set(false)
         isSundayMessageVisible.set(true)
         isNoStudentDataMessageVisible.set(false)
-        StudentDataModel().fetchAttendanceByGradeSection(currentSelectedDate, selectedGrade.value!!, selectedSection.value!!, userName,
+        StudentDataModel().fetchAttendanceByGradeSection(currentSelectedDate, selectedGrade.value!!, selectedSection.value!!,
                 object : ApolloQueryResponseListener<FetchAttendanceByGradeSectionQuery.Data> {
                     override fun onResponseReceived(response: Response<FetchAttendanceByGradeSectionQuery.Data>?) {
                         isProgressBarVisible.set(false)

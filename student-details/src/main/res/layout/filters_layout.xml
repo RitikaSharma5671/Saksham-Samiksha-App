@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical">
 
+
     <RelativeLayout
+        android:id="@+id/class_rl_1"
         android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
         android:layout_height="wrap_content">
 
         <TextView
@@ -35,10 +41,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/class_recycler_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_margin="6dp"
+        android:layout_below="@id/class_rl_1"
         android:animationCache="true"
         android:fadeScrollbars="false"
         android:overScrollMode="never"
@@ -52,6 +60,7 @@
         android:layout_height="1.5dp"
         android:layout_marginStart="28dp"
         android:layout_marginTop="6dp"
+        android:layout_below="@id/class_recycler_view"
         android:layout_marginEnd="28dp"
         android:layout_marginBottom="6dp"
         android:background="@color/color5" />
@@ -63,16 +72,22 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
         android:textAllCaps="true"
+        android:layout_centerHorizontal="true"
         android:textSize="12sp"
+        android:id="@+id/section_title"
+        android:layout_below="@id/tile_divider"
         android:text="@string/select_class_section" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/section_recycler_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
+        android:layout_below="@id/section_title"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="4dp"
+        android:layout_margin="6dp"
         android:animationCache="true"
+        android:layout_centerHorizontal="true"
         android:fadeScrollbars="false"
         android:overScrollMode="never"
         android:scrollbars="vertical"
@@ -83,6 +98,7 @@
         android:id="@+id/tile_divider_2"
         android:layout_width="match_parent"
         android:layout_height="1.5dp"
+        android:layout_below="@id/section_recycler_view"
         android:layout_marginStart="28dp"
         android:layout_marginTop="6dp"
         android:layout_marginEnd="28dp"
@@ -94,8 +110,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_below="@id/tile_divider_2"
         android:layout_marginBottom="10dp"
         android:gravity="center"
+        android:id="@+id/stream_rl_2"
         android:layout_gravity="center_horizontal">
 
     <TextView
@@ -124,8 +142,10 @@
     </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/stream_recycler_view"
-        android:layout_width="wrap_content"
+        android:layout_below="@id/stream_rl_2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_margin="4dp"
         android:animationCache="true"
@@ -134,4 +154,7 @@
         android:scrollbars="vertical"
         android:scrollingCache="true"
         android:smoothScrollbar="true" />
-</LinearLayout>
+
+
+</RelativeLayout>
+</ScrollView>

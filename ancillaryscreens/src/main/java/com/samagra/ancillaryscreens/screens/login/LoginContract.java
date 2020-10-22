@@ -1,5 +1,6 @@
 package com.samagra.ancillaryscreens.screens.login;
 
+import android.view.View;
 import android.widget.EditText;
 
 import com.samagra.ancillaryscreens.R;
@@ -54,6 +55,8 @@ public interface LoginContract {
         void hideProgressDialog();
 
         void finishActivity();
+
+        void onHelpButtonClicked(android.view.View v);
     }
 
     interface Interactor extends MvpInteractor {
