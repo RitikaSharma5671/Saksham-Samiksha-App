@@ -1,5 +1,6 @@
 package com.example.student_details.ui
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
@@ -7,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
+import com.example.student_details.Utilities
 import com.example.student_details.Utilities.findFirstLetterPosition
 import com.example.student_details.databinding.ItemAttendanceRowBinding
 import com.example.student_details.models.realm.StudentInfo
@@ -17,6 +19,7 @@ import java.text.DecimalFormat
 class AttendanceViewHolder(val itemAttendanceRowBinding: ItemAttendanceRowBinding, val application: Application, markAttendanceView: LifecycleOwner,
                            val markAttendanceViewModel: MarkAttendanceViewModel) : RecyclerView.ViewHolder(itemAttendanceRowBinding.root) {
     private lateinit var attendanceItemDataViewModel: AttendanceItemViewModel
+    @SuppressLint("DefaultLocale")
     fun bind(studentInfo: StudentInfo, layoutPosition: Int) {
         val context = itemView.context
         attendanceItemDataViewModel = AttendanceItemViewModel(
@@ -30,6 +33,7 @@ class AttendanceViewHolder(val itemAttendanceRowBinding: ItemAttendanceRowBindin
         val drawable: Drawable = TextDrawable.builder().round().build(findFirstLetterPosition(studentInfo.name ), ContextCompat.getColor(context, R.color.color_primary))
         itemAttendanceRowBinding.listAvatar.setImageDrawable(drawable)
         itemAttendanceRowBinding.attendanceSwitch.isChecked = studentInfo.isPresent
+        itemAttendanceRowBinding.listTitle.text = studentInfo.name.toUpperCase() + " (" + studentInfo.srn + ")"
         if(studentInfo.temp > 0)
         itemAttendanceRowBinding.tempValue.text = String.format(context!!.resources.getString(R.string.temp_value), studentInfo.temp.toString())
         itemAttendanceRowBinding.tempValue.setOnClickListener {

@@ -36,6 +36,7 @@ import com.samagra.commons.CommonUtilities;
 import com.samagra.grove.logging.Grove;
 
 import org.odk.collect.android.activities.WebViewActivity;
+import org.odk.collect.android.utilities.CustomTabHelper;
 
 import java.util.Objects;
 
@@ -48,6 +49,7 @@ import static com.samagra.commons.CustomTabHelper.OPEN_URL;
  *
  * @author Pranav Sharma
  */
+@SuppressWarnings("ConstantConditions")
 public class LoginActivity extends BaseActivity implements LoginContract.View,MultiTextWatcher.TextWatcherWithInstance {
 
     public RelativeLayout parentLoginLayout;
@@ -58,6 +60,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
     private Button button;
     private ProgressDialog mProgress;
     private Button helpBtton;
+    private TextView mentorFAQ;
+    private TextView teacherFAQ;
 
 
     @Inject
@@ -74,11 +78,22 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
         textInputPassword = findViewById(R.id.text_input_password);
         userNameEditText = findViewById(R.id.edit_user_email);
         helpBtton = findViewById(R.id.help_button);
+        teacherFAQ = findViewById(R.id.teacher_faq);
+        mentorFAQ = findViewById(R.id.mentor_faq);
         TextView forgotPasswordCTA = findViewById(R.id.forgot_password_cta);
         parentLoginLayout = findViewById(R.id.login_parent);
         SpannableString content = new SpannableString(getText(R.string.reset_here));
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         forgotPasswordCTA.setText(content);
+
+
+        SpannableString contentTeacher = new SpannableString(getText(R.string.faqs_for_teachers_school_heads));
+        contentTeacher.setSpan(new UnderlineSpan(), 0, contentTeacher.length(), 0);
+        teacherFAQ.setText(contentTeacher);
+
+        SpannableString contentMentor = new SpannableString(getText(R.string.faqs_for_mentors));
+        contentMentor.setSpan(new UnderlineSpan(), 0, contentMentor.length(), 0);
+        mentorFAQ.setText(contentMentor);
 
         SpannableString content1 = new SpannableString("NEED HELP?");
         content1.setSpan(new UnderlineSpan(), 0, content1.length(), 0);
@@ -96,6 +111,27 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
         mProgress.setMessage(getString(R.string.please_wait));
         mProgress.setCancelable(false);
         mProgress.setIndeterminate(true);
+
+        String urlFromConfig_MentorDoc = "http://bit.ly/Guidelines_document";
+        if(AncillaryScreensDriver.mainApplication.getConfig().getString("faq_mentor_url") != null && !AncillaryScreensDriver.mainApplication.getConfig().getString("faq_mentor_url").isEmpty())
+            urlFromConfig_MentorDoc = AncillaryScreensDriver.mainApplication.getConfig().getString("faq_mentor_url");
+
+        String urlFromConfig_TeacherDoc = "http://bit.ly/samiksha-FAQ";
+        if(AncillaryScreensDriver.mainApplication.getConfig().getString("faq_teacher_url") != null && !AncillaryScreensDriver.mainApplication.getConfig().getString("faq_teacher_url").isEmpty())
+            urlFromConfig_TeacherDoc = AncillaryScreensDriver.mainApplication.getConfig().getString("faq_teacher_url");
+
+        String finalUrlFromConfig_TeacherDoc = urlFromConfig_TeacherDoc;
+        teacherFAQ.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivityContext(), WebViewActivity.class);
+            intent.putExtra(CustomTabHelper.OPEN_URL, finalUrlFromConfig_TeacherDoc);
+            getActivityContext().startActivity(intent);
+        });
+        String finalUrlFromConfig_MentorDoc = urlFromConfig_MentorDoc;
+        mentorFAQ.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivityContext(), WebViewActivity.class);
+            intent.putExtra(CustomTabHelper.OPEN_URL, finalUrlFromConfig_MentorDoc);
+            getActivityContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -221,7 +257,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
     public void onHelpButtonClicked(View v) {
         String urlFromConfig = AncillaryScreensDriver.mainApplication.getConfig().getString("help_url");
         if(urlFromConfig.isEmpty())
-            urlFromConfig = "http://bit.ly/samiksha-helpline";
+            urlFromConfig = "https://forms.gle/ReS5tMBVwpmCMhEe7";
         Uri websiteUri = Uri.parse(urlFromConfig);
             try {
                 //open in external browser

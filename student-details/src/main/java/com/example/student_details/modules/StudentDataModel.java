@@ -140,17 +140,15 @@ public class StudentDataModel {
                 });
     }
 
-    public void fetchAttendanceByGradeSection(String date, int grade, String section,
+    public void fetchAttendanceByGradeSection(String date, int grade, String section,String schoolCode,
                                               ApolloQueryResponseListener<FetchAttendanceByGradeSectionQuery.Data> apolloQueryResponseListener) {
         FetchAttendanceByGradeSectionQuery fetchAttendanceByGradeSectionQuery = FetchAttendanceByGradeSectionQuery.builder().date(date).grade(grade)
-                .section(section).build();
+                .section(section).school_code(schoolCode).build();
         apolloClient
                 .query(fetchAttendanceByGradeSectionQuery)
                 .enqueue(new ApolloCall.Callback<FetchAttendanceByGradeSectionQuery.Data>() {
                     @Override
                     public void onResponse(@NotNull Response<FetchAttendanceByGradeSectionQuery.Data> response) {
-//                        Grove.d("Section update request with response " +
-//                                response.getData().attendance_aggregate().nodes().size() + " and error fields as " + response.getErrors() + " new section as " + response.getData().update_student());
                         if (response.getData() != null && response.getErrors() == null) {
                             apolloQueryResponseListener.onResponseReceived(response);
                         } else {
@@ -166,11 +164,12 @@ public class StudentDataModel {
                 });
     }
 
-    public void fetchAttendanceByGradeSectionStream(String date, int grade, String section, String userName, String stream,
+    public void fetchAttendanceByGradeSectionStream(String date, int grade, String section, String stream,String schoolCode,
                                                     ApolloQueryResponseListener<FetchAttendanceByGradeSectionStreamQuery.Data> apolloQueryResponseListener) {
         FetchAttendanceByGradeSectionStreamQuery fetchAttendanceByGradeSectionStreamQuery = FetchAttendanceByGradeSectionStreamQuery.builder()
-                .date(date).taken_by(userName).grade(grade)
+                .date(date).grade(grade)
                 .stream(stream)
+                .school_code(schoolCode)
                 .section(section).build();
         apolloClient
                 .query(fetchAttendanceByGradeSectionStreamQuery)

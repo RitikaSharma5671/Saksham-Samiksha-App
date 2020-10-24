@@ -16,6 +16,8 @@ public interface PreferenceHelper {
 
     String getToken();
 
+    String fetchSchoolCode1();
+
     boolean isFirstLogin();
 
     String getFormVersion();
@@ -81,4 +83,8 @@ public interface PreferenceHelper {
     String getDistrict();
 
     boolean hasDownloadedStudentData();
+
+    boolean eInstallSendCOunt();
+
+    void updateInstallSendCOunt(boolean b);
 }

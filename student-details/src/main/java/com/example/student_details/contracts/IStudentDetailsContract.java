@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.student_details.models.realm.SchoolEmployeesInfo;
 import com.hasura.model.GetStudentsForSchoolQuery;
+import com.hasura.model.SendUsageInfoMutation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,4 +34,6 @@ public interface IStudentDetailsContract {
     void removeRealsmDB();
 
     void launchTeacherAttendanceView(Context activityContext);
+
+    void updateUsageInfo(String username, String block, String schoolName, String schoolCode, String designation, String district, String misId, ApolloQueryResponseListener<SendUsageInfoMutation.Data> apolloQueryResponseListener);
 }

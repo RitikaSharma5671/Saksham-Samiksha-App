@@ -22,7 +22,7 @@ public interface HomeMvpPresenter<V extends HomeMvpView, I extends HomeMvpIntera
 
     void onViewHelplineClicked();
 
-    void onViewSubmittedFormsOptionsClicked();
+    void onViewSubmittedFormsOptionsClicked(Context activityContext);
 
     void onSubmitFormsClicked();
 

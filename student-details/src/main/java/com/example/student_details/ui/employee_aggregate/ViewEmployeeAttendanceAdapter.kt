@@ -70,7 +70,7 @@ class ViewEmployeeAttendanceAdapter(
             val drawable: Drawable = TextDrawable.builder().round().build(findFirstLetterPosition(attendanceData.name), getColor(context, R.color.color_primary))
             itemView.profile_pic_employee.setImageDrawable(drawable)
             itemView.attendance_status_present_employee.text = if (attendanceData.attendanceStatus != "-" && attendanceData.attendanceStatus != "Others")
-                attendanceData.attendanceStatus else attendanceData.attendanceStatus + " (" + attendanceData.otherReason + ")"
+                attendanceData.attendanceStatus else attendanceData.attendanceStatus + "\n(" + attendanceData.otherReason + ")"
             if(attendanceData.attendanceStatus.toLowerCase() == "Present in school".toLowerCase())
                 itemView.attendance_status_present_employee.setTextColor(getColor(context, R.color.color_primary))
             else

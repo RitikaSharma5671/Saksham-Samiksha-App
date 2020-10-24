@@ -355,9 +355,9 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
     @Override
     public void sendAnalyticsAdoptionEvent(String s, boolean b) {
         if(b) {
-            Collect1.getInstance().getAnalytics().logEvent("app_installed_school_teacher", "install_info", s);
+            Collect1.getInstance().getAnalytics().logEvent("app_installed_school_teacher_" + s, "install_info", s);
         }else {
-            Collect1.getInstance().getAnalytics().logEvent("app_installed_mentor_monitor", "install_info", s);
+            Collect1.getInstance().getAnalytics().logEvent("app_installed_mentor_monitor_" +s, "install_info", s);
         }
     }
 

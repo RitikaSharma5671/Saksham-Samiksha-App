@@ -144,6 +144,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     }
 
     public void launchLoginScreen() {
+        splashPresenter.getMvpInteractor().getPreferenceHelper().updateInstallSendCOunt(false);
         splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
         splashPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
             Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
@@ -157,6 +158,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
     @Override
     public void redirectToHomeScreen() {
+        splashPresenter.getMvpInteractor().getPreferenceHelper().updateInstallSendCOunt(false);
         splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
         Grove.d("Redirecting to Home screen from Splash screen >>> ");
         splashPresenter.setInclompleteProfileCount();

@@ -468,7 +468,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
 
     @Override
     public void onViewODKSubmissionsClicked() {
-        homePresenter.onViewSubmittedFormsOptionsClicked();
+        homePresenter.onViewSubmittedFormsOptionsClicked(getActivityContext());
     }
 
     @Override

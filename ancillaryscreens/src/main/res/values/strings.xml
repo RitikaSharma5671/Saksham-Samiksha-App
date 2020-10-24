@@ -59,7 +59,7 @@
     <string name="logout">Logout</string>
     <string name="update_failed">User details failed to update.</string>
     <string name="mulitple_users_same_email_found" tools:ignore="MissingTranslation">Multiple users with the same email found. Please ensure that your email is not used by any other account or Contact Admin.</string>
-    <string name="mulitple_users_same_phone_found">Multiple users with the same phone number found. Please ensure that your contact number is not used by any other account or Contact Admin.</string>
+    <string name="mulitple_users_same_phone_found">Multiple users with the same phone number found. Please check that you have not registered your entered contact number for any other username on Saksham Samiksha or Contact Admin.</string>
     <string name="next">NEXT</string>
     <string name="no_internet_saving_complete" translatable="false">Thank you for filling the inspection report for. Since you have filled the report in offline mode, please manually submit the form when connected to the internet from the "Submit form" option</string>
     <string name="no_users_found">No Users Found.</string>
@@ -166,4 +166,6 @@
     <string name="school_district_label">District: %s</string>
     <string name="if_your_school_details_are_incorrect_please_click_here_to_edit">If your school details are incorrect, Please click here to edit.</string>
     <string name="enter_phone_register">Enter your mobile number to receive One time password for verification</string>
+    <string name="faqs_for_teachers_school_heads">FAQs For Teachers/School Heads</string>
+    <string name="faqs_for_mentors">FAQs For Mentors</string>
 </resources>

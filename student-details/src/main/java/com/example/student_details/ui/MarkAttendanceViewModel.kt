@@ -69,7 +69,6 @@ class MarkAttendanceViewModel : ViewModel() {
                         val sts = realm.copyFromRealm(realm
                                 .where(StudentInfo::class.java)
                                 .equalTo("section", section).equalTo("grade", jjj).findAll())
-//                        val task: List<StudentInfo> = realm.where(StudentInfo::class.java).equalTo("section", section).equalTo("grade", jjj).findAll()
                         if (sts.isNotEmpty()) studentList.addAll(sts)
                     }
                 } else {

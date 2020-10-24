@@ -19,6 +19,10 @@ import com.example.student_details.ui.employee_aggregate.ViewEmployeeAttendance;
 import com.example.student_details.ui.teacher_aggregate.MainActivity;
 import com.example.student_details.ui.teacher_attendance.data.Employees;
 import com.hasura.model.GetStudentsForSchoolQuery;
+import com.hasura.model.SendAttendanceMutation;
+import com.hasura.model.SendUsageInfoMutation;
+import com.hasura.model.type.Attendance_insert_input;
+import com.hasura.model.type.TrackInstall_insert_input;
 import com.samagra.grove.logging.Grove;
 
 import org.jetbrains.annotations.NotNull;
@@ -128,6 +132,38 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
     public void launchTeacherAttendanceView(Context activityContext) {
         Intent i = new Intent(activityContext, ViewEmployeeAttendance.class);
         activityContext.startActivity(i);
+    }
+
+    @Override
+    public void updateUsageInfo(String username, String block, String schoolName, String schoolCode, String designation, String district, String misId, ApolloQueryResponseListener<SendUsageInfoMutation.Data> apolloQueryResponseListener) {
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl("http://167.71.227.241:5001/v1/graphql")
+                .okHttpClient(new OkHttpClient.Builder()
+                        .addInterceptor(new AuthorizationInterceptor())
+                        .build()
+                ).build();
+
+        List<TrackInstall_insert_input> trackInstall_insert_inputs = new ArrayList<>();
+        TrackInstall_insert_input trackInstall_insert_input = TrackInstall_insert_input.builder().schoolCode(schoolCode).district(district).block(block)
+                .mis_id(username).schoolName(schoolName).designation(designation).username(username)
+                .build();
+        trackInstall_insert_inputs.add(trackInstall_insert_input);
+        SendUsageInfoMutation sendUsageInfoMutation = SendUsageInfoMutation.builder().query_param(trackInstall_insert_inputs).build();
+        apolloClient.mutate(sendUsageInfoMutation).enqueue(new ApolloCall.Callback<SendUsageInfoMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<SendUsageInfoMutation.Data> response) {
+                if (response.getData() != null && response.getErrors() == null){
+                    apolloQueryResponseListener.onResponseReceived(response);
+                } else {
+                    apolloQueryResponseListener.onResponseReceived(null);
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                apolloQueryResponseListener.onFailureReceived(e);
+            }
+        });
     }
 
     @Override

@@ -69,6 +69,11 @@ public class AppPreferenceHelper implements PreferenceHelper {
     }
 
     @Override
+    public String fetchSchoolCode1() {
+        return defaultPreferences.getString("user.schoolCode", "");
+    }
+
+    @Override
     public boolean isTeacher() {
         String designation = defaultPreferences.getString("user.designation", "");
         return !designation.contains("DDO") &&(designation.contains("TGT") ||
@@ -166,6 +171,16 @@ public class AppPreferenceHelper implements PreferenceHelper {
     @Override
     public boolean hasDownloadedStudentData() {
         return defaultPreferences.getBoolean("downloadedStudentData", false);
+    }
+
+    @Override
+    public boolean eInstallSendCOunt() {
+        return defaultPreferences.getBoolean("eInstallSendCOunt", false);
+    }
+
+    @Override
+    public void updateInstallSendCOunt(boolean b) {
+        defaultPreferences.edit().putBoolean("eInstallSendCOunt", b).apply();
     }
 
     private String generateObjectForStudentData(InstitutionInfo inputObject) {

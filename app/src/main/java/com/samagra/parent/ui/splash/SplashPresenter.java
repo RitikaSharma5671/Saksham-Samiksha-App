@@ -173,7 +173,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
     @Override
     public void startUnzipTask(Context context) {
-        FileUnzipper fileUnzipper = new FileUnzipper(context, ROOT + "/saksham_data_json.json", R.raw.saksham_data_json, new UnzipTaskListener() {
+        FileUnzipper fileUnzipper = new FileUnzipper(context, ROOT + "/saksham_data_json.json", R.raw.kist_school, new UnzipTaskListener() {
             @Override
             public void unZipSuccess() {
                 Grove.d("Data file has been unzipped successfully.");

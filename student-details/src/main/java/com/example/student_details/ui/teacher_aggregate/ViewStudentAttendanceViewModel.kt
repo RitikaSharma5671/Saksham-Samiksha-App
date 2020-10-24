@@ -27,7 +27,7 @@ class ViewStudentAttendanceViewModel : ViewModel() {
     val selectedSection: MutableLiveData<String> = MutableLiveData("A")
     val selectedStream: MutableLiveData<String> = MutableLiveData("")
 
-    fun fetchRelevantStudentData(currentDay: String, currentSelectedDate: String, userName: String) {
+    fun fetchRelevantStudentData(currentDay: String, currentSelectedDate: String, schoolCode: String) {
         if (currentSelectedDate != "") {
             if (currentDay == "Sun") {
                 isProgressBarVisible.set(false)
@@ -38,14 +38,14 @@ class ViewStudentAttendanceViewModel : ViewModel() {
             } else {
 
                 if (selectedGrade.value!! < 11) {
-                    fetchDataWithoutStreamSelected(currentSelectedDate, userName)
+                    fetchDataWithoutStreamSelected(currentSelectedDate, schoolCode)
                 }else {
                     if(selectedStream.value != null && selectedStream.value!!.isEmpty()) {
-                        fetchDataWithoutStreamSelected(currentSelectedDate, userName)
+                        fetchDataWithoutStreamSelected(currentSelectedDate, schoolCode)
                     }else if(selectedStream.value != null && selectedStream.value!!.isNotEmpty()){
-                        fetchDataWithStreamSelected(currentSelectedDate, userName)
+                        fetchDataWithStreamSelected(currentSelectedDate, schoolCode)
                     }else {
-                        fetchDataWithoutStreamSelected(currentSelectedDate, userName)
+                        fetchDataWithoutStreamSelected(currentSelectedDate, schoolCode)
                     }
                 }
             }
@@ -53,12 +53,12 @@ class ViewStudentAttendanceViewModel : ViewModel() {
 
     }
 
-    private fun fetchDataWithoutStreamSelected(currentSelectedDate: String, userName: String) {
+    private fun fetchDataWithoutStreamSelected(currentSelectedDate: String, schoolCode: String) {
         isProgressBarVisible.set(true)
         isStudentListVisible.set(false)
         isSundayMessageVisible.set(true)
         isNoStudentDataMessageVisible.set(false)
-        StudentDataModel().fetchAttendanceByGradeSection(currentSelectedDate, selectedGrade.value!!, selectedSection.value!!,
+        StudentDataModel().fetchAttendanceByGradeSection(currentSelectedDate, selectedGrade.value!!, selectedSection.value!!,schoolCode,
                 object : ApolloQueryResponseListener<FetchAttendanceByGradeSectionQuery.Data> {
                     override fun onResponseReceived(response: Response<FetchAttendanceByGradeSectionQuery.Data>?) {
                         isProgressBarVisible.set(false)
@@ -85,13 +85,13 @@ class ViewStudentAttendanceViewModel : ViewModel() {
                 })
     }
 
-    private fun fetchDataWithStreamSelected(currentSelectedDate: String, userName: String) {
+    private fun fetchDataWithStreamSelected(currentSelectedDate: String, schoolCode: String) {
         isProgressBarVisible.set(true)
         isStudentListVisible.set(false)
         isSundayMessageVisible.set(true)
         isNoStudentDataMessageVisible.set(false)
         val stream = selectedStream.value!!.substring(0, 1).toUpperCase() + selectedStream.value!!.substring(1).toLowerCase()
-        StudentDataModel().fetchAttendanceByGradeSectionStream(currentSelectedDate, selectedGrade.value!!, selectedSection.value!!, userName, stream,
+        StudentDataModel().fetchAttendanceByGradeSectionStream(currentSelectedDate, selectedGrade.value!!, selectedSection.value!!, stream,schoolCode,
                 object : ApolloQueryResponseListener<FetchAttendanceByGradeSectionStreamQuery.Data> {
                     override fun onResponseReceived(response: Response<FetchAttendanceByGradeSectionStreamQuery.Data>?) {
                         isProgressBarVisible.set(false)
