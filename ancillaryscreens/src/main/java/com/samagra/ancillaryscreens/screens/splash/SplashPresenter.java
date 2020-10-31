@@ -95,17 +95,17 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(updatedToken -> {
-                            if (updatedToken != null && updatedToken.has("jwt")) {
+                            if (updatedToken != null && updatedToken.has("user")) {
                                 SplashPresenter.this.getIFormManagementContract().resetODKForms(SplashPresenter.this.getMvpView().getActivityContext());
                                 getMvpView().redirectToHomeScreen();
-                                Grove.e(updatedToken.toString());
+                                Grove.e("Token found to be valid " + updatedToken.toString());
                             } else {
-                                updateJWT(AncillaryScreensDriver.API_KEY);
+                                updateJWT();
                             }
 
                         }, throwable -> {
-                            updateJWT(AncillaryScreensDriver.API_KEY);
-                            Grove.e(throwable);
+                            updateJWT();
+                            Grove.e("Token found to be invalid "+ throwable);
                         }));
             } else {
                 getMvpView().redirectToHomeScreen();
@@ -223,19 +223,22 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
             Grove.e("Up version detected");
         }
     }
-    private void updateJWT(String apiKey) {
+    private void updateJWT() {
         boolean firstRun = getMvpInteractor().isFirstRun();
         if (!firstRun) {
             if (getMvpInteractor().isLoggedIn()) {
                 String refreshToken = getMvpInteractor().getRefreshToken();
+                String jwt = getMvpInteractor().getPreferenceHelper().getToken();
                 Grove.e(refreshToken);
                 getCompositeDisposable().add(getApiHelper()
-                        .refreshToken(apiKey, refreshToken)
+                        .refreshToken(refreshToken, jwt)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(updatedToken -> {
-                            if(updatedToken != null && updatedToken.has("token")){
-                                getMvpInteractor().updateToken(updatedToken.getString("token"));
+                            if(updatedToken != null && updatedToken.has("statusCode")&&
+                                    updatedToken.getInt("statusCode") == 200
+                                    && updatedToken.has("successResponse")&& updatedToken.getJSONObject("successResponse").has("token")){
+                                getMvpInteractor().updateToken(updatedToken.getJSONObject("successResponse").getString("token"));
                                 getMvpView().redirectToHomeScreen();
                             }else{
                                 launchLoginScreen();

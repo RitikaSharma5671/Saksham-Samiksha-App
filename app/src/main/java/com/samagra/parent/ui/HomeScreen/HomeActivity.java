@@ -23,6 +23,7 @@ import com.example.update.UpdateApp;
 import com.google.android.material.snackbar.Snackbar;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.models.AboutBundle;
+import com.samagra.ancillaryscreens.screens.profile.UserProfileElement;
 import com.samagra.cascading_module.CascadingModuleDriver;
 import com.samagra.commons.Constants;
 import com.samagra.commons.CustomEvents;
@@ -39,11 +40,6 @@ import com.samagra.parent.R;
 import com.samagra.parent.UtilityFunctions;
 import com.samagra.parent.base.BaseActivity;
 import com.samagra.parent.ui.Settings.UpdateAppLanguageFragment;
-import com.samagra.user_profile.contracts.ComponentManager;
-import com.samagra.user_profile.contracts.IProfileContract;
-import com.samagra.user_profile.contracts.ProfileSectionInteractor;
-import com.samagra.user_profile.profile.UserProfileElement;
-
 import org.odk.collect.android.utilities.LocaleHelper;
 
 import java.util.ArrayList;
@@ -112,7 +108,6 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
         InternetMonitor.startMonitoringInternet(((MainApplication) getApplicationContext()));
         setupListeners();
         homePresenter.updateLanguageSettings();
-        AppNotificationUtils.updateFirebaseToken(getActivityContext(), AppConstants.BASE_API_URL, getActivityContext().getResources().getString(R.string.fusionauth_api_key));
         mUpdateApp = new UpdateApp(this);
         renderLayoutInvisible();
     }
@@ -126,11 +121,11 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
 
     @Override
     public void setDownloadProgress(int progress) {
-        if (progress >= 100) {
-            progressBarText.setText(R.string.hundred_percent);
-        } else {
-            progressBarText.setText(String.format(Locale.ENGLISH, "%d%%", progress));
-        }
+//        if (progress >= 100) {
+//            progressBarText.setText(R.string.hundred_percent);
+//        } else {
+//            progressBarText.setText(String.format(Locale.ENGLISH, "%d%%", progress));
+//        }
     }
 
 
@@ -337,30 +332,18 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                         break;
                     case R.id.profile:
                         Grove.d("User clicked on View Profile Section option");
-                        ComponentManager.registerProfilePackage(new ProfileSectionInteractor(), ((MainApplication) (HomeActivity.this.getApplicationContext())),
-                                AppConstants.BASE_API_URL,
-                                AppConstants.APPLICATION_ID,
-                                AppConstants.SEND_OTP_URL,
-                                AppConstants.UPDATE_PASSWORD_URL,
-                                HomeActivity.this.getApplicationContext().getResources().getString(R.string.fusionauth_api_key), homePresenter.fetchUserID());
-                        IProfileContract initializer = ComponentManager.iProfileContract;
+                        Grove.d("User clicked on View Profile Section option");
                         ArrayList<UserProfileElement> profileElements = homePresenter.getProfileConfig();
-                        if (initializer != null) {
-                            Grove.d("Launching Profile Screen");
-                            initializer.launchProfileActivity(HomeActivity.this.getActivityContext(), profileElements
-                                    , HomeActivity.this.getActivityContext().getResources().getString(R.string.fusionauth_api_key));
-                        }else{
-                            Grove.e("Initializer was null, so could not launch Profile screen");
-                        }
+                        AncillaryScreensDriver.launchProfileActivity(this, profileElements, homePresenter.fetchUserID());
                         break;
-                    case R.id.logout:
+                        case R.id.logout:
                         Grove.d("User clicked to logout out of application");
                         if (homePresenter.isNetworkConnected()) {
                             if (logoutListener == null) {
                                 Grove.d("Logout Listener initialised");
                                 HomeActivity.this.initializeLogoutListener();
                             }
-                            AncillaryScreensDriver.performLogout(HomeActivity.this, HomeActivity.this.getActivityContext().getResources().getString(R.string.fusionauth_api_key));
+                            AncillaryScreensDriver.performLogout(HomeActivity.this);
                         } else {
                             showSnackbar("It seems you are offline. Logout cannot happen in offline conditions.", 3000);
                         }

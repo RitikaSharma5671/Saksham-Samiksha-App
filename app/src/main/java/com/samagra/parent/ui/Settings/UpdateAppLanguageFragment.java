@@ -56,7 +56,7 @@ public class UpdateAppLanguageFragment extends Fragment {
         if (getArguments() != null && getArguments().getString("appLanguage") != null && getArguments().getString("appLanguage").equals("hi")) {
             hindiLanguage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
             hindiLanguage.setTypeface(Typeface.DEFAULT_BOLD);
-            englishLanguage.setTextColor(ContextCompat.getColor(getActivity(), R.color.dark_grey));
+            englishLanguage.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey));
             englishLanguage.setTypeface(Typeface.DEFAULT);
             checkEnglish.setVisibility(View.INVISIBLE);
             checkHindi.setVisibility(View.VISIBLE);
@@ -65,7 +65,7 @@ public class UpdateAppLanguageFragment extends Fragment {
         } else {
             englishLanguage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
             englishLanguage.setTypeface(Typeface.DEFAULT_BOLD);
-            hindiLanguage.setTextColor(ContextCompat.getColor(getActivity(), R.color.dark_grey));
+            hindiLanguage.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey));
             hindiLanguage.setTypeface(Typeface.DEFAULT);
             checkEnglish.setVisibility(View.VISIBLE);
             checkHindi.setVisibility(View.INVISIBLE);
@@ -99,7 +99,7 @@ public class UpdateAppLanguageFragment extends Fragment {
     private void onLanguageSelected(TextView selectedTextView, ImageView selectedCheck, TextView deselectedTextView, ImageView deselectedCheck, String selectedCode) {
         selectedTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         selectedTextView.setTypeface(Typeface.DEFAULT_BOLD);
-        deselectedTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.dark_grey));
+        deselectedTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey));
         deselectedTextView.setTypeface(Typeface.DEFAULT);
         selectedCheck.setVisibility(View.VISIBLE);
         deselectedCheck.setVisibility(View.INVISIBLE);

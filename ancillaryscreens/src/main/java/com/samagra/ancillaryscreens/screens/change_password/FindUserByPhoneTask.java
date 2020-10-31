@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.data.network.BackendApiUrls;
 import com.samagra.ancillaryscreens.models.OnUserFound;
+import com.samagra.ancillaryscreens.models.RelayUserInfo;
 import com.samagra.ancillaryscreens.models.UserInformation;
 import com.samagra.grove.logging.Grove;
 
@@ -35,7 +36,6 @@ public class FindUserByPhoneTask extends AsyncTask<String, Void, String> {
         String serverURL = BASE_URL;
         String phoneNo = strings[0];
         String apiKey = strings[1];
-//
         String json = "{\n" +
                 "    \"search\": {\n" +
                 "        \"queryString\": \"(registrations.applicationId: " + AncillaryScreensDriver.APPLICATION_ID + ")AND(data.phone:" + phoneNo +
@@ -67,9 +67,15 @@ public class FindUserByPhoneTask extends AsyncTask<String, Void, String> {
             response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 isSuccess = true;
-                String APIResponse  = response.body().string();
-                UserInformation userDownloadData = new Gson().fromJson(APIResponse, UserInformation.class);
-                return String.valueOf(userDownloadData.getTotal());
+                String APIResponse = response.body().string();
+
+                RelayUserInfo userDownloadData = new Gson().fromJson(APIResponse, RelayUserInfo.class);
+                if (userDownloadData.getStatusCode() == 200)
+                    return String.valueOf(userDownloadData.getSuccessResponse().getTotal());
+                else {
+                    isSuccess = true;
+                    return null;
+                }
             } else {
                 Grove.e("Response Failure received for Send OTP Task with failure " + response.body().string());
                 isSuccess = false;

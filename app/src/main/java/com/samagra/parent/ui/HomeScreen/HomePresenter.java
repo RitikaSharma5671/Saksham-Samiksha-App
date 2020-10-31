@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.samagra.ancillaryscreens.screens.profile.UserProfileElement;
 import com.samagra.commons.InstitutionInfo;
 import com.samagra.commons.utils.FormDownloadStatus;
 import com.samagra.grove.logging.Grove;
@@ -14,7 +15,6 @@ import com.samagra.parent.R;
 import com.samagra.parent.UtilityFunctions;
 import com.samagra.parent.base.BasePresenter;
 import com.samagra.parent.ui.submissions.SubmissionsActivity;
-import com.samagra.user_profile.profile.UserProfileElement;
 
 import org.json.JSONArray;
 import org.json.JSONException;

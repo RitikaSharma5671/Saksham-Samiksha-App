@@ -1,6 +1,6 @@
 package com.samagra.ancillaryscreens.screens.login;
 
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.SpannableString;
@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -25,14 +26,17 @@ import com.samagra.ancillaryscreens.R2;
 import com.samagra.ancillaryscreens.base.BaseActivity;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
-import com.samagra.ancillaryscreens.screens.change_password.ChangePasswordActivity;
 import com.samagra.ancillaryscreens.screens.passReset.EnterMobileNumberFragment;
 import com.samagra.ancillaryscreens.utils.SnackbarUtils;
 import com.samagra.commons.CommonUtilities;
 import com.samagra.grove.logging.Grove;
 
+import java.security.Key;
+import java.util.Base64;
 import java.util.Objects;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -40,7 +44,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import butterknife.Unbinder;
-import io.sentry.Sentry;
 
 /**
  * The View Part for the Login Screen, must implement {@link LoginContract.View}
@@ -57,7 +60,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     public ProgressBar progressBar;
     @BindView(android.R.id.content)
     public FrameLayout content;
-    @BindView(R2.id.login_submit)
     public Button submitButton;
     @BindView(R2.id.userLayout)
     public TextInputLayout userLayout;
@@ -79,8 +81,19 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         setContentView(R.layout.activity_login_screen);
         getActivityComponent().inject(this);
         unbinder = ButterKnife.bind(this);
+        submitButton = findViewById(R.id.login_submit);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    performLogin();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         loginPresenter.onAttach(this);
-        if(getIntent().getBooleanExtra("loggedOut", false)){
+        if (getIntent().getBooleanExtra("loggedOut", false)) {
             SnackbarUtils.showShortSnackbar(loginParentLayout, getActivityContext().getResources().getString(R.string.successful_logout_message));
         }
 
@@ -92,11 +105,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     @OnClick(R2.id.forgot_password)
     public void changePassword() {
-        if (CommonUtilities.isNetworkAvailable(this)){
+        if (CommonUtilities.isNetworkAvailable(this)) {
             EnterMobileNumberFragment mForgotPasswordFragment = new EnterMobileNumberFragment();
-            addFragment(R.id.login_fragment_container,getSupportFragmentManager(),mForgotPasswordFragment,"EnterMobileNumberFragment");
-        }else{
-            SnackbarUtils.showLongSnackbar(loginParentLayout,  "It seems you are not connected to the internet. Please switch of on your mobile data to login.");
+            addFragment(R.id.login_fragment_container, getSupportFragmentManager(), mForgotPasswordFragment, "EnterMobileNumberFragment");
+        } else {
+            SnackbarUtils.showLongSnackbar(loginParentLayout, "It seems you are not connected to the internet. Please switch of on your mobile data to login.");
         }
     }
 
@@ -160,21 +173,71 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         finish();
     }
 
-    @OnClick(R2.id.login_submit)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void performLogin() {
+    public void performLogin() throws Exception {
         if (CommonUtilities.isNetworkAvailable(this)) {
             if (validateInputs(editTextUsername, editTextPassword)) {
                 String username = Objects.requireNonNull(editTextUsername.getText()).toString().trim();
                 String password = Objects.requireNonNull(editTextPassword.getText()).toString().trim();
                 progressBar.setVisibility(View.VISIBLE);
-                loginPresenter.startAuthenticationTask(new LoginRequest(username, password));
-            }else{
+                loginPresenter.startAuthenticationTask(new LoginRequest(encrypt(username, encodeKey("A%C*F-JaNdRgUkXp")),
+                        encrypt(password, encodeKey("A%C*F-JaNdRgUkXp"))));
+            } else {
                 styleDisabledButton();
             }
         } else {
             SnackbarUtils.showLongSnackbar(content, getActivityContext().getResources().getString(R.string.internet_not_connected_error_login));
         }
+    }
+
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i + 1), 16));
+        }
+        return data;
+    }
+
+    private static final String ALGO = "AES"; // Default uses ECB PKCS5Padding
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String decodeKey(String str) {
+        byte[] decoded = Base64.getDecoder().decode(str.getBytes());
+        return new String(decoded);
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String encodeKey(String str) {
+        byte[] encoded = Base64.getEncoder().encode(str.getBytes());
+        return new String(encoded);
+    }
+
+    public static String encrypt(String Data, String secret) throws Exception {
+        Key key = generateKey(secret);
+        Cipher c = Cipher.getInstance(ALGO);
+        c.init(Cipher.ENCRYPT_MODE, key);
+        byte[] encVal = c.doFinal(Data.getBytes());
+        String encryptedValue = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            encryptedValue = Base64.getEncoder().encodeToString(encVal);
+        } else {
+            encryptedValue = android.util.Base64.encode(encVal, android.util.Base64.DEFAULT).toString();
+
+        }
+        return encryptedValue;
+    }
+
+    private static Key generateKey(String secret) {
+        byte[] decoded;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            decoded = Base64.getDecoder().decode(secret.getBytes());
+        } else {
+            decoded = android.util.Base64.decode(secret.getBytes(), android.util.Base64.DEFAULT);
+        }
+        Key key = new SecretKeySpec(decoded, ALGO);
+        return key;
     }
 
     /**
@@ -207,13 +270,13 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
 
     @OnTextChanged(R2.id.login_username)
-    public void onUsernameChanged(CharSequence text){
+    public void onUsernameChanged(CharSequence text) {
         editTextUsername.setError(null);
         styleLiveButton();
     }
 
     @OnTextChanged(R2.id.login_password)
-    public void onPasswordChanged(CharSequence text){
+    public void onPasswordChanged(CharSequence text) {
         editTextPassword.setError(null);
         styleLiveButton();
     }
@@ -225,12 +288,12 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         loginPresenter.onDetach();
     }
 
-    public void styleLiveButton(){
+    public void styleLiveButton() {
         submitButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         submitButton.setTextColor(getResources().getColor(R.color.white));
     }
 
-    public void styleDisabledButton(){
+    public void styleDisabledButton() {
         submitButton.setBackgroundColor(getResources().getColor(R.color.grey));
         submitButton.setTextColor(getResources().getColor(R.color.white));
     }

@@ -5,6 +5,7 @@ import android.app.ProgressDialog
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
+import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -15,13 +16,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.samagra.ancillaryscreens.R
 import com.samagra.ancillaryscreens.models.OnUserFound
-import com.samagra.ancillaryscreens.screens.change_password.FindUserByPhoneTask
 import com.samagra.commons.CommonUtilities.isNetworkAvailable
 import com.samagra.commons.SamagraAlertDialog
 import com.samagra.commons.SamagraAlertDialog.CaastleAlertDialogActionListener
 import com.samagra.grove.logging.Grove
 import kotlinx.android.synthetic.main.aa.*
-import org.odk.collect.android.listeners.ActionListener
 import org.odk.collect.android.utilities.SnackbarUtils
 import java.util.regex.Pattern
 
@@ -140,8 +139,9 @@ class EnterMobileNumberFragment : Fragment(), View.OnClickListener, OnUserFound,
     }
 
     private fun checkPhoneValidity(amount: String) {
-        FindUserByPhoneTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, amount, requireContext().getText(R.string.fusionauth_api_key).toString())
-
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val token = sharedPreferences.getString("token", "")
+        SendOTPTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber)
     }
 
     private fun isValidPhoneNumber(phoneNumber: String): Boolean {

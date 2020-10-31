@@ -1,12 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">AncillaryScreens</string>
-    <string name="fusionauth_api_key" translatable="false">YBr98KDc32etBmd-T-9zOkX4iyF9DqDp9YuDOtd3Miw</string>
+    <string name="fusionauth_api_key" translatable="false">Y</string>
     <string name="profile_contact_message" translatable="false">These following fields cannot be updated. In case there is any issue, contact admin.</string>
     <string-array name="category_of_user_shiksha_sathi">
         <item>Not Applicable</item>
         <item>Additional Charge</item>
         <item>Stopgap Arrangement (BRCCs)</item>
     </string-array>
+    <string name="phone_number_email_not_simultaneous">Both Phone number and email cannot change at the same time. Please try with one first.</string>
+    <string name="internet_not_connected_otp">It seems you are not connected to the internet. Please switch on your mobile data/connect to Wi-fi to receive OTP</string>
+    <string name="internet_not_connected_profile_screen">It seems you are not connected to the internet. Please switch on your mobile data/connect to Wi-fi to update your profile</string>
     <string name="oh_no" tools:ignore="MissingTranslation">Oh no!</string>
     <string name="unexpected_error_occured" tools:ignore="MissingTranslation">Something unexpected has occurred.</string>
     <string name="send_otp"> Send OTP </string>
@@ -26,7 +29,7 @@
     <string name="please_enter_the_otp_sent_to_the_mobile_number_of_school_incharge" tools:ignore="MissingTranslation">Please enter the OTP sent to the associated mobile number.</string>
     <string name="otp"> OTP </string>
     <string name="internet_not_connected">It seems you are not connected to the internet. Please switch on your mobile data to change password.</string>
-    <string name="pass_changed_redirecting">The password has been successfully changed. Redirecting you to profile page</string>
+    <string name="pass_changed_redirecting">The password has been successfully changed. Click OK to go to Login page. You need to login again to continue. </string>
     <string name="pass_change_successful">The password has been successfully changed. You need to login again to continue. Redirecting you to login page</string>
     <string name="error_in_change_pass">The server responded with an error. Please retry again</string>
     <string name="error_sending_otp">Error sending OTP. Please contact admin.</string>

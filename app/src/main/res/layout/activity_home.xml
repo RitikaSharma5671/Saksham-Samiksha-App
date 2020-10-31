@@ -40,6 +40,7 @@
             android:layout_width="match_parent"
             android:id="@+id/progress_bar_text"
             android:textSize="21sp"
+            android:visibility="gone"
             android:letterSpacing="0.15"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"

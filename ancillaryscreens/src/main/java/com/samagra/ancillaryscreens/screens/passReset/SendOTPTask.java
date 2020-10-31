@@ -57,7 +57,7 @@ public class SendOTPTask extends AsyncTask<String, Void, String> {
                     return jsonData;
                 }
             } catch (IOException e) {
-                Grove.e("OTP Network R/Q failed with IO Exception at Login Screen with Execption " + e.getMessage());
+                Grove.e("OTP Network R/Q failed with IO Exception at Login Screen with Exception " + e.getMessage());
                 isSuccess = false;
                 e.printStackTrace();
             }

@@ -1,7 +1,9 @@
 package com.samagra.ancillaryscreens.screens.passReset;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -26,17 +29,28 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.androidnetworking.error.ANError;
 import com.google.android.material.textfield.TextInputLayout;
 import com.samagra.ancillaryscreens.R;
+import com.samagra.ancillaryscreens.data.network.BackendCallHelper;
+import com.samagra.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.samagra.ancillaryscreens.screens.change_password.MultiTextWatcher;
+import com.samagra.ancillaryscreens.screens.login.LoginActivity;
+import com.samagra.ancillaryscreens.screens.login.LoginPresenter;
 import com.samagra.ancillaryscreens.utils.SnackbarUtils;
+import com.samagra.commons.CommonUtilities;
+import com.samagra.commons.Constants;
 import com.samagra.commons.SamagraAlertDialog;
 import com.samagra.grove.logging.Grove;
 
 import org.odk.collect.android.listeners.ActionListener;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
-public class OTPFragment extends Fragment implements View.OnClickListener, ActionListener, MultiTextWatcher.TextWatcherWithInstance,ChangePasswordActionListener {
+
+public class OTPFragment extends Fragment implements  ActionListener, MultiTextWatcher.TextWatcherWithInstance,ChangePasswordActionListener {
 
     private TextInputLayout passwordLayout;
     private TextInputLayout otpLayou;
@@ -50,6 +64,7 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
     private String lastPage = "lastPage";
     Button submitButton;
     private View.OnClickListener resendListener;
+    private View.OnClickListener sendListener;
     String TAG = OTPFragment.class.getName();
     private CountDownTimer countDownTimer;
     private ProgressDialog mProgress;
@@ -94,8 +109,54 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
                 getFragmentManager().popBackStack();
             }
         });
-
+        sendListener = new View.OnClickListener() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onClick(View v) {
+                String pass = password.getText().toString();
+                String confPass = confirmPassword.getText().toString();
+                String otpText = otp.getText().toString();
+                if (!OTPFragment.this.validateInputs(otpText, pass, confPass)) {
+                    return;
+                }
+                if (!OTPFragment.this.isNetworkConnected()) {
+                    if (parent != null) {
+                        SnackbarUtils.showLongSnackbar(parent, OTPFragment.this.getResources().getString(R.string.internet_not_connected));
+                    }
+                } else {
+                    Timber.d("SENDING REQUEST TO UPDATE PWD");
+                    OTPFragment.this.showProgressBar(OTPFragment.this.getString(R.string.password_changing));
+//                    BackendCallHelperImpl.getInstance()
+//                            .performUpdatePassword(phoneNumber,
+//                                    otp.getText().toString(),
+//                                    pass)
+//                            .subscribeOn(Schedulers.io())
+//                            .observeOn(AndroidSchedulers.mainThread())
+//                            .subscribe(loginResponse -> {
+//                                    if (loginResponse != null) {
+//                                        onSuccess();
+//                                    } else {
+//                                        onFailure(new Exception("vggv"));
+//                                    }
+//
+//                            }, throwable -> {
+//                                onFailure(new Exception("vggv"));
+////                                if (throwable instanceof ANError)
+////                                    Grove.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", throwable, throwable, throwable);
+//                                Grove.e(throwable);
+//                            });
+                    new UpdatePasswordTask(OTPFragment.this).
+                            executeOnExecutor(
+                                    AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber,
+                                    otp.getText().toString(),
+                                    pass);
+                    submitButton.setEnabled(false);
+                    submitButton.setClickable(false);
+                }
+            }
+        };
         submitButton = view.findViewById(R.id.password_submit);
+        submitButton.setOnClickListener(sendListener);
         new MultiTextWatcher()
                 .registerEditText(otp)
                 .registerEditText(password)
@@ -112,6 +173,8 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
                     @Override
                     public void onSuccess() {
                         hideProgressBar();
+                        submitButton.setEnabled(true);
+                        submitButton.setClickable(true);
                         startTimer();
                         if (view != null) {
                             parent = view.findViewById(R.id.parent);
@@ -120,21 +183,24 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
                             }
                         }
                         submitButton.setText(getActivity().getResources().getString(R.string.submit));
-                        submitButton.setOnClickListener(OTPFragment.this::onClick);
+                        submitButton.setOnClickListener(sendListener);
                     }
 
                     @Override
                     public void onFailure(Exception exception) {
                         hideProgressBar();
+                        submitButton.setEnabled(true);
+                        submitButton.setClickable(true);
                         if (parent != null) {
                             SnackbarUtils.showLongSnackbar(parent, OTPFragment.this.getActivity().getResources().getString(R.string.error_sending_otp));
                         }
                     }
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber);
+                submitButton.setEnabled(false);
+                submitButton.setClickable(false);
             }
         };
 
-        submitButton.setOnClickListener(this);
         mProgress = new ProgressDialog(requireContext());
         mProgress.setTitle(getString(R.string.password_changing));
         mProgress.setMessage(getString(R.string.please_wait));
@@ -143,34 +209,13 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
-        if (!isNetworkConnected()) {
-            if (parent != null) {
-                SnackbarUtils.showLongSnackbar(parent, this.getResources().getString(R.string.internet_not_connected));
-            }
-        } else {
-            if (v.getId() == R.id.password_submit) {
-                String pass = password.getText().toString();
-                String confPass = confirmPassword.getText().toString();
-                String otpText = otp.getText().toString();
-                if (!validateInputs(otpText, pass, confPass)) {
-                    return;
-                }
-                showProgressBar(getString(R.string.password_changing));
-                new UpdatePasswordTask(this).executeOnExecutor(
-                        AsyncTask.THREAD_POOL_EXECUTOR, phoneNumber,
-                        otp.getText().toString(),
-                        pass);
-            }
-        }
-    }
 
     @Override
     public void onSuccess() {
         Grove.e(TAG, "Successfully changed password.");
         hideProgressBar();
-
+        submitButton.setEnabled(true);
+        submitButton.setClickable(true);
         // Return to login screen. Show snack-bar that password was changed successfully.
         // Logout if not logged out and ask him to login again.
 
@@ -182,6 +227,13 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
                         removeFragment(this, getFragmentManager());
                         getActivity().finish();
                         alertDialog.dismiss();
+                        String appLanguage = PreferenceManager.getDefaultSharedPreferences(requireContext()).getString(Constants.APP_LANGUAGE_KEY, "en");
+                        PreferenceManager.getDefaultSharedPreferences(requireContext()).edit().clear().apply();
+                        Grove.d("OnSuccess() make Remove token api makeRemoveTokenApiCall() call invoked");
+                        Grove.d("Removed FCM Token, from the user data");
+                        logoutUserLocally(requireContext(), appLanguage);
+                        Intent intent = new Intent(requireContext(), LoginActivity.class);
+                        CommonUtilities.startActivityAsNewTask(intent, requireContext());
                     }).show();
         } else {
             new SamagraAlertDialog.Builder(requireContext()).setTitle(getText(R.string.password_changed)).
@@ -196,6 +248,16 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
                         alertDialog.dismiss();
                     }).show();
         }
+    }
+
+    private static void logoutUserLocally(@NonNull Context context, String appLanguage) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLoggedIn", false);
+        editor.putString(Constants.APP_LANGUAGE_KEY, appLanguage);
+        editor.remove("updatedMappingThroughFirebase2");
+        editor.remove("formVersion");
+        editor.apply();
     }
 
     private void removeFragment(Fragment fragment, FragmentManager manager) {
@@ -225,6 +287,8 @@ public class OTPFragment extends Fragment implements View.OnClickListener, Actio
     @Override
     public void onFailure(Exception exception) {
         hideProgressBar();
+        submitButton.setEnabled(true);
+        submitButton.setClickable(true);
         if (parent != null) {
             Grove.e("Could not update Password" + exception.getMessage());
             SnackbarUtils.showLongSnackbar(parent, exception.getMessage());

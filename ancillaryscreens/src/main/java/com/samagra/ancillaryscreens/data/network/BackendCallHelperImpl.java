@@ -9,9 +9,11 @@ import com.rx2androidnetworking.Rx2AndroidNetworking;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
+import com.samagra.ancillaryscreens.data.network.model.RelayLoginResponse;
 import com.samagra.commons.Constants;
 import com.samagra.grove.logging.Grove;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.reactivex.Single;
@@ -44,7 +46,7 @@ public class BackendCallHelperImpl implements BackendCallHelper {
     }
 
     @Override
-    public Single<JSONObject> refreshToken(String apiKey, String refreshToken) {
+    public Single<JSONObject> refreshToken(String refreshToken, String jwt) {
         JSONObject body = new JSONObject();
         try {
             body.put("refreshToken", refreshToken);
@@ -52,7 +54,7 @@ public class BackendCallHelperImpl implements BackendCallHelper {
             Grove.e("Could not parse malformed JSON");
         }
         return Rx2AndroidNetworking.post(BackendApiUrls.REFRESH_JWT_ENDPOINT)
-                .addHeaders("Authorization", apiKey)
+                .addHeaders("Authorization", "Bearer " + jwt)
                 .addHeaders("Content-Type", "application/json")
                 .setTag(Constants.LOGOUT_CALLS)
                 .addJSONObjectBody(body)
@@ -63,8 +65,8 @@ public class BackendCallHelperImpl implements BackendCallHelper {
 
     @Override
     public Single<JSONObject> validateToken(String jwt){
-        return Rx2AndroidNetworking.get(BackendApiUrls.VALIDATE_ENDPOINT)
-                .addHeaders("Authorization", "JWT " + jwt)
+        return Rx2AndroidNetworking.post(BackendApiUrls.VALIDATE_ENDPOINT)
+                .addHeaders("Authorization", "Bearer " + jwt)
                 .addHeaders("Content-Type", "application/json")
                 .setTag(Constants.LOGOUT_CALLS)
                 .build()
@@ -86,14 +88,49 @@ public class BackendCallHelperImpl implements BackendCallHelper {
     public Single<LoginResponse> performLoginApiCall(LoginRequest loginRequest) {
         return Rx2AndroidNetworking.post(BackendApiUrls.AUTH_LOGIN_ENDPOINT)
                 .addHeaders("Content-Type", "application/json")
-                .addHeaders("Authorization", AncillaryScreensDriver.API_KEY)
                 .addJSONObjectBody(loginRequest.getLoginRequestJSONObject())
                 .build()
                 .getJSONObjectSingle()
                 .map(jsonObject -> {
-                    LoginResponse loginResponse;
-                    loginResponse = new Gson().fromJson(jsonObject.toString(), LoginResponse.class);
-                    return loginResponse;
+                    RelayLoginResponse relayLoginResponse;
+                    relayLoginResponse = new Gson().fromJson(jsonObject.toString(), RelayLoginResponse.class);
+                    return relayLoginResponse.getSuccessResponse();
+                });
+    }
+
+    @Override
+    public Single<JSONObject> performUpdatePassword(String phoneNumber, String otp, String password) {
+        JSONObject requestJson = new JSONObject();
+        try {
+            // Add values to json
+            requestJson.put("phoneNo", phoneNumber);
+            requestJson.put("otp", otp);
+            requestJson.put("password", password);
+            requestJson.put("applicationId", AncillaryScreensDriver.APPLICATION_ID);
+        }catch (Exception e) {
+
+        }
+        return Rx2AndroidNetworking.post(AncillaryScreensDriver.UPDATE_PASSWORD_URL+ "change-password")
+                .addHeaders("Content-Type", "application/json")
+                .addJSONObjectBody(requestJson)
+                .build()
+                .getJSONObjectSingle()
+                .map(jsonObject -> {
+                    return jsonObject;
+                });
+    }
+
+    public Single<JSONObject> performLogoutApiCall(String token, String apiKey) throws JSONException {
+        JSONObject jsonObject1 = new JSONObject();
+        jsonObject1.put("refreshToken", token);
+        return Rx2AndroidNetworking.post(BackendApiUrls.AUTH_LOGOUT_ENDPOINT)
+                .addHeaders("Content-Type", "application/json")
+                .addHeaders("Authorization", "Bearer " + apiKey)
+                .addJSONObjectBody(jsonObject1)
+                .build()
+                .getJSONObjectSingle()
+                .map(jsonObject -> {
+                    return jsonObject;
                 });
     }
 
@@ -104,7 +141,6 @@ public class BackendCallHelperImpl implements BackendCallHelper {
      * @param apiKey - The API key is used as authorization and passed in the headers.
      * @param userId - The unique id used to identify a user.
      * @return a {@link Single} object which receives the result of the API response and can be observed.
-     * @see com.samagra.ancillaryscreens.AncillaryScreensDriver#performLogout(Context, String)
      * @see {https://fusionauth.io/docs/v1/tech/apis/users#retrieve-a-user}
      */
     @Override
@@ -112,7 +148,7 @@ public class BackendCallHelperImpl implements BackendCallHelper {
         Grove.d("performGetUserDetailsApiCall() method called...");
         return Rx2AndroidNetworking.get(BackendApiUrls.USER_DETAILS_ENDPOINT)
                 .addPathParameter("user_id", userId)
-                .addHeaders("Authorization", apiKey)
+                .addHeaders("Authorization", "Bearer " + apiKey)
                 .setTag(Constants.LOGOUT_CALLS)
                 .build()
                 .getJSONObjectSingle();
@@ -126,14 +162,13 @@ public class BackendCallHelperImpl implements BackendCallHelper {
      * @param apiKey     - The API key is used as authorization and passed in the headers.
      * @param jsonObject - The updated user object that replaces the user with id userId at the backend.
      * @return a {@link Single} object which receives the result of the API response and can be observed.
-     * @see com.samagra.ancillaryscreens.AncillaryScreensDriver#performLogout(Context, String)
      * @see {https://fusionauth.io/docs/v1/tech/apis/users#update-a-user}
      */
     @Override
     public Single<JSONObject> performPutUserDetailsApiCall(String userId, String apiKey, JSONObject jsonObject) {
         return Rx2AndroidNetworking.put(BackendApiUrls.USER_DETAILS_ENDPOINT)
                 .addPathParameter("user_id", userId)
-                .addHeaders("Authorization", apiKey)
+                .addHeaders("Authorization", "Bearer "+ apiKey)
                 .setTag(Constants.LOGOUT_CALLS)
                 .addJSONObjectBody(jsonObject)
                 .build()

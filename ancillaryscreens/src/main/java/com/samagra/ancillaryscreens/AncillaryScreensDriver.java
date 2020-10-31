@@ -13,6 +13,8 @@ import com.samagra.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.samagra.ancillaryscreens.models.AboutBundle;
 import com.samagra.ancillaryscreens.screens.about.AboutActivity;
 import com.samagra.ancillaryscreens.screens.login.LoginActivity;
+import com.samagra.ancillaryscreens.screens.profile.ProfileActivity;
+import com.samagra.ancillaryscreens.screens.profile.UserProfileElement;
 import com.samagra.ancillaryscreens.screens.tutorials.TutorialActivity;
 import com.samagra.commons.CommonUtilities;
 import com.samagra.commons.Constants;
@@ -25,6 +27,8 @@ import com.samagra.grove.logging.Grove;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -33,7 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * The driver class for this module, any screen that needs to be launched from outside this module, should be
  * launched using this class.
- * Note: It is essential that you call the {@link AncillaryScreensDriver#init(MainApplication, String, String, String, String, String)} to initialise
+ * Note: It is essential that you call the {@link AncillaryScreensDriver#init(MainApplication, String, String, String, String)} to initialise
  * the class prior to using it else an {@link InvalidConfigurationException} will be thrown.
  *
  * @author Pranav Sharma
@@ -44,7 +48,7 @@ public class AncillaryScreensDriver {
     public static String BASE_API_URL;
     public static String SEND_OTP_URL;
     public static String APPLICATION_ID;
-    public static String API_KEY;
+    private static String USER_ID;
 
     /**
      *
@@ -53,16 +57,14 @@ public class AncillaryScreensDriver {
      * @param SEND_OTP_URL - String SEND OTP URL
      * @param UPDATE_PASSWORD_URL - String Update Password URL
      * @param APPLICATION_ID - String Application ID
-     * @param  API_KEY _ Fusion Auth API Key
      */
     public static void init(@NonNull MainApplication mainApplication, @NonNull String BASE_URL, @NonNull String SEND_OTP_URL,
-                            @NonNull String UPDATE_PASSWORD_URL, @NonNull String APPLICATION_ID, @NonNull String API_KEY) {
+                            @NonNull String UPDATE_PASSWORD_URL, @NonNull String APPLICATION_ID) {
         AncillaryScreensDriver.mainApplication = mainApplication;
         AncillaryScreensDriver.BASE_API_URL = BASE_URL;
         AncillaryScreensDriver.SEND_OTP_URL = SEND_OTP_URL;
         AncillaryScreensDriver.UPDATE_PASSWORD_URL = UPDATE_PASSWORD_URL;
         AncillaryScreensDriver.APPLICATION_ID = APPLICATION_ID;
-        AncillaryScreensDriver.API_KEY = API_KEY;
     }
 
     /**
@@ -116,18 +118,34 @@ public class AncillaryScreensDriver {
      * @see AncillaryScreensDriver#notifyLogoutInitiated()
      * @see AncillaryScreensDriver#notifyLogoutCompleted()
      */
-    public static void performLogout(@NonNull Context context, String apiKey) {
+    public static void performLogout(@NonNull Context context) {
         // TODO : Logout button => Logout from fusionAuth => Update user by removing registration token => Login splash_ss
         Grove.d("Inside performLogout() method....");
         checkValidConfig();
         notifyLogoutInitiated();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String token = sharedPreferences.getString("FCM.token", "");
-        if (CommonUtilities.isNetworkAvailable(context))
-            makeRemoveTokenApiCall(token, context, apiKey);
+        if (CommonUtilities.isNetworkAvailable(context)) {
+            try {
+                makeRemoveTokenApiCall(context);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         else
             Toast.makeText(context, "No Internet Connection. Please connect to internet and try again later", Toast.LENGTH_LONG).show();
     }
+
+    public static void launchProfileActivity(Context context, ArrayList<UserProfileElement> profileElements, String fetchUserID) {
+        checkValidConfig();
+        // Intent intent = new Intent(context, ProfileActivity.class);
+
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putParcelableArrayListExtra("config", profileElements);
+        USER_ID = fetchUserID;
+        context.startActivity(intent);
+    }
+
 
 
     /**
@@ -135,16 +153,14 @@ public class AncillaryScreensDriver {
      * of a 2-step process to logout the user. The object retrieved by this API call is then edited to remove
      * the FCMToken from it. This is done to prevent logged out users from receiving notifications.
      *
-     * @param token   - The API token for the fusionAuth API.
      * @param context - The current Activity Context.
      * @see AncillaryScreensDriver#removeFCMTokenFromObject(JSONObject) - This edits the JSONObject retrieved by removing the FCM token.
-     * @see AncillaryScreensDriver#putUpdatedUserDetailsObject(JSONObject, Context, String, String, String)  - This uploads the new JSON Object as User data Object (with no FCM Token).
      */
-    private static void makeRemoveTokenApiCall(@NonNull String token, @NonNull Context context, @NonNull String apiKey) {
+    private static void makeRemoveTokenApiCall(@NonNull Context context) throws JSONException {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String userId = sharedPreferences.getString("user.id", "");
+        String userId = sharedPreferences.getString("token", "");
         BackendCallHelperImpl.getInstance()
-                .performGetUserDetailsApiCall(userId, apiKey)
+                .performLogoutApiCall(sharedPreferences.getString("refreshToken", ""), userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<JSONObject>() {
@@ -158,10 +174,11 @@ public class AncillaryScreensDriver {
                         String appLanguage = PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.APP_LANGUAGE_KEY, "en");
                         PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
                         Grove.d("OnSuccess() make Remove token api makeRemoveTokenApiCall() call invoked");
-                        JSONObject removedFCMTokenObject = removeFCMTokenFromObject(jsonObject);
                         Grove.d("Removed FCM Token, from the user data");
-                        putUpdatedUserDetailsObject(removedFCMTokenObject, context, userId, apiKey, appLanguage);
-                    }
+                        logoutUserLocally(context, appLanguage);
+                        notifyLogoutCompleted();
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        CommonUtilities.startActivityAsNewTask(intent, context);                    }
 
                     @Override
                     public void onError(Throwable e) {
@@ -171,45 +188,6 @@ public class AncillaryScreensDriver {
                     }
                 });
     }
-
-
-    /**
-     * This function makes an API call to post the updated User data as {@link JSONObject} returned by {@link AncillaryScreensDriver#removeFCMTokenFromObject(JSONObject)}.
-     *  @param jsonObjectToPut - The user {@link JSONObject} without FCM Token.
-     * @param context         - The current Activity Context.
-     * @param userId          - String userId for the current User.
-     * @param apiKey          - The FusionAuth ApiKey.
-     * @param appLanguage App Language
-     */
-    private static void putUpdatedUserDetailsObject(JSONObject jsonObjectToPut, Context context, String userId, String apiKey, String appLanguage) {
-        BackendCallHelperImpl.getInstance()
-                .performPutUserDetailsApiCall(userId, apiKey, jsonObjectToPut)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<JSONObject>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Grove.d("On Subscribe Put updated objects... putUpdatedUserDetailsObject() called ");
-                    }
-
-                    @Override
-                    public void onSuccess(JSONObject jsonObject) {
-                        Grove.d("Successfully removed FCM TOKEN,while logging out on Success() for putUpdatedUserDetailsObject() called");
-                        logoutUserLocally(context, appLanguage);
-                        notifyLogoutCompleted();
-                        Intent intent = new Intent(context, LoginActivity.class);
-                        CommonUtilities.startActivityAsNewTask(intent, context);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        notifyLogoutCompleted();
-                        Grove.e("onError for putUpdatedUserDetailsObject() called " + e.getMessage());
-                        Toast.makeText(context, context.getResources().getString(R.string.unable_to_log_out), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
 
 
     /**
@@ -277,7 +255,7 @@ public class AncillaryScreensDriver {
     }
 
     /**
-     * Function to check if the mainApplication is initialised indicating if {@link AncillaryScreensDriver#init(MainApplication, String, String, String, String, String)} is called or not.
+     * Function to check if the mainApplication is initialised indicating if {@link AncillaryScreensDriver#init(MainApplication, String, String, String, String)} is called or not.
      * If not, it throws {@link InvalidConfigurationException}
      *
      * @throws InvalidConfigurationException - This Exception means that the module is not configured by the user properly. The exception generates

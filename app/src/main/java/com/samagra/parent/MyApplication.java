@@ -106,7 +106,7 @@ public class MyApplication extends Application implements MainApplication, Lifec
         AncillaryScreensDriver.init(this, AppConstants.BASE_API_URL,
                 AppConstants.SEND_OTP_URL,
                 AppConstants.UPDATE_PASSWORD_URL,
-                getApplicationId(), getApplicationContext().getResources().getString(R.string.fusionauth_api_key));
+                getApplicationId());
         Grove.d("Ancillary Screens Module initialised >>>>");
         initBus();
         UpdateDriver.init(this);

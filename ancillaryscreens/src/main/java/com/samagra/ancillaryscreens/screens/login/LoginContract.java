@@ -28,7 +28,7 @@ public interface LoginContract {
         boolean validateInputs(EditText editTextUsername, EditText editTextPassword);
 
 
-        void performLogin();
+        void performLogin() throws Exception;
 
         void changePassword();
 

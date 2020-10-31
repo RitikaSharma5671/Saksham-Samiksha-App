@@ -1,9 +1,9 @@
 package com.samagra.parent.ui.HomeScreen;
 
+import com.samagra.ancillaryscreens.screens.profile.UserProfileElement;
 import com.samagra.commons.InstitutionInfo;
 import com.samagra.parent.base.MvpPresenter;
 import com.samagra.parent.di.PerActivity;
-import com.samagra.user_profile.profile.UserProfileElement;
 
 import java.util.ArrayList;
 

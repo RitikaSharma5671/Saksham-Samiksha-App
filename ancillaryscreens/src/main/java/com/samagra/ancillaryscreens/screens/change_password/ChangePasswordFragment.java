@@ -2,8 +2,10 @@ package com.samagra.ancillaryscreens.screens.change_password;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,8 +88,10 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     }
 
     private void checkPhoneValidity(String phoneNumber) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        String token = sharedPreferences.getString("token", "");
         new FindUserByPhoneTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                phoneNumber, requireContext().getText(R.string.fusionauth_api_key).toString());
+                phoneNumber, token);
     }
 
     private boolean validate(String phoneNumber) {

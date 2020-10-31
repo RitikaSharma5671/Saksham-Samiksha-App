@@ -15,6 +15,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import timber.log.Timber;
 
 public class UpdatePasswordTask extends AsyncTask<String, Void, String> {
 
@@ -40,7 +41,7 @@ public class UpdatePasswordTask extends AsyncTask<String, Void, String> {
             requestJson.put("otp", otp);
             requestJson.put("password", password);
             requestJson.put("applicationId", AncillaryScreensDriver.APPLICATION_ID);
-
+            Timber.d("Inside Update Password Task");
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             RequestBody body = RequestBody.create(JSON, requestJson.toString());
             OkHttpClient client = new OkHttpClient();
@@ -58,7 +59,7 @@ public class UpdatePasswordTask extends AsyncTask<String, Void, String> {
                     return response.body().string();
                 }else{
                     isSuccessful = false;
-                    return response.body().string();
+                    return null;
                 }
             } catch (IOException e) {
                 Grove.e(e);
@@ -89,7 +90,7 @@ public class UpdatePasswordTask extends AsyncTask<String, Void, String> {
                     listener.onFailure(new Exception(s));
                 }
             } else {
-                listener.onFailure(new Exception("Password could not be changed. Please contact admin."));
+                listener.onFailure(new Exception("Password could not be changed."));
             }
         } else listener.onSuccess();
     }
