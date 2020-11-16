@@ -44,8 +44,6 @@ public class SendOTPTask extends AsyncTask<String, Void, String> {
                     return response.body().toString();
                 }else{
                     isSuccess = false;
-                    String jsonData = response.body().string();
-                    response.body().close();
                     return "Failure";
                 }
             } catch (IOException e) {

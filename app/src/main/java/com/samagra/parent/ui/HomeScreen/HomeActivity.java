@@ -254,8 +254,16 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
 
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        if(messageView != null)
+            messageView.dismiss();
+    }
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(messageView != null)
+            messageView.dismiss();
         if (logoutListener != null && !logoutListener.isDisposed()) {
             AndroidNetworking.cancel(Constants.LOGOUT_CALLS);
             logoutListener.dispose();
@@ -374,7 +382,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
                                 iStudentDetailsContract.removeRealsmDB();
                                 Grove.d("Logout completed Event received");
                                 hideLoading();
-                                Grove.d("Logout snackbar hidden");
+                                Grove.d("Logout snack bar hidden");
                                 logoutListener.dispose();
                                 Grove.d("Logout listener disposed off...");
                             } else if (eventExchangeObject.customEvents == CustomEvents.LOGOUT_INITIATED) {
@@ -414,6 +422,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         new LocaleHelper().updateLocale(getActivityContext(), language);
 
     }
+
 
     @Override
     public void displayHomeWelcomeText(String userName) {

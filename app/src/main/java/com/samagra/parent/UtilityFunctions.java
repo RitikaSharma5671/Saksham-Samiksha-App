@@ -68,10 +68,10 @@ public class UtilityFunctions {
      *
      * @param container - The parent root container for the snackbar (Usually the view with id android.R.id.content
      * @param context   - The current activity context
-     * @param message   - The String message that needs to be displayed in the snackbar
+     * @param message   - The String message that needs to be displayed in the snack bar
      */
     public static Snackbar getSnackbarWithProgressIndicator(@NonNull View container, @NonNull Context context, String message) {
-        Snackbar bar = Snackbar.make(container, message, Snackbar.LENGTH_INDEFINITE);
+        Snackbar bar = Snackbar.make(container, message, Snackbar.LENGTH_SHORT);
         ViewGroup contentLay = (ViewGroup) bar.getView().findViewById(com.google.android.material.R.id.snackbar_text).getParent();
         ProgressBar item = new ProgressBar(context);
         item.setScaleY(0.8f);
