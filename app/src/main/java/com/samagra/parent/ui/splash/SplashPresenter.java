@@ -1,5 +1,6 @@
 package com.samagra.parent.ui.splash;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -20,16 +21,23 @@ import com.samagra.parent.base.BasePresenter;
 import com.samagra.parent.helper.BackendNwHelper;
 
 import org.odk.collect.android.BuildConfig;
+import org.odk.collect.android.activities.SplashScreenActivity;
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.contracts.AppPermissionUserActionListener;
 import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.contracts.PermissionsHelper;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.storage.StorageInitializer;
+import org.odk.collect.android.utilities.DialogUtils;
+import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.android.utilities.ThemeUtils;
 
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * The presenter for the Splash Screen. This class controls the interactions between the View and the data.
@@ -94,7 +102,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                     .subscribe(updatedToken -> {
                         if (updatedToken != null && updatedToken.has("jwt")) {
                             jwtTokenValid = true;
-                            ((SplashActivity)activityContext).endSplashScreen();
+                            ((SplashActivity) activityContext).endSplashScreen();
                             Grove.e("JWT Token found to be valid for this user with value: " + updatedToken.toString());
                         }
 
@@ -104,8 +112,8 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                         updateJWT(apiKey);
                         Grove.e(throwable);
                     }));
-        }else{
-            ((SplashActivity)activityContext).launchLoginScreen();
+        } else {
+            ((SplashActivity) activityContext).launchLoginScreen();
         }
     }
 
@@ -133,35 +141,65 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
         if (firstRun || showSplash)
             getMvpInteractor().updateFirstRunFlag(false);
-        ((SplashActivity)context).showSimpleSplash();
+        ((SplashActivity) context).showSimpleSplash();
         updateCurrentVersion();
     }
 
     @Override
     public void requestStoragePermissions(String packageName, PackageManager packageManager, Context context) {
-        getIFormManagementContract().enableUsingScopedStorage();
-        PermissionsHelper permissionUtils = new PermissionsHelper();
-        if (!PermissionsHelper.areStoragePermissionsGranted(context)) {
-            permissionUtils.requestStoragePermissions((SplashActivity) context, new AppPermissionUserActionListener() {
-                @Override
-                public void granted() {
-                    try {
-                        getIFormManagementContract().createODKDirectories();
-                    } catch (RuntimeException e) {
-                        AlertDialogUtils.showDialog(AlertDialogUtils.createErrorDialog(context,
-                                e.getMessage(), EXIT), (SplashActivity) context);
-                        return;
-                    }
-                    init(packageName, packageManager, context);
+//        getIFormManagementContract().enableUsingScopedStorage();
+        PermissionUtils permissionUtils = new PermissionUtils(new ThemeUtils(context).getMaterialDialogTheme());
+//        if (!PermissionsHelper.areStoragePermissionsGranted(context)) {
+//            permissionUtils.requestStoragePermissions((SplashActivity) context, new AppPermissionUserActionListener() {
+//                @Override
+//                public void granted() {
+//                   vff(context);
+//                    init(packageName, packageManager, context);
+//                }
+//
+//                @Override
+//                public void denied() {
+//                    ((SplashActivity)context).finishSplashScreen();
+//                }
+//            });
+//        } else {
+//            init(packageName, packageManager, context);
+//        }
+        permissionUtils.requestStoragePermissions((SplashActivity) context, new PermissionListener() {
+            @Override
+            public void granted() {
+                // must be at the beginning of any activity that can be called from an external intent
+                try {
+                    new StorageInitializer().createOdkDirsOnStorage();
+                } catch (RuntimeException e) {
+                    DialogUtils.showDialog(DialogUtils.createErrorDialog((SplashActivity) context,
+                            e.getMessage(), EXIT), (SplashActivity) context);
+                    return;
                 }
 
-                @Override
-                public void denied() {
-                    ((SplashActivity)context).finishSplashScreen();
-                }
-            });
-        } else {
-            init(packageName, packageManager, context);
+//                vff(context);
+                init(packageName, packageManager, context);
+            }
+
+            @Override
+            public void denied() {
+                // The activity has to finish because ODK Collect cannot function without these permissions.
+                ((SplashActivity)context).finish();
+            }
+        });
+    }
+
+    public void vff(Context context) {
+        try {
+//            getIFormManagementContract().createODKDirectories();
+            Timber.d("CREATED DIRECDDDDDDDDDDDDDDD");
+            if (!getIFormManagementContract().isScopedStorageUsed())
+                getIFormManagementContract().observeStorageMigration(context);
+
+        } catch (RuntimeException e) {
+            AlertDialogUtils.showDialog(AlertDialogUtils.createErrorDialog(context,
+                    e.getMessage(), EXIT), (SplashActivity) context);
+            return;
         }
     }
 
@@ -173,20 +211,20 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
 
     @Override
     public void startUnzipTask(Context context) {
-        FileUnzipper fileUnzipper = new FileUnzipper(context, ROOT + "/saksham_data_json.json", R.raw.kist_school, new UnzipTaskListener() {
-            @Override
-            public void unZipSuccess() {
-                Grove.d("Data file has been unzipped successfully.");
-//                IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
-//                iStudentDetailsContract.loadSchoolDistrictData();
-            }
-
-            @Override
-            public void unZipFailure(Exception exception) {
-                Grove.e("Could not unzip the data file.");
-            }
-        });
-        fileUnzipper.unzipFile();
+//        FileUnzipper fileUnzipper = new FileUnzipper(context, ROOT + "/saksham_data_json.json", R.raw.kist_school, new UnzipTaskListener() {
+//            @Override
+//            public void unZipSuccess() {
+//                Grove.d("Data file has been unzipped successfully.");
+////                IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+////                iStudentDetailsContract.loadSchoolDistrictData();
+//            }
+//
+//            @Override
+//            public void unZipFailure(Exception exception) {
+//                Grove.e("Could not unzip the data file.");
+//            }
+//        });
+//        fileUnzipper.unzipFile();
     }
 
     @Override

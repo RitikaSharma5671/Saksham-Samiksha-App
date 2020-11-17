@@ -16,11 +16,14 @@ import com.samagra.grove.logging.Grove;
 import com.samagra.parent.R;
 import com.samagra.parent.base.BaseActivity;
 
+import org.odk.collect.android.activities.MainMenuActivity;
+
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * The View Part for the Splash Screen, must implement {@link SplashContract.View}
@@ -48,31 +51,31 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         splashImage.setVisibility(View.VISIBLE);
         splashPresenter.initialise((MainApplication) getApplicationContext());
         splashPresenter.requestStoragePermissions(getActivityContext().getPackageName(), getActivityContext().getPackageManager(), getActivityContext());
-        screenChangeDisposable = new CompositeDisposable();
-        setDisposable();
+//        screenChangeDisposable = new CompositeDisposable();
+//        setDisposable();
     }
 
 
     @Override
     public void endSplashScreen() {
         Grove.d("Moving to next screen from Splash");
-        if (!splashPresenter.getIFormManagementContract().isScopedStorageUsed()) {
-            splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
-        }
+//        if (!splashPresenter.getIFormManagementContract().isScopedStorageUsed()) {
+//            splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
+//        }
         if (splashPresenter.getMvpInteractor().isLoggedIn()) {
             if (splashPresenter.canLaunchHome()) {
                 if (splashPresenter.isJwtTokenValid()) {
-                    splashPresenter.getIFormManagementContract().resetODKForms(getActivityContext(), failedResetActions -> {
-                        Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
+//                    splashPresenter.getIFormManagementContract().resetODKForms(getActivityContext(), failedResetActions -> {
+//                        Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
                         redirectToHomeScreen();
-                    });
+//                    });
 
                 } else {
                     splashPresenter.updateJWT(getActivityContext().getResources().getString(R.string.fusionauth_api_key));
                 }
             }
         } else {
-            new CountDownTimer(2500, 500) {
+            new CountDownTimer(5000, 500) {
                 public void onTick(long millisUntilFinished) {
                 }
 
@@ -93,19 +96,25 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     public void showSimpleSplash() {
         splashImage.setImageResource(R.drawable.login_bg);
         splashImage.setVisibility(View.VISIBLE);
-        if (!splashPresenter.getMvpInteractor().isLoggedIn()) {
-            new CountDownTimer(2500, 500) {
-                public void onTick(long millisUntilFinished) {
-                }
-
-                public void onFinish() {
-                    launchLoginScreen();
-                }
-            }.start();
-
-        } else {
-            splashPresenter.verifyJWTTokenValidity(getActivityContext().getResources().getString(R.string.fusionauth_api_key), getActivityContext());
+        if(!splashPresenter.getIFormManagementContract().isScopedStorageUsed()) {
+            splashPresenter.getIFormManagementContract().observeStorageMigration(getActivityContext());
+            finishSplashScreen();
+        }else {
+            launchLoginScreen();
         }
+//        if (!splashPresenter.getMvpInteractor().isLoggedIn()) {
+//            new CountDownTimer(2500, 500) {
+//                public void onTick(long millisUntilFinished) {
+//                }
+//
+//                public void onFinish() {
+//                    launchLoginScreen();
+//                }
+//            }.start();
+//
+//        } else {
+//            splashPresenter.verifyJWTTokenValidity(getActivityContext().getResources().getString(R.string.fusionauth_api_key), getActivityContext());
+//        }
     }
 
     @Override
@@ -124,7 +133,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        screenChangeDisposable.dispose();
+//        screenChangeDisposable.dispose();
         splashPresenter.onDetach();
     }
 
@@ -146,14 +155,21 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
     public void launchLoginScreen() {
         splashPresenter.getMvpInteractor().getPreferenceHelper().updateInstallSendCOunt(false);
-        splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
-        splashPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
-            Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
+//        splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
+//        splashPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
+//            Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
+//        if(splashPresenter.getIFormManagementContract().isScopedStorageUsed()) {
+
             splashPresenter.setInclompleteProfileCount();
             Intent intent = new Intent(this, LoginActivity.class);
             CommonUtilities.startActivityAsNewTask(intent, this);
             finishSplashScreen();
-        });
+//        } else {
+//            splashPresenter.vff(getActivityContext());
+//            Timber.d("CREATED DIRECDDDDDDDDDDDDDDD111");
+//            splashPresenter.getIFormManagementContract().observeStorageMigration(getActivityContext());
+//        }
+//        });
 
     }
 
@@ -161,9 +177,10 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     public void redirectToHomeScreen() {
 //        if (splashPresenter.getIFormManagementContract().isScopedStorageUsed()) {
             splashPresenter.getMvpInteractor().getPreferenceHelper().updateInstallSendCOunt(false);
-            splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
+//            splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
             Grove.d("Redirecting to Home screen from Splash screen >>> ");
             splashPresenter.setInclompleteProfileCount();
+            if(splashPresenter.getIFormManagementContract().isScopedStorageUsed()){
             Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -171,8 +188,9 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
             startActivity(intent);
             Grove.d("Closing Splash Screen");
             finishSplashScreen();
-//        } else {
-//        }
+        } else {
+                splashPresenter.getIFormManagementContract().observeStorageMigration(getActivityContext());
+        }
     }
 
 

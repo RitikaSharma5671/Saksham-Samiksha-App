@@ -83,6 +83,7 @@ the specific language governing permissions and limitations under the License.
         </provider>
 
         <activity android:name=".activities.MainMenuActivity" />
+        <activity android:name=".activities.StorageMigrationActivity" />
         <activity
             android:name=".activities.ScannerWithFlashlightActivity"
             android:screenOrientation="portrait"

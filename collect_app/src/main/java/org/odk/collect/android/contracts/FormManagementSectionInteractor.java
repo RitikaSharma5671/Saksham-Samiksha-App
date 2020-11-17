@@ -16,6 +16,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FillBlankFormActivity;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderListActivity;
+import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.activities.StorageMigrationActivity;
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.dao.FormsDao;
@@ -492,7 +493,7 @@ public class FormManagementSectionInteractor
     @Override
     public void observeStorageMigration(Context context) {
         if (!Collect1.getInstance().getStorageStateProvider().isScopedStorageUsed()) {
-            context.startActivity(new Intent(context, StorageMigrationActivity.class));
+            context.startActivity(new Intent(context, MainMenuActivity.class));
         }
     }
 

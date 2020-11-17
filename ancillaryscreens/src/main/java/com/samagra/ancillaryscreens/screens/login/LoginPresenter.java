@@ -13,6 +13,8 @@ import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.commons.Constants;
 import com.samagra.commons.ExchangeObject;
 import com.samagra.commons.Modules;
+import com.samagra.commons.utils.FileUnzipper;
+import com.samagra.commons.utils.UnzipTaskListener;
 import com.samagra.grove.logging.Grove;
 
 import org.odk.collect.android.contracts.IFormManagementContract;
@@ -23,6 +25,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.samagra.cascading_module.CascadingModuleDriver.ROOT;
 
 /**
  * The presenter for the Login Screen. This class controls the interactions between the View and the data.
@@ -89,4 +93,21 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
     }
 
 
+    public void vfvfv(String scopedStorageRootDirPath) {
+                                getIFormManagementContract().createODKDirectories();
+        FileUnzipper fileUnzipper = new FileUnzipper(getMvpView().getActivityContext(), scopedStorageRootDirPath + "/saksham_data_json.json", R.raw.qkist_school, new UnzipTaskListener() {
+            @Override
+            public void unZipSuccess() {
+                Grove.d("Data file has been unzipped successfully.");
+//                IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+//                iStudentDetailsContract.loadSchoolDistrictData();
+            }
+
+            @Override
+            public void unZipFailure(Exception exception) {
+                Grove.e("Could not unzip the data file.");
+            }
+        });
+        fileUnzipper.unzipFile();
+    }
 }

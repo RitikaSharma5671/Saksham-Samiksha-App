@@ -177,11 +177,12 @@ public class MyApplication extends Application implements MainApplication, Lifec
                                 && isSignalExchangeType((ExchangeObject) exchangeObject)) {
                             ExchangeObject.SignalExchangeObject signalExchangeObject = (ExchangeObject.SignalExchangeObject) exchangeObject;
                             if (signalExchangeObject.shouldStartAsNewTask) {
-                                if (currentActivity != null) {
+//                                if (currentActivity != null) {
                                     Intent intent =  new Intent(getApplicationContext(), LoginActivity.class);
+                                    intent.putExtra("bujbhjb", true);
                                     CommonUtilities.startActivityAsNewTask(intent, getApplicationContext());
-                                }  else
-                                    CommonUtilities.startActivityAsNewTask(signalExchangeObject.intentToLaunch, getApplicationContext());
+//                                }  else
+//                                    CommonUtilities.startActivityAsNewTask(signalExchangeObject.intentToLaunch, getApplicationContext());
                             }
                             else
                                 startActivity(signalExchangeObject.intentToLaunch);

@@ -93,6 +93,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         homeRecyclerView = findViewById(R.id.home_items_layout);
         getActivityComponent().inject(this);
         homePresenter.onAttach(this);
+        homePresenter.getIFormManagementContract().enableUsingScopedStorage();
         HomeItemsAdapter homeItemsAdapter = new HomeItemsAdapter(
                 this,
                 homePresenter.fetchHomeItemList(),

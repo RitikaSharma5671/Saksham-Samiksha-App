@@ -36,6 +36,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.samagra.commons.ExchangeObject;
+import com.samagra.commons.Modules;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
@@ -577,6 +579,10 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         storageMigrationBanner.setAction(() -> {
             storageMigrationBanner.setVisibility(View.GONE);
             storageMigrationRepository.clearResult();
+//            Intent intent = new Intent(this, LoginAc);
+            ExchangeObject.SignalExchangeObject signalExchangeObject = new ExchangeObject.SignalExchangeObject(Modules.MAIN_APP, Modules.COLLECT_APP, null, true);
+            Collect1.getInstance().getMainApplication().getEventBus().send(signalExchangeObject);
+            finish();
         });
     }
 }

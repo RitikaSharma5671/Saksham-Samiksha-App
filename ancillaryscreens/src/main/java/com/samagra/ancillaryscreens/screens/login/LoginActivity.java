@@ -33,9 +33,11 @@ import com.example.assets.uielements.MultiTextWatcher;
 import com.samagra.ancillaryscreens.screens.passReset.EnterMobileNumberFragment;
 import com.samagra.ancillaryscreens.utils.SnackbarUtils;
 import com.samagra.commons.CommonUtilities;
+import com.samagra.commons.MainApplication;
 import com.samagra.grove.logging.Grove;
 
 import org.odk.collect.android.activities.WebViewActivity;
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.utilities.CustomTabHelper;
 
 import java.util.Objects;
@@ -85,16 +87,12 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
         SpannableString content = new SpannableString(getText(R.string.reset_here));
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         forgotPasswordCTA.setText(content);
-
-
         SpannableString contentTeacher = new SpannableString(getText(R.string.faqs_for_teachers_school_heads));
         contentTeacher.setSpan(new UnderlineSpan(), 0, contentTeacher.length(), 0);
         teacherFAQ.setText(contentTeacher);
-
         SpannableString contentMentor = new SpannableString(getText(R.string.faqs_for_mentors));
         contentMentor.setSpan(new UnderlineSpan(), 0, contentMentor.length(), 0);
         mentorFAQ.setText(contentMentor);
-
         SpannableString content1 = new SpannableString("NEED HELP?");
         content1.setSpan(new UnderlineSpan(), 0, content1.length(), 0);
         helpBtton.setText(content1);
@@ -111,7 +109,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
         mProgress.setMessage(getString(R.string.please_wait));
         mProgress.setCancelable(false);
         mProgress.setIndeterminate(true);
-
         String urlFromConfig_MentorDoc = "http://bit.ly/Guidelines_document";
         if(AncillaryScreensDriver.mainApplication.getConfig().getString("faq_mentor_url") != null && !AncillaryScreensDriver.mainApplication.getConfig().getString("faq_mentor_url").isEmpty())
             urlFromConfig_MentorDoc = AncillaryScreensDriver.mainApplication.getConfig().getString("faq_mentor_url");
@@ -132,6 +129,9 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
             intent.putExtra(CustomTabHelper.OPEN_URL, finalUrlFromConfig_MentorDoc);
             getActivityContext().startActivity(intent);
         });
+//        if(getIntent().getBooleanExtra("bujbhjb", false)) {
+            loginPresenter.vfvfv( Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath());
+//        }
     }
 
     @Override
