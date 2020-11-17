@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.instances.Instance;
 import org.odk.collect.android.openrosa.OpenRosaConstants;
-import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
 import org.odk.collect.android.tasks.InstanceUploaderTask;
@@ -65,7 +64,7 @@ public class InstanceServerUploaderTaskTest extends MockedServerTest {
         HEAD: {
             RecordedRequest r = nextRequest();
             assertEquals("HEAD", r.getMethod());
-            assertMatches("/submission\\?deviceID=\\w+%3A\\w+", r.getPath());
+            assertMatches("/submission\\?deviceID=collect%\\w+", r.getPath());
             assertMatches("org.odk.collect.android/.* Dalvik/.*", r.getHeader("User-Agent"));
             assertEquals("1.0", r.getHeader(OpenRosaConstants.VERSION_HEADER));
             assertTrue(r.getHeader("Accept-Encoding").contains("gzip"));
@@ -75,7 +74,7 @@ public class InstanceServerUploaderTaskTest extends MockedServerTest {
         POST: {
             RecordedRequest r = nextRequest();
             assertEquals("POST", r.getMethod());
-            assertMatches("/submission\\?deviceID=\\w+%3A\\w+", r.getPath());
+            assertMatches("/submission\\?deviceID=collect%\\w+", r.getPath());
             assertMatches("org.odk.collect.android/.* Dalvik/.*", r.getHeader("User-Agent"));
             assertEquals("1.0", r.getHeader(OpenRosaConstants.VERSION_HEADER));
             assertTrue(r.getHeader("Accept-Encoding").contains("gzip"));
@@ -91,7 +90,7 @@ public class InstanceServerUploaderTaskTest extends MockedServerTest {
                 .displayName("Test Form")
                 .instanceFilePath(xml.getAbsolutePath())
                 .jrFormId("test_form")
-                .status(InstanceProviderAPI.STATUS_COMPLETE)
+                .status(Instance.STATUS_COMPLETE)
                 .lastStatusChangeDate(123L)
                 .build();
 

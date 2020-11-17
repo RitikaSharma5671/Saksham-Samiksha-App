@@ -74,7 +74,7 @@ the specific language governing permissions and limitations under the License.
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="org.odk.collect.android.provider"
+            android:authorities="com.samagra.sakshamSamiksha.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -83,7 +83,6 @@ the specific language governing permissions and limitations under the License.
         </provider>
 
         <activity android:name=".activities.MainMenuActivity" />
-        <activity android:name=".activities.StorageMigrationActivity" />
         <activity
             android:name=".activities.ScannerWithFlashlightActivity"
             android:screenOrientation="portrait"
@@ -102,19 +101,17 @@ the specific language governing permissions and limitations under the License.
             android:name=".activities.DrawActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activities.GoogleDriveActivity"
+            android:name=".gdrive.GoogleDriveActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.InstanceChooserList"
-            android:exported="false"/>
-        <activity android:name=".activities.FormChooserListActivity"
-            android:exported="false"/>
+        <activity android:name=".activities.InstanceChooserList" />
+        <activity android:name=".activities.FillBlankFormActivity" android:launchMode="singleTop"/>
         <activity android:name=".activities.FormDownloadListActivity" />
         <activity
-            android:name=".activities.FileManagerTabs"
+            android:name=".activities.DeleteSavedFormActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name=".activities.GoogleSheetsUploaderActivity"
+            android:name=".gdrive.GoogleSheetsUploaderActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name=".activities.InstanceUploaderListActivity"
@@ -202,7 +199,7 @@ the specific language governing permissions and limitations under the License.
 
         <activity-alias
             android:name=".activities.FormChooserList"
-            android:targetActivity=".activities.FormChooserListActivity"
+            android:targetActivity=".activities.FillBlankFormActivity"
             tools:ignore="AppLinkUrlError">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -220,16 +217,16 @@ the specific language governing permissions and limitations under the License.
             android:targetActivity=".activities.FormDownloadListActivity">
             <intent-filter>
                 <action android:name="org.odk.collect.android.FORM_DOWNLOAD" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
             </intent-filter>
         </activity-alias>
 
         <activity-alias
             android:name=".activities.InstanceUploaderList"
-            android:exported="false"
-            android:targetActivity=".activities.InstanceUploaderListActivity">
+            android:targetActivity=".activities.InstanceUploaderListActivity" >
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -237,18 +234,16 @@ the specific language governing permissions and limitations under the License.
         </activity-alias>
 
         <activity-alias
-            android:exported="false"
             android:name=".activities.InstanceUploaderActivity"
             android:targetActivity=".activities.InstanceUploaderActivity">
             <intent-filter>
                 <action android:name="org.odk.collect.android.INSTANCE_UPLOAD" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
             </intent-filter>
         </activity-alias>
 
         <activity-alias
-            android:exported="false"
             android:name=".activities.SplashScreenActivity"
             android:targetActivity=".activities.SplashScreenActivity">
             <intent-filter>

@@ -14,13 +14,13 @@
 
 package org.odk.collect.android.upload;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 
 import org.odk.collect.android.R;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.instances.Instance;
 import org.odk.collect.android.openrosa.CaseInsensitiveHeaders;
@@ -30,6 +30,7 @@ import org.odk.collect.android.openrosa.OpenRosaConstants;
 import org.odk.collect.android.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.utilities.ResponseMessageParser;
+import org.odk.collect.android.utilities.TranslationHandler;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 
 import java.io.File;
@@ -77,7 +78,7 @@ public class InstanceServerUploader extends InstanceUploader {
         // the proper scheme.
         if (uriRemap.containsKey(submissionUri)) {
             submissionUri = uriRemap.get(submissionUri);
-            Timber.i("Using Uri remap for submission %s. Now: %s", instance.getDatabaseId(),
+            Timber.i("Using Uri remap for submission %s. Now: %s", instance.getId(),
                     submissionUri.toString());
         } else {
             if (submissionUri.getHost() == null) {
@@ -91,7 +92,7 @@ public class InstanceServerUploader extends InstanceUploader {
             } catch (IllegalArgumentException e) {
                 saveFailedStatusToDatabase(instance);
                 Timber.d(e.getMessage() != null ? e.getMessage() : e.toString());
-                throw new UploadException(Collect1.getInstance().getAppContext().getResources().getString(R.string.url_error));
+                throw new UploadException(TranslationHandler.getString(Collect1.getInstance().getAppContext(), R.string.url_error));
             }
 
             HttpHeadResult headResult;
@@ -117,7 +118,7 @@ public class InstanceServerUploader extends InstanceUploader {
 
             if (headResult.getStatusCode() == HttpsURLConnection.HTTP_UNAUTHORIZED) {
                 saveFailedStatusToDatabase(instance);
-                throw new UploadAuthRequestedException(Collect1.getInstance().getAppContext().getResources().getString(R.string.server_auth_credentials, submissionUri.getHost()),
+                throw new UploadAuthRequestedException(TranslationHandler.getString(Collect1.getInstance().getAppContext(), R.string.server_auth_credentials, submissionUri.getHost()),
                         submissionUri);
             } else if (headResult.getStatusCode() == HttpsURLConnection.HTTP_NO_CONTENT) {
                 // Redirect header received
@@ -292,12 +293,12 @@ public class InstanceServerUploader extends InstanceUploader {
 
     private String getServerSubmissionURL() {
 
-        Collect1 app = Collect1.getInstance();
+        Context app = Collect1.getInstance().getAppContext();
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
                 Collect1.getInstance().getAppContext());
         String serverBase = settings.getString(GeneralKeys.KEY_SERVER_URL,
-                app.getAppContext().getResources().getString(R.string.default_server_url));
+                app.getString(R.string.default_server_url));
 
         if (serverBase.endsWith(URL_PATH_SEP)) {
             serverBase = serverBase.substring(0, serverBase.length() - 1);
@@ -305,7 +306,7 @@ public class InstanceServerUploader extends InstanceUploader {
 
         // NOTE: /submission must not be translated! It is the well-known path on the server.
         String submissionPath = settings.getString(GeneralKeys.KEY_SUBMISSION_URL,
-                app.getAppContext().getResources().getString(R.string.default_odk_submission));
+                app.getString(R.string.default_odk_submission));
 
         if (!submissionPath.startsWith(URL_PATH_SEP)) {
             submissionPath = URL_PATH_SEP + submissionPath;

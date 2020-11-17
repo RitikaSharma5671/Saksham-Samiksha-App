@@ -41,6 +41,7 @@ import org.odk.collect.android.forms.Form;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -276,7 +277,10 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         ((HomeActivity) context).renderLayoutInvisible();
         String latestFormVrsion = MyApplication.getmFirebaseRemoteConfig().getString("version");
         String previousVersion = getMvpInteractor().getPreferenceHelper().getFormVersion();
+        Grove.d("First cal vgfvgv >>> " + getUserRoleFromPref() );
         String formsString = MyApplication.getmFirebaseRemoteConfig().getString(getRoleFromRoleMappingFirebase(getUserRoleFromPref()));
+        Grove.d("second cal vgfvgv >>> " + getUserRoleFromPref() );
+
         formsDownloadStatus = FormDownloadStatus.DOWNLOADING;
         isPermissionGiven = isStoragePermissionAvailable;
         Grove.e("Checking if the forms are matching: %s", getIFormManagementContract().checkIfODKFormsMatch(formsString));
@@ -444,6 +448,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         public void onSuccessfulFormListDownload(HashMap<String, ServerFormDetails> latestFormListFromServer) {
             Grove.d("FormList download complete %s, is the form list size", latestFormListFromServer.size());
             String formsString = MyApplication.getmFirebaseRemoteConfig().getString(getRoleFromRoleMappingFirebase(getUserRoleFromPref()));
+            Grove.d("thirssss cal vgfvgv >>> " + getUserRoleFromPref() );
             HashMap<String, String> userRoleBasedForms = getIFormManagementContract().downloadFormList(formsString);
             // Download Forms if updates available or if forms not downloaded. Delete forms if not applied for the role.
             HashMap<String, ServerFormDetails> formsToBeDownloaded = getIFormManagementContract().downloadNewFormsBasedOnDownloadedFormList(userRoleBasedForms, latestFormListFromServer);
@@ -467,6 +472,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
         @Override
         public void onFailureFormListDownload(boolean isAPIFailure) {
+
             if (isAPIFailure) {
                 Grove.e("There has been an error in downloading the forms from ODK Server");
                 ((HomeActivity) context).showDownloadFailureMessage();
@@ -489,7 +495,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             }
 
             @Override
-            public void formsDownloadingSuccessful(HashMap<ServerFormDetails, String> result) {
+            public void formsDownloadingSuccessful(Map<ServerFormDetails, String> result) {
                 Grove.d("Form Download Complete %s", result);
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
                 if (isSchoolAccount() || isUserSchoolHead()) {
@@ -620,6 +626,8 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             return atHomeItemsList;
         }
         String role = getRoleFromRoleMappingFirebase(getUserRoleFromPref());
+        Grove.d("four cal vgfvgv >>> " + getUserRoleFromPref() );
+
         switch (role) {
             case "Teacher":
                 atHomeItemsList.add("Fill Forms");

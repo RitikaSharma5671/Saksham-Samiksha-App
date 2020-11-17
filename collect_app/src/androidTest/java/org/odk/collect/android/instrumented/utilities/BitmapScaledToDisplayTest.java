@@ -5,7 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;

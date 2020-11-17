@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.odk.collect.android.activities.FormEntryActivity;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.location.client.GoogleFusedLocationClient;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;

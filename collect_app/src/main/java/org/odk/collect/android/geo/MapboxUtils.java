@@ -5,7 +5,6 @@ import com.mapbox.mapboxsdk.Mapbox;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.application.Collect1;
 
-
 public class MapboxUtils {
     private static boolean initAttempted;
     private static Mapbox mapbox;

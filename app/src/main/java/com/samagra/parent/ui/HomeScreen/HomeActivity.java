@@ -130,12 +130,12 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         }
     }
 
-    private void relaunchHomeScreen() {
-        new LocaleHelper().updateLocale(getActivityContext());
-        startActivity(new Intent(this, HomeActivity.class));
-        overridePendingTransition(0, 0);
-        finishAffinity();
-    }
+//    private void relaunchHomeScreen() {
+//        new LocaleHelper().updateLocale(getActivityContext());
+//        startActivity(new Intent(this, HomeActivity.class));
+//        overridePendingTransition(0, 0);
+//        finishAffinity();
+//    }
 
     @Override
     public void setDownloadProgress(int progress) {
@@ -419,7 +419,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
 
     @Override
     public void updateLocale(String language) {
-        new LocaleHelper().updateLocale(getActivityContext(), language);
+//        new LocaleHelper().updateLocale(getActivityContext(), language);
 
     }
 

@@ -66,7 +66,10 @@ public class NotificationDrawer {
 
     public <D extends Page<D>> D clickNotification(String appName, String title, String expectedTextOnClick, D destination) {
         UiDevice device = waitForNotification(appName);
+
         UiObject2 titleElement = device.findObject(By.text(title));
+        assertThat(titleElement.getText(), is(title));
+
         titleElement.click();
 
         device.wait(Until.hasObject(By.textStartsWith(expectedTextOnClick)), 2000L);

@@ -6,7 +6,6 @@ import android.net.NetworkInfo;
 
 import org.odk.collect.android.application.Collect1;
 
-
 public class ConnectivityProvider implements NetworkStateProvider {
 
     public boolean isDeviceOnline() {
@@ -19,6 +18,6 @@ public class ConnectivityProvider implements NetworkStateProvider {
     }
 
     private ConnectivityManager getConnectivityManager() {
-        return (ConnectivityManager) Collect1.getInstance().getApplicationVal().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return (ConnectivityManager) Collect1.getInstance().getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 }

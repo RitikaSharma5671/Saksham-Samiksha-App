@@ -30,13 +30,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.multidex.BuildConfig;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CaptureSelfieVideoActivity;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.WidgetViewUtils;
@@ -46,11 +45,11 @@ import org.odk.collect.android.utilities.CameraUtils;
 import org.odk.collect.android.utilities.ContentUriProvider;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtil;
+import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.WidgetAppearanceUtils;
-import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
+import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 import org.odk.collect.android.widgets.utilities.FileWidgetUtils;
@@ -74,7 +73,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 @SuppressLint("ViewConstructor")
-public class VideoWidget extends QuestionWidget implements FileWidget, ButtonClickListener, BinaryDataReceiver {
+public class VideoWidget extends QuestionWidget implements FileWidget, ButtonClickListener, WidgetDataReceiver {
 
     public static final boolean DEFAULT_HIGH_RESOLUTION = true;
 
@@ -82,6 +81,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget, ButtonCli
     private MediaUtil mediaUtil;
 
     private final WaitingForDataRegistry waitingForDataRegistry;
+    private final QuestionMediaManager questionMediaManager;
 
     @NonNull
     private FileUtil fileUtil;
@@ -93,25 +93,26 @@ public class VideoWidget extends QuestionWidget implements FileWidget, ButtonCli
 
     private boolean selfie;
 
-    public VideoWidget(Context context, QuestionDetails prompt, WaitingForDataRegistry waitingForDataRegistry) {
-        this(context, prompt, new FileUtil(), new MediaUtil(), waitingForDataRegistry);
+    public VideoWidget(Context context, QuestionDetails prompt,  QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
+        this(context, prompt, new FileUtil(), new MediaUtil(), waitingForDataRegistry, questionMediaManager, new CameraUtils());
     }
 
-    public VideoWidget(Context context, QuestionDetails questionDetails, @NonNull FileUtil fileUtil, @NonNull MediaUtil mediaUtil, WaitingForDataRegistry waitingForDataRegistry) {
+    public VideoWidget(Context context, QuestionDetails questionDetails, @NonNull FileUtil fileUtil, @NonNull MediaUtil mediaUtil,
+                       WaitingForDataRegistry waitingForDataRegistry, QuestionMediaManager questionMediaManager, CameraUtils cameraUtils) {
         super(context, questionDetails);
 
         this.fileUtil = fileUtil;
         this.mediaUtil = mediaUtil;
         this.waitingForDataRegistry = waitingForDataRegistry;
+        this.questionMediaManager = questionMediaManager;
 
-        String appearance = getFormEntryPrompt().getAppearanceHint();
-        selfie = appearance != null && (appearance.equalsIgnoreCase(WidgetAppearanceUtils.SELFIE) || appearance.equalsIgnoreCase(WidgetAppearanceUtils.NEW_FRONT));
+        selfie = WidgetAppearanceUtils.isFrontCameraAppearance(getFormEntryPrompt());
 
-        captureButton = createSimpleButton(getContext(), R.id.capture_video, getFormEntryPrompt().isReadOnly(), getContext().getString(R.string.capture_video), getAnswerFontSize(), this);
+        captureButton = createSimpleButton(getContext(), R.id.capture_video, questionDetails.isReadOnly(), getContext().getString(R.string.capture_video), getAnswerFontSize(), this);
 
-        chooseButton = createSimpleButton(getContext(), R.id.choose_video, getFormEntryPrompt().isReadOnly(), getContext().getString(R.string.choose_video), getAnswerFontSize(), this);
+        chooseButton = createSimpleButton(getContext(), R.id.choose_video, questionDetails.isReadOnly(), getContext().getString(R.string.choose_video), getAnswerFontSize(), this);
 
-        playButton = createSimpleButton(getContext(), R.id.play_video, getFormEntryPrompt().isReadOnly(), getContext().getString(R.string.play_video), getAnswerFontSize(), this);
+        playButton = createSimpleButton(getContext(), R.id.play_video, false, getContext().getString(R.string.play_video), getAnswerFontSize(), this);
         playButton.setVisibility(VISIBLE);
 
         // retrieve answer from data model and update ui
@@ -129,7 +130,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget, ButtonCli
         hideButtonsIfNeeded();
 
         if (selfie) {
-            if (!CameraUtils.isFrontCameraAvailable()) {
+            if (!cameraUtils.isFrontCameraAvailable()) {
                 captureButton.setEnabled(false);
                 ToastUtils.showLongToast(R.string.error_front_camera_unavailable);
             }
@@ -138,9 +139,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget, ButtonCli
 
     @Override
     public void deleteFile() {
-        MediaManager
-                .INSTANCE
-                .markOriginalFileOrDelete(getFormEntryPrompt().getIndex().toString(),
+        questionMediaManager.deleteAnswerFile(getFormEntryPrompt().getIndex().toString(),
                         getInstanceFolder() + File.separator + binaryName);
         binaryName = null;
     }
@@ -174,10 +173,10 @@ public class VideoWidget extends QuestionWidget implements FileWidget, ButtonCli
      * so a File object would be presented.
      *
      * @param object Uri or File of the chosen file.
-     * @see org.odk.collect.android.activities.FormEntryActivity#onActivityResult(int, int, Intent)
+//     * @see org.odk.collect.android.activities.FormEntryActivity#onActivityResult(int, int, Intent)
      */
     @Override
-    public void setBinaryData(Object object) {
+    public void setData(Object object) {
         File newVideo = null;
         // get the file path and create a copy in the instance folder
         if (object instanceof Uri) {
@@ -201,9 +200,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget, ButtonCli
             values.put(Video.Media.DATE_ADDED, System.currentTimeMillis());
             values.put(Video.Media.DATA, newVideo.getAbsolutePath());
 
-            MediaManager
-                    .INSTANCE
-                    .replaceRecentFileForQuestion(getFormEntryPrompt().getIndex().toString(), newVideo.getAbsolutePath());
+            questionMediaManager.replaceAnswerFile(getFormEntryPrompt().getIndex().toString(), newVideo.getAbsolutePath());
 
             Uri videoURI = getContext().getContentResolver().insert(
                     Video.Media.EXTERNAL_CONTENT_URI, values);
@@ -348,7 +345,10 @@ public class VideoWidget extends QuestionWidget implements FileWidget, ButtonCli
 
         Uri uri = null;
         try {
-            uri = ContentUriProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", file);
+            uri = ContentUriProvider.getUriForFile(getContext(),
+//                    BuildConfig.APPLICATION_ID + ".provider",
+                    "com.samagra.sakshamSamiksha.provider"
+                    ,file);
             FileUtils.grantFileReadPermissions(intent, uri, getContext());
         } catch (IllegalArgumentException e) {
             Timber.e(e);

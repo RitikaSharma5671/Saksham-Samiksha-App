@@ -29,12 +29,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.R2;
-import org.odk.collect.android.analytics.Analytics;
-import org.odk.collect.android.analytics.AnalyticsEvents;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.preferences.PreferencesProvider;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.android.async.Scheduler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,9 +61,6 @@ public class ShowQRCodeFragment extends Fragment {
     private AlertDialog dialog;
 
     @Inject
-    public Analytics analytics;
-
-    @Inject
     public QRCodeGenerator qrCodeGenerator;
 
     @Inject
@@ -81,15 +75,13 @@ public class ShowQRCodeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.show_qrcode_fragment, container, false);
-        ButterKnife.bind(this, view);
+        ivQRCode =  view.findViewById(R.id.ivQRcode);
+        progressBar = view.findViewById(R.id.circularProgressBar);
+        tvPasswordWarning = view.findViewById(R.id.tvPasswordWarning);
+        passwordStatus  =view.findViewById(R.id.status);
         setHasOptionsMenu(true);
         passwordsSet[0] = !preferencesProvider.getAdminSharedPreferences().getString(KEY_ADMIN_PW, "").isEmpty();
         passwordsSet[1] = !preferencesProvider.getGeneralSharedPreferences().getString(KEY_PASSWORD, "").isEmpty();
-
-        ivQRCode = view.findViewById(R.id.ivQRcode);
-        progressBar = view.findViewById(R.id.circularProgressBar);
-        tvPasswordWarning = view.findViewById(R.id.tvPasswordWarning);
-        passwordStatus = view.findViewById(R.id.status);
 
         qrCodeViewModel.getBitmap().observe(this.getViewLifecycleOwner(), bitmap -> {
             if (bitmap != null) {
@@ -124,7 +116,6 @@ public class ShowQRCodeFragment extends Fragment {
         ).get(QRCodeViewModel.class);
     }
 
-    @OnClick(R2.id.tvPasswordWarning)
     void passwordWarningClicked() {
         if (dialog == null) {
             final String[] items = {
@@ -133,10 +124,7 @@ public class ShowQRCodeFragment extends Fragment {
 
             dialog = new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.include_password_dialog)
-                    .setMultiChoiceItems(items, checkedItems, (dialog, which, isChecked) -> {
-                        checkedItems[which] = isChecked;
-                        analytics.logEvent(AnalyticsEvents.CONFIGURE_QR_CODE, items[which]);
-                    })
+                    .setMultiChoiceItems(items, checkedItems, (dialog, which, isChecked) -> checkedItems[which] = isChecked)
                     .setCancelable(false)
                     .setPositiveButton(R.string.generate, (dialog, which) -> {
                         qrCodeViewModel.setIncludedKeys(getSelectedPasswordKeys());

@@ -7,7 +7,6 @@ import android.widget.Toast;
 
 import org.odk.collect.android.application.Collect1;
 
-
 public class ToastUtils {
 
     private ToastUtils() {
@@ -35,11 +34,11 @@ public class ToastUtils {
     }
 
     private static void showToast(int messageResource, int duration) {
-        Toast.makeText(Collect1.getInstance().getAppContext(), Collect1.getInstance().getAppContext().getResources().getString(messageResource), duration).show();
+        Toast.makeText(Collect1.getInstance().getAppContext(), TranslationHandler.getString(Collect1.getInstance().getAppContext(), messageResource), duration).show();
     }
 
     public static void showShortToastInMiddle(int messageResource) {
-        showToastInMiddle(Collect1.getInstance().getAppContext().getResources().getString(messageResource), Toast.LENGTH_SHORT);
+        showToastInMiddle(TranslationHandler.getString(Collect1.getInstance().getAppContext(), messageResource), Toast.LENGTH_SHORT);
     }
 
     public static void showShortToastInMiddle(String message) {
@@ -47,7 +46,7 @@ public class ToastUtils {
     }
 
     public static void showLongToastInMiddle(int messageResource) {
-        showToastInMiddle(Collect1.getInstance().getAppContext().getResources().getString(messageResource), Toast.LENGTH_LONG);
+        showToastInMiddle(TranslationHandler.getString(Collect1.getInstance().getAppContext(), messageResource), Toast.LENGTH_LONG);
     }
 
     private static void showToastInMiddle(String message, int duration) {

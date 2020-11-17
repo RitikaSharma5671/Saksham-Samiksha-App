@@ -31,7 +31,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.exception.GDriveConnectionException;
 import org.odk.collect.android.network.NetworkStateProvider;
@@ -61,10 +60,6 @@ import timber.log.Timber;
  */
 public class MediaUtils {
 
-    private MediaUtils() {
-        // static methods only
-    }
-
     protected static String escapePathForLikeSQLClause(String path) {
         String ep = path;
         ep = ep.replaceAll("\\!", "!!");
@@ -79,8 +74,7 @@ public class MediaUtils {
         String[] projection = {Images.ImageColumns._ID};
         try (Cursor c = Collect1
                 .getInstance()
-                .getApplicationVal()
-                .getContentResolver()
+                .getAppContext().getContentResolver()
                 .query(Images.Media.EXTERNAL_CONTENT_URI,
                         projection, selection, selectArgs, null)) {
             if (c != null && c.getCount() > 0) {
@@ -97,8 +91,8 @@ public class MediaUtils {
         }
     }
 
-    public static final int deleteImageFileFromMediaProvider(String imageFile) {
-        ContentResolver cr = Collect1.getInstance().getApplicationVal().getContentResolver();
+    public int deleteImageFileFromMediaProvider(String imageFile) {
+        ContentResolver cr = Collect1.getInstance().getAppContext().getContentResolver();
         // images
         int count = 0;
         Cursor imageCursor = null;
@@ -143,7 +137,7 @@ public class MediaUtils {
     }
 
     public static final int deleteImagesInFolderFromMediaProvider(File folder) {
-        ContentResolver cr = Collect1.getInstance().getApplicationVal().getContentResolver();
+        ContentResolver cr = Collect1.getInstance().getAppContext().getContentResolver();
         // images
         int count = 0;
         Cursor imageCursor = null;
@@ -190,8 +184,7 @@ public class MediaUtils {
         Cursor c = null;
         try {
             c = Collect1
-                    .getInstance()
-                    .getApplicationVal()
+                    .getInstance().getAppContext()
                     .getContentResolver()
                     .query(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                             projection, selection, selectArgs, null);
@@ -214,7 +207,7 @@ public class MediaUtils {
     }
 
     public static final int deleteAudioFileFromMediaProvider(String audioFile) {
-        ContentResolver cr = Collect1.getInstance().getApplicationVal().getContentResolver();
+        ContentResolver cr = Collect1.getInstance().getAppContext().getContentResolver();
         // audio
         int count = 0;
         Cursor audioCursor = null;
@@ -259,7 +252,7 @@ public class MediaUtils {
     }
 
     public static final int deleteAudioInFolderFromMediaProvider(File folder) {
-        ContentResolver cr = Collect1.getInstance().getApplicationVal().getContentResolver();
+        ContentResolver cr = Collect1.getInstance().getAppContext().getContentResolver();
         // audio
         int count = 0;
         Cursor audioCursor = null;
@@ -306,8 +299,7 @@ public class MediaUtils {
         Cursor c = null;
         try {
             c = Collect1
-                    .getInstance()
-                    .getApplicationVal()
+                    .getInstance().getAppContext()
                     .getContentResolver()
                     .query(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                             projection, selection, selectArgs, null);
@@ -330,7 +322,7 @@ public class MediaUtils {
     }
 
     public static final int deleteVideoFileFromMediaProvider(String videoFile) {
-        ContentResolver cr = Collect1.getInstance().getApplicationVal().getContentResolver();
+        ContentResolver cr = Collect1.getInstance().getAppContext().getContentResolver();
         // video
         int count = 0;
         Cursor videoCursor = null;
@@ -375,7 +367,7 @@ public class MediaUtils {
     }
 
     public static final int deleteVideoInFolderFromMediaProvider(File folder) {
-        ContentResolver cr = Collect1.getInstance().getApplicationVal().getContentResolver();
+        ContentResolver cr = Collect1.getInstance().getAppContext().getContentResolver();
         // video
         int count = 0;
         Cursor videoCursor = null;
@@ -434,8 +426,6 @@ public class MediaUtils {
      *
      * @param context The context.
      * @param uri The Uri to query.
-     * @see #isLocal(String)
-     * @see #getFile(Context, Uri)
      * @author paulburke
      */
     public static String getPath(final Context context, final Uri uri) {
@@ -457,9 +447,12 @@ public class MediaUtils {
             } else if (isDownloadsDocument(uri)) {
                 // DownloadsProvider
 
-                final String id = DocumentsContract.getDocumentId(uri);
+                String id = DocumentsContract.getDocumentId(uri);
                 if (id.startsWith("raw:")) {
                     return id.replaceFirst("raw:", "");
+                }
+                if (id.startsWith("msf:")) {
+                    id = id.replaceFirst("msf:", "");
                 }
 
                 String[] contentUriPrefixesToTry = {
@@ -482,7 +475,7 @@ public class MediaUtils {
 
                 // path could not be retrieved using ContentResolver, therefore copy file to accessible cache using streams
                 // https://github.com/coltoscosmin/FileUtils/blob/master/FileUtils.java
-                String fileName = getFileName(context, uri);
+                String fileName = getFileNameFromUri(context, uri);
                 File cacheDir = getDocumentCacheDir(context);
                 File file = generateFileName(fileName, cacheDir);
                 String destinationPath = null;
@@ -657,29 +650,30 @@ public class MediaUtils {
         return null;
     }
 
-    private static String getFileName(@NonNull Context context, Uri uri) {
+    public static String getFileNameFromUri(@NonNull Context context, Uri uri) {
         String mimeType = context.getContentResolver().getType(uri);
-        String filename = null;
+        String fileName = null;
 
         if (mimeType == null) {
             String path = getPath(context, uri);
             if (path == null) {
-                filename = getName(uri.toString());
+                fileName = getName(uri.toString());
             } else {
                 File file = new File(path);
-                filename = file.getName();
+                fileName = file.getName();
             }
         } else {
-            Cursor returnCursor = context.getContentResolver().query(uri, null, null, null, null);
-            if (returnCursor != null) {
-                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                returnCursor.moveToFirst();
-                filename = returnCursor.getString(nameIndex);
-                returnCursor.close();
+            try (Cursor returnCursor = context.getContentResolver().query(uri, null, null, null, null)) {
+                if (returnCursor != null && returnCursor.moveToFirst()) {
+                    int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (nameIndex != -1) {
+                        fileName = returnCursor.getString(nameIndex);
+                    }
+                }
             }
         }
 
-        return filename;
+        return fileName;
     }
 
     private static String getName(String filename) {

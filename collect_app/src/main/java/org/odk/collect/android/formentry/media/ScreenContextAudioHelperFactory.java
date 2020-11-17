@@ -5,7 +5,7 @@ import android.media.MediaPlayer;
 
 import org.odk.collect.android.audio.AudioHelper;
 import org.odk.collect.android.utilities.ScreenContext;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.android.async.Scheduler;
 
 import java.util.function.Supplier;
 

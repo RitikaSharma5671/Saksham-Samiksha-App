@@ -17,7 +17,6 @@ package org.odk.collect.android.injection;
 import android.app.Activity;
 import android.content.Context;
 
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
 

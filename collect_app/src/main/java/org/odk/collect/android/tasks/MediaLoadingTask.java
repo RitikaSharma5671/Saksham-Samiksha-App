@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.dao.helpers.ContentResolverHelper;
 import org.odk.collect.android.exception.GDriveConnectionException;
@@ -57,7 +56,11 @@ public class MediaLoadingTask extends AsyncTask<Uri, Void, File> {
             if (instanceFile != null) {
                 String instanceFolder = instanceFile.getParent();
                 String extension = ContentResolverHelper.getFileExtensionFromUri(formEntryActivity.get(), uris[0]);
-                String destMediaPath = instanceFolder + File.separator + System.currentTimeMillis() + extension;
+                String destMediaPath = instanceFolder
+                        + File.separator
+                        + System.currentTimeMillis()
+                        + "."
+                        + extension;
 
                 try {
                     File chosenFile = MediaUtils.getFileFromUri(formEntryActivity.get(), uris[0], MediaStore.Images.Media.DATA, connectivityProvider.get());
@@ -94,6 +97,6 @@ public class MediaLoadingTask extends AsyncTask<Uri, Void, File> {
         if (prev != null && !formEntryActivity.get().isInstanceStateSaved()) {
             ((DialogFragment) prev).dismiss();
         }
-        formEntryActivity.get().setBinaryWidgetData(result);
+        formEntryActivity.get().setWidgetData(result);
     }
 }

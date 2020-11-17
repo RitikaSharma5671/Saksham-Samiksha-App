@@ -70,11 +70,11 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     protected void onDestroy() {
         super.onDestroy();
     }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(new LocaleHelper().updateLocale(base, PreferenceManager.getDefaultSharedPreferences(base).getString(Constants.APP_LANGUAGE_KEY, "en")));
-    }
+//
+//    @Override
+//    protected void attachBaseContext(Context base) {
+//        super.attachBaseContext(new LocaleHelper().updateLocale(base, PreferenceManager.getDefaultSharedPreferences(base).getString(Constants.APP_LANGUAGE_KEY, "en")));
+//    }
 
     @Override
     public Context getActivityContext() {

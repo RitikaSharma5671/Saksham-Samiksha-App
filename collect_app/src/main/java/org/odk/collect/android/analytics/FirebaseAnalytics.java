@@ -28,7 +28,6 @@ public class FirebaseAnalytics implements Analytics {
         Bundle bundle = new Bundle();
         bundle.putString("action", action);
         bundle.putString("label", label);
-        if(firebaseAnalytics !=null)
         firebaseAnalytics.logEvent(category, bundle);
     }
 
@@ -39,5 +38,10 @@ public class FirebaseAnalytics implements Analytics {
 
     public void setAnalyticsCollectionEnabled(boolean isAnalyticsEnabled) {
         firebaseAnalytics.setAnalyticsCollectionEnabled(isAnalyticsEnabled);
+    }
+
+    @Override
+    public void setUserProperty(String name, String value) {
+        firebaseAnalytics.setUserProperty(name, value);
     }
 }

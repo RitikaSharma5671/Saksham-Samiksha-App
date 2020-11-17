@@ -178,8 +178,8 @@ public class MyApplication extends Application implements MainApplication, Lifec
                             ExchangeObject.SignalExchangeObject signalExchangeObject = (ExchangeObject.SignalExchangeObject) exchangeObject;
                             if (signalExchangeObject.shouldStartAsNewTask) {
                                 if (currentActivity != null) {
-                                    Intent intent =  new Intent(currentActivity, LoginActivity.class);
-                                    CommonUtilities.startActivityAsNewTask(intent, currentActivity);
+                                    Intent intent =  new Intent(getApplicationContext(), LoginActivity.class);
+                                    CommonUtilities.startActivityAsNewTask(intent, getApplicationContext());
                                 }  else
                                     CommonUtilities.startActivityAsNewTask(signalExchangeObject.intentToLaunch, getApplicationContext());
                             }
@@ -379,10 +379,10 @@ public class MyApplication extends Application implements MainApplication, Lifec
         super.onConfigurationChanged(newConfig);
         Collect1.defaultSysLanguage = newConfig.locale.getLanguage();
         boolean isUsingSysLanguage = GeneralSharedPreferences.getInstance().get(KEY_APP_LANGUAGE).equals("");
-        if (!isUsingSysLanguage) {
-            Grove.d("Changing App language to: " + newConfig.locale.getLanguage());
-            new LocaleHelper().updateLocale(this);
-        }
+//        if (!isUsingSysLanguage) {
+//            Grove.d("Changing App language to: " + newConfig.locale.getLanguage());
+//            new LocaleHelper().updateLocale(this);
+//        }
 
     }
 

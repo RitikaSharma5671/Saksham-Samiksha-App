@@ -2,7 +2,7 @@ package org.odk.collect.android.support;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
 import org.odk.collect.android.injection.config.AppDependencyModule;
 import org.odk.collect.android.injection.config.DaggerAppDependencyComponent;

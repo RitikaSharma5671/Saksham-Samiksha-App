@@ -78,7 +78,7 @@ class EnterMobileNumberFragment : Fragment(), View.OnClickListener, OnUserFound,
         mProgress.setCancelable(false)
         mProgress.isIndeterminate = true
         ttb_close_button.setOnClickListener {
-            fragmentManager!!.popBackStack()
+            requireFragmentManager().popBackStack()
         }
     }
 
@@ -207,8 +207,8 @@ class EnterMobileNumberFragment : Fragment(), View.OnClickListener, OnUserFound,
         val arguments = Bundle()
         arguments.putString("phoneNumber", phoneNumber)
         otpFragment.arguments = arguments
-        removeFragment(this, fragmentManager!!)
-        addFragment(R.id.login_fragment_container, fragmentManager!!, otpFragment, "OTPFragment")
+        removeFragment(this, parentFragmentManager)
+        addFragment(R.id.login_fragment_container, parentFragmentManager, otpFragment, "OTPFragment")
     }
 
 

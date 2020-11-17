@@ -14,7 +14,6 @@
 
 package org.odk.collect.android.activities;
 
-import androidx.appcompat.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -28,6 +27,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LiveData;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -35,10 +35,11 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.R2;
 import org.odk.collect.android.adapters.InstanceUploaderAdapter;
 import org.odk.collect.android.analytics.Analytics;
+import org.odk.collect.android.backgroundwork.SchedulerFormUpdateAndSubmitManager;
 import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.gdrive.GoogleSheetsUploaderActivity;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.listeners.PermissionListener;
@@ -46,7 +47,7 @@ import org.odk.collect.android.network.NetworkStateProvider;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.tasks.InstanceSyncTask;
-import org.odk.collect.android.upload.AutoSendWorker;
+import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -55,12 +56,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import timber.log.Timber;
 
-import static org.odk.collect.android.analytics.AnalyticsEvents.FILTER_FORMS_TO_SEND;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
@@ -79,10 +76,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
 
     private static final int INSTANCE_UPLOADER = 0;
 
-
     Button uploadButton;
-
-
     Button toggleSelsButton;
 
     private InstancesDao instancesDao;
@@ -115,15 +109,12 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
         setTitle(getString(R.string.send_data));
         setContentView(R.layout.instance_uploader_list);
 
-        ButterKnife.bind(this);
-        toggleSelsButton = findViewById(R.id.toggle_button);
-
         uploadButton = findViewById(R.id.upload_button);
+        toggleSelsButton = findViewById(R.id.toggle_button);
 
         if (savedInstanceState != null) {
             showAllMode = savedInstanceState.getBoolean(SHOW_ALL_MODE);
         }
-//        invalidateOptionsMenu();
 
         permissionUtils.requestStoragePermissions(this, new PermissionListener() {
             @Override
@@ -139,8 +130,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
         });
     }
 
-    @OnClick({R2.id.upload_button})
-    public void onUploadButtonsClicked(Button button) {
+    public void onUploadButtonsClicked() {
         if (!connectivityProvider.isDeviceOnline()) {
             ToastUtils.showShortToast(R.string.no_connection);
             return;
@@ -212,8 +202,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
      * Updates whether an auto-send job is ongoing.
      */
     private void updateAutoSendStatus() {
-        LiveData<List<WorkInfo>> statuses = WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(AutoSendWorker.TAG);
-
+        LiveData<List<WorkInfo>> statuses = WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(SchedulerFormUpdateAndSubmitManager.AUTO_SEND_TAG);
         statuses.observe(this, workStatuses -> {
             if (workStatuses != null) {
                 for (WorkInfo status : workStatuses) {
@@ -274,39 +263,32 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
             // otherwise, do the normal aggregate/other thing.
             Intent i = new Intent(this, InstanceUploaderActivity.class);
             i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIds);
-            // Not required but without this permission a Device ID attached to a request will be empty.
-            permissionUtils.requestReadPhoneStatePermission(this, false, new PermissionListener() {
-                @Override
-                public void granted() {
-                    startActivityForResult(i, INSTANCE_UPLOADER);
-                }
-
-                @Override
-                public void denied() {
-                    startActivityForResult(i, INSTANCE_UPLOADER);
-                }
-            });
+            startActivityForResult(i, INSTANCE_UPLOADER);
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.instance_uploader_menu, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int itemId = item.getItemId();
-//        if (itemId == R.id.menu_preferences) {
-//            createPreferencesMenu();
-//            return true;
-//        } else if (itemId == R.id.menu_change_view) {
-//            showSentAndUnsentChoices();
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.instance_uploader_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (!MultiClickGuard.allowClick(getClass().getName())) {
+            return true;
+        }
+
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_preferences) {
+            createPreferencesMenu();
+            return true;
+        } else if (itemId == R.id.menu_change_view) {
+            showSentAndUnsentChoices();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void createPreferencesMenu() {
         Intent i = new Intent(this, PreferencesActivity.class);
@@ -421,7 +403,6 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
                         case 1: // show all
                             showAllMode = true;
                             updateAdapter();
-                            analytics.logEvent(FILTER_FORMS_TO_SEND, "SentAndUnsent");
                             break;
 
                         case 2:// do nothing

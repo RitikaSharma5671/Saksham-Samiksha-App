@@ -1,9 +1,10 @@
 package org.odk.collect.android.widgets.utilities;
 
 import org.javarosa.core.model.FormIndex;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.javarosawrapper.FormController;
+
+import timber.log.Timber;
 
 public class FormControllerWaitingForDataRegistry implements WaitingForDataRegistry {
 
@@ -16,6 +17,7 @@ public class FormControllerWaitingForDataRegistry implements WaitingForDataRegis
 
         FormController formController = collect.getFormController();
         if (formController == null) {
+            Timber.w("Can not call setIndexWaitingForData() because of null formController");
             return;
         }
 

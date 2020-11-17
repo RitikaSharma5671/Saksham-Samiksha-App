@@ -80,9 +80,6 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:2.19"
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
-    // Butterknife
-    annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
-
     // GSON
     implementation("com.google.code.gson:gson:2.6.2") {
         exclude group: 'org.apache.httpcomponents'

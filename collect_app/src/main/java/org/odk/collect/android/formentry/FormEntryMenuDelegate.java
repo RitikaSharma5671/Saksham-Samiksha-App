@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.R;
 import org.odk.collect.android.formentry.backgroundlocation.BackgroundLocationViewModel;
 import org.odk.collect.android.formentry.questions.AnswersProvider;
@@ -39,7 +40,7 @@ public class FormEntryMenuDelegate implements MenuDelegate, RequiresFormControll
     }
 
     @Override
-    public void formLoaded(FormController formController) {
+    public void formLoaded(@NotNull FormController formController) {
         this.formController = formController;
     }
 
@@ -54,25 +55,25 @@ public class FormEntryMenuDelegate implements MenuDelegate, RequiresFormControll
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_SAVE_MID);
 
-        menu.findItem(R.id.menu_save).setVisible(false).setEnabled(false);
+        menu.findItem(R.id.menu_save).setVisible(useability).setEnabled(useability);
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_JUMP_TO);
 
-        menu.findItem(R.id.menu_goto).setVisible(false)
-                .setEnabled(false);
+        menu.findItem(R.id.menu_goto).setVisible(useability)
+                .setEnabled(useability);
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_CHANGE_LANGUAGE)
                 && (formController != null)
                 && formController.getLanguages() != null
                 && formController.getLanguages().length > 1;
 
-        menu.findItem(R.id.menu_languages).setVisible(false)
-                .setEnabled(false);
+        menu.findItem(R.id.menu_languages).setVisible(useability)
+                .setEnabled(useability);
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
 
-        menu.findItem(R.id.menu_preferences).setVisible(false)
-                .setEnabled(false);
+        menu.findItem(R.id.menu_preferences).setVisible(useability)
+                .setEnabled(useability);
 
         if (formController != null && formController.currentFormCollectsBackgroundLocation()
                 && new PlayServicesChecker().isGooglePlayServicesAvailable(activity)) {

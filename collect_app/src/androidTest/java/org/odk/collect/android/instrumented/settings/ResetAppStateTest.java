@@ -27,7 +27,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
@@ -45,7 +46,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -90,7 +90,7 @@ public class ResetAppStateTest {
         setupTestSettings();
         resetAppState(Collections.singletonList(ApplicationResetter.ResetAction.RESET_PREFERENCES));
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect1.getInstance());
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect1.getInstance().getAppContext());
         assertEquals(settings.getString(GeneralKeys.KEY_USERNAME, ""), "");
         assertEquals(settings.getString(GeneralKeys.KEY_PASSWORD, ""), "");
         assertTrue(settings.getBoolean(AdminKeys.KEY_VIEW_SENT, true));
@@ -141,14 +141,14 @@ public class ResetAppStateTest {
     }
 
     private void resetAppState(List<Integer> resetActions) {
-        List<Integer> failedResetActions = new ApplicationResetter().reset(InstrumentationRegistry.getTargetContext(), resetActions);
+        List<Integer> failedResetActions = new ApplicationResetter().reset(resetActions);
         assertEquals(0, failedResetActions.size());
     }
 
     private void setupTestSettings() throws IOException {
         String username = "usernameTest";
         String password = "passwordTest";
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect1.getInstance());
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect1.getInstance().getAppContext());
         settings
                 .edit()
                 .putString(GeneralKeys.KEY_USERNAME, username)

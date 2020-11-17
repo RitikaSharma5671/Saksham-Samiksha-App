@@ -19,7 +19,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.injection.DaggerUtils;
 

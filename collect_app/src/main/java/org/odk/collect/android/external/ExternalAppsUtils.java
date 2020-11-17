@@ -35,7 +35,6 @@ import org.javarosa.xpath.expr.XPathExpression;
 import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.javarosa.xpath.expr.XPathPathExpr;
 import org.javarosa.xpath.parser.XPathSyntaxException;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.exception.ExternalParamsException;

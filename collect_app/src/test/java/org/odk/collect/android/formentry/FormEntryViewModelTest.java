@@ -16,6 +16,7 @@ import java.io.IOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.atMostOnce;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
@@ -50,11 +51,43 @@ public class FormEntryViewModelTest {
     }
 
     @Test
+    public void addRepeat_whenThereIsAnErrorCreatingRepeat_setsErrorWithMessage() {
+        doThrow(new RuntimeException(new IOException("OH NO"))).when(formController).newRepeat();
+
+        viewModel.addRepeat(true);
+        assertThat(viewModel.getError().getValue(), equalTo("OH NO"));
+    }
+
+    @Test
+    public void addRepeat_whenThereIsAnErrorCreatingRepeat_setsErrorWithoutCause() {
+        RuntimeException runtimeException = mock(RuntimeException.class);
+        when(runtimeException.getCause()).thenReturn(null);
+        when(runtimeException.getMessage()).thenReturn("Unknown issue occurred while adding a new group");
+
+        doThrow(runtimeException).when(formController).newRepeat();
+
+        viewModel.addRepeat(true);
+        assertThat(viewModel.getError().getValue(), equalTo("Unknown issue occurred while adding a new group"));
+    }
+
+    @Test
     public void addRepeat_whenThereIsAnErrorSteppingToNextScreen_setsErrorWithMessage() throws Exception {
         when(formController.stepToNextScreenEvent()).thenThrow(new JavaRosaException(new IOException("OH NO")));
 
         viewModel.addRepeat(true);
         assertThat(viewModel.getError().getValue(), equalTo("OH NO"));
+    }
+
+    @Test
+    public void addRepeat_whenThereIsAnErrorSteppingToNextScreen_setsErrorWithoutCause() throws Exception {
+        JavaRosaException javaRosaException = mock(JavaRosaException.class);
+        when(javaRosaException.getCause()).thenReturn(null);
+        when(javaRosaException.getMessage()).thenReturn("Unknown issue occurred while adding a new group");
+
+        when(formController.stepToNextScreenEvent()).thenThrow(javaRosaException);
+
+        viewModel.addRepeat(true);
+        assertThat(viewModel.getError().getValue(), equalTo("Unknown issue occurred while adding a new group"));
     }
 
     @Test
@@ -81,6 +114,12 @@ public class FormEntryViewModelTest {
         viewModel.promptForNewRepeat();
         viewModel.cancelRepeatPrompt();
         verify(analytics, only()).logEvent(AnalyticsEvents.ADD_REPEAT, "InlineDecline", "formIdentifierHash");
+    }
+
+    @Test
+    public void cancelRepeatPrompt_doesNotLogInlineDeclineAnalytics() {
+        viewModel.cancelRepeatPrompt();
+        verify(analytics, never()).logEvent(AnalyticsEvents.ADD_REPEAT, "InlineDecline", "formIdentifierHash");
     }
 
     @Test

@@ -41,7 +41,6 @@ import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.HierarchyListAdapter;
 import org.odk.collect.android.analytics.Analytics;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.formentry.FormEntryViewModel;
@@ -51,6 +50,7 @@ import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.logic.HierarchyElement;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
+import org.odk.collect.android.utilities.MultiClickGuard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,6 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.analytics.AnalyticsEvents.NULL_FORM_CONTROLLER_EVENT;
 import static org.odk.collect.android.javarosawrapper.FormIndexUtils.getPreviousLevel;
 
 public class FormHierarchyActivity extends CollectAbstractActivity implements DeleteRepeatDialogFragment.DeleteRepeatDialogCallback {
@@ -142,7 +141,6 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
         if (formController == null) {
             finish();
             Timber.w("FormController is null");
-            analytics.logEvent(NULL_FORM_CONTROLLER_EVENT, "FormHierarchyActivity", null);
             return;
         }
 
@@ -263,6 +261,10 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (!MultiClickGuard.allowClick(getClass().getName())) {
+            return true;
+        }
+
         int itemId = item.getItemId();
         if (itemId == R.id.menu_delete_child) {
             DialogUtils.showIfNotShowing(DeleteRepeatDialogFragment.class, getSupportFragmentManager());
@@ -315,6 +317,14 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
         // it must be the last remaining item.
         return event == FormEntryController.EVENT_PROMPT_NEW_REPEAT
                 && index.getElementMultiplicity() == 0;
+    }
+
+    private boolean didDeleteFirstRepeatItem() {
+        return Collect1
+                .getInstance()
+                .getFormController()
+                .getFormIndex()
+                .getElementMultiplicity() == 0;
     }
 
     /**
@@ -791,7 +801,10 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
             //   and you delete an item from the second repeat, it will send you into the
             //   first repeat instead of going back a level as expected.
             goToPreviousEvent();
+        } else if (didDeleteFirstRepeatItem()) {
+            goUpLevel();
         } else {
+            goToPreviousEvent();
             goUpLevel();
         }
     }

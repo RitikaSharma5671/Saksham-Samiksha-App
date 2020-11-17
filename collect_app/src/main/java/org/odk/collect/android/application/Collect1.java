@@ -17,6 +17,8 @@ import org.odk.collect.android.application.initialization.ApplicationInitializer
 import org.odk.collect.android.configure.SettingsImporter;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.external.ExternalDataManager;
+import org.odk.collect.android.formmanagement.FormDownloader;
+import org.odk.collect.android.formmanagement.ServerFormsDetailsFetcher;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
 import org.odk.collect.android.injection.config.DaggerAppDependencyComponent;
 import org.odk.collect.android.javarosawrapper.FormController;
@@ -25,7 +27,7 @@ import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageStateProvider;
 import org.odk.collect.android.storage.migration.StorageMigrationRepository;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.FormListDownloader;
+import org.odk.collect.audiorecorder.AudioInitialiser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -44,6 +46,15 @@ public class Collect1 {
     public
     StorageMigrationRepository storageMigrationRepository;
 
+    @Inject
+    public ServerFormsDetailsFetcher serverFormsDetailsFetcher;
+
+    public FormDownloader getFormDownloader() {
+        return formDownloader;
+    }
+
+    @Inject
+    FormDownloader formDownloader;
     public MainApplication getMainApplication() {
         return mainApplication;
     }
@@ -81,8 +92,6 @@ public class Collect1 {
     @Inject
     StoragePathProvider storagePathProvider;
 
-    @Inject
-    FormListDownloader formListDownloader;
 
     @Inject
     Analytics analytics;
@@ -185,12 +194,12 @@ public class Collect1 {
             */
     private void setupStrictMode() {
         if (BuildConfig.DEBUG) {
-            android.os.StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                     .detectAll()
                     .permitDiskReads()  // shared preferences are being read on main thread
                     .penaltyLog()
                     .build());
-            android.os.StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
                     .detectAll()
                     .penaltyLog()
                     .build());
@@ -205,6 +214,7 @@ public class Collect1 {
             appContext = context;
             this.mainApplication = mainApplication;
             setupDagger(application);
+            AudioInitialiser.setiini(context);
             applicationInitializer.initialize();
 
             fixGoogleBug154855417(context);
@@ -259,7 +269,7 @@ public class Collect1 {
         return FileUtils.getMd5Hash(new ByteArrayInputStream(formIdentifier.getBytes()));
     }
 
-    public FormListDownloader getDDon() {
-        return formListDownloader;
+    public ServerFormsDetailsFetcher getServerDetailsFetcher() {
+        return serverFormsDetailsFetcher;
     }
 }

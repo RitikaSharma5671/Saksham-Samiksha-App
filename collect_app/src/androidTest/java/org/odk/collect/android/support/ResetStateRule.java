@@ -9,7 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.injection.config.AppDependencyModule;
 import org.odk.collect.android.preferences.PreferencesProvider;
 import org.odk.collect.android.storage.StorageStateProvider;
@@ -62,11 +62,11 @@ public class ResetStateRule implements TestRule {
 
             resetDagger();
             clearSharedPrefs(context);
-            clearDisk(context);
+            clearDisk();
             setTestState();
 
             // Reinitialize any application state with new deps/state
-            ((Collect) context.getApplicationContext()).getComponent().applicationInitializer().initialize();
+//            (Collect1.getInstance().getAppContext().getComponent().applicationInitializer().initialize();
 
             base.evaluate();
         }
@@ -76,7 +76,7 @@ public class ResetStateRule implements TestRule {
         MultiClickGuard.test = true;
     }
 
-    private void clearDisk(Context context) {
+    private void clearDisk() {
         // Reset the app in both the old and new storage locations (just nuke dirs)
         List<Integer> resetActions = Arrays.asList(
                 ApplicationResetter.ResetAction.RESET_PREFERENCES,
@@ -88,9 +88,9 @@ public class ResetStateRule implements TestRule {
         );
 
         new StorageStateProvider().disableUsingScopedStorage();
-        new ApplicationResetter().reset(context, resetActions);
+        new ApplicationResetter().reset(resetActions);
         new StorageStateProvider().enableUsingScopedStorage();
-        new ApplicationResetter().reset(context, resetActions);
+        new ApplicationResetter().reset(resetActions);
 
         // Setup storage location for tests
         if (useScopedStorage) {

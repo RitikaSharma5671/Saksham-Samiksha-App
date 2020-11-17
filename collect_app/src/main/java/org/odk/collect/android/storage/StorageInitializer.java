@@ -6,7 +6,6 @@ import android.os.Environment;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect1;
 
-
 import java.io.File;
 
 import timber.log.Timber;
@@ -37,7 +36,7 @@ public class StorageInitializer {
             if (!dir.exists()) {
                 if (!dir.mkdirs()) {
                     String message = context.getString(R.string.cannot_create_directory, dirPath);
-                    Timber.d("Error while creating directories : " + message);
+                    Timber.w(message);
                     throw new RuntimeException(message);
                 }
             } else {

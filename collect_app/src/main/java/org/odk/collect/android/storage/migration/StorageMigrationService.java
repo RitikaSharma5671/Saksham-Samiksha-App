@@ -5,10 +5,11 @@ import android.content.Intent;
 
 import androidx.annotation.Nullable;
 
-
 import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.backgroundwork.ChangeLock;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class StorageMigrationService extends IntentService {
 
@@ -17,6 +18,17 @@ public class StorageMigrationService extends IntentService {
     @Inject
     StorageMigrator storageMigrator;
 
+    @Inject
+    @Named("FORMS")
+    ChangeLock formsLock;
+
+    @Inject
+    @Named("INSTANCES")
+    ChangeLock instancesLock;
+
+    @Inject
+    StorageMigrationRepository storageMigrationRepository;
+
     public StorageMigrationService() {
         super(SERVICE_NAME);
         Collect1.getInstance().getComponent().inject(this);
@@ -24,6 +36,19 @@ public class StorageMigrationService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        storageMigrator.performStorageMigration();
+        instancesLock.withLock(acquiredInstancesLock -> {
+            formsLock.withLock(acquiredFormsLock -> {
+                if (acquiredInstancesLock && acquiredFormsLock) {
+                    storageMigrator.performStorageMigration();
+                } else {
+                    storageMigrationRepository.setResult(StorageMigrationResult.CHANGES_IN_PROGRESS);
+                    storageMigrationRepository.markMigrationEnd();
+                }
+
+                return null;
+            });
+
+            return null;
+        });
     }
 }

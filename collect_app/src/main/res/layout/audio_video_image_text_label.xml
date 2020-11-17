@@ -86,7 +86,7 @@
             tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/videoButton"
+            android:id="@+id/videoButton1212"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
             android:layout_width="@dimen/touch_target_size"
             android:layout_height="@dimen/touch_target_size"

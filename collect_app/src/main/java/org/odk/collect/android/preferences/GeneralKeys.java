@@ -4,7 +4,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.mapbox.mapboxsdk.maps.Style;
 
 import org.odk.collect.android.R;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.utilities.QuestionFontSizeUtils;
 
@@ -100,10 +99,14 @@ public final class GeneralKeys {
     public static final String BASEMAP_SOURCE_STAMEN        = "stamen";
     public static final String BASEMAP_SOURCE_CARTO         = "carto";
 
+    // experimental
+    public static final String KEY_MAGENTA_THEME            = "magenta";
+    public static final String KEY_EXTERNAL_APP_RECORDING   = "external_app_recording";
+
     private static HashMap<String, Object> getHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
         // odk_server_preferences.xmll
-        hashMap.put(KEY_SERVER_URL,                 Collect1.getInstance().getAppContext().getResources().getString(R.string.default_server_url));
+        hashMap.put(KEY_SERVER_URL,                  Collect1.getInstance().getAppContext().getResources().getString(R.string.default_server_url));
         hashMap.put(KEY_USERNAME,                   "");
         hashMap.put(KEY_PASSWORD,                   "");
         // form_management_preferences.xml
@@ -130,17 +133,19 @@ public final class GeneralKeys {
         // identity_preferences.xml
         hashMap.put(KEY_ANALYTICS,                  true);
         // custom_server_paths_preferenceshs_preferences.xml
-        hashMap.put(KEY_FORMLIST_URL,               Collect1.getInstance().getAppContext().getResources().getString(R.string.default_odk_formlist));
-        hashMap.put(KEY_SUBMISSION_URL,             Collect1.getInstance().getAppContext().getResources().getString(R.string.default_odk_submission));
+        hashMap.put(KEY_FORMLIST_URL,                Collect1.getInstance().getAppContext().getResources().getString(R.string.default_odk_formlist));
+        hashMap.put(KEY_SUBMISSION_URL,              Collect1.getInstance().getAppContext().getResources().getString(R.string.default_odk_submission));
         // server_preferences.xml
-        hashMap.put(KEY_PROTOCOL,                   Collect1.getInstance().getAppContext().getResources().getString(R.string.protocol_odk_default));
+        hashMap.put(KEY_PROTOCOL,                    Collect1.getInstance().getAppContext().getResources().getString(R.string.protocol_odk_default));
         // user_interface_preferences.xml
-        hashMap.put(KEY_APP_THEME,                  Collect1.getInstance().getAppContext().getResources().getString(R.string.app_theme_light));
+        hashMap.put(KEY_APP_THEME,                   Collect1.getInstance().getAppContext().getResources().getString(R.string.app_theme_light));
         hashMap.put(KEY_APP_LANGUAGE,               "");
         hashMap.put(KEY_FONT_SIZE,                  String.valueOf(QuestionFontSizeUtils.DEFAULT_FONT_SIZE));
         hashMap.put(KEY_NAVIGATION,                 NAVIGATION_SWIPE);
         hashMap.put(KEY_SHOW_SPLASH,                false);
-        hashMap.put(KEY_SPLASH_PATH,                Collect1.getInstance().getAppContext().getResources().getString(R.string.default_splash_path));
+        hashMap.put(KEY_SPLASH_PATH,                 Collect1.getInstance().getAppContext().getResources().getString(R.string.default_splash_path));
+        hashMap.put(KEY_MAGENTA_THEME,              false);
+        hashMap.put(KEY_EXTERNAL_APP_RECORDING,     true);
         // map_preferences.xml
         hashMap.put(KEY_BASEMAP_SOURCE,             BASEMAP_SOURCE_GOOGLE);
         hashMap.put(KEY_CARTO_MAP_STYLE,            "positron");

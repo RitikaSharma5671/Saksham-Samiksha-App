@@ -4,7 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import org.odk.collect.android.application.Collect1;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;

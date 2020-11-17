@@ -59,31 +59,32 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         if (!splashPresenter.getIFormManagementContract().isScopedStorageUsed()) {
             splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
         }
-            if (splashPresenter.getMvpInteractor().isLoggedIn()) {
-                if (splashPresenter.canLaunchHome()) {
-                    if (splashPresenter.isJwtTokenValid()) {
-                        splashPresenter.getIFormManagementContract().resetODKForms(getActivityContext(), failedResetActions -> {
-                            Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
-                            redirectToHomeScreen();
-                        });
+        if (splashPresenter.getMvpInteractor().isLoggedIn()) {
+            if (splashPresenter.canLaunchHome()) {
+                if (splashPresenter.isJwtTokenValid()) {
+                    splashPresenter.getIFormManagementContract().resetODKForms(getActivityContext(), failedResetActions -> {
+                        Grove.d("Failure to reset actions at Splash screen " + failedResetActions);
+                        redirectToHomeScreen();
+                    });
 
-                    } else {
-                        splashPresenter.updateJWT(getActivityContext().getResources().getString(R.string.fusionauth_api_key));
-                    }
+                } else {
+                    splashPresenter.updateJWT(getActivityContext().getResources().getString(R.string.fusionauth_api_key));
                 }
-            } else {
-                new CountDownTimer(2500, 500) {
-                    public void onTick(long millisUntilFinished) {
-                    }
+            }
+        } else {
+            new CountDownTimer(2500, 500) {
+                public void onTick(long millisUntilFinished) {
+                }
 
-                    public void onFinish() {
-                        launchLoginScreen();
-                    }
-                }.start();
-                Grove.d("Closing Splash Screen and Launching Login");
+                public void onFinish() {
+                    launchLoginScreen();
+                }
+            }.start();
+            Grove.d("Closing Splash Screen and Launching Login");
 
         }
     }
+
     /**
      * This function configures the Splash Screen
      * and renders it on screen. This includes the Splash screen image and other UI configurations.
@@ -158,17 +159,20 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
     @Override
     public void redirectToHomeScreen() {
-        splashPresenter.getMvpInteractor().getPreferenceHelper().updateInstallSendCOunt(false);
-        splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
-        Grove.d("Redirecting to Home screen from Splash screen >>> ");
-        splashPresenter.setInclompleteProfileCount();
-        Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(intent);
-        Grove.d("Closing Splash Screen");
-        finishSplashScreen();
+//        if (splashPresenter.getIFormManagementContract().isScopedStorageUsed()) {
+            splashPresenter.getMvpInteractor().getPreferenceHelper().updateInstallSendCOunt(false);
+            splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
+            Grove.d("Redirecting to Home screen from Splash screen >>> ");
+            splashPresenter.setInclompleteProfileCount();
+            Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            Grove.d("Closing Splash Screen");
+            finishSplashScreen();
+//        } else {
+//        }
     }
 
 

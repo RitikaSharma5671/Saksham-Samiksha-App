@@ -2,10 +2,12 @@ package org.odk.collect.android.storage;
 
 import android.os.Environment;
 
-
 import org.odk.collect.android.application.Collect1;
 
 import java.io.File;
+
+import static org.odk.collect.utilities.PathUtils.getAbsoluteFilePath;
+import static org.odk.collect.utilities.PathUtils.getRelativeFilePath;
 
 public class StoragePathProvider {
 
@@ -97,10 +99,6 @@ public class StoragePathProvider {
         return getDbPath(getDirPath(StorageSubdirectory.FORMS), filePath);
     }
 
-    public String getAbsoluteFormFilePath(String filePath) {
-        return getAbsoluteFilePath(getDirPath(StorageSubdirectory.FORMS), filePath);
-    }
-
     public String getCacheDbPath(String filePath) {
         return getDbPath(getDirPath(StorageSubdirectory.CACHE), filePath);
     }
@@ -123,21 +121,6 @@ public class StoragePathProvider {
         return storageStateProvider.isScopedStorageUsed()
                 ? relativeFilePath
                 : absoluteFilePath;
-    }
-
-    private String getAbsoluteFilePath(String dirPath, String filePath) {
-        if (filePath == null) {
-            return null;
-        }
-        return filePath.startsWith(dirPath)
-                ? filePath
-                : dirPath + File.separator + filePath;
-    }
-
-    public String getRelativeFilePath(String dirPath, String filePath) {
-        return filePath.startsWith(dirPath)
-                ? filePath.substring(dirPath.length() + 1)
-                : filePath;
     }
 
     @SuppressWarnings("PMD.DoNotHardCodeSDCard")

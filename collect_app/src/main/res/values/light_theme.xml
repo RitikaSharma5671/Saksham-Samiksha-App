@@ -7,16 +7,14 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.Collect.BaseLight" parent="Theme.MaterialComponents.Light">
+    <style name="Theme.Collect.BaseLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!--Material theme attributes-->
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorPrimary">#E0E0E0</item>
+        <item name="colorSecondary">#2196F3</item>
         <item name="colorError">@color/red_500</item>
-        <item name="primaryTextColor">@color/primary_text_color</item>
-        <item name="secondaryTextColor">@color/secondary_text_color</item>
-        <item name="colorPrimaryVariant">@color/color_primary</item>
-        <item name="android:colorAccent">@color/color_primary</item>
-        <item name="colorSecondaryVariant">@color/color_secondary_dark</item>
+
+        <item name="colorPrimaryVariant">?colorPrimary</item>
+        <item name="colorSecondaryVariant">?colorSecondary</item>
         <item name="colorSurface">#FFFFFF</item>
         <item name="colorOnPrimary">#000000</item>
         <item name="colorOnSecondary">#000000</item>
@@ -24,6 +22,7 @@
         <item name="colorOnError">#000000</item>
         <item name="colorOnSurface">#000000</item>
         <item name="scrimBackground">@color/mtrl_scrim_color</item>
+
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
         <item name="textAppearanceHeadline3">@style/TextAppearance.MaterialComponents.Headline3</item>
@@ -42,15 +41,13 @@
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.MaterialComponents.MediumComponent</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.MaterialComponents.LargeComponent</item>
         <!--/Material theme attributes-->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
 
         <item name="android:scrollbarThumbHorizontal">@drawable/thumb</item>
         <item name="android:scrollbarThumbVertical">@drawable/thumb</item>
         <item name="android:scrollbarSize">1.75mm</item>
         <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
         <item name="android:fadeScrollbars">false</item>
-        <item name="colorAccent">@color/color_primary</item>
+        <item name="colorAccent">@color/blue_500</item>
         <item name="android:fontFamily">@string/font_family_regular</item>
         <item name="android:panelBackground">@android:color/white</item>
         <item name="alertDialogTheme">@style/Theme.Collect.BaseLight.Dialog.Alert</item>
@@ -58,9 +55,7 @@
         <item name="iconColor">#000000</item>
         <item name="dividerColor">#1e000000</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
-        <item name="dividerCompat">@android:drawable/divider_horizontal_bright</item>
         <item name="android:tintMode" tools:targetApi="21">src_in</item>
-
     </style>
 
     <style name="Theme.Collect.BaseLight.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -68,17 +63,10 @@
     </style>
 
     <style name="Widget.Collect.SearchView.Light" parent="Widget.AppCompat.Light.SearchView">
-        <item name="closeIcon">@drawable/ic_cross</item>
-        <item name="searchIcon">@drawable/ic_search</item>
+        <item name="searchHintIcon">@null</item>
     </style>
 
     <style name="Theme.Collect.Light.Dialog" parent="android:Theme.Material.Light.Dialog">
-        <item name="android:colorAccent">@color/color_primary</item>
-        <item name="android:textColor">@color/color_primary</item>
-        <item name="android:textColorPrimary">@color/color_primary</item>
-        <item name="android:textColorHighlight">@color/color_primary</item>
-        <item name="android:textColorSecondary">@color/color_primary</item>
-        <item name="android:textColorHint">@color/color_primary</item>
-        <item name="android:textColorLink">@color/color_primary</item>
+        <item name="android:colorAccent">?attr/colorSecondary</item>
     </style>
 </resources>

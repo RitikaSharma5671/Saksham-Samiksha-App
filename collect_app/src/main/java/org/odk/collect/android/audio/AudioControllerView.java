@@ -15,79 +15,78 @@
 package org.odk.collect.android.audio;
 
 import android.content.Context;
-import android.view.View;
+import android.os.Build;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.odk.collect.android.R;
-import org.odk.collect.android.R2;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.odk.collect.android.databinding.AudioControllerLayoutBinding;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class AudioControllerView extends FrameLayout {
 
-    TextView currentDurationLabel;
+    public static final int ONE_HOUR = 3600000;
+    public static final int ONE_MINUTE = 60000;
+    public static final int ONE_SECOND = 1000;
 
-    TextView totalDurationLabel;
+    public final AudioControllerLayoutBinding binding;
 
-    @BindView(R2.id.playBtnee)
-    @SuppressFBWarnings("UR")
-    ImageButton playButtonjljk;
-
-
+    private final TextView currentDurationLabel;
+    private final TextView totalDurationLabel;
+    private final ImageButton playButton;
+    private final SeekBar seekBar;
     private final SwipeListener swipeListener;
 
-    private Boolean playing = false;
-    private Integer position = 0;
-    private Integer duration = 0;
+    private boolean playing;
+    private int position;
+    private int duration;
 
     private Listener listener;
 
     public AudioControllerView(Context context) {
-        super(context);
-
-        View.inflate(context, R.layout.audio_controller_layout, this);
-        ButterKnife.bind(this);
-        SeekBar seekBarCTA = findViewById(R.id.seekBarButton);
-
-        swipeListener = new SwipeListener();
-        seekBarCTA.setOnSeekBarChangeListener(swipeListener);
-        playButtonjljk.setImageResource(R.drawable.ic_play_arrow_24dp);
-        currentDurationLabel = findViewById(R.id.currentDuration);
-        totalDurationLabel = findViewById(R.id.totalDuration);
-        playButtonjljk.setOnClickListener(
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        playClicked();
-                    }
-                }
-        );
+        this(context, null);
     }
 
-    @OnClick(R2.id.fastForwardBtn)
-    void fastForwardMedia() {
+    public AudioControllerView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        binding = AudioControllerLayoutBinding.inflate(LayoutInflater.from(context), this, true);
+        playButton = binding.play;
+        currentDurationLabel = binding.currentDuration;
+        totalDurationLabel = binding.totalDuration;
+        seekBar = binding.seekBar;
+
+        swipeListener = new SwipeListener();
+        seekBar.setOnSeekBarChangeListener(swipeListener);
+        playButton.setImageResource(R.drawable.ic_play_arrow_24dp);
+
+        binding.fastForwardBtn.setOnClickListener(view -> fastForwardMedia());
+        binding.fastRewindBtn.setOnClickListener(view -> rewindMedia());
+        binding.play.setOnClickListener(view -> playClicked());
+        binding.remove.setOnClickListener(view -> listener.onRemoveClicked());
+    }
+
+    private void fastForwardMedia() {
         int newPosition = position + 5000;
         onPositionChanged(newPosition);
     }
 
-    @OnClick(R2.id.fastRewindBtn)
-    void rewindMedia() {
+    private void rewindMedia() {
         int newPosition = position - 5000;
         onPositionChanged(newPosition);
     }
 
-    void playClicked() {
+    private void playClicked() {
+        if (listener == null) {
+            return;
+        }
+
         if (playing) {
             listener.onPauseClicked();
         } else {
@@ -104,25 +103,13 @@ public class AudioControllerView extends FrameLayout {
         }
     }
 
-    public void hidePlayer() {
-        setVisibility(GONE);
-    }
-
-    public void showPlayer() {
-        setVisibility(View.VISIBLE);
-    }
-
-    private static String getTime(long seconds) {
-        return new DateTime(seconds, DateTimeZone.UTC).toString("mm:ss");
-    }
-
     public void setPlaying(Boolean playing) {
         this.playing = playing;
 
         if (playing) {
-            playButtonjljk.setImageResource(R.drawable.ic_pause_24dp);
+            playButton.setImageResource(R.drawable.ic_pause_24dp);
         } else {
-            playButtonjljk.setImageResource(R.drawable.ic_play_arrow_24dp);
+            playButton.setImageResource(R.drawable.ic_play_arrow_24dp);
         }
     }
 
@@ -139,20 +126,21 @@ public class AudioControllerView extends FrameLayout {
     public void setDuration(Integer duration) {
         this.duration = duration;
 
-        totalDurationLabel.setText(getTime(duration));
-        SeekBar seekBarCTA = findViewById(R.id.seekBarButton);
-    seekBarCTA.setMax(duration);
-
+        totalDurationLabel.setText(LengthFormatter.formatLength((long) duration));
+        seekBar.setMax(duration);
         setPosition(0);
     }
 
     private void renderPosition(Integer position) {
         this.position = position;
 
-        currentDurationLabel.setText(getTime(position));
-        SeekBar seekBarCTA = findViewById(R.id.seekBarButton);
+        currentDurationLabel.setText(LengthFormatter.formatLength((long) position));
 
-        seekBarCTA.setProgress(position);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            seekBar.setProgress(position, true);
+        } else {
+            seekBar.setProgress(position);
+        }
     }
 
     public interface SwipableParent {
@@ -166,6 +154,8 @@ public class AudioControllerView extends FrameLayout {
         void onPauseClicked();
 
         void onPositionChanged(Integer newPosition);
+
+        void onRemoveClicked();
     }
 
     private class SwipeListener implements SeekBar.OnSeekBarChangeListener {

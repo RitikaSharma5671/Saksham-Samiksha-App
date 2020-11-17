@@ -16,14 +16,13 @@
 
 package org.odk.collect.android.widgets;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
-import androidx.multidex.BuildConfig;
-
 import android.view.Gravity;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -33,6 +32,7 @@ import android.widget.TextView;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.WidgetViewUtils;
@@ -41,10 +41,10 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ContentUriProvider;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtil;
+import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
+import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 import org.odk.collect.android.widgets.utilities.FileWidgetUtils;
@@ -57,7 +57,8 @@ import timber.log.Timber;
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createAnswerTextView;
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createSimpleButton;
 
-public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, ButtonClickListener, BinaryDataReceiver {
+@SuppressLint("ViewConstructor")
+public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, ButtonClickListener, WidgetDataReceiver {
 
     @NonNull
     private FileUtil fileUtil;
@@ -65,35 +66,36 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, B
     @NonNull
     private MediaUtil mediaUtil;
 
-    private String binaryName;
+    private final QuestionMediaManager questionMediaManager;
     private final WaitingForDataRegistry waitingForDataRegistry;
+
+    private String binaryName;
 
     Button chooseFileButton;
     TextView chosenFileNameTextView;
     private LinearLayout answerLayout;
 
-    public ArbitraryFileWidget(Context context, QuestionDetails prompt, WaitingForDataRegistry waitingForDataRegistry) {
-        this(context, prompt, new FileUtil(), new MediaUtil(), waitingForDataRegistry);
+    public ArbitraryFileWidget(Context context, QuestionDetails prompt, QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
+        this(context, prompt, new FileUtil(), new MediaUtil(), questionMediaManager, waitingForDataRegistry);
     }
 
-    ArbitraryFileWidget(Context context, QuestionDetails questionDetails, @NonNull FileUtil fileUtil, @NonNull MediaUtil mediaUtil, WaitingForDataRegistry waitingForDataRegistry) {
+    ArbitraryFileWidget(Context context, QuestionDetails questionDetails, @NonNull FileUtil fileUtil, @NonNull MediaUtil mediaUtil,
+                        QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
         super(context, questionDetails);
-
         this.fileUtil = fileUtil;
         this.mediaUtil = mediaUtil;
+        this.questionMediaManager = questionMediaManager;
+        this.waitingForDataRegistry = waitingForDataRegistry;
 
         binaryName = questionDetails.getPrompt().getAnswerText();
-        this.waitingForDataRegistry = waitingForDataRegistry;
 
         setUpLayout(context);
     }
 
     @Override
     public void deleteFile() {
-        MediaManager
-                .INSTANCE
-                .markOriginalFileOrDelete(getFormEntryPrompt().getIndex().toString(),
-                        getInstanceFolder() + File.separator + binaryName);
+        questionMediaManager.deleteAnswerFile(getFormEntryPrompt().getIndex().toString(),
+                getInstanceFolder() + File.separator + binaryName);
         binaryName = null;
     }
 
@@ -117,7 +119,7 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, B
     }
 
     @Override
-    public void setBinaryData(Object object) {
+    public void setData(Object object) {
         File newFile;
         // get the file path and create a copy in the instance folder
         if (object instanceof Uri) {
@@ -161,12 +163,13 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, B
         LinearLayout widgetLayout = new LinearLayout(getContext());
         widgetLayout.setOrientation(LinearLayout.VERTICAL);
 
-        chooseFileButton = createSimpleButton(getContext(), getFormEntryPrompt().isReadOnly(), getContext().getString(R.string.choose_file), getAnswerFontSize(), this);
-        chooseFileButton.setEnabled(!getFormEntryPrompt().isReadOnly());
+        chooseFileButton = createSimpleButton(getContext(), questionDetails.isReadOnly(), getContext().getString(R.string.choose_file), getAnswerFontSize(), this);
+        chooseFileButton.setEnabled(!questionDetails.isReadOnly());
 
         answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.HORIZONTAL);
         answerLayout.setGravity(Gravity.CENTER);
+        answerLayout.setTag("ArbitraryFileWidgetAnswer");
 
         ImageView attachmentImg = new ImageView(getContext());
         attachmentImg.setImageResource(R.drawable.ic_attachment);
@@ -204,7 +207,9 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, B
 
         Uri fileUri = Uri.fromFile(new File(getInstanceFolder() + File.separator + binaryName));
         Uri contentUri = ContentUriProvider.getUriForFile(getContext(),
-                BuildConfig.APPLICATION_ID + ".provider",
+//                BuildConfig.APPLICATION_ID + ".provider",
+                "com.samagra.sakshamSamiksha.provider",
+
                 new File(getInstanceFolder() + File.separator + binaryName));
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);

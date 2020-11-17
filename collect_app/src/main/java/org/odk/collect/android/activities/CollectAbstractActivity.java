@@ -16,32 +16,26 @@
 
 package org.odk.collect.android.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
-import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager;
 
-import com.samagra.commons.Constants;
-
-import java.util.HashMap;
-
-import timber.log.Timber;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import static org.odk.collect.android.utilities.PermissionUtils.areStoragePermissionsGranted;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
-import static org.odk.collect.android.utilities.PermissionUtils.isEntryPointActivity;
 
 public abstract class CollectAbstractActivity extends AppCompatActivity {
 
@@ -83,17 +77,6 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    protected void onResume() {
-        super.onResume();
-        if (getIntent().hasExtra(Constants.KEY_CUSTOMIZE_TOOLBAR)) {
-            modifyToolbarUsingModificationMap((HashMap<String, Object>) getIntent().getSerializableExtra(Constants.KEY_CUSTOMIZE_TOOLBAR));
-        } else {
-            modifyToolbarWithGlobalDefualts();
-        }
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         isInstanceStateSaved = true;
         super.onSaveInstanceState(outState);
@@ -105,40 +88,32 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(new LocaleHelper().updateLocale(base, PreferenceManager.getDefaultSharedPreferences(base).getString(Constants.APP_LANGUAGE_KEY, "en")));
-    }
-
-
-    /**
-     * This function modifies the current Activity {@link Toolbar} with the parameters provided in the
-     * {@link ODKDriver}'s init function.
-     */
-    @SuppressLint("ResourceType")
-    private void modifyToolbarWithGlobalDefualts() {
-        if (getSupportActionBar() != null && ODKDriver.isModifyToolbarIcon()) {
-            if (ODKDriver.getToolbarIconResId() == Long.MAX_VALUE) {
-                // Hide the Toolbar icon
-                Timber.i("Changing toolbar Icon to null");
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            } else {
-                Timber.i("Changing toolbar icon to set Icon");
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
-                getSupportActionBar().setHomeAsUpIndicator((int) ODKDriver.getToolbarIconResId());
-            }
-            if(this instanceof FormEntryActivity)
-                getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_cross));
-        } else {
-            Timber.w("No toolbar found, cannot modify");
-        }
+        super.attachBaseContext(base);
+        applyOverrideConfiguration(new Configuration());
     }
 
     @Override
-    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        if (overrideConfiguration != null) {
-            overrideConfiguration.setTo(getBaseContext().getResources().getConfiguration());
+    public void applyOverrideConfiguration(Configuration newConfig) {
+        super.applyOverrideConfiguration(updateConfigurationIfSupported(newConfig));
+    }
+
+    private Configuration updateConfigurationIfSupported(Configuration config) {
+        if (Build.VERSION.SDK_INT >= 24) {
+            if (!config.getLocales().isEmpty()) {
+                return config;
+            }
+        } else {
+            if (config.locale != null) {
+                return config;
+            }
         }
-        super.applyOverrideConfiguration(overrideConfiguration);
+
+        Locale locale = new LocaleHelper().getLocale(this);
+        if (locale != null) {
+            config.setLocale(locale);
+            config.setLayoutDirection(locale);
+        }
+        return config;
     }
 
     public void initToolbar(CharSequence title) {
@@ -148,37 +123,31 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
         }
     }
-    /**
-     * This functions uses action bar preferences as provided via the intent. It is included for a more
-     * fine grained control over the ODK Collect's default activities.
-     *
-     * @param toolbarModificationObject - This is Map of Action Bar properties and their values that
-     *                                  need to be applied. This is prepared by the app module.
-     */
-    private void modifyToolbarUsingModificationMap(HashMap<String, Object> toolbarModificationObject) {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            if (toolbarModificationObject.get(Constants.CUSTOM_TOOLBAR_TITLE) != null) {
-                actionBar.setTitle((String) toolbarModificationObject.get(Constants.CUSTOM_TOOLBAR_TITLE));
-            }
-            if (!(boolean) toolbarModificationObject.get(Constants.CUSTOM_TOOLBAR_SHOW_NAVICON)) {
-                actionBar.setDisplayShowHomeEnabled(false);
-                actionBar.setDisplayHomeAsUpEnabled(false);
-            } else {
-                actionBar.setDisplayShowHomeEnabled(true);
-                actionBar.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp));
-                if ((boolean) toolbarModificationObject.get(Constants.CUSTOM_TOOLBAR_BACK_NAVICON_CLICK)) {
-                    actionBar.setDisplayHomeAsUpEnabled(true);
-                    Toolbar toolbar = findViewById(R.id.toolbar);
-                    toolbar.setTitleTextColor(getResources().getColor(R.color.primary_text_color));
-                    if (toolbar != null) {
-                        toolbar.setNavigationOnClickListener(v -> finish());
-                    }
-                }
-            }
-            if(this instanceof FormEntryActivity)
-                getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_cross));
 
+    /**
+     * Checks to see if an activity is one of the entry points to the app i.e
+     * an activity that has a view action that can launch the app.
+     *
+     * @param activity that has permission requesting code.
+     * @return true if the activity is an entry point to the app.
+     */
+    public static boolean isEntryPointActivity(CollectAbstractActivity activity) {
+
+        List<Class<?>> activities = new ArrayList<>();
+        activities.add(FormEntryActivity.class);
+        activities.add(InstanceChooserList.class);
+        activities.add(FillBlankFormActivity.class);
+        activities.add(InstanceUploaderListActivity.class);
+        activities.add(SplashScreenActivity.class);
+        activities.add(FormDownloadListActivity.class);
+        activities.add(InstanceUploaderActivity.class);
+
+        for (Class<?> act : activities) {
+            if (activity.getClass().equals(act)) {
+                return true;
+            }
         }
+
+        return false;
     }
 }

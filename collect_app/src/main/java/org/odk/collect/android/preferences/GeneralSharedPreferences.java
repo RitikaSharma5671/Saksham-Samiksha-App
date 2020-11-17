@@ -21,7 +21,6 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
 
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.injection.DaggerUtils;
 

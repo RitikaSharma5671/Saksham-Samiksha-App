@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.StatFs;
 
-
 import org.odk.collect.android.application.Collect1;
 
 import java.io.File;

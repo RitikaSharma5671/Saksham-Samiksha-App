@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jakewharton.butterknife'
-
 android {
     compileSdkVersion 28
     buildToolsVersion "29.0.2"
@@ -33,9 +31,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":commons")
-    // Butterknife
-    implementation "com.jakewharton:butterknife:10.1.0"
-    annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
+
     annotationProcessor "com.google.dagger:dagger-compiler:2.19"
 
     implementation 'me.xdrop:fuzzywuzzy:1.2.0'

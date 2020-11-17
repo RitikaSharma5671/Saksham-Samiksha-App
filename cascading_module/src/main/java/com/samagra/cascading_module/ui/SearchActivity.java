@@ -19,9 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.samagra.cascading_module.R;
-import com.samagra.cascading_module.R2;
 import com.samagra.cascading_module.base.BaseActivity;
 import com.samagra.commons.InstitutionInfo;
 import com.samagra.grove.logging.Grove;

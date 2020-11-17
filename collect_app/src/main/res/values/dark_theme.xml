@@ -7,9 +7,9 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.Collect.BaseDark" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="Theme.Collect.BaseDark" parent="Theme.AppCompat.NoActionBar">
         <!--Material theme attributes-->
-        <item name="colorPrimary">#014d3f</item>
+        <item name="colorPrimary">#616161</item>
         <item name="colorSecondary">#57C4C2</item>
         <item name="colorError">@color/red_500</item>
 
@@ -52,7 +52,6 @@
         <item name="iconColor">#ffffff</item>
         <item name="dividerColor">#1effffff</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
-        <item name="dividerCompat">@android:drawable/divider_horizontal_dark</item>
         <!--
             The default tint mode for ImageViews is SRC_ATOP, which produces
             incorrect blending results when tinting images with a colour that

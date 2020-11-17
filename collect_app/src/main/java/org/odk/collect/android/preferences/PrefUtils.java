@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceManager;
 
-
 import org.odk.collect.android.application.Collect1;
 
 import java.util.Arrays;

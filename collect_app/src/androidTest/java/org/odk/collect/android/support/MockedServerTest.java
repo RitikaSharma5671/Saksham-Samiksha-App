@@ -5,7 +5,8 @@ import android.preference.PreferenceManager;
 
 import org.junit.After;
 import org.junit.Before;
-
+import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.preferences.GeneralKeys;
 
 import java.util.Map;
@@ -82,7 +83,7 @@ public abstract class MockedServerTest {
     }
 
     private static void configAppFor(MockWebServer server) {
-        Editor prefs = PreferenceManager.getDefaultSharedPreferences(Collect1.getInstance().getBaseContext()).edit();
+        Editor prefs = PreferenceManager.getDefaultSharedPreferences(Collect1.getInstance().getApplicationVal().getBaseContext()).edit();
         prefs.putString(GeneralKeys.KEY_SERVER_URL, server.url("/").toString());
         if (!prefs.commit()) {
             throw new RuntimeException("Failed to set up SharedPreferences for MockWebServer");

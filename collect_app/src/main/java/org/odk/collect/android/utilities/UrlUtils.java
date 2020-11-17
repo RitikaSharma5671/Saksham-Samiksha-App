@@ -17,7 +17,6 @@ package org.odk.collect.android.utilities;
 import androidx.annotation.NonNull;
 
 import org.odk.collect.android.R;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.exception.BadUrlException;
 
@@ -33,10 +32,10 @@ public class UrlUtils {
         final String googleHeader = "docs.google.com/spreadsheets/d/";
         if (urlString == null || urlString.isEmpty()) {
             throw new BadUrlException(
-                    Collect1.getInstance().getAppContext().getResources().getString(R.string.missing_submission_url));
+                    TranslationHandler.getString(Collect1.getInstance().getAppContext(), R.string.missing_submission_url));
         } else if (urlString.length() < googleHeader.length()) {
             throw new BadUrlException(
-                    Collect1.getInstance().getAppContext().getResources().getString(R.string.invalid_sheet_id, urlString));
+                    TranslationHandler.getString(Collect1.getInstance().getAppContext(), R.string.invalid_sheet_id, urlString));
         } else {
             int start = urlString.indexOf(googleHeader) + googleHeader.length();
             int end = urlString.indexOf('/', start);
@@ -46,7 +45,7 @@ public class UrlUtils {
             }
             if (start == -1) {
                 throw new BadUrlException(
-                        Collect1.getInstance().getAppContext().getResources().getString(R.string.invalid_sheet_id, urlString));
+                        TranslationHandler.getString(Collect1.getInstance().getAppContext(), R.string.invalid_sheet_id, urlString));
             }
             return urlString.substring(start, end);
         }

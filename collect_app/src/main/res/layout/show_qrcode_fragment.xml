@@ -54,7 +54,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:src="@android:drawable/ic_dialog_alert"
-            android:tint="?colorOnError" />
+            app:tint="?colorOnError" />
 
         <TextView
             android:id="@+id/tvPasswordWarning"
@@ -63,6 +63,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:padding="5dp"
+            android:onClick="passwordWarningClicked"
             android:textColor="?colorOnError"
             android:textSize="15sp"
             tools:text="@string/qrcode_with_both_passwords" />

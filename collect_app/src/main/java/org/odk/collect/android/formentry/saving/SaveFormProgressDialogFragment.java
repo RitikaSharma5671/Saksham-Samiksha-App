@@ -9,6 +9,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.fragments.dialogs.ProgressDialogFragment;
 import org.odk.collect.android.injection.DaggerUtils;
+import org.odk.collect.android.async.Scheduler;
 
 import javax.inject.Inject;
 
@@ -19,6 +20,9 @@ public class SaveFormProgressDialogFragment extends ProgressDialogFragment {
     @Inject
     Analytics analytics;
 
+    @Inject
+    Scheduler scheduler;
+
     private FormSaveViewModel viewModel;
 
     @Override
@@ -26,8 +30,8 @@ public class SaveFormProgressDialogFragment extends ProgressDialogFragment {
         super.onAttach(context);
         DaggerUtils.getComponent(context).inject(this);
 
-        viewModel = new ViewModelProvider(requireActivity(), new FormSaveViewModel.Factory(analytics))
-                .get(FormSaveViewModel.class);
+        FormSaveViewModel.Factory factory = new FormSaveViewModel.Factory(requireActivity(), null, analytics, scheduler);
+        viewModel = new ViewModelProvider(requireActivity(), factory).get(FormSaveViewModel.class);
 
         setCancelable(false);
         setTitle(getString(R.string.saving_form));

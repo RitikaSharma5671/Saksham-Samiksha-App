@@ -2,7 +2,6 @@ package org.odk.collect.android.formentry.backgroundlocation;
 
 import android.location.Location;
 
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.formentry.audit.AuditConfig;
 import org.odk.collect.android.formentry.audit.AuditEvent;

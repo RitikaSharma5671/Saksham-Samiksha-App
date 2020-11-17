@@ -19,7 +19,9 @@ import butterknife.ButterKnife;
  */
 public class ExtendedEditTextPreference extends EditTextPreference {
 
+    @BindView(android.R.id.title)
     TextView title;
+    @BindView(android.R.id.summary)
     TextView summary;
 
     @ColorInt
@@ -60,8 +62,7 @@ public class ExtendedEditTextPreference extends EditTextPreference {
     protected void onBindView(View view) {
         super.onBindView(view);
         ButterKnife.bind(this, view);
-        title = view.findViewById(android.R.id.title);
-        summary = view.findViewById(android.R.id.summary);
+
         setupColorStates();
 
         if (isEnabled) {

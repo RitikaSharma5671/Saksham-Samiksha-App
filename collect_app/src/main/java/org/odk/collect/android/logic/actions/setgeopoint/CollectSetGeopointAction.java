@@ -22,7 +22,6 @@ import com.google.android.gms.location.LocationListener;
 
 import org.javarosa.core.model.actions.setgeopoint.SetGeopointAction;
 import org.javarosa.core.model.instance.TreeReference;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.location.client.GoogleFusedLocationClient;
 import org.odk.collect.android.location.client.MaxAccuracyWithinTimeoutLocationClient;

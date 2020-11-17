@@ -1,3 +1,5 @@
+include ':audiorecorder'
+include ':strings'
 include ':student-details'
 include ':assets'
 include ':nbi-stubs'

@@ -23,7 +23,6 @@ import android.util.DisplayMetrics;
 
 import org.odk.collect.android.application.Collect1;
 
-
 /**
  * Created by laguta.yurii@gmail.com on 26/8/17.
  * <p>

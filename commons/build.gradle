@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jakewharton.butterknife'
-
 android {
     compileSdkVersion 28
 
@@ -63,9 +61,6 @@ dependencies {
     // Dependency Injection
     api "com.google.dagger:dagger:2.19"
     api 'javax.inject:javax.inject:1'
-
-    // Butterknife
-    api "com.jakewharton:butterknife:10.1.0"
 
     // Locale Changer
     api "com.github.YarikSOffice:lingver:1.2.0"

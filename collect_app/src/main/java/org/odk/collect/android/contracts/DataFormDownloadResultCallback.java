@@ -4,9 +4,10 @@ package org.odk.collect.android.contracts;
 import org.odk.collect.android.formmanagement.ServerFormDetails;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public interface DataFormDownloadResultCallback {
-    void formsDownloadingSuccessful(HashMap<ServerFormDetails, String> result);
+    void formsDownloadingSuccessful(Map<ServerFormDetails, String> result);
 
     void formsDownloadingFailure();
 

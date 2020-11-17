@@ -170,8 +170,8 @@ public class StorageMigrationActivity extends CollectAbstractActivity {
         storageMigrationBanner.setAction(() -> {
             storageMigrationBanner.setVisibility(View.GONE);
             storageMigrationRepository.clearResult();
-            Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
-            ExchangeObject.SignalExchangeObject signalExchangeObject = new ExchangeObject.SignalExchangeObject(Modules.MAIN_APP, Modules.COLLECT_APP, intent, true);
+//            Intent intent = new Intent(this, LoginAc);
+            ExchangeObject.SignalExchangeObject signalExchangeObject = new ExchangeObject.SignalExchangeObject(Modules.MAIN_APP, Modules.COLLECT_APP, null, true);
             Collect1.getInstance().getMainApplication().getEventBus().send(signalExchangeObject);
             finish();
         });
