@@ -14,7 +14,6 @@
 
 package org.odk.collect.android.upload;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -293,12 +292,12 @@ public class InstanceServerUploader extends InstanceUploader {
 
     private String getServerSubmissionURL() {
 
-        Context app = Collect1.getInstance().getAppContext();
+        Collect1 app = Collect1.getInstance();
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
                 Collect1.getInstance().getAppContext());
         String serverBase = settings.getString(GeneralKeys.KEY_SERVER_URL,
-                app.getString(R.string.default_server_url));
+                app.getAppContext().getResources().getString(R.string.default_server_url));
 
         if (serverBase.endsWith(URL_PATH_SEP)) {
             serverBase = serverBase.substring(0, serverBase.length() - 1);
@@ -306,7 +305,7 @@ public class InstanceServerUploader extends InstanceUploader {
 
         // NOTE: /submission must not be translated! It is the well-known path on the server.
         String submissionPath = settings.getString(GeneralKeys.KEY_SUBMISSION_URL,
-                app.getString(R.string.default_odk_submission));
+                app.getAppContext().getResources().getString(R.string.default_odk_submission));
 
         if (!submissionPath.startsWith(URL_PATH_SEP)) {
             submissionPath = URL_PATH_SEP + submissionPath;

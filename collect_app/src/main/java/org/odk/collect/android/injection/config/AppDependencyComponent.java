@@ -115,6 +115,7 @@ public interface AppDependencyComponent {
     void inject(SavedFormListFragment savedFormListFragment);
 
     void inject(PropertyManager propertyManager);
+    void inject(StorageMigrationActivity storageMigrationActivity);
 
     void inject(FormEntryActivity formEntryActivity);
 
@@ -153,8 +154,6 @@ public interface AppDependencyComponent {
     void inject(MapboxMapFragment mapFragment);
 
     void inject(MainMenuActivity mainMenuActivity);
-
-    void inject(StorageMigrationActivity storageMigrationActivity);
 
     void inject(QRCodeTabsActivity qrCodeTabsActivity);
 

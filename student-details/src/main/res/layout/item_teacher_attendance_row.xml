@@ -191,7 +191,7 @@
                     android:imeOptions="actionDone"
                     android:padding="8dp"
                     android:singleLine="true"
-                    android:textColor="@color/black"
+                    android:textColor="@color/color1"
                     android:textColorHint="@color/color3"
                     android:textSize="11.5sp"
                     android:visibility="visible" />

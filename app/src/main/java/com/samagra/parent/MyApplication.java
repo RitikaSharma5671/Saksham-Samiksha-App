@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.multidex.MultiDex;
 
 import com.example.student_details.contracts.StudentDetailsComponentManager;
 import com.example.student_details.contracts.StudentDetailsSectionInteractor;
@@ -87,6 +88,7 @@ public class MyApplication extends Application implements MainApplication, Lifec
     @Override
     public void onCreate() {
         super.onCreate();
+        setUpDagger();
         eventBus = new RxBus();
         initialiseLoggingComponent();
         Collect1.getInstance().init(this, getApplicationContext(), new FormManagmentModuleInitialisationListener() {
@@ -118,6 +120,13 @@ public class MyApplication extends Application implements MainApplication, Lifec
         UpdateDriver.init(this);
         rxEventBus = new EventBus();
         initialiseStudentModule();
+    }
+
+    private void setUpDagger() {
+        applicationComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+        applicationComponent.inject(this);
     }
 
     private void initialiseStudentModule() {
@@ -244,10 +253,7 @@ public class MyApplication extends Application implements MainApplication, Lifec
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        applicationComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
-        applicationComponent.inject(this);
+        MultiDex.install(this);
     }
 
     public ApplicationComponent getApplicationComponent() {

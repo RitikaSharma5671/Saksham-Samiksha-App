@@ -372,7 +372,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
 
             if (!externalDataMap.isEmpty()) {
 
-                publishProgress(Collect1.getInstance().getAppContext().getResources()
+                publishProgress(Collect1.getInstance().getAppContext()
                         .getString(R.string.survey_loading_reading_csv_message));
 
                 ExternalDataReader externalDataReader = new ExternalDataReaderImpl(this);

@@ -15,11 +15,11 @@ import com.samagra.commons.utils.AlertDialogUtils;
 import com.samagra.commons.utils.FileUnzipper;
 import com.samagra.commons.utils.UnzipTaskListener;
 import com.samagra.grove.logging.Grove;
+import com.samagra.parent.BuildConfig;
 import com.samagra.parent.R;
 import com.samagra.parent.base.BasePresenter;
 import com.samagra.parent.helper.BackendNwHelper;
 
-import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.contracts.AppPermissionUserActionListener;
 import org.odk.collect.android.contracts.IFormManagementContract;

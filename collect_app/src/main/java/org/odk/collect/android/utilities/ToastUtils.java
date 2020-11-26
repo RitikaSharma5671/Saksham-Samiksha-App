@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.application.Collect1;
 
 public class ToastUtils {

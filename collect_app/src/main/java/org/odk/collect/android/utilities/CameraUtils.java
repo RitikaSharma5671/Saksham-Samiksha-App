@@ -79,7 +79,7 @@ public class CameraUtils {
     public boolean isFrontCameraAvailable() {
         try {
             //https://developer.android.com/reference/android/hardware/camera2/CameraCharacteristics.html
-            CameraManager cameraManager = (CameraManager) Collect1.getInstance().getAppContext()
+            CameraManager cameraManager = (CameraManager) Collect1.getInstance().getApplicationVal()
                     .getSystemService(Context.CAMERA_SERVICE);
             if (cameraManager != null) {
                 String[] cameraId = cameraManager.getCameraIdList();

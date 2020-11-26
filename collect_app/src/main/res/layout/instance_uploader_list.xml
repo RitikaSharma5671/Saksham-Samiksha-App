@@ -57,7 +57,6 @@ the License.
                 style="@style/Widget.Collect.Button.BottomOption"
                 android:layout_marginLeft="@dimen/margin_extra_small"
                 android:layout_marginRight="@dimen/margin_extra_small"
-                android:onClick="onUploadButtonsClicked"
                 android:text="@string/send_selected_data" />
         </LinearLayout>
 

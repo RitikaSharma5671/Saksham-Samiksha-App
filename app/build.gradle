@@ -7,12 +7,12 @@ apply plugin: 'io.sentry.android.gradle'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.androidCompileSdk
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "com.samagra.sakshamSamiksha"
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion rootProject.androidMinSdk
+        targetSdkVersion rootProject.androidTargetSdk
         versionCode 10050
         versionName "1.0.7"
         multiDexEnabled true

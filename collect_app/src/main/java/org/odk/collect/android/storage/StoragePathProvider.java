@@ -49,7 +49,7 @@ public class StoragePathProvider {
     }
 
     public String getScopedStorageRootDirPath() {
-        File scopedExternalFilesDirPath = Collect1.getInstance().getAppContext().getExternalFilesDir(null);
+        File scopedExternalFilesDirPath = Collect1.getInstance().getApplicationVal().getExternalFilesDir(null);
         return scopedExternalFilesDirPath != null
                 ? scopedExternalFilesDirPath.getAbsolutePath()
                 : "";

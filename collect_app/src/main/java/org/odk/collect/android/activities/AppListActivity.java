@@ -35,7 +35,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.SortDialogAdapter;
 import org.odk.collect.android.application.Collect1;
-import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.listeners.RecyclerViewClickListener;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.utilities.MultiClickGuard;
@@ -273,8 +272,8 @@ abstract class AppListActivity extends CollectAbstractActivity {
     }
 
     protected void restoreSelectedSortingOrder() {
-        selectedSortingOrder = PreferenceManager
-                .getDefaultSharedPreferences(Collect1.getInstance().getAppContext())
+        selectedSortingOrder =
+        PreferenceManager.getDefaultSharedPreferences(Collect1.getInstance().getAppContext())
                 .getInt(getSortingOrderKey(), BY_NAME_ASC);
     }
 

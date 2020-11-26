@@ -8,11 +8,7 @@ import org.odk.collect.android.async.TaskSpec
 abstract class WorkerAdapter(private val spec: TaskSpec, context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     override fun doWork(): Result {
-        val completed = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            spec.getTask(applicationContext).get()
-        } else {
-//            spec.getTask(applicationContext).get()
-true       }
+        val completed = spec.getTask(applicationContext).get()
 
         return if (completed) {
             Result.success()

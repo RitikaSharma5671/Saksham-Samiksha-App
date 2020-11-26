@@ -17,7 +17,6 @@ import org.javarosa.xform.parse.XFormParser;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect1;
-import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.preferences.FormUpdateMode;
 import org.odk.collect.android.geo.MapboxUtils;
 import org.odk.collect.android.logic.PropertyManager;
@@ -135,12 +134,7 @@ public class ApplicationInitializer {
                 return;
             }
 
-//            FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
-//            crashlytics.log((priority == Log.ERROR ? "E/" : "W/") + tag + ": " + message);
-//
-//            if (t != null && priority == Log.ERROR) {
-//                crashlytics.recordException(t);
-//            }
+
         }
     }
 }

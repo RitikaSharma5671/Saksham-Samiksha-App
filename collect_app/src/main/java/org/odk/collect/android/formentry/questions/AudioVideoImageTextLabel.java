@@ -53,6 +53,7 @@ import org.odk.collect.android.utilities.ScreenUtils;
 import org.odk.collect.android.utilities.StringUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.audioclips.Clip;
 
 import java.io.File;
 

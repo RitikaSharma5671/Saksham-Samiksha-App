@@ -417,7 +417,7 @@ public class ServerFormDownloader implements FormDownloader {
                 Timber.w("Copied %s over %s", tempFile.getAbsolutePath(), file.getAbsolutePath());
                 FileUtils.deleteAndReport(tempFile);
             } else {
-                String msg = Collect1.getInstance().getAppContext().getString(R.string.fs_file_copy_error,
+                String msg = Collect1.getInstance().getAppContext().getResources().getString(R.string.fs_file_copy_error,
                         tempFile.getAbsolutePath(), file.getAbsolutePath(), errorMessage);
                 Timber.w(msg);
                 throw new RuntimeException(msg);

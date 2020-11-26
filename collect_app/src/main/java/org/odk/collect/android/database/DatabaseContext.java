@@ -20,6 +20,7 @@ import android.content.ContextWrapper;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.application.Collect1;
 
 import java.io.File;

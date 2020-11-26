@@ -31,7 +31,6 @@ import android.widget.Toast;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.AboutListAdapter;
 import org.odk.collect.android.application.Collect1;
-import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.CustomTabHelper;
 

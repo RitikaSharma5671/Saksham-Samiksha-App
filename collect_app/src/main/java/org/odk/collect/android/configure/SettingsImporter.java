@@ -12,8 +12,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import timber.log.Timber;
-
 import static org.odk.collect.android.utilities.SharedPreferencesUtils.put;
 
 public class SettingsImporter {
@@ -37,15 +35,12 @@ public class SettingsImporter {
     }
 
     public boolean fromJSON(@NonNull String json) {
-        json = json.replaceAll("\\r\\n|\\r|\\n", "");
         if (!settingsValidator.isValid(json)) {
             return false;
         }
 
-        Timber.d("evsveverfvbetft true ho raha hai");
-//        Map<String, ?> map = generalSharedPrefs.getAll();
-//        generalSharedPrefs.edit().clear().apply();
-//        adminSharedPrefs.edit().clear().apply();
+        generalSharedPrefs.edit().clear().apply();
+        adminSharedPrefs.edit().clear().apply();
 
         try {
             JSONObject jsonObject = new JSONObject(json);
@@ -60,10 +55,10 @@ public class SettingsImporter {
         }
 
         preferenceMigrator.migrate(generalSharedPrefs, adminSharedPrefs);
-//
-//        clearUnknownKeys(generalSharedPrefs, generalDefaults);
-//        clearUnknownKeys(adminSharedPrefs, adminDefaults);
-//
+
+        clearUnknownKeys(generalSharedPrefs, generalDefaults);
+        clearUnknownKeys(adminSharedPrefs, adminDefaults);
+
         loadDefaults(generalSharedPrefs, generalDefaults);
         loadDefaults(adminSharedPrefs, adminDefaults);
 

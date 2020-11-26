@@ -63,7 +63,6 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:padding="5dp"
-            android:onClick="passwordWarningClicked"
             android:textColor="?colorOnError"
             android:textSize="15sp"
             tools:text="@string/qrcode_with_both_passwords" />

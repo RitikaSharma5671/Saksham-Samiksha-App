@@ -32,7 +32,6 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.adapters.SortDialogAdapter;
 import org.odk.collect.android.application.Collect1;
-import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.listeners.RecyclerViewClickListener;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.utilities.MultiClickGuard;

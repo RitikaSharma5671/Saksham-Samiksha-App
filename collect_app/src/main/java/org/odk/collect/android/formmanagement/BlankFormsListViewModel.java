@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.analytics.AnalyticsEvents;
+import org.odk.collect.android.async.Scheduler;
 import org.odk.collect.android.backgroundwork.ChangeLock;
 import org.odk.collect.android.formmanagement.matchexactly.ServerFormsSynchronizer;
 import org.odk.collect.android.formmanagement.matchexactly.SyncStatusRepository;
@@ -21,7 +22,6 @@ import org.odk.collect.android.preferences.FormUpdateMode;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.PreferencesProvider;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.async.Scheduler;
 
 import java.io.ByteArrayInputStream;
 import java.util.Objects;

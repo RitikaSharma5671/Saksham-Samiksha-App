@@ -47,7 +47,6 @@ import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.material.MaterialBanner;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPasswordDialogFragment;
 import org.odk.collect.android.preferences.AdminPasswordDialogFragment.Action;
@@ -67,6 +66,7 @@ import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.material.MaterialBanner;
 
 import java.lang.ref.WeakReference;
 
@@ -287,6 +287,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         setButtonsVisibility();
         invalidateOptionsMenu();
         setUpStorageMigrationBanner();
+        tryToPerformAutomaticMigration();
     }
 
     private void setButtonsVisibility() {
@@ -578,5 +579,14 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
             storageMigrationBanner.setVisibility(View.GONE);
             storageMigrationRepository.clearResult();
         });
+    }
+
+    private void tryToPerformAutomaticMigration() {
+        if (storageStateProvider.shouldPerformAutomaticMigration()) {
+            StorageMigrationDialog dialog = showStorageMigrationDialog();
+            if (dialog != null) {
+                dialog.startStorageMigration();
+            }
+        }
     }
 }

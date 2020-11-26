@@ -17,7 +17,6 @@ package org.odk.collect.android.tasks;
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect1;
-import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.instances.Instance;
 import org.odk.collect.android.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.logic.PropertyManager;

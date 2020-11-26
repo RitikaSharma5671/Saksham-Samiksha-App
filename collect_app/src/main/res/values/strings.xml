@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recording_warning">You must stop recording before leaving this screen.</string>
+</resources>

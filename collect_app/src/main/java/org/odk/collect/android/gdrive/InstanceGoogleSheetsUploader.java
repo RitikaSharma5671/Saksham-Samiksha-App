@@ -264,7 +264,7 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         File toUpload = new File(filePath);
 
         if (!new File(filePath).exists()) {
-            throw new UploadException(Collect1.getInstance().getAppContext()
+            throw new UploadException(Collect1.getInstance().getAppContext().getResources()
                     .getString(R.string.media_upload_error, filePath));
         }
 

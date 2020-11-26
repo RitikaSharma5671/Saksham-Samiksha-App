@@ -8,8 +8,8 @@ public final class AndroidUserAgent implements UserAgentProvider {
     @Override
     public String getUserAgent() {
         return String.format("%s/%s %s",
-                "org.odk.collect.android",
-                BuildConfig.VERSION_NAME,
+                "com.samagra.sakshamSamiksha",
+                "BuildConfig.VERSION_NAME",
                 System.getProperty("http.agent"));
     }
 

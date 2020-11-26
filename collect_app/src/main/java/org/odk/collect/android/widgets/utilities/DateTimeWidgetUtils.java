@@ -15,7 +15,6 @@ import org.joda.time.chrono.IslamicChronology;
 import org.joda.time.chrono.PersianChronologyKhayyamBorkowski;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect1;
-import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.fragments.dialogs.CopticDatePickerDialog;
 import org.odk.collect.android.fragments.dialogs.CustomTimePickerDialog;
 import org.odk.collect.android.fragments.dialogs.EthiopianDatePickerDialog;
@@ -111,6 +110,7 @@ public class DateTimeWidgetUtils {
                 customDate = new DateTime(date).withChronology(IslamicChronology.getInstance());
                 monthArray = context.getResources().getStringArray(R.array.islamic_months);
                 break;
+
             case MYANMAR:
                 customDate = new DateTime(date);
                 MyanmarDate myanmarDate = MyanmarDateConverter.convert(customDate.getYear(),
@@ -131,6 +131,7 @@ public class DateTimeWidgetUtils {
 
         SimpleDateFormat df = new SimpleDateFormat("HH:mm", Locale.getDefault());
         switch (datePickerDetails.getDatePickerType()) {
+
             case MYANMAR: {
                 MyanmarDate myanmarDate = MyanmarDateConverter.convert(customDate.getYear(),
                         customDate.getMonthOfYear(), customDate.getDayOfMonth(), customDate.getHourOfDay(),

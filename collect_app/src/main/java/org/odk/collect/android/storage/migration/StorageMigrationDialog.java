@@ -20,13 +20,13 @@ import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.WebViewActivity;
 import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.material.MaterialFullScreenDialogFragment;
 import org.odk.collect.android.preferences.AdminPasswordDialogFragment;
 import org.odk.collect.android.preferences.AdminPasswordDialogFragment.Action;
 import org.odk.collect.android.utilities.AdminPasswordProvider;
 import org.odk.collect.android.utilities.CustomTabHelper;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.MultiClickGuard;
+import org.odk.collect.android.material.MaterialFullScreenDialogFragment;
 
 import javax.inject.Inject;
 

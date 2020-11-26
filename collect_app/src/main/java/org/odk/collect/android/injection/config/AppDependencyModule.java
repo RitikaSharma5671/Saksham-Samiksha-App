@@ -270,6 +270,7 @@ public class AppDependencyModule {
     }
 
     @Provides
+    @Singleton
     public StorageStateProvider providesStorageStateProvider() {
         return new StorageStateProvider();
     }
@@ -306,16 +307,12 @@ public class AppDependencyModule {
 
     @Provides
     public VersionInformation providesVersionInformation() {
-        return new VersionInformation(() -> BuildConfig.VERSION_NAME);
+        return new VersionInformation(() -> "BuildConfig.VERSION_NAME");
     }
 
     @Provides
     public FileProvider providesFileProvider(Context context) {
-        return filePath -> getUriForFile(context,
-                "com.samagra.sakshamSamiksha.provider",
-
-//                BuildConfig.APPLICATION_ID + ".provider",
-                new File(filePath));
+        return filePath -> getUriForFile(context, "com.samagra.sakshamSamiksha.provider", new File(filePath));
     }
 
     @Provides
