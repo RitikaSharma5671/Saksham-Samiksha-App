@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.samagra.commons.Constants;
+import com.samagra.grove.logging.Grove;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -143,11 +144,9 @@ public class FormManagementSectionInteractor
     public void resetODKForms(Context context, IResetActionListener iResetActionListener) {
         final List<Integer> resetActions = new ArrayList<>();
         resetActions.add(ApplicationResetter.ResetAction.RESET_FORMS);
-        resetActions.add(ApplicationResetter.ResetAction.RESET_INSTANCES);
         resetActions.add(ApplicationResetter.ResetAction.RESET_LAYERS);
         resetActions.add(ApplicationResetter.ResetAction.RESET_CACHE);
         resetActions.add(ApplicationResetter.ResetAction.RESET_OSM_DROID);
-        new InstancesDao().deleteInstancesDatabase();
         new AsyncTask<Void, Void, List<Integer>>() {
             @Override
             protected void onPreExecute() {
@@ -194,7 +193,7 @@ public class FormManagementSectionInteractor
 //                            break;
 //                    }
 //                    if (value.containsKey("dlerrormessage")) {
-                    formListDownloadResultCallback.onFailureFormListDownload(true);
+                    formListDownloadResultCallback.onFailureFormListDownload(true, exception != null ? exception.getType().toString() : "No Known Exception");
 //                    } else {
 //                        formListDownloadResultCallback.onFailureFormListDownload(false);
 //                    }
@@ -325,7 +324,7 @@ public class FormManagementSectionInteractor
         });
 
 
-        downloadFormsTask[0].executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, filesToDownload);
+        downloadFormsTask[0].execute(filesToDownload);
     }
 
     @Override
@@ -513,7 +512,16 @@ public class FormManagementSectionInteractor
 
     @Override
     public void enableUsingScopedStorage() {
-        Collect1.getInstance().getStorageStateProvider().enableUsingScopedStorage();
+        if (!Collect1.getInstance().getStorageStateProvider().isScopedStorageUsed() && !new File(Collect1.getInstance().getStoragePathProvider().getUnscopedStorageRootDirPath()).exists()) {
+            Collect1.getInstance().getStorageStateProvider().enableUsingScopedStorage();
+            Grove.d("Scoped storage has been enabled now.");
+        } else if (!Collect1.getInstance().getStorageStateProvider().isScopedStorageUsed()) {
+            Collect1.getInstance().getStorageStateProvider().enableUsingScopedStorage();
+            Grove.d("Scoped storage has been enabled now as it did not fulfil other condition before");
+
+        }else {
+            Grove.d("Scoped storage has already been enabled.");
+        }
     }
 
     @Override

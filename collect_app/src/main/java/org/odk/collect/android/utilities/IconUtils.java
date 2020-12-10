@@ -32,7 +32,7 @@ public class IconUtils {
     }
 
     public static int getNotificationAppIcon() {
-        return R.drawable.ic_notes_white;
+        return R.drawable.saksham_notif_icon;
     }
 
     /** Renders a Drawable (such as a vector drawable) into a Bitmap. */

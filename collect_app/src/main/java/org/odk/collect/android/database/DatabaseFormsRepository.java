@@ -26,6 +26,7 @@ import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.FOR
 import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.GEOMETRY_XPATH;
 import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.JR_FORM_ID;
 import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.JR_VERSION;
+import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.MD5_HASH;
 import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.SUBMISSION_URI;
 
 public class DatabaseFormsRepository implements FormsRepository {
@@ -94,6 +95,7 @@ public class DatabaseFormsRepository implements FormsRepository {
         v.put(BASE64_RSA_PUBLIC_KEY, form.getBASE64RSAPublicKey());
         v.put(AUTO_DELETE, form.getAutoDelete());
         v.put(AUTO_SEND, form.getAutoSend());
+        v.put(MD5_HASH, form.getMD5Hash());
         v.put(GEOMETRY_XPATH, form.getGeometryXpath());
 
         if (form.isDeleted()) {

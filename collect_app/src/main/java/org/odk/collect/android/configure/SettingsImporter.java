@@ -1,4 +1,5 @@
-package org.odk.collect.android.configure;
+package  org.odk.collect.android.configure;
+
 
 import android.content.SharedPreferences;
 
@@ -7,10 +8,14 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.application.initialization.SettingsPreferenceMigrator;
+import org.odk.collect.android.configure.SettingsChangeHandler;
+import org.odk.collect.android.configure.SettingsValidator;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.SharedPreferencesUtils.put;
 
@@ -35,12 +40,15 @@ public class SettingsImporter {
     }
 
     public boolean fromJSON(@NonNull String json) {
+        json = json.replaceAll("\\r\\n|\\r|\\n", "");
         if (!settingsValidator.isValid(json)) {
             return false;
         }
 
-        generalSharedPrefs.edit().clear().apply();
-        adminSharedPrefs.edit().clear().apply();
+        Timber.d("evsveverfvbetft true ho raha hai");
+//        Map<String, ?> map = generalSharedPrefs.getAll();
+//        generalSharedPrefs.edit().clear().apply();
+//        adminSharedPrefs.edit().clear().apply();
 
         try {
             JSONObject jsonObject = new JSONObject(json);
@@ -55,10 +63,10 @@ public class SettingsImporter {
         }
 
         preferenceMigrator.migrate(generalSharedPrefs, adminSharedPrefs);
-
-        clearUnknownKeys(generalSharedPrefs, generalDefaults);
-        clearUnknownKeys(adminSharedPrefs, adminDefaults);
-
+//
+//        clearUnknownKeys(generalSharedPrefs, generalDefaults);
+//        clearUnknownKeys(adminSharedPrefs, adminDefaults);
+//
         loadDefaults(generalSharedPrefs, generalDefaults);
         loadDefaults(adminSharedPrefs, adminDefaults);
 

@@ -171,7 +171,7 @@ public final class ThemeUtils {
     }
 
     public int getHighlight() {
-        return ContextCompat.getColor(Collect1.getInstance().getAppContext(), R.color.blue_500);
+        return ContextCompat.getColor(Collect1.getInstance().getAppContext(), R.color.color_primary);
     }
 
     public int getPrimary() {

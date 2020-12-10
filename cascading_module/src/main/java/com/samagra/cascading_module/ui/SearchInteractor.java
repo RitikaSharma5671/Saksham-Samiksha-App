@@ -25,6 +25,11 @@ public class SearchInteractor extends BaseInteractor implements SearchMvpInterac
         return null;
     }
 
+    @Override
+    public String getUserFullName() {
+        return getPreferenceHelper().getCurrentUserFullName();
+    }
+
 
 //    @Inject
 //    public SearchInteractor(PreferenceHelper preferenceHelper) {

@@ -3,6 +3,8 @@ package com.samagra.cascading_module.ui;
 
 import android.app.Activity;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,15 +14,19 @@ import com.samagra.cascading_module.CascadingModuleDriver;
 import com.samagra.cascading_module.R;
 import com.samagra.cascading_module.base.BasePresenter;
 import com.samagra.cascading_module.tasks.SearchSchoolTask;
+import com.samagra.commons.Constants;
 import com.samagra.commons.InstitutionInfo;
 import com.samagra.grove.logging.Grove;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
+import org.odk.collect.android.forms.Form;
+
 import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -162,4 +168,42 @@ public class SearchPresenter<V extends SearchMvpView, I extends SearchMvpInterac
         }
         return -1;
     }
+
+    public void prefillData(InstitutionInfo institutionInfo) {
+        Grove.d("Pre-filling data for the Forms downloaded");
+        List<Form> forms = CascadingModuleDriver.iFormManagementContract.getDownloadedFormsNamesFromDatabase();
+        for (Form form : forms) {
+            String formName = form.getDisplayName();
+            CascadingModuleDriver.iFormManagementContract.updateFormBasedOnIdentifier(formName, "district", institutionInfo.getDistrict());
+            CascadingModuleDriver.iFormManagementContract.updateFormBasedOnIdentifier(formName, "block", institutionInfo.getBlock());
+            CascadingModuleDriver.iFormManagementContract.updateFormBasedOnIdentifier(formName, "school", institutionInfo.getSchoolName());
+            CascadingModuleDriver.iFormManagementContract.updateFormBasedOnIdentifier(formName, "user_name", getMvpInteractor().getUserName());
+            CascadingModuleDriver.iFormManagementContract.updateFormBasedOnIdentifier(formName, "name", getMvpInteractor().getUserFullName());
+            CascadingModuleDriver.iFormManagementContract.updateFormBasedOnIdentifier(formName, "designation", getUserRoleFromPref());
+        }
+    }
+
+    private String getUserRoleFromPref() {
+        return getMvpInteractor().getPreferenceHelper().getUserRoleFromPref();
+
+    }
+
+    public void onFillFormsOptionClicked() {
+        CascadingModuleDriver.iFormManagementContract.launchFormChooserView(getMvpView().getActivityContext(), generateToolbarModificationObject(true,
+                R.drawable.ic_arrow_back_white_24dp, getMvpView().getActivityContext().getResources().getString(R.string.please_select_forms), true));
+    }
+
+    private static HashMap<String, Object> generateToolbarModificationObject(boolean navigationIconDisplay,
+                                                                                     int navigationIconResId,
+                                                                                     @Nullable String title,
+                                                                                     boolean goBackOnNavIconPress) {
+        return new HashMap<String, Object>() {{
+            put(Constants.CUSTOM_TOOLBAR_SHOW_NAVICON, navigationIconDisplay);
+            put(Constants.CUSTOM_TOOLBAR_RESID_NAVICON, navigationIconResId);
+            put(Constants.CUSTOM_TOOLBAR_BACK_NAVICON_CLICK, goBackOnNavIconPress);
+            put(Constants.CUSTOM_TOOLBAR_TITLE, title);
+        }};
+    }
+
+
 }

@@ -11,4 +11,6 @@ import com.samagra.cascading_module.base.MvpInteractor;
  */
 public interface SearchMvpInteractor extends MvpInteractor {
     String getUserName();
+
+    String getUserFullName();
 }

@@ -85,24 +85,11 @@ android {
         archivesBaseName = 'collect'
     }
 
-    signingConfigs {
-        release {
-            if (secrets.getProperty('RELEASE_STORE_FILE')) {
-                storeFile file(secrets.getProperty('RELEASE_STORE_FILE'))
-                storePassword secrets.getProperty('RELEASE_STORE_PASSWORD')
-                keyAlias secrets.getProperty('RELEASE_KEY_ALIAS')
-                keyPassword secrets.getProperty('RELEASE_KEY_PASSWORD')
-            }
-        }
-    }
 
     buildTypes {
 
         // Release build for all forks
         release {
-            if (secrets.getProperty('RELEASE_STORE_FILE')) {
-                signingConfig signingConfigs.release
-            }
             minifyEnabled(true)
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             resValue("bool", "FIREBASE_ENABLED", "true")
@@ -112,21 +99,18 @@ android {
 
         // Release build for the official ODK Collect app
         odkCollectRelease {
-            if (secrets.getProperty('RELEASE_STORE_FILE')) {
-                signingConfig signingConfigs.release
-            }
             minifyEnabled(true)
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             resValue("bool", "FIREBASE_ENABLED", "true")
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
             buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
-
             matchingFallbacks = ['release'] // So other modules use release build type for this
         }
 
         debug {
             debuggable(true)
             testCoverageEnabled((findProperty("enableJacoco") ?: "false").toBoolean())
+            resValue("bool", "FIREBASE_ENABLED", "true")
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
             buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
 
@@ -270,6 +254,7 @@ dependencies {
     implementation "net.danlew:android.joda:2.10.6.1"
     implementation project(path: ':commons')
     implementation project(path: ':assets')
+    implementation project(path: ':grove')
     // Real LeakCanary for debug builds only: notifications, analysis, etc
 
     // Android Architecture Components:

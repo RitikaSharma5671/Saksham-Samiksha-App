@@ -35,7 +35,7 @@ public class OpenRosaFormSource implements FormSource {
             "http://openrosa.org/xforms/xformsManifest";
 
     private final OpenRosaXmlFetcher openRosaXMLFetcher;
-    private String serverURL;
+    private String serverURL ="http://aggregate.cttsamagra.xyz:8080";
     private final String formListPath;
 
     public OpenRosaFormSource(String serverURL, String formListPath, OpenRosaHttpInterface openRosaHttpInterface, WebCredentialsUtils webCredentialsUtils) {
@@ -369,7 +369,7 @@ public class OpenRosaFormSource implements FormSource {
 
     @NotNull
     private String getFormListURL() {
-        String downloadListUrl = serverURL;
+        String downloadListUrl = "http://aggregate.cttsamagra.xyz:8080";
 
         while (downloadListUrl.endsWith("/")) {
             downloadListUrl = downloadListUrl.substring(0, downloadListUrl.length() - 1);

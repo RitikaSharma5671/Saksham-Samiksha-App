@@ -36,7 +36,7 @@ the specific language governing permissions and limitations under the License.
             android:lineSpacingMultiplier="1.2"
             android:paddingTop="10dp"
             android:paddingBottom="20dp"
-            android:textColor="?colorOnSurface"
+            android:textColor="@color/color_primary"
             android:textSize="21sp"
             android:textStyle="bold" />
 
@@ -45,6 +45,7 @@ the specific language governing permissions and limitations under the License.
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
+            android:visibility="gone"
             android:lineSpacingMultiplier="1.2"
             android:text="@string/save_form_as"
             android:textColor="?colorOnSurface"
@@ -55,9 +56,11 @@ the specific language governing permissions and limitations under the License.
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
+            android:visibility="gone"
             android:textSize="21sp" />
 
         <CheckBox
+            android:visibility="gone"
             android:id="@+id/mark_finished"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,12 +68,19 @@ the specific language governing permissions and limitations under the License.
             android:layout_marginBottom="10dp"
             android:text="@string/mark_finished"
             android:textSize="21sp" />
+        <ImageView
+            android:layout_marginBottom="70dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_send_sms"
+            android:layout_width="220dp"
+            android:layout_height="200dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/save_exit_button"
-            style="@style/Widget.Collect.Button.FullWidth"
+            style="@style/ButtonStyle1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:text="@string/quit_entry" />
 
         <View

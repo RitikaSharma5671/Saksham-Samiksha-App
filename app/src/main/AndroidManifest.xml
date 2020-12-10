@@ -21,6 +21,7 @@
         android:largeHeap="true"
         android:usesCleartextTraffic="true"
         android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true"
     tools:replace="android:name,android:allowBackup">
         <uses-library android:name ="org.apache.http.legacy" android:required ="false"/>
         <activity

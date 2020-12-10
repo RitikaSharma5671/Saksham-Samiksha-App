@@ -18,8 +18,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
@@ -267,33 +265,6 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.instance_uploader_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (!MultiClickGuard.allowClick(getClass().getName())) {
-            return true;
-        }
-
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_preferences) {
-            createPreferencesMenu();
-            return true;
-        } else if (itemId == R.id.menu_change_view) {
-            showSentAndUnsentChoices();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void createPreferencesMenu() {
-        Intent i = new Intent(this, PreferencesActivity.class);
-        startActivity(i);
-    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long rowId) {

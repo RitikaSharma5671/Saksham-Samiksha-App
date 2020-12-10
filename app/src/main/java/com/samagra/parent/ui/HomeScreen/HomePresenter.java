@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
 
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
@@ -123,7 +124,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         Grove.d("User selects the option View Submitted Forms...");
             if (isSchoolAccount() || isTeacherAccount() || isUserSchoolHead()) {
                 getIFormManagementContract().launchViewSubmittedFormsView(activityContext, UtilityFunctions.generateToolbarModificationObject(true,
-                        R.drawable.ic_arrow_back_white_24dp,
+                        R.drawable.ic_cross,
                         activityContext.getResources().getString(R.string.my_visits), true));
             } else {
                 Intent intent = new Intent(activityContext, SubmissionsActivity.class);
@@ -136,7 +137,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         Grove.d("User selects the option Submit Forms...");
         if (getMvpView() != null) {
             getIFormManagementContract().launchViewUnsubmittedFormView(getMvpView().getActivityContext(), getClass().getName(), UtilityFunctions.generateToolbarModificationObject(true,
-                    R.drawable.ic_arrow_back_white_24dp,
+                    R.drawable.ic_cross,
                     getMvpView().getActivityContext().getResources().getString(R.string.submit_saved_forms), true));
         }
     }
@@ -446,19 +447,19 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
 
         @Override
         public void onSuccessfulFormListDownload(HashMap<String, ServerFormDetails> latestFormListFromServer) {
-            Grove.d("FormList download complete %s, is the form list size", latestFormListFromServer.size());
+            Grove.d("FormList download complete "+ latestFormListFromServer.size()+" is the form list size");
             String formsString = MyApplication.getmFirebaseRemoteConfig().getString(getRoleFromRoleMappingFirebase(getUserRoleFromPref()));
             Grove.d("thirssss cal vgfvgv >>> " + getUserRoleFromPref() );
             HashMap<String, String> userRoleBasedForms = getIFormManagementContract().downloadFormList(formsString);
             // Download Forms if updates available or if forms not downloaded. Delete forms if not applied for the role.
             HashMap<String, ServerFormDetails> formsToBeDownloaded = getIFormManagementContract().downloadNewFormsBasedOnDownloadedFormList(userRoleBasedForms, latestFormListFromServer);
             if (formsToBeDownloaded.size() > 0) {
-                Grove.d("Number of forms to be downloaded are %d", formsToBeDownloaded.size());
+               Grove.d("Number of forms to be downloaded are "+ formsToBeDownloaded );
                 formsDownloadStatus = FormDownloadStatus.DOWNLOADING;
                 currentProgress = 2;
                 currentProgress = 30;
             } else {
-                Grove.d("No new forms to be downloaded");
+               Grove.e("No new forms to be downloaded for the user inspite of requirement, username is" + getMvpInteractor().getUserName() );
                 if (isSchoolAccount() || isUserSchoolHead()) {
                     buildCSV();
                     buildCSVForTeachers(context);
@@ -471,10 +472,10 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         }
 
         @Override
-        public void onFailureFormListDownload(boolean isAPIFailure) {
+        public void onFailureFormListDownload(boolean isAPIFailure, String message) {
 
+            Grove.e("There has been an error in downloading the forms from ODK Server for user" + getMvpInteractor().getUserName() + " failure is" +  message);
             if (isAPIFailure) {
-                Grove.e("There has been an error in downloading the forms from ODK Server");
                 ((HomeActivity) context).showDownloadFailureMessage();
                 formsDownloadStatus = FormDownloadStatus.FAILURE;
             }

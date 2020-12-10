@@ -11,6 +11,7 @@ import org.odk.collect.android.forms.FormsRepository;
 import org.odk.collect.android.forms.MediaFile;
 import org.odk.collect.android.listeners.FormDownloaderListener;
 import org.odk.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.FormNameUtils;
 import org.odk.collect.android.utilities.Validator;
@@ -273,6 +274,7 @@ public class ServerFormDownloader implements FormDownloader {
                     .displayName(formInfo.get(FileUtils.TITLE))
                     .jrVersion(formInfo.get(FileUtils.VERSION))
                     .jrFormId(formInfo.get(FileUtils.FORMID))
+                    .md5Hash(formInfo.get(FileUtils.getMd5Hash(formFile)))
                     .submissionUri(formInfo.get(FileUtils.SUBMISSIONURI))
                     .base64RSAPublicKey(formInfo.get(FileUtils.BASE64_RSA_PUBLIC_KEY))
                     .autoDelete(formInfo.get(FileUtils.AUTO_DELETE))

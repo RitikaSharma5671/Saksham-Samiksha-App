@@ -14,16 +14,3 @@ public interface IHomeItemClickListener {
     void onEditStudentDataClicked();
 }
 
-/**
- switch (v.getId()) {
- case R.id.fill_forms:
- break;
- case R.id.view_submitted_forms:
- break;
- case R.id.submit_forms:
-
- break;
- case R.id.need_help:
-
- break;
- */

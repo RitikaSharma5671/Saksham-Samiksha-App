@@ -125,7 +125,7 @@ public class SubmissionsActivity extends BaseActivity implements SubmissionsMvpV
     private void onViewSubmissionsClicked() {
         if(FormManagementCommunicator.getContract() != null)
             FormManagementCommunicator.getContract().launchViewSubmittedFormsView(getActivityContext(),  UtilityFunctions.generateToolbarModificationObject(true,
-                    R.drawable.ic_arrow_back_white_24dp,
+                    R.drawable.ic_cross,
                     getActivityContext().getResources().getString(R.string.view_sent_forms), true));
     }
 

@@ -36,7 +36,7 @@
     <color name="defaultLightIconColor">#de000000</color>
     <color name="lightDividerColor">#1e000000</color>
     <color name="lightRankItemColor">#EEEEEE</color>
-    <color name="lightAccentColor">@color/blue_500</color>
+    <color name="lightAccentColor">@color/accent</color>
     <color name="lightIconColorDisabled">#61000000</color>
     <color name="lightIconColorEnabled">#de000000</color>
 

@@ -59,6 +59,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.samagra.commons.FormFilledEvent;
 
 import org.apache.commons.io.IOUtils;
 import org.javarosa.core.model.FormDef;
@@ -700,6 +701,18 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(getString(R.string.loading_form));
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_cross_white));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (audioRecorderViewModel.isRecording().getValue()) {
+                    // We want the user to stop recording before changing screens
+                    DialogUtils.showIfNotShowing(RecordingWarningDialogFragment.class, getSupportFragmentManager());
+                }
+
+                showIfNotShowing(QuitFormDialogFragment.class, getSupportFragmentManager());
+            }
+        });
     }
 
     /**
@@ -1333,14 +1346,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 .setText(getString(R.string.save_enter_data_description,
                         formController.getFormTitle()));
 
-        // checkbox for if finished or ready to send
-        final CheckBox instanceComplete = endView
-                .findViewById(R.id.mark_finished);
-        instanceComplete.setChecked(InstancesDaoHelper.isInstanceComplete(true));
 
-        if (!(boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_MARK_AS_FINALIZED)) {
-            instanceComplete.setVisibility(View.GONE);
-        }
 
         // edittext to change the displayed name of the instance
         final EditText saveAs = endView.findViewById(R.id.save_name);
@@ -1420,7 +1426,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     .findViewById(R.id.save_form_as);
             sa.setVisibility(View.GONE);
         }
-
+        final CheckBox instanceComplete = endView
+                .findViewById(R.id.mark_finished);
+        instanceComplete.setChecked(InstancesDaoHelper.isInstanceComplete(true));
         // Create 'save' button
         endView.findViewById(R.id.save_exit_button)
                 .setOnClickListener(new OnClickListener() {
@@ -1863,8 +1871,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
             case SAVED:
                 DialogUtils.dismissDialog(SaveFormProgressDialogFragment.class, getSupportFragmentManager());
-                showShortToast(R.string.data_saved_ok);
-
+//                showShortToast(R.string.data_saved_ok);
+                Collect1.getInstance().getMainApplication().eventBusInstance().post(new FormFilledEvent());
                 if (result.getRequest().viewExiting()) {
                     if (result.getRequest().shouldFinalize()) {
                         formSubmitManager.scheduleSubmit();

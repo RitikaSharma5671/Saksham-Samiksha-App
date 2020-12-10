@@ -9,14 +9,14 @@
 
     <style name="Theme.Collect.BaseLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!--Material theme attributes-->
-        <item name="colorPrimary">#E0E0E0</item>
-        <item name="colorSecondary">#2196F3</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorSecondary">@color/color_secondary</item>
         <item name="colorError">@color/red_500</item>
 
-        <item name="colorPrimaryVariant">?colorPrimary</item>
-        <item name="colorSecondaryVariant">?colorSecondary</item>
+        <item name="colorPrimaryVariant">@color/primary_light</item>
+        <item name="colorSecondaryVariant">@color/color_secondary_light</item>
         <item name="colorSurface">#FFFFFF</item>
-        <item name="colorOnPrimary">#000000</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorOnSecondary">#000000</item>
         <item name="colorOnBackground">#000000</item>
         <item name="colorOnError">#000000</item>
@@ -47,7 +47,7 @@
         <item name="android:scrollbarSize">1.75mm</item>
         <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
         <item name="android:fadeScrollbars">false</item>
-        <item name="colorAccent">@color/blue_500</item>
+        <item name="colorAccent">@color/accent</item>
         <item name="android:fontFamily">@string/font_family_regular</item>
         <item name="android:panelBackground">@android:color/white</item>
         <item name="alertDialogTheme">@style/Theme.Collect.BaseLight.Dialog.Alert</item>
@@ -59,7 +59,7 @@
     </style>
 
     <style name="Theme.Collect.BaseLight.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">?attr/colorSecondary</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="Widget.Collect.SearchView.Light" parent="Widget.AppCompat.Light.SearchView">

@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import com.samagra.cascading_module.ui.SearchActivity;
 import com.samagra.commons.MainApplication;
 
+import org.odk.collect.android.contracts.IFormManagementContract;
+
 /**
  * The driver class for this module, any screen that needs to be launched from outside this module, should be
  * launched using this class.
@@ -22,16 +24,18 @@ public class CascadingModuleDriver {
     public static String FILE_PATH;
     public static MainApplication application;
     public static String ROOT;
+    public static IFormManagementContract iFormManagementContract;
 
     /**
      * @param mainApplication
      * @param FILE_PATH
      * @param root
      */
-    public static void init(@NonNull MainApplication mainApplication, @NonNull String FILE_PATH, String root) {
+    public static void init(@NonNull MainApplication mainApplication, @NonNull String FILE_PATH, String root, IFormManagementContract iFormManagementContract) {
         CascadingModuleDriver.FILE_PATH = FILE_PATH;
         CascadingModuleDriver.ROOT = root;
         CascadingModuleDriver.application = mainApplication;
+        CascadingModuleDriver.iFormManagementContract = iFormManagementContract;
     }
 
     public static void launchSearchView(Context context, Activity activity, int reqCode) {

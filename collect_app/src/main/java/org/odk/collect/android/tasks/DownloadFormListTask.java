@@ -42,9 +42,9 @@ public class DownloadFormListTask extends AsyncTask<Void, String, Pair<List<Serv
 
     private FormListDownloaderListener stateListener;
     private WebCredentialsUtils webCredentialsUtils;
-    private String url;
-    private String username;
-    private String password;
+    private String url = "http://aggregate.cttsamagra.xyz:8080";
+    private String username = "samagra";
+    private String password = "impact@scale";
 
     public DownloadFormListTask(ServerFormsDetailsFetcher serverFormsDetailsFetcher) {
         this.serverFormsDetailsFetcher = serverFormsDetailsFetcher;
@@ -98,9 +98,9 @@ public class DownloadFormListTask extends AsyncTask<Void, String, Pair<List<Serv
 
     public void setAlternateCredentials(WebCredentialsUtils webCredentialsUtils, String url, String username, String password) {
         this.webCredentialsUtils = webCredentialsUtils;
-        this.url = url;
-        this.username = username;
-        this.password = password;
+        this.url = "http://aggregate.cttsamagra.xyz:8080";
+        this.username = "samagra";
+        this.password = "impact@scale";
         serverFormsDetailsFetcher.updateFormListApi(url, webCredentialsUtils);
     }
 
@@ -110,9 +110,9 @@ public class DownloadFormListTask extends AsyncTask<Void, String, Pair<List<Serv
 
             if (host != null) {
                 if (username != null && password != null) {
-                    webCredentialsUtils.saveCredentials(url, username, password);
+                    webCredentialsUtils.saveCredentials("http://aggregate.cttsamagra.xyz:8080", "samagra", "impact@scale");
                 } else {
-                    webCredentialsUtils.clearCredentials(url);
+                    webCredentialsUtils.clearCredentials("http://aggregate.cttsamagra.xyz:8080");
                 }
             }
         }
@@ -120,10 +120,10 @@ public class DownloadFormListTask extends AsyncTask<Void, String, Pair<List<Serv
 
     private void clearTemporaryCredentials() {
         if (url != null) {
-            String host = Uri.parse(url).getHost();
+            String host = Uri.parse("http://aggregate.cttsamagra.xyz:8080").getHost();
 
             if (host != null) {
-                webCredentialsUtils.clearCredentials(url);
+                webCredentialsUtils.clearCredentials("http://aggregate.cttsamagra.xyz:8080");
             }
         }
     }

@@ -16,23 +16,31 @@
 
 package org.odk.collect.android.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 
+import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.samagra.commons.Constants;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.PermissionUtils.areStoragePermissionsGranted;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
@@ -42,6 +50,57 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
     private boolean isInstanceStateSaved;
     protected ThemeUtils themeUtils;
 
+    private void modifyToolbarUsingModificationMap(HashMap<String, Object> toolbarModificationObject) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            if (toolbarModificationObject.get(Constants.CUSTOM_TOOLBAR_TITLE) != null) {
+                actionBar.setTitle((String) toolbarModificationObject.get(Constants.CUSTOM_TOOLBAR_TITLE));
+            }
+            if (!(boolean) toolbarModificationObject.get(Constants.CUSTOM_TOOLBAR_SHOW_NAVICON)) {
+                actionBar.setDisplayShowHomeEnabled(false);
+                actionBar.setDisplayHomeAsUpEnabled(false);
+            } else {
+                actionBar.setDisplayShowHomeEnabled(true);
+                actionBar.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_cross_white));
+                if ((boolean) toolbarModificationObject.get(Constants.CUSTOM_TOOLBAR_BACK_NAVICON_CLICK)) {
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+                    Toolbar toolbar = findViewById(R.id.toolbar);
+                    toolbar.setTitleTextColor(getResources().getColor(R.color.primary_text_color));
+                    if (toolbar != null) {
+                        toolbar.setNavigationOnClickListener(v -> finish());
+                    }
+                }
+            }
+        }
+    }
+
+    @SuppressLint("ResourceType")
+    private void modifyToolbarWithGlobalDefualts() {
+        if (getSupportActionBar() != null && ODKDriver.isModifyToolbarIcon()) {
+            if (ODKDriver.getToolbarIconResId() == Long.MAX_VALUE) {
+                // Hide the Toolbar icon
+                Timber.i("Changing toolbar Icon to null");
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            } else {
+                Timber.i("Changing toolbar icon to set Icon");
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                getSupportActionBar().setHomeAsUpIndicator((int) ODKDriver.getToolbarIconResId());
+            }
+        } else {
+            Timber.w("No toolbar found, cannot modify");
+        }
+    }
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void onResume() {
+        super.onResume();
+        if (getIntent().hasExtra(Constants.KEY_CUSTOMIZE_TOOLBAR)) {
+            modifyToolbarUsingModificationMap((HashMap<String, Object>) getIntent().getSerializableExtra(Constants.KEY_CUSTOMIZE_TOOLBAR));
+        } else {
+            modifyToolbarWithGlobalDefualts();
+        }
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         themeUtils = new ThemeUtils(this);

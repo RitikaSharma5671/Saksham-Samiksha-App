@@ -318,8 +318,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
             popupMenu = new PopupMenu(HomeActivity.this, v);
             popupMenu.getMenuInflater().inflate(R.menu.home_screen_menu, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-//                    case R.id.change_lang:
+                int itemId = item.getItemId();//                    case R.id.change_lang:
 //                        if (HomeActivity.this.findViewById(R.id.fragment_container) != null) {
 //                            UpdateAppLanguageFragment firstFragment = UpdateAppLanguageFragment.newInstance(PreferenceManager.getDefaultSharedPreferences(HomeActivity.this.getActivityContext())
 //                                    .getString(Constants.APP_LANGUAGE_KEY, "en"), language -> {
@@ -334,29 +333,25 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
 //                            parentHome.setVisibility(View.GONE);
 //                        }
 //                        break;
-                    case R.id.about_us:
-                        AncillaryScreensDriver.launchAboutActivity(HomeActivity.this, HomeActivity.this.provideAboutBundle());
-                        break;
-                    case R.id.tutorial_video:
-                        homePresenter.onViewHelplineClicked();
-                        break;
-                    case R.id.profile:
-                        Grove.d("User clicked on View Profile Section option");
-                        ArrayList<UserProfileElement> profileElements = homePresenter.getProfileConfig();
-                        AncillaryScreensDriver.launchProfileActivity(this, profileElements, homePresenter.fetchUserID());
-                        break;
-                    case R.id.logout:
-                        Grove.d("User clicked to logout out of application");
-                        if (homePresenter.isNetworkConnected()) {
-                            if (logoutListener == null) {
-                                Grove.d("Logout Listener initialised");
-                                HomeActivity.this.initializeLogoutListener();
-                            }
-                            AncillaryScreensDriver.performLogout(HomeActivity.this, HomeActivity.this.getActivityContext().getResources().getString(R.string.fusionauth_api_key));
-                        } else {
-                            showSnackbar("It seems you are offline. Logout cannot happen in offline conditions.", 3000);
+                if (itemId == R.id.about_us) {
+                    AncillaryScreensDriver.launchAboutActivity(HomeActivity.this, HomeActivity.this.provideAboutBundle());
+                } else if (itemId == R.id.tutorial_video) {
+                    homePresenter.onViewHelplineClicked();
+                } else if (itemId == R.id.profile) {
+                    Grove.d("User clicked on View Profile Section option");
+                    ArrayList<UserProfileElement> profileElements = homePresenter.getProfileConfig();
+                    AncillaryScreensDriver.launchProfileActivity(this, profileElements, homePresenter.fetchUserID());
+                } else if (itemId == R.id.logout) {
+                    Grove.d("User clicked to logout out of application");
+                    if (homePresenter.isNetworkConnected()) {
+                        if (logoutListener == null) {
+                            Grove.d("Logout Listener initialised");
+                            HomeActivity.this.initializeLogoutListener();
                         }
-                        break;
+                        AncillaryScreensDriver.performLogout(HomeActivity.this, HomeActivity.this.getActivityContext().getResources().getString(R.string.fusionauth_api_key));
+                    } else {
+                        showSnackbar("It seems you are offline. Logout cannot happen in offline conditions.", 3000);
+                    }
                 }
                 return true;
             });
@@ -412,7 +407,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
 
     @Override
     public void launchSearchModule() {
-        CascadingModuleDriver.init((MainApplication) getApplicationContext(), AppConstants.FILE_PATH, Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath());
+        CascadingModuleDriver.init((MainApplication) getApplicationContext(), AppConstants.FILE_PATH,
+                Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath(),homePresenter.getIFormManagementContract());
         CascadingModuleDriver.launchSearchView(getActivityContext(),
                 this, CascadingModuleDriver.SEARCH_ACTIVITY_REQUEST_CODE);
     }

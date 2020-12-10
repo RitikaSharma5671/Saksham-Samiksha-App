@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -120,7 +121,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView {
         cancelButton.setEnabled(true);
         select_button.setClickable(true);
         select_button.setEnabled(true);
-        lottie_loader.setVisibility(View.INVISIBLE);
+        lottie_loader.setVisibility(View.GONE);
     }
 
     @Override

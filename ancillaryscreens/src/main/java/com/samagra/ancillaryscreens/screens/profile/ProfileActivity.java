@@ -36,6 +36,7 @@ import com.samagra.commons.MainApplication;
 import com.samagra.grove.logging.Grove;
 
 import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.contracts.IFormManagementContract;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -125,7 +126,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             schoolBlock.setText(String.format(getString(R.string.school_block_label),institutionInfo.getBlock()));
             schoolDistrict.setText(String.format(getString(R.string.school_district_label),institutionInfo.getDistrict()));
             change_details.setOnClickListener(v -> {
-                CascadingModuleDriver.init((MainApplication) getApplicationContext(), FILE_PATH, ROOT);
+                CascadingModuleDriver.init((MainApplication) getApplicationContext(), FILE_PATH, ROOT, AncillaryScreensDriver.getContract());
                 launch();
             });
         }else{
@@ -133,6 +134,7 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
         }
 
     }
+
 
     private void launch() {
         CascadingModuleDriver.launchSearchView(getActivityContext(),

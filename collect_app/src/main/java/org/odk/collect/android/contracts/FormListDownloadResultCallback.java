@@ -7,5 +7,4 @@ import java.util.HashMap;
 
 public interface FormListDownloadResultCallback {
     void onSuccessfulFormListDownload(HashMap<String, ServerFormDetails> value);
-    void onFailureFormListDownload(boolean isAPIFailure);
-}
+    void onFailureFormListDownload(boolean isAPIFailure, String message);}

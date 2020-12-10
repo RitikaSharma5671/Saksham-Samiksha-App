@@ -12,4 +12,6 @@ public interface CommonsPreferenceHelper {
     String getUserRoleFromPref();
 
     String getUserName();
+
+    String getCurrentUserFullName();
 }

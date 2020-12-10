@@ -179,6 +179,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
         loginPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
             Grove.d("Failure to reset actions at Login screen " + failedResetActions);
             Grove.d("Moving to Home Screen");
+            loginPresenter.getIFormManagementContract().createODKDirectories();
             loginPresenter.finishAndMoveToHomeScreen();
         });
     }

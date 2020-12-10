@@ -67,12 +67,12 @@ public class FormEntryMenuDelegate implements MenuDelegate, RequiresFormControll
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_SAVE_MID);
 
-        menu.findItem(R.id.menu_save).setVisible(useability).setEnabled(useability);
+        menu.findItem(R.id.menu_save).setVisible(false).setEnabled(false);
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_JUMP_TO);
 
-        menu.findItem(R.id.menu_goto).setVisible(useability)
-                .setEnabled(useability);
+        menu.findItem(R.id.menu_goto).setVisible(false)
+                .setEnabled(false);
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_CHANGE_LANGUAGE)
                 && (formController != null)
@@ -84,8 +84,8 @@ public class FormEntryMenuDelegate implements MenuDelegate, RequiresFormControll
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
 
-        menu.findItem(R.id.menu_preferences).setVisible(useability)
-                .setEnabled(useability);
+        menu.findItem(R.id.menu_preferences).setVisible(false)
+                .setEnabled(false);
 
         if (formController != null && formController.currentFormCollectsBackgroundLocation()
                 && new PlayServicesChecker().isGooglePlayServicesAvailable(activity)) {
@@ -94,7 +94,7 @@ public class FormEntryMenuDelegate implements MenuDelegate, RequiresFormControll
             backgroundLocation.setChecked(GeneralSharedPreferences.getInstance().getBoolean(KEY_BACKGROUND_LOCATION, true));
         }
 
-        menu.findItem(R.id.menu_add_repeat).setVisible(formEntryViewModel.canAddRepeat());
+        menu.findItem(R.id.menu_add_repeat).setVisible(false);
     }
 
     @Override

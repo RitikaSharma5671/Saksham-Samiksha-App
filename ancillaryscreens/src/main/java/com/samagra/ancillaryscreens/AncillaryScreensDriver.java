@@ -27,6 +27,7 @@ import com.samagra.grove.logging.Grove;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.odk.collect.android.contracts.IFormManagementContract;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,23 +54,26 @@ public class AncillaryScreensDriver {
     public static String API_KEY;
     public static String USER_ID;
     public static String VERIFY_PHONE_OTP_URL = "http://142.93.208.135:8080/ams/";
+    private static IFormManagementContract CONTRACT;
 
     /**
-     *  @param mainApplication MainApplication Instance
+     * @param mainApplication MainApplication Instance
      * @param BASE_URL - String Base API URL
      * @param SEND_OTP_URL - String SEND OTP URL
      * @param UPDATE_PASSWORD_URL - String Update Password URL
      * @param APPLICATION_ID - String Application ID
      * @param  API_KEY _ Fusion Auth API Key
+     * @param contract
      */
     public static void init(@NonNull MainApplication mainApplication, @NonNull String BASE_URL, @NonNull String SEND_OTP_URL,
-                            @NonNull String UPDATE_PASSWORD_URL, @NonNull String APPLICATION_ID, @NonNull String API_KEY) {
+                            @NonNull String UPDATE_PASSWORD_URL, @NonNull String APPLICATION_ID, @NonNull String API_KEY, IFormManagementContract contract) {
         AncillaryScreensDriver.mainApplication = mainApplication;
         AncillaryScreensDriver.BASE_API_URL = BASE_URL;
         AncillaryScreensDriver.SEND_OTP_URL = SEND_OTP_URL;
         AncillaryScreensDriver.UPDATE_PASSWORD_URL = UPDATE_PASSWORD_URL;
         AncillaryScreensDriver.APPLICATION_ID = APPLICATION_ID;
         AncillaryScreensDriver.API_KEY = API_KEY;
+        AncillaryScreensDriver.CONTRACT = contract;
     }
 
     public static void sendEvent(String contentKey, String updatedValue) {
@@ -317,5 +321,9 @@ public class AncillaryScreensDriver {
 
     public static void onProfileSuccessfullyUpdated(String schoolCode) {
 
+    }
+
+    public static IFormManagementContract getContract() {
+        return CONTRACT;
     }
 }

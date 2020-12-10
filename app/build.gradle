@@ -7,6 +7,14 @@ apply plugin: 'io.sentry.android.gradle'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        fv {
+            storeFile file('C:\\Users\\umang\\Music\\saksham.jks')
+            storePassword 'sakshamsamiksha'
+            keyAlias 'samiksha-key'
+            keyPassword 'sakshamsamiksha'
+        }
+    }
     compileSdkVersion rootProject.androidCompileSdk
     defaultConfig {
         vectorDrawables.useSupportLibrary = true

@@ -56,9 +56,8 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     @Override
     public void endSplashScreen() {
         Grove.d("Moving to next screen from Splash");
-        if (!splashPresenter.getIFormManagementContract().isScopedStorageUsed()) {
             splashPresenter.getIFormManagementContract().enableUsingScopedStorage();
-        }
+
         if (splashPresenter.getMvpInteractor().isLoggedIn()) {
             if (splashPresenter.canLaunchHome()) {
                 if (splashPresenter.isJwtTokenValid()) {

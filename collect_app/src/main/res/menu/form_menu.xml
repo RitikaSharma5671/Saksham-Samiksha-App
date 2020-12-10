@@ -16,12 +16,14 @@
     than title-->
     <item
         android:id="@+id/menu_add_repeat"
+        android:visible="false"
         android:icon="@drawable/ic_add_circle_24"
         android:title="@string/add_another_menu"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_save"
+        android:visible="false"
         android:icon="@drawable/ic_save_menu_24"
         android:title="@string/save_all_answers"
         app:showAsAction="always" />
@@ -29,6 +31,7 @@
     <item
         android:id="@+id/menu_goto"
         android:icon="@drawable/ic_menu_goto_24"
+        android:visible="false"
         android:title="@string/view_hierarchy"
         app:showAsAction="always" />
 
@@ -47,6 +50,7 @@
 
     <item
         android:id="@+id/menu_preferences"
+        android:visible="false"
         android:title="@string/general_preferences"
         app:showAsAction="never" />
 

@@ -37,15 +37,21 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
 
     @Override
     public String getUserRoleFromPref() {
-        try {
-            return new HashMap<String, String>((Map) new Gson().fromJson(defaultPreferences.getString("user.data", ""), HashMap.class).get("roleData")).get("designation");
-        } catch (Exception e) {
-            return "";
-        }
+        return defaultPreferences.getString("user.designation", "");
+
     }
 
     @Override
     public String getUserName() {
         return defaultPreferences.getString("user.fullName", "");
+    }
+
+    @Override
+    public String getCurrentUserFullName() {
+        if (defaultPreferences.getString("user.fullName", "").equals(""))
+            return defaultPreferences.getString("user.username", "");
+        else
+            return defaultPreferences.getString("user.fullName", "");
+
     }
 }
