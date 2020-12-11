@@ -6,10 +6,10 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.work.WorkManager;
 
 import org.jetbrains.annotations.NotNull;
-import org.odk.collect.async.Cancellable;
-import org.odk.collect.async.CoroutineAndWorkManagerScheduler;
-import org.odk.collect.async.Scheduler;
-import org.odk.collect.async.TaskSpec;
+import org.odk.collect.android.async.Cancellable;
+import org.odk.collect.android.async.CoroutineAndWorkManagerScheduler;
+import org.odk.collect.android.async.Scheduler;
+import org.odk.collect.android.async.TaskSpec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +52,21 @@ public class TestScheduler implements Scheduler {
     }
 
     @Override
+    public void immediate(@NotNull Runnable foreground) {
+        increment();
+
+        wrappedScheduler.immediate(() -> {
+            foreground.run();
+            decrement();
+        });
+    }
+
+    @Override
+    public void networkDeferred(@NotNull String tag, @NotNull TaskSpec spec) {
+        deferredTasks.add(new DeferredTask(tag, spec, null));
+    }
+
+    @Override
     public void networkDeferred(@NotNull String tag, @NotNull TaskSpec spec, long repeatPeriod) {
         cancelDeferred(tag);
         deferredTasks.add(new DeferredTask(tag, spec, repeatPeriod));
@@ -71,8 +86,11 @@ public class TestScheduler implements Scheduler {
         Context applicationContext = ApplicationProvider.getApplicationContext();
 
         for (DeferredTask deferredTask : deferredTasks) {
-            deferredTask.getSpec().getTask(applicationContext).run();
+            deferredTask.getSpec().getTask(applicationContext).get();
         }
+
+        // Remove non repeating tasks
+        deferredTasks.removeIf(deferredTask -> deferredTask.repeatPeriod == null);
     }
 
     public void setFinishedCallback(Runnable callback) {
@@ -109,9 +127,9 @@ public class TestScheduler implements Scheduler {
 
         private final String tag;
         private final TaskSpec spec;
-        private final long repeatPeriod;
+        private final Long repeatPeriod;
 
-        public DeferredTask(String tag, TaskSpec spec, long repeatPeriod) {
+        public DeferredTask(String tag, TaskSpec spec, Long repeatPeriod) {
             this.tag = tag;
             this.spec = spec;
             this.repeatPeriod = repeatPeriod;

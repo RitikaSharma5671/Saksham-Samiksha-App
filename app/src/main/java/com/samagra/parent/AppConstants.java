@@ -2,7 +2,7 @@ package com.samagra.parent;
 
 import android.os.Environment;
 
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 
 import java.io.File;
 import java.util.HashMap;
@@ -16,8 +16,8 @@ import java.util.HashMap;
 public class AppConstants {
     public static final String PREF_FILE_NAME = "SAMAGRA_PREFS";
     public static final String BASE_API_URL = "http://www.auth.samagra.io:9011";
-    public static final String ROOT = Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath();
-    public static final String FILE_PATH =  Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath() + "/saksham_data_json.json";
+    public static final String ROOT = Collect.getInstance().getStoragePathProvider().getScopedStorageRootDirPath();
+    public static final String FILE_PATH =  Collect.getInstance().getStoragePathProvider().getScopedStorageRootDirPath() + "/saksham_data_json.json";
     public static final String SEND_OTP_URL = "http://142.93.208.135:8080/shiksha-saathi/";
     public static final String UPDATE_PASSWORD_URL = "http://142.93.208.135:8080/shiksha-saathi/";
     public static final String SENDER_EMAIL_ID = "";

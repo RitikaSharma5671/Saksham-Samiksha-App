@@ -11,28 +11,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.odk.collect.android.R;
-
-import org.odk.collect.android.R2;
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.provider.InstanceProvider;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.odk.collect.android.views.ProgressBar;
+import org.odk.collect.android.views.InstanceUploaderProgressBar;
 
 import java.util.Date;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
 
-import static org.odk.collect.android.provider.InstanceProviderAPI.STATUS_SUBMISSION_FAILED;
-import static org.odk.collect.android.provider.InstanceProviderAPI.STATUS_SUBMITTED;
+import static org.odk.collect.android.instances.Instance.STATUS_SUBMISSION_FAILED;
+import static org.odk.collect.android.instances.Instance.STATUS_SUBMITTED;
 
 public class InstanceUploaderAdapter extends CursorAdapter {
     private final CompositeDisposable compositeDisposable;
 
     public InstanceUploaderAdapter(Context context, Cursor cursor) {
         super(context, cursor);
-        Collect1.getInstance().getComponent().inject(this);
+        Collect.getInstance().getComponent().inject(this);
         compositeDisposable = new CompositeDisposable();
     }
 
@@ -74,21 +70,21 @@ public class InstanceUploaderAdapter extends CursorAdapter {
     }
 
     static class ViewHolder {
-        TextView formTitle;
-        TextView formSubtitle;
-        CheckBox checkbox;
-        ProgressBar progressBar;
-        ImageView statusIcon;
-        ImageView closeButton;
+         TextView formTitle;
+         TextView formSubtitle;
+         CheckBox checkbox;
+         InstanceUploaderProgressBar progressBar;
+         ImageView statusIcon;
+         ImageView closeButton;
 
         ViewHolder(View view) {
-            formTitle = view.findViewById(R.id.form_title);
-           formSubtitle = view.findViewById(R.id.form_subtitle);
-            checkbox = view.findViewById(R.id.checkbox);
-            progressBar = view.findViewById(R.id.progress_bar);
-            statusIcon = view.findViewById(R.id.image);
+
+            formTitle  = view.findViewById(R.id.form_title);
+            formSubtitle  = view.findViewById(R.id.form_subtitle);
+            checkbox  = view.findViewById(R.id.checkbox);
+            progressBar  = view.findViewById(R.id.progress_bar);
+            statusIcon  = view.findViewById(R.id.image);
             closeButton = view.findViewById(R.id.close_box);
-            ButterKnife.bind(this, view);
         }
     }
 }

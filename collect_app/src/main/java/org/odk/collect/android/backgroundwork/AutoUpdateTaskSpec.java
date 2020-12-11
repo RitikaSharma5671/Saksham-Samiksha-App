@@ -21,23 +21,27 @@ import android.content.Context;
 import androidx.work.WorkerParameters;
 
 import org.jetbrains.annotations.NotNull;
+import org.odk.collect.android.R;
+import org.odk.collect.android.formmanagement.FormDownloadException;
+import org.odk.collect.android.formmanagement.FormDownloader;
 import org.odk.collect.android.formmanagement.ServerFormDetails;
 import org.odk.collect.android.formmanagement.ServerFormsDetailsFetcher;
-import org.odk.collect.android.formmanagement.previouslydownloaded.ServerFormsUpdateChecker;
-import org.odk.collect.android.forms.FormRepository;
 import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.network.NetworkStateProvider;
-import org.odk.collect.android.notifications.NotificationManagerNotifier;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.notifications.Notifier;
+import org.odk.collect.android.preferences.PreferencesProvider;
 import org.odk.collect.android.storage.migration.StorageMigrationRepository;
-import org.odk.collect.android.utilities.MultiFormDownloader;
-import org.odk.collect.async.TaskSpec;
-import org.odk.collect.async.WorkerAdapter;
+import org.odk.collect.android.utilities.TranslationHandler;
+import org.odk.collect.android.async.TaskSpec;
+import org.odk.collect.android.async.WorkerAdapter;
+import org.odk.collect.android.forms.FormSourceException;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_AUTOMATIC_UPDATE;
 
@@ -50,35 +54,57 @@ public class AutoUpdateTaskSpec implements TaskSpec {
     StorageMigrationRepository storageMigrationRepository;
 
     @Inject
-    NetworkStateProvider connectivityProvider;
+    FormDownloader formDownloader;
 
     @Inject
-    MultiFormDownloader multiFormDownloader;
+    Notifier notifier;
 
     @Inject
-    FormRepository formRepository;
+    PreferencesProvider preferencesProvider;
+
+    @Inject
+    @Named("FORMS")
+    ChangeLock changeLock;
 
     @NotNull
     @Override
-    public Runnable getTask(@NotNull Context context) {
+    public Supplier<Boolean> getTask(@NotNull Context context) {
         DaggerUtils.getComponent(context).inject(this);
-        NotificationManagerNotifier notifier = new NotificationManagerNotifier(context);
 
         return () -> {
-            if (!connectivityProvider.isDeviceOnline() || storageMigrationRepository.isMigrationBeingPerformed()) {
-                return;
-            }
+            try {
+                List<ServerFormDetails> serverForms = serverFormsDetailsFetcher.fetchFormDetails();
+                List<ServerFormDetails> updatedForms = serverForms.stream().filter(ServerFormDetails::isUpdated).collect(Collectors.toList());
 
-            ServerFormsUpdateChecker checker = new ServerFormsUpdateChecker(serverFormsDetailsFetcher, formRepository);
-            List<ServerFormDetails> newUpdates = checker.check();
+                if (!updatedForms.isEmpty()) {
+                    if (preferencesProvider.getGeneralSharedPreferences().getBoolean(KEY_AUTOMATIC_UPDATE, false)) {
+                        changeLock.withLock(acquiredLock -> {
+                            if (acquiredLock) {
+                                HashMap<ServerFormDetails, String> results = new HashMap<>();
+                                for (ServerFormDetails serverFormDetails : updatedForms) {
+                                    try {
+                                        formDownloader.downloadForm(serverFormDetails, null, null);
+                                        results.put(serverFormDetails, TranslationHandler.getString(context, R.string.success));
+                                    } catch (FormDownloadException e) {
+                                        results.put(serverFormDetails, TranslationHandler.getString(context, R.string.failure));
+                                    } catch (InterruptedException e) {
+                                        break;
+                                    }
+                                }
 
-            if (!newUpdates.isEmpty()) {
-                if (GeneralSharedPreferences.getInstance().getBoolean(KEY_AUTOMATIC_UPDATE, false)) {
-                    final HashMap<ServerFormDetails, String> result = multiFormDownloader.downloadForms(newUpdates, null);
-                    notifier.onUpdatesDownloaded(result);
-                } else {
-                    notifier.onUpdatesAvailable();
+                                notifier.onUpdatesDownloaded(results);
+                            }
+
+                            return null;
+                        });
+                    } else {
+                        notifier.onUpdatesAvailable(updatedForms);
+                    }
                 }
+
+                return true;
+            } catch (FormSourceException e) {
+                return true;
             }
         };
     }

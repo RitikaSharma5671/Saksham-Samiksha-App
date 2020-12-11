@@ -42,7 +42,7 @@ import com.samagra.parent.R;
 import com.samagra.parent.UtilityFunctions;
 import com.samagra.parent.base.BaseActivity;
 
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.PermissionUtils;
 
@@ -131,8 +131,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
     }
 
     private void relaunchHomeScreen() {
-        new LocaleHelper().updateLocale(getActivityContext());
-        startActivity(new Intent(this, HomeActivity.class));
+         startActivity(new Intent(this, HomeActivity.class));
         overridePendingTransition(0, 0);
         finishAffinity();
     }
@@ -412,14 +411,14 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
 
     @Override
     public void launchSearchModule() {
-        CascadingModuleDriver.init((MainApplication) getApplicationContext(), AppConstants.FILE_PATH, Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath());
+        CascadingModuleDriver.init((MainApplication) getApplicationContext(), AppConstants.FILE_PATH, Collect.getInstance().getStoragePathProvider().getScopedStorageRootDirPath());
         CascadingModuleDriver.launchSearchView(getActivityContext(),
                 this, CascadingModuleDriver.SEARCH_ACTIVITY_REQUEST_CODE);
     }
 
     @Override
     public void updateLocale(String language) {
-        new LocaleHelper().updateLocale(getActivityContext(), language);
+//        new LocaleHelper().updateLocale(getActivityContext(), language);
 
     }
 

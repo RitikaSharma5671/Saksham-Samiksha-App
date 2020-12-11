@@ -15,34 +15,26 @@
 package org.odk.collect.android.widgets;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
-import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.work.WorkManager;
 
+import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.analytics.Analytics;
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.audio.AudioHelper;
 import org.odk.collect.android.formentry.media.AudioHelperFactory;
-import org.odk.collect.android.formentry.media.ScreenContextAudioHelperFactory;
 import org.odk.collect.android.formentry.questions.AudioVideoImageTextLabel;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.QuestionTextSizeHelper;
@@ -54,48 +46,42 @@ import org.odk.collect.android.preferences.GuidanceHint;
 import org.odk.collect.android.utilities.AnimationUtils;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.android.utilities.ScreenUtils;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.StringUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ViewUtils;
 import org.odk.collect.android.widgets.interfaces.Widget;
-import org.odk.collect.async.CoroutineAndWorkManagerScheduler;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.android.widgets.items.SelectImageMapWidget;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 import javax.inject.Inject;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.analytics.AnalyticsEvents.AUDIO_QUESTION;
+import static org.odk.collect.android.analytics.AnalyticsEvents.PROMPT;
 import static org.odk.collect.android.formentry.media.FormMediaUtils.getClipID;
 import static org.odk.collect.android.formentry.media.FormMediaUtils.getPlayColor;
 import static org.odk.collect.android.formentry.media.FormMediaUtils.getPlayableAudioURI;
 import static org.odk.collect.android.injection.DaggerUtils.getComponent;
 
-public abstract class QuestionWidget
-        extends FrameLayout
-        implements Widget {
+public abstract class QuestionWidget extends FrameLayout implements Widget {
 
     private final FormEntryPrompt formEntryPrompt;
     private final AudioVideoImageTextLabel audioVideoImageTextLabel;
-    private final QuestionDetails questionDetails;
+    protected final QuestionDetails questionDetails;
     private final TextView helpTextView;
     private final View helpTextLayout;
     private final View guidanceTextLayout;
     private final View textLayout;
     private final TextView warningText;
     private PermissionUtils permissionUtils;
-    private static final String GUIDANCE_EXPANDED_STATE = "expanded_state";
     private AtomicBoolean expanded;
-    private Bundle state;
     protected final ThemeUtils themeUtils;
-    protected final AudioHelper audioHelper;
+    protected AudioHelper audioHelper;
     private final ViewGroup containerView;
     private final QuestionTextSizeHelper questionTextSizeHelper = new QuestionTextSizeHelper();
 
@@ -104,33 +90,25 @@ public abstract class QuestionWidget
     @Inject
     public ReferenceManager referenceManager;
 
+    @Inject
     public AudioHelperFactory audioHelperFactory;
 
     @Inject
     public Analytics analytics;
 
     @Inject
-    public WorkManager workManager;
-
-    @Inject
-    public Scheduler scheduler;
+    public ScreenUtils screenUtils;
 
     public QuestionWidget(Context context, QuestionDetails questionDetails) {
-        this(context, questionDetails, true);
-    }
-
-    public QuestionWidget(Context context, QuestionDetails questionDetails, boolean registerForContextMenu) {
         super(context);
         getComponent(context).inject(this);
         setId(View.generateViewId());
-        audioHelperFactory = new ScreenContextAudioHelperFactory(scheduler, MediaPlayer::new);
         this.audioHelper = audioHelperFactory.create(context);
 
         themeUtils = new ThemeUtils(context);
 
         if (context instanceof FormEntryActivity) {
-            state = ((FormEntryActivity) context).getState();
-            permissionUtils = new PermissionUtils();
+            permissionUtils = new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert);
         }
 
         this.questionDetails = questionDetails;
@@ -153,9 +131,10 @@ public abstract class QuestionWidget
             addAnswerView(answerView);
         }
 
-        if (registerForContextMenu && context instanceof FormEntryActivity && !getFormEntryPrompt().isReadOnly()) {
+        if (context instanceof FormEntryActivity && !questionDetails.isReadOnly()) {
             registerToClearAnswerOnLongPress((FormEntryActivity) context, this);
         }
+        hideAnswerContainerIfNeeded();
     }
 
     /**
@@ -187,18 +166,24 @@ public abstract class QuestionWidget
         String imageURI = this instanceof SelectImageMapWidget ? null : prompt.getImageText();
         String videoURI = prompt.getSpecialFormQuestionText("video");
         String bigImageURI = prompt.getSpecialFormQuestionText("big-image");
-        label.setImageVideo(
-                imageURI,
-                videoURI,
-                bigImageURI,
-                getReferenceManager()
-        );
-
-//        String playableAudioURI = getPlayableAudioURI(prompt, referenceManager);
-//        if (playableAudioURI != null) {
-//            label.setAudio(playableAudioURI, audioHelper);
-//            analytics.logEvent(AUDIO_QUESTION, "AudioLabel", questionDetails.getFormAnalyticsID());
-//        }
+        String playableAudioURI = getPlayableAudioURI(prompt, referenceManager);
+        try {
+            if (imageURI != null) {
+                audioVideoImageTextLabel.setImage(new File(referenceManager.deriveReference(imageURI).getLocalURI()));
+            }
+            if (bigImageURI != null) {
+                audioVideoImageTextLabel.setBigImage(new File(referenceManager.deriveReference(bigImageURI).getLocalURI()));
+            }
+            if (videoURI != null) {
+                audioVideoImageTextLabel.setVideo(new File(referenceManager.deriveReference(videoURI).getLocalURI()));
+            }
+            if (playableAudioURI != null) {
+                label.setAudio(playableAudioURI, audioHelper);
+                analytics.logEvent(PROMPT, "AudioLabel", questionDetails.getFormAnalyticsID());
+            }
+        } catch (InvalidReferenceException e) {
+            Timber.d(e, "Invalid media reference due to %s ", e.getMessage());
+        }
 
         label.setPlayTextColor(getPlayColor(formEntryPrompt, themeUtils));
     }
@@ -220,13 +205,6 @@ public abstract class QuestionWidget
         guidance = configureGuidanceTextView(guidanceTextView, guidanceHint);
 
         expanded = new AtomicBoolean(false);
-
-        if (getState() != null) {
-            if (getState().containsKey(GUIDANCE_EXPANDED_STATE + getFormEntryPrompt().getIndex())) {
-                Boolean result = getState().getBoolean(GUIDANCE_EXPANDED_STATE + getFormEntryPrompt().getIndex());
-                expanded = new AtomicBoolean(result);
-            }
-        }
 
         if (setting.equals(GuidanceHint.Yes)) {
             guidanceTextLayout.setVisibility(VISIBLE);
@@ -296,40 +274,6 @@ public abstract class QuestionWidget
         return questionDetails;
     }
 
-    // http://code.google.com/p/android/issues/detail?id=8488
-    private void recycleDrawablesRecursive(ViewGroup viewGroup, List<ImageView> images) {
-
-        int childCount = viewGroup.getChildCount();
-        for (int index = 0; index < childCount; index++) {
-            View child = viewGroup.getChildAt(index);
-            if (child instanceof ImageView) {
-                images.add((ImageView) child);
-            } else if (child instanceof ViewGroup) {
-                recycleDrawablesRecursive((ViewGroup) child, images);
-            }
-        }
-        viewGroup.destroyDrawingCache();
-    }
-
-    // http://code.google.com/p/android/issues/detail?id=8488
-    public void recycleDrawables() {
-        List<ImageView> images = new ArrayList<>();
-        // collect all the image views
-        recycleDrawablesRecursive(this, images);
-        for (ImageView imageView : images) {
-            imageView.destroyDrawingCache();
-            Drawable d = imageView.getDrawable();
-            if (d != null && d instanceof BitmapDrawable) {
-                imageView.setImageDrawable(null);
-                BitmapDrawable bd = (BitmapDrawable) d;
-                Bitmap bmp = bd.getBitmap();
-                if (bmp != null) {
-                    bmp.recycle();
-                }
-            }
-        }
-    }
-
     public void setFocus(Context context) {
         SoftKeyboardUtils.hideSoftKeyboard(this);
     }
@@ -356,24 +300,6 @@ public abstract class QuestionWidget
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
         containerView.addView(v, params);
-    }
-
-    public Bundle getState() {
-        return state;
-    }
-
-    public Bundle getCurrentState() {
-        saveState();
-        return state;
-    }
-
-    @OverridingMethodsMustInvokeSuper
-    protected void saveState() {
-        state = new Bundle();
-
-        if (expanded != null) {
-            state.putBoolean(GUIDANCE_EXPANDED_STATE + getFormEntryPrompt().getIndex(), expanded.get());
-        }
     }
 
     private TextView setupHelpText(TextView helpText, FormEntryPrompt prompt) {
@@ -419,6 +345,18 @@ public abstract class QuestionWidget
         answerContainer.addView(v, params);
     }
 
+    private void hideAnswerContainerIfNeeded() {
+        if (questionDetails.isReadOnly() && formEntryPrompt.getAnswerValue() == null) {
+            findViewById(R.id.space_box).setVisibility(VISIBLE);
+            findViewById(R.id.answer_container).setVisibility(GONE);
+        }
+    }
+
+    public void showAnswerContainer() {
+        findViewById(R.id.space_box).setVisibility(GONE);
+        findViewById(R.id.answer_container).setVisibility(VISIBLE);
+    }
+
     /**
      * Register this widget's child views to pop up a context menu to clear the widget when the
      * user long presses on it. Widget subclasses may override this if some or all of their
@@ -450,9 +388,15 @@ public abstract class QuestionWidget
 
     //region Accessors
 
+    /**
+     * @deprecated widgets shouldn't need to know about the instance folder. They can use
+     * {@link org.odk.collect.android.utilities.QuestionMediaManager} to access media attached
+     * to the instance.
+     */
     @Nullable
+    @Deprecated
     public final String getInstanceFolder() {
-        Collect1 collect = Collect1.getInstance();
+        Collect collect = Collect.getInstance();
         if (collect == null) {
             throw new IllegalStateException("Collect application instance is null.");
         }

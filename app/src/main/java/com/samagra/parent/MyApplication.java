@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.multidex.MultiDex;
 
 import com.example.student_details.contracts.StudentDetailsComponentManager;
 import com.example.student_details.contracts.StudentDetailsSectionInteractor;
@@ -45,7 +46,7 @@ import com.samagra.parent.di.component.DaggerApplicationComponent;
 import com.samagra.parent.di.modules.ApplicationModule;
 import com.samagra.parent.helper.OkHttpClientProvider;
 
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.application.FormManagmentModuleInitialisationListener;
 import org.odk.collect.android.contracts.ComponentManager;
 import org.odk.collect.android.contracts.FormManagementSectionInteractor;
@@ -89,7 +90,7 @@ public class MyApplication extends Application implements MainApplication, Lifec
         super.onCreate();
         eventBus = new RxBus();
         initialiseLoggingComponent();
-        Collect1.getInstance().init(this, getApplicationContext(), new FormManagmentModuleInitialisationListener() {
+        Collect.getInstance().init(this, getApplicationContext(), new FormManagmentModuleInitialisationListener() {
             @Override
             public void onSuccess() {
                 Grove.d("Form Module has been initialised correctly");
@@ -148,6 +149,7 @@ public class MyApplication extends Application implements MainApplication, Lifec
 //                R.style.FormEntryActivityTheme, R.style.BaseAppTheme_SettingsTheme_Dark, Long.MAX_VALUE);
         Grove.d("Form Management Module initialised >>>>");
     }
+
 
     public static String getApplicationId() {
         return AppConstants.APPLICATION_ID;
@@ -241,6 +243,8 @@ public class MyApplication extends Application implements MainApplication, Lifec
         return OkHttpClientProvider.provideOkHttpClient(networkConnectionInterceptor);
     }
 
+
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -248,6 +252,7 @@ public class MyApplication extends Application implements MainApplication, Lifec
                 .applicationModule(new ApplicationModule(this))
                 .build();
         applicationComponent.inject(this);
+        MultiDex.install(this);
     }
 
     public ApplicationComponent getApplicationComponent() {
@@ -377,13 +382,7 @@ public class MyApplication extends Application implements MainApplication, Lifec
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Collect1.defaultSysLanguage = newConfig.locale.getLanguage();
-        boolean isUsingSysLanguage = GeneralSharedPreferences.getInstance().get(KEY_APP_LANGUAGE).equals("");
-        if (!isUsingSysLanguage) {
-            Grove.d("Changing App language to: " + newConfig.locale.getLanguage());
-            new LocaleHelper().updateLocale(this);
-        }
-
+        Collect.defaultSysLanguage = newConfig.locale.getLanguage();
     }
 
     public static FirebaseRemoteConfig getmFirebaseRemoteConfig() {

@@ -25,13 +25,13 @@ import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.condition.EvaluationContext;
 import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.odk.collect.android.R;
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.ExternalDataException;
 import org.odk.collect.android.external.ExternalDataManager;
 import org.odk.collect.android.external.ExternalDataUtil;
 import org.odk.collect.android.external.ExternalSQLiteOpenHelper;
 import org.odk.collect.android.external.ExternalSelectChoice;
+import org.odk.collect.android.utilities.TranslationHandler;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -100,7 +100,7 @@ public class ExternalDataHandlerSearch extends ExternalDataHandlerBase {
             // we should never get here since it is already handled in ExternalDataUtil
             // .getSearchXPathExpression(String appearance)
             throw new ExternalDataException(
-                    Collect1.getInstance().getAppContext().getResources().getString(R.string.ext_search_wrong_arguments_error));
+                    TranslationHandler.getString(Collect.getInstance().getApplicationContext(), R.string.ext_search_wrong_arguments_error));
         }
 
         String searchType = null;
@@ -182,7 +182,7 @@ public class ExternalDataHandlerSearch extends ExternalDataHandlerBase {
                 c = db.query(ExternalDataUtil.EXTERNAL_DATA_TABLE_NAME, sqlColumns, selection,
                         selectionArgs, null, null, ExternalDataUtil.SORT_COLUMN_NAME);
             } catch (Exception e) {
-                Timber.e(Collect1.getInstance().getAppContext().getResources().getString(R.string.ext_import_csv_missing_error, dataSetName, dataSetName));
+                Timber.e(TranslationHandler.getString(Collect.getInstance().getApplicationContext(), R.string.ext_import_csv_missing_error, dataSetName, dataSetName));
                 c = db.query(ExternalDataUtil.EXTERNAL_DATA_TABLE_NAME, sqlColumns, selection,
                         selectionArgs, null, null, null);
             }

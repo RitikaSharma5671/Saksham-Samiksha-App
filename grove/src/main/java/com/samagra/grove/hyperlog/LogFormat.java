@@ -61,7 +61,7 @@ public class LogFormat implements Serializable {
      */
     String formatLogMessage(int logLevel, String tag, String message) {
         String timeStamp = HLDateTimeUtility.getCurrentTime();
-        String senderName = BuildConfig.VERSION_NAME;
+        String senderName = BuildConfig.LIBRARY_PACKAGE_NAME;
         String osVersion = "Android-" + Build.VERSION.RELEASE;
         String logLevelName = getLogLevelName(logLevel);
         return getFormattedLogMessage(logLevelName, tag, message, timeStamp, senderName, osVersion, deviceUUID);

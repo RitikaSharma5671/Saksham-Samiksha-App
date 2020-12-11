@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 
 import org.apache.commons.io.IOUtils;
 import org.javarosa.core.model.Constants;
@@ -33,16 +34,17 @@ import org.javarosa.core.model.instance.TreeElement;
 import org.javarosa.core.model.instance.TreeReference;
 import org.javarosa.xform.util.XFormUtils;
 import org.odk.collect.android.R;
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.storage.StorageStateProvider;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.FileNameMap;
 import java.net.URLConnection;
@@ -81,34 +83,57 @@ public class FileUtils {
     public static final String AUTO_SEND = "autoSend";
     public static final String GEOMETRY_XPATH = "geometryXpath";
 
-    /**
-     * Suffix for the form media directory.
-     */
+    /** Suffix for the form media directory. */
     public static final String MEDIA_SUFFIX = "-media";
 
-    /**
-     * Filename of the last-saved instance data.
-     */
+    /** Filename of the last-saved instance data. */
     public static final String LAST_SAVED_FILENAME = "last-saved.xml";
 
-    /**
-     * Valid XML stub that can be parsed without error.
-     */
+    /** Valid XML stub that can be parsed without error. */
     public static final String STUB_XML = "<?xml version='1.0' ?><stub />";
 
-    /**
-     * True if we have checked whether /sdcard points to getExternalStorageDirectory().
-     */
+    /** True if we have checked whether /sdcard points to getExternalStorageDirectory(). */
     private static boolean isSdcardSymlinkChecked;
 
-    /**
-     * The result of checking whether /sdcard points to getExternalStorageDirectory().
-     */
+    /** The result of checking whether /sdcard points to getExternalStorageDirectory(). */
     private static boolean isSdcardSymlinkSameAsExternalStorageDirectory;
 
     static int bufSize = 16 * 1024; // May be set by unit test
 
     private FileUtils() {
+    }
+
+    public static void saveAnswerFileFromUri(Uri uri, File destFile, Context context) {
+        try {
+            ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
+            if (pfd != null) {
+                FileDescriptor fd = pfd.getFileDescriptor();
+                InputStream fileInputStream = new FileInputStream(fd);
+                OutputStream fileOutputStream = new FileOutputStream(destFile);
+
+                byte[] buffer = new byte[1024];
+                int length;
+
+                while ((length = fileInputStream.read(buffer)) > 0) {
+                    fileOutputStream.write(buffer, 0, length);
+                }
+
+                fileOutputStream.flush();
+                fileInputStream.close();
+                fileOutputStream.close();
+                pfd.close();
+            }
+        } catch (IOException e) {
+            Timber.w(e);
+        }
+    }
+
+    public static File createDestinationMediaFile(String fileLocation, String fileExtension) {
+        return new File(fileLocation
+                + File.separator
+                + System.currentTimeMillis()
+                + "."
+                + fileExtension);
     }
 
     public static String getMimeType(String fileUrl) throws IOException {
@@ -290,7 +315,11 @@ public class FileUtils {
 
         fields.put(TITLE, formDef.getTitle());
         fields.put(FORMID, formDef.getMainInstance().getRoot().getAttributeValue(null, "id"));
-        fields.put(VERSION, formDef.getMainInstance().getRoot().getAttributeValue(null, "version"));
+        String version = formDef.getMainInstance().getRoot().getAttributeValue(null, "version");
+        if (version != null && version.trim().isEmpty()) {
+            version = null;
+        }
+        fields.put(VERSION, version);
 
         if (formDef.getSubmissionProfile() != null) {
             fields.put(SUBMISSIONURI, formDef.getSubmissionProfile().getAction());
@@ -311,11 +340,11 @@ public class FileUtils {
     /**
      * Returns an XPath path representing the first geopoint of this form definition or null if the
      * definition does not contain any field of type geopoint.
-     * <p>
+     *
      * The first geopoint is either of:
-     * (1) the first geopoint in the body that is not in a repeat
-     * (2) if the form has a setgeopoint action, the first geopoint in the instance that occurs
-     * before (1) or (1) if there is no geopoint defined before it in the instance.
+     *      (1) the first geopoint in the body that is not in a repeat
+     *      (2) if the form has a setgeopoint action, the first geopoint in the instance that occurs
+     *          before (1) or (1) if there is no geopoint defined before it in the instance.
      */
     private static String getOverallFirstGeoPoint(FormDef formDef) {
         TreeReference firstTopLevelBodyGeoPoint = getFirstToplevelBodyGeoPoint(formDef);
@@ -461,12 +490,11 @@ public class FileUtils {
      */
     public static void checkMediaPath(File mediaDir) {
         if (mediaDir.exists() && mediaDir.isFile()) {
-            Timber.e("The media folder is already there and it is a FILE!! We will need to delete "
-                    + "it and create a folder instead");
+            Timber.e("The media folder is already there and it is a FILE!! We will need to delete it and create a folder instead");
             boolean deleted = mediaDir.delete();
             if (!deleted) {
                 throw new RuntimeException(
-                        Collect1.getInstance().getAppContext().getResources().getString(R.string.fs_delete_media_path_if_file_error,
+                        TranslationHandler.getString(Collect.getInstance().getApplicationContext(), R.string.fs_delete_media_path_if_file_error,
                                 mediaDir.getAbsolutePath()));
             }
         }
@@ -475,7 +503,7 @@ public class FileUtils {
         boolean createdOrExisted = createFolder(mediaDir.getAbsolutePath());
         if (!createdOrExisted) {
             throw new RuntimeException(
-                    Collect1.getInstance().getAppContext().getResources().getString(R.string.fs_create_media_folder_error,
+                    TranslationHandler.getString(Collect.getInstance().getApplicationContext(), R.string.fs_create_media_folder_error,
                             mediaDir.getAbsolutePath()));
         }
     }
@@ -483,13 +511,14 @@ public class FileUtils {
     public static void purgeMediaPath(String mediaPath) {
         File tempMediaFolder = new File(mediaPath);
         File[] tempMediaFiles = tempMediaFolder.listFiles();
-        if (tempMediaFiles == null || tempMediaFiles.length == 0) {
-            deleteAndReport(tempMediaFolder);
-        } else {
+
+        if (tempMediaFiles != null) {
             for (File tempMediaFile : tempMediaFiles) {
                 deleteAndReport(tempMediaFile);
             }
         }
+
+        deleteAndReport(tempMediaFolder);
     }
 
     public static void moveMediaFiles(String tempMediaPath, File formMediaPath) throws IOException {
@@ -499,10 +528,6 @@ public class FileUtils {
             deleteAndReport(tempMediaFolder);
         } else {
             for (File mediaFile : mediaFiles) {
-                File f = new File(formMediaPath, mediaFile.getName());
-                if (f.exists()) {
-                    f.delete();
-                }
                 org.apache.commons.io.FileUtils.moveFileToDirectory(mediaFile, formMediaPath, true);
             }
             deleteAndReport(tempMediaFolder);
@@ -559,15 +584,12 @@ public class FileUtils {
 
         try (FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(data);
-            fos.close();
         } catch (IOException e) {
             Timber.e(e);
         }
     }
 
-    /**
-     * Sorts file paths as if sorting the path components and extensions lexicographically.
-     */
+    /** Sorts file paths as if sorting the path components and extensions lexicographically. */
     public static int comparePaths(String a, String b) {
         // Regular string compareTo() is incorrect, because it will sort "/" and "."
         // after other punctuation (e.g. "foo/bar" will sort AFTER "foo-2/bar" and
@@ -595,16 +617,14 @@ public class FileUtils {
 
     /**
      * Grants read permissions to a content URI added to the specified Intent.
-     * <p>
+     *
      * See {@link #grantFileReadPermissions(Intent, Uri, Context)} for details.
      */
     public static void grantFileReadPermissions(Intent intent, Uri uri, Context context) {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
     }
 
-    /**
-     * Uses the /sdcard symlink to shorten a path, if it's valid to do so.
-     */
+    /** Uses the /sdcard symlink to shorten a path, if it's valid to do so. */
     @SuppressWarnings("PMD.DoNotHardCodeSDCard")
     public static String simplifyPath(File file) {
         if (new StorageStateProvider().isScopedStorageUsed()) {
@@ -640,13 +660,11 @@ public class FileUtils {
         return path;
     }
 
-    /**
-     * Checks whether /sdcard points to the same place as getExternalStorageDirectory().
-     */
+    /** Checks whether /sdcard points to the same place as getExternalStorageDirectory(). */
     @SuppressWarnings("PMD.DoNotHardCodeSDCard")
     @SuppressFBWarnings(
-            value = "DMI_HARDCODED_ABSOLUTE_FILENAME",
-            justification = "The purpose of this function is to test this specific path."
+        value = "DMI_HARDCODED_ABSOLUTE_FILENAME",
+        justification = "The purpose of this function is to test this specific path."
     )
     private static void checkIfSdcardSymlinkSameAsExternalStorageDirectory() {
         try {
@@ -672,9 +690,7 @@ public class FileUtils {
         isSdcardSymlinkSameAsExternalStorageDirectory = false;
     }
 
-    /**
-     * Iterates over all directories and files under a root path.
-     */
+    /** Iterates over all directories and files under a root path. */
     public static Iterable<File> walk(File root) {
         return () -> new Walker(root, true);
     }
@@ -683,9 +699,7 @@ public class FileUtils {
         return () -> new Walker(root, false);
     }
 
-    /**
-     * An iterator that walks over all the directories and files under a given path.
-     */
+    /** An iterator that walks over all the directories and files under a given path. */
     private static class Walker implements Iterator<File> {
         private final List<File> queue = new ArrayList<>();
         private final boolean depthFirst;
@@ -695,13 +709,11 @@ public class FileUtils {
             this.depthFirst = depthFirst;
         }
 
-        @Override
-        public boolean hasNext() {
+        @Override public boolean hasNext() {
             return !queue.isEmpty();
         }
 
-        @Override
-        public File next() {
+        @Override public File next() {
             if (queue.isEmpty()) {
                 throw new NoSuchElementException();
             }

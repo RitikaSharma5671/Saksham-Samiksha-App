@@ -20,17 +20,11 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public final class InstanceProviderAPI {
-    public static final String AUTHORITY = "org.odk.collect.android.provider.odk.instances";
+    public static final String AUTHORITY = "com.samagra.sakshamSamiksha.provider.odk.instances";
 
     // This class cannot be instantiated
     private InstanceProviderAPI() {
     }
-
-    // status for instances
-    public static final String STATUS_INCOMPLETE = "incomplete";
-    public static final String STATUS_COMPLETE = "complete";
-    public static final String STATUS_SUBMITTED = "submitted";
-    public static final String STATUS_SUBMISSION_FAILED = "submissionFailed";
 
     public static final class InstanceColumns implements BaseColumns {
         // This class cannot be instantiated

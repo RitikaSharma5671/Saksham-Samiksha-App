@@ -35,9 +35,9 @@ import com.samagra.commons.InstitutionInfo;
 import com.samagra.commons.MainApplication;
 import com.samagra.grove.logging.Grove;
 
-import org.odk.collect.android.application.Collect1;
 
-import java.io.File;
+import org.odk.collect.android.application.Collect;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
@@ -113,8 +113,8 @@ public class ProfileActivity extends BaseActivity implements ProfileContract.Vie
             SpannableString content = new SpannableString(getText(R.string.change_details));
             content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
             change_details.setText(content);
-            String ROOT = Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath();
-            String FILE_PATH = Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath() + "/saksham_data_json.json";
+            String ROOT = Collect.getInstance().getStoragePathProvider().getScopedStorageRootDirPath();
+            String FILE_PATH = Collect.getInstance().getStoragePathProvider().getScopedStorageRootDirPath() + "/saksham_data_json.json";
             InstitutionInfo institutionInfo = profilePresenter.fetchSchoolDetails();
             schoolDistrict = findViewById(R.id.school_district);
             schoolBlock = findViewById(R.id.school_block);

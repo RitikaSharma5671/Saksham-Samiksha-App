@@ -1,7 +1,5 @@
 package org.odk.collect.android.configure;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,7 +35,6 @@ public class StructureAndTypeSettingsValidator implements SettingsValidator {
                 Object defaultValue = entry.getValue();
 
                 if (!jsonValue.getClass().isAssignableFrom(defaultValue.getClass())) {
-                    Log.i("veev eve", "ENTRY KET   "  + entry.getKey() + " vrver " + jsonValue + "   eveve  " + defaultValue);
                     return true;
                 }
             }

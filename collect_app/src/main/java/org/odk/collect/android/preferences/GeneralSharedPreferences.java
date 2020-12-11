@@ -21,8 +21,7 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
 
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.injection.DaggerUtils;
 
 import java.util.Map;
@@ -46,7 +45,7 @@ public class GeneralSharedPreferences {
      */
     @Deprecated
     public static synchronized GeneralSharedPreferences getInstance() {
-        return DaggerUtils.getComponent(Collect1.getInstance().getAppContext()).generalSharedPreferences();
+        return DaggerUtils.getComponent(Collect.getInstance().getApplicationContext()).generalSharedPreferences();
     }
 
     public Object get(String key) {

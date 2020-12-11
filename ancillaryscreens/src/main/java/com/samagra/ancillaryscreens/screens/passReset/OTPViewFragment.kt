@@ -69,7 +69,7 @@ class OTPViewFragment : Fragment(), View.OnClickListener, OnOtpCompletionListene
             requireActivity().finish()
         }
         if (arguments != null) {
-            phoneNumber = requireArguments().getString("phoneNumber")
+            phoneNumber = requireArguments().getString("phoneNumber")!!
             //lastPage = arguments.getString("last")
         }
         validate_button.setOnClickListener(this)

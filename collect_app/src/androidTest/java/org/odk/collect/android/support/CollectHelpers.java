@@ -2,7 +2,7 @@ package org.odk.collect.android.support;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
 import org.odk.collect.android.injection.config.AppDependencyModule;
 import org.odk.collect.android.injection.config.DaggerAppDependencyComponent;
@@ -14,13 +14,13 @@ public final class CollectHelpers {
     }
 
     public static FormController waitForFormController() throws InterruptedException {
-        if (Collect1.getInstance().getFormController() == null) {
+        if (Collect.getInstance().getFormController() == null) {
             do {
                 Thread.sleep(1);
-            } while (Collect1.getInstance().getFormController() == null);
+            } while (Collect.getInstance().getFormController() == null);
         }
 
-        return Collect1.getInstance().getFormController();
+        return Collect.getInstance().getFormController();
     }
 
     public static AppDependencyComponent getAppDependencyComponent() {

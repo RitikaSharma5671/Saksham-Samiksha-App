@@ -4,7 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import org.odk.collect.android.application.Collect;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class SQLiteUtilsTest {
     public void doesColumnExistTest() {
         String tableName = "testTable";
 
-        SQLiteDatabase db = Collect1.getInstance().openOrCreateDatabase("testDatabase", MODE_PRIVATE, null);
+        SQLiteDatabase db = Collect.getInstance().openOrCreateDatabase("testDatabase", MODE_PRIVATE, null);
         db.execSQL("CREATE TABLE " + tableName + " (id integer, column1 text);");
 
         assertTrue(SQLiteUtils.doesColumnExist(db, tableName, "id"));
@@ -35,7 +35,7 @@ public class SQLiteUtilsTest {
         final String tableName = "testTable";
         final String columnName = CustomSQLiteQueryBuilder.quoteIdentifier("col");
 
-        SQLiteDatabase db = Collect1.getInstance().openOrCreateDatabase("testDatabase", MODE_PRIVATE, null);
+        SQLiteDatabase db = Collect.getInstance().openOrCreateDatabase("testDatabase", MODE_PRIVATE, null);
 
         assertFalse(SQLiteUtils.doesTableExist(db, tableName));
 

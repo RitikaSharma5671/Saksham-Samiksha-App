@@ -15,7 +15,6 @@ import com.example.student_details.models.realm.SchoolEmployeesInfo
 import com.example.student_details.modules.StudentDataModel
 import com.hasura.model.SendTeacherAttendanceNewFormatMutation
 import io.realm.Realm
-import org.odk.collect.android.application.Collect1
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -43,7 +42,7 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
     }
 
     @SuppressLint("DefaultLocale")
-    fun fetchEmployeeData(schoolCode: String, schoolName: String) {
+    fun fetchEmployeeData() {
         isEmployeesListVisible.set(false)
         isEmptyListMessageVisible.set(false)
         isProgressBarVisible.set(true)
@@ -142,28 +141,28 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
         employeeList.postValue(lisss)
     }
 
-    fun uploadAttendanceData(userName: String, schoolCode: String, schoolName: String, district: String, block: String) {
+    fun uploadAttendanceData(userName: String) {
         val list = employeeList.value!!
         val calendar: Calendar = Calendar.getInstance()
         val currentSelectedDate: String = DateFormat.format("yyyy-MM-dd", calendar).toString()
         val model = StudentDataModel()
         model.uploadEmployeeAttendanceData(currentSelectedDate, userName, list, object : ApolloQueryResponseListener<SendTeacherAttendanceNewFormatMutation.Data> {
             override fun onResponseReceived(response: Response<SendTeacherAttendanceNewFormatMutation.Data>?) {
-                try {
-                    Collect1.getInstance().analytics.logEvent("teacher_attendance_mark", "teacher_attendance_upload_successful",
-                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
-                } catch (e: Exception) {
-                }
+//                try {
+//                    Collect.getInstance().analytics.logEvent("teacher_attendance_mark", "teacher_attendance_upload_successful",
+//                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
+//                } catch (e: Exception) {
+//                }
                 attendanceUploadSuccessful.postValue("Success")
             }
 
             override fun onFailureReceived(e: ApolloException?) {
-                try {
-                    Collect1.getInstance().analytics.logEvent("teacher_attendance_mark", "teacher_attendance_upload_failure",
-                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
-                } catch (e: Exception) {
-
-                }
+//                try {
+//                    Collect.getInstance().analytics.logEvent("teacher_attendance_mark", "teacher_attendance_upload_failure",
+//                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
+//                } catch (e: Exception) {
+//
+//                }
                 attendanceUploadSuccessful.postValue("Failure")
             }
 

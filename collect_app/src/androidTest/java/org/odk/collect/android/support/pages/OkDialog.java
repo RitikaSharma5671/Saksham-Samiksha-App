@@ -27,22 +27,13 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 public class OkDialog extends Page<OkDialog> {
-    OkDialog(ActivityTestRule rule) {
+    public OkDialog(ActivityTestRule rule) {
         super(rule);
     }
 
     @Override
     public OkDialog assertOnPage() {
         onView(withText(R.string.ok)).inRoot(isDialog()).check(matches(isDisplayed()));
-        return this;
-    }
-
-    public OkDialog assertMessage(int messageStringId) {
-        return assertMessage(getTranslatedString(messageStringId));
-    }
-
-    public OkDialog assertMessage(String message) {
-        onView(withText(message)).inRoot(isDialog()).check(matches(isDisplayed()));
         return this;
     }
 

@@ -49,11 +49,6 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
 
 
     @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(new LocaleHelper().updateLocale(base, PreferenceManager.getDefaultSharedPreferences(base).getString(Constants.APP_LANGUAGE_KEY, "en")));
-    }
-
-    @Override
     public void showSnackbar(String message, int duration) {
         Snackbar.make(findViewById(android.R.id.content), message, duration).show();
     }

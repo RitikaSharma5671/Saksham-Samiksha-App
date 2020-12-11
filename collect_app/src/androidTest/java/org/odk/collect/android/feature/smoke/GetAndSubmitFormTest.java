@@ -43,13 +43,13 @@ public class GetAndSubmitFormTest {
 
     @Test
     public void canGetBlankForm_fillItIn_andSubmit() {
-        server.addForm("One Question", "one-question", "one-question.xml");
+        server.addForm("One Question", "one-question", "1", "one-question.xml");
 
         rule.mainMenu()
                 .setServer(server.getURL())
                 .clickGetBlankForm()
                 .clickGetSelected()
-                .assertMessage("One Question (Version:: 1 ID: one-question) - Success")
+                .assertText("One Question (Version:: 1 ID: one-question) - Success")
                 .clickOK(new MainMenuPage(rule))
 
                 .startBlankForm("One Question")

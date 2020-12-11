@@ -426,4 +426,5 @@
     <string name="send_sms_titile">एस.एम.एस. (SMS) भेजें</string>
   <string name="confirm">पुष्टि करें</string>
   <string name="quit_dialog_label">क्या बाहर जाना चाहते हो? अब तक भरा गया डेटा खो जाएगा।</string>
+    <string name="app_theme_dark">dark_theme</string>
 </resources>

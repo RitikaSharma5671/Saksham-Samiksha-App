@@ -42,7 +42,7 @@ class MarkTeacherAttendanceView : Fragment() {
         val block: String = sharedPreferences.getString("user.block", "")!!
         val schoolName:String =sharedPreferences.getString("user.schoolName", "")!!
         userName  = sharedPreferences.getString("user.username", "")!!
-        markAttendanceViewModel.fetchEmployeeData(schoolCode, schoolName)
+        markAttendanceViewModel.fetchEmployeeData()
         layoutBinding.vffv.setOnClickListener {
             markAttendanceViewModel.onSendAttendanceClicked()
         }
@@ -106,7 +106,7 @@ class MarkTeacherAttendanceView : Fragment() {
                             override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                 alertDialog.dismiss()
                                 mProgress.show()
-                                markAttendanceViewModel.uploadAttendanceData(userName, schoolCode,schoolName, district, block)
+                                markAttendanceViewModel.uploadAttendanceData(userName)
                             }
 
                         }).setAction3("CANCEL, WANT TO RECHECK", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {

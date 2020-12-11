@@ -2,14 +2,14 @@ package org.odk.collect.android.preferences;
 
 import android.content.Context;
 import android.preference.PreferenceCategory;
+
 import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
+
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Custom PreferenceCategory that allows the titleto be "greyed out"/disabled
@@ -53,9 +53,7 @@ public class ExtendedPreferenceCategory extends PreferenceCategory {
     @Override
     protected void onBindView(View view) {
         super.onBindView(view);
-        ButterKnife.bind(this, view);
         title = view.findViewById(android.R.id.title);
-
         setupColorStates();
 
         if (isEnabled) {

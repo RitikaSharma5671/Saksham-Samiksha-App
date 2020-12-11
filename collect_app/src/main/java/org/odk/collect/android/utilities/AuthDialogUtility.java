@@ -24,8 +24,9 @@ import android.view.View;
 import android.widget.EditText;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect1;
-
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.logic.PropertyManager;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
 
 import javax.inject.Inject;
 
@@ -40,12 +41,21 @@ public class AuthDialogUtility {
     private String customUsername;
     private String customPassword;
 
-    @Inject WebCredentialsUtils webCredentialsUtils;
+    @Inject
+    WebCredentialsUtils webCredentialsUtils;
+    @Inject
+    PropertyManager propertyManager;
+    @Inject
+    GeneralSharedPreferences generalSharedPreferences;
 
     public AuthDialogUtility() {
-        Collect1.getInstance().getComponent().inject(this);
+        Collect.getInstance().getComponent().inject(this);
     }
 
+    /**
+     * @deprecated should use {@link org.odk.collect.android.preferences.ServerAuthDialogFragment} instead
+     */
+    @Deprecated
     public AlertDialog createDialog(final Context context,
                                     final AuthDialogUtilityResultListener resultListener, String url) {
 
@@ -86,7 +96,7 @@ public class AuthDialogUtility {
                 if (customUsername != null && customPassword != null) {
                     webCredentialsUtils.saveCredentials(finalOverriddenUrl != null ? finalOverriddenUrl : webCredentialsUtils.getServerUrlFromPreferences(), userNameValue, passwordValue);
                 } else if (finalOverriddenUrl == null) {
-                    webCredentialsUtils.saveCredentialsPreferences(userNameValue, passwordValue);
+                    webCredentialsUtils.saveCredentialsPreferences(generalSharedPreferences, userNameValue, passwordValue, propertyManager);
                 } else {
                     webCredentialsUtils.saveCredentials(finalOverriddenUrl, userNameValue, passwordValue);
                 }

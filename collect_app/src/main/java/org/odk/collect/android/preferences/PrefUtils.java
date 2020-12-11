@@ -6,8 +6,7 @@ import android.content.SharedPreferences;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceManager;
 
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 
 import java.util.Arrays;
 
@@ -16,7 +15,7 @@ public class PrefUtils {
 
     public static SharedPreferences getSharedPrefs() {
         return PreferenceManager.getDefaultSharedPreferences(
-            Collect1.getInstance().getAppContext());
+            Collect.getInstance().getApplicationContext());
     }
 
     public static SharedPreferences getAdminSharedPrefs() {

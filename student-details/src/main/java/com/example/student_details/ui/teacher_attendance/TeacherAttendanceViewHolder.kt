@@ -5,7 +5,6 @@ package com.example.student_details.ui.teacher_attendance
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Application
-import android.content.Context
 import android.content.DialogInterface
 import android.graphics.drawable.Drawable
 import android.text.SpannableString
@@ -13,9 +12,7 @@ import android.text.style.UnderlineSpan
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
 import com.example.student_details.Utilities.findFirstLetterPosition
@@ -137,7 +134,7 @@ class TeacherAttendanceViewHolder(private val itemTeacherAttendanceRowBinding: I
             val view: View? = markAttendanceView.activity?.currentFocus
             if (markAttendanceView != null && view != null) {
                 val imm: InputMethodManager = markAttendanceView.activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm?.hideSoftInputFromWindow(view.windowToken, 0)
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
             }
             if(itemTeacherAttendanceRowBinding.otherStatus.text != null &&
                     itemTeacherAttendanceRowBinding.otherStatus.text.toString().isNotEmpty() &&

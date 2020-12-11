@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.javarosa.core.model.CoreModelModule;
@@ -14,19 +15,21 @@ import org.javarosa.core.util.JavaRosaCoreModule;
 import org.javarosa.model.xform.XFormsModule;
 import org.javarosa.xform.parse.XFormParser;
 import org.odk.collect.android.BuildConfig;
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.analytics.Analytics;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.preferences.FormUpdateMode;
 import org.odk.collect.android.geo.MapboxUtils;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.logic.actions.setgeopoint.CollectSetGeopointActionHandler;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.utilities.LocaleHelper;
-import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.utilities.UserAgentProvider;
 
 import java.util.Locale;
 
 import timber.log.Timber;
+
+import static org.odk.collect.android.configure.SettingsUtils.getFormUpdateMode;
 
 public class ApplicationInitializer {
 
@@ -34,14 +37,16 @@ public class ApplicationInitializer {
     private final UserAgentProvider userAgentProvider;
     private final SettingsPreferenceMigrator preferenceMigrator;
     private final PropertyManager propertyManager;
+    private final Analytics analytics;
     private final GeneralSharedPreferences generalSharedPreferences;
     private final AdminSharedPreferences adminSharedPreferences;
 
-    public ApplicationInitializer(Application context, UserAgentProvider userAgentProvider, SettingsPreferenceMigrator preferenceMigrator, PropertyManager propertyManager) {
+    public ApplicationInitializer(Application context, UserAgentProvider userAgentProvider, SettingsPreferenceMigrator preferenceMigrator, PropertyManager propertyManager, Analytics analytics) {
         this.context = context;
         this.userAgentProvider = userAgentProvider;
         this.preferenceMigrator = preferenceMigrator;
         this.propertyManager = propertyManager;
+        this.analytics = analytics;
 
         generalSharedPreferences = GeneralSharedPreferences.getInstance();
         adminSharedPreferences = AdminSharedPreferences.getInstance();
@@ -53,23 +58,27 @@ public class ApplicationInitializer {
         initializeLocale();
     }
 
-    public void initializePreferences() {
+    private void initializePreferences() {
         performMigrations();
         reloadSharedPreferences();
     }
 
-    public void initializeFrameworks() {
-        NotificationUtils.createNotificationChannel(context);
+    private void initializeFrameworks() {
         JodaTimeAndroid.init(context);
         initializeLogging();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         initializeMapFrameworks();
         initializeJavaRosa();
+        initializeAnalytics();
     }
 
-    public void initializeLocale() {
-        Collect1.defaultSysLanguage = Locale.getDefault().getLanguage();
-        new LocaleHelper().updateLocale(context);
+    private void initializeAnalytics() {
+        FormUpdateMode formUpdateMode = getFormUpdateMode(context, generalSharedPreferences.getSharedPreferences());
+        analytics.setUserProperty("FormUpdateMode", formUpdateMode.getValue(context));
+    }
+
+    private void initializeLocale() {
+        Collect.defaultSysLanguage = Locale.getDefault().getLanguage();
     }
 
     private void initializeJavaRosa() {
@@ -88,7 +97,7 @@ public class ApplicationInitializer {
     }
 
     private void initializeLogging() {
-        if (BuildConfig.BUILD_TYPE.equals("odkCollectRelease")) {
+        if (BuildConfig.BUILD_TYPE.equals("release")) {
             Timber.plant(new CrashReportingTree());
         } else {
             Timber.plant(new Timber.DebugTree());
@@ -124,13 +133,6 @@ public class ApplicationInitializer {
             if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
                 return;
             }
-
-//            FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
-//            crashlytics.log((priority == Log.ERROR ? "E/" : "W/") + tag + ": " + message);
-//
-//            if (t != null && priority == Log.ERROR) {
-//                crashlytics.recordException(t);
-//            }
         }
     }
 }

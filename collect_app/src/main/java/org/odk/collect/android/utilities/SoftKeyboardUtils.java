@@ -21,8 +21,7 @@ import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import org.odk.collect.android.application.Collect1;
-
+import org.odk.collect.android.application.Collect;
 
 public class SoftKeyboardUtils {
 
@@ -40,6 +39,6 @@ public class SoftKeyboardUtils {
     }
 
     private static InputMethodManager getInputMethodManager() {
-        return (InputMethodManager) Collect1.getInstance().getApplicationVal().getSystemService(Context.INPUT_METHOD_SERVICE);
+        return (InputMethodManager) Collect.getInstance().getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 }

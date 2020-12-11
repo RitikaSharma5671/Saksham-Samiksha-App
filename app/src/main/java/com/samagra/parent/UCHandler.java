@@ -26,7 +26,7 @@ import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.grove.logging.Grove;
 
-import org.odk.collect.android.BuildConfig;
+import com.samagra.parent.BuildConfig;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

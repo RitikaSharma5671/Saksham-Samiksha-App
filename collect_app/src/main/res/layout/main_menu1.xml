@@ -14,7 +14,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <org.odk.collect.android.material.MaterialBanner
+    <org.odk.collect.utilities.material.MaterialBanner
         android:id="@+id/storageMigrationBanner1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

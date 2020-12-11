@@ -853,7 +853,7 @@ public class Camera2Fragment extends Fragment
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
 
-            CameraUtils.savePhoto(new StoragePathProvider().getTmpFilePath(), bytes);
+            CameraUtils.savePhoto(new StoragePathProvider().getTmpImageFilePath(), bytes);
         }
     }
 

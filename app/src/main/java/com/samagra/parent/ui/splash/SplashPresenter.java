@@ -19,8 +19,9 @@ import com.samagra.parent.R;
 import com.samagra.parent.base.BasePresenter;
 import com.samagra.parent.helper.BackendNwHelper;
 
-import org.odk.collect.android.BuildConfig;
-import org.odk.collect.android.application.Collect1;
+import com.samagra.parent.BuildConfig;
+
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.contracts.AppPermissionUserActionListener;
 import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.contracts.PermissionsHelper;
@@ -40,7 +41,7 @@ import io.reactivex.schedulers.Schedulers;
 @SuppressWarnings("deprecation")
 public class SplashPresenter<V extends SplashContract.View, I extends SplashContract.Interactor> extends BasePresenter<V, I> implements SplashContract.Presenter<V, I> {
 
-    private static final String ROOT = Collect1.getInstance().getStoragePathProvider().getScopedStorageRootDirPath();
+    private static final String ROOT = Collect.getInstance().getStoragePathProvider().getScopedStorageRootDirPath();
     private static final boolean EXIT = true;
 
     public boolean isJwtTokenValid() {
@@ -134,18 +135,18 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         if (firstRun || showSplash)
             getMvpInteractor().updateFirstRunFlag(false);
         ((SplashActivity)context).showSimpleSplash();
-        updateCurrentVersion();
+        updateCurrentVersion(context);
     }
 
     @Override
     public void requestStoragePermissions(String packageName, PackageManager packageManager, Context context) {
-        getIFormManagementContract().enableUsingScopedStorage();
         PermissionsHelper permissionUtils = new PermissionsHelper();
         if (!PermissionsHelper.areStoragePermissionsGranted(context)) {
             permissionUtils.requestStoragePermissions((SplashActivity) context, new AppPermissionUserActionListener() {
                 @Override
                 public void granted() {
                     try {
+                        getIFormManagementContract().enableUsingScopedStorage();
                         getIFormManagementContract().createODKDirectories();
                     } catch (RuntimeException e) {
                         AlertDialogUtils.showDialog(AlertDialogUtils.createErrorDialog(context,
@@ -161,6 +162,8 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                 }
             });
         } else {
+            getIFormManagementContract().enableUsingScopedStorage();
+            getIFormManagementContract().createODKDirectories();
             init(packageName, packageManager, context);
         }
     }
@@ -212,7 +215,8 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
     }
 
 
-    private void updateCurrentVersion() {
+    private void updateCurrentVersion(Context context) {
+//        int currentVersion = Integer.parseInt(context.getPackageManager().getPackageInfo(context.getOpPackageName(), 0).getLongVersionCode());
         int currentVersion = BuildConfig.VERSION_CODE;
         int previousSavedVersion = getMvpInteractor().getPreferenceHelper().getPreviousVersion();
         if (previousSavedVersion < currentVersion) {

@@ -2,16 +2,14 @@ package org.odk.collect.android.preferences;
 
 import android.content.Context;
 import android.preference.CheckBoxPreference;
-import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import org.odk.collect.android.utilities.ThemeUtils;
+import androidx.core.content.ContextCompat;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import org.odk.collect.android.utilities.ThemeUtils;
 
 /**
  * A Checkbox preference that allows the title to have the disabled look when the
@@ -40,9 +38,9 @@ public class ExtendedCheckboxPreference extends CheckBoxPreference {
     protected void onBindView(View view) {
         super.onBindView(view);
 
-        ButterKnife.bind(this, view);
-        title  = view.findViewById(android.R.id.title);
+        title = view.findViewById(android.R.id.title);
         checkBox = view.findViewById(android.R.id.checkbox);
+
         //the title's color is only modified if the checkbox is disabled which means the parent
         //Server setting was disabled since shouldDisableDependents gets set in multiple places.
         if (!checkBox.isEnabled()) {

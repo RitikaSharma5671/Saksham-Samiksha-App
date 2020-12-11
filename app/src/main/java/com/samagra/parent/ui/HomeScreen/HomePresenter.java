@@ -41,6 +41,7 @@ import org.odk.collect.android.forms.Form;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -489,7 +490,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             }
 
             @Override
-            public void formsDownloadingSuccessful(HashMap<ServerFormDetails, String> result) {
+            public void formsDownloadingSuccessful(Map<ServerFormDetails, String> result) {
                 Grove.d("Form Download Complete %s", result);
                 formsDownloadStatus = FormDownloadStatus.SUCCESS;
                 if (isSchoolAccount() || isUserSchoolHead()) {

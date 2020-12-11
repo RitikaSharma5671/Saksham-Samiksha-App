@@ -27,7 +27,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
@@ -45,7 +45,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -90,7 +89,7 @@ public class ResetAppStateTest {
         setupTestSettings();
         resetAppState(Collections.singletonList(ApplicationResetter.ResetAction.RESET_PREFERENCES));
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect1.getInstance());
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect.getInstance().getApplicationContext());
         assertEquals(settings.getString(GeneralKeys.KEY_USERNAME, ""), "");
         assertEquals(settings.getString(GeneralKeys.KEY_PASSWORD, ""), "");
         assertTrue(settings.getBoolean(AdminKeys.KEY_VIEW_SENT, true));
@@ -141,14 +140,14 @@ public class ResetAppStateTest {
     }
 
     private void resetAppState(List<Integer> resetActions) {
-        List<Integer> failedResetActions = new ApplicationResetter().reset(InstrumentationRegistry.getTargetContext(), resetActions);
+        List<Integer> failedResetActions = new ApplicationResetter().reset(resetActions);
         assertEquals(0, failedResetActions.size());
     }
 
     private void setupTestSettings() throws IOException {
         String username = "usernameTest";
         String password = "passwordTest";
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect1.getInstance());
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect.getInstance().getApplicationContext());
         settings
                 .edit()
                 .putString(GeneralKeys.KEY_USERNAME, username)
@@ -178,7 +177,7 @@ public class ResetAppStateTest {
         values.put(FormsColumns.DATE, "1487077903756");
         values.put(FormsColumns.DISPLAY_NAME, "displayName");
         values.put(FormsColumns.FORM_FILE_PATH, storagePathProvider.getFormDbPath("testFile1.xml"));
-        Collect1.getInstance().getContentResolver()
+        Collect.getInstance().getApplication().getContentResolver()
                 .insert(FormsColumns.CONTENT_URI, values);
 
         assertEquals(1, getFormsCount());
@@ -192,7 +191,7 @@ public class ResetAppStateTest {
         values.put(InstanceColumns.DISPLAY_NAME, "formName");
         values.put(InstanceColumns.JR_FORM_ID, "jrformid");
         values.put(InstanceColumns.JR_VERSION, "jrversion");
-        Collect1.getInstance().getContentResolver()
+        Collect.getInstance().getApplication().getContentResolver()
                 .insert(InstanceColumns.CONTENT_URI, values);
 
         assertEquals(1, getInstancesCount());
@@ -239,7 +238,7 @@ public class ResetAppStateTest {
 
     private int getFormsCount() {
         int forms = 0;
-        Cursor cursor = Collect1.getInstance().getContentResolver().query(
+        Cursor cursor = Collect.getInstance().getApplication().getContentResolver().query(
                 FormsColumns.CONTENT_URI, null, null, null,
                 FormsColumns.DISPLAY_NAME + " ASC");
         if (cursor != null) {
@@ -260,7 +259,7 @@ public class ResetAppStateTest {
 
     private int getInstancesCount() {
         int instances = 0;
-        Cursor cursor = Collect1.getInstance().getContentResolver().query(
+        Cursor cursor = Collect.getInstance().getApplication().getContentResolver().query(
                 InstanceColumns.CONTENT_URI, null, null, null,
                 InstanceColumns.DISPLAY_NAME + " ASC");
         if (cursor != null) {

@@ -11,8 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import org.odk.collect.android.R;
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.formentry.audit.AuditEvent;
 import org.odk.collect.android.javarosawrapper.FormController;
 
@@ -22,7 +21,7 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
 public class DeleteRepeatDialogFragment extends DialogFragment {
 
     private DeleteRepeatDialogCallback callback;
-    FormController formController = Collect1.getInstance().getFormController();
+    FormController formController = Collect.getInstance().getFormController();
 
     @Override
     public void onAttach(@NonNull Context context) {

@@ -58,14 +58,6 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
        return getActivityContext().getResources().getString(stringID);
     }
 
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(new LocaleHelper().updateLocale(base, PreferenceManager.getDefaultSharedPreferences(base).getString(Constants.APP_LANGUAGE_KEY, "en")));
-    }
-
-
-
     protected void resetTitles() {
         try {
             ActivityInfo info = getPackageManager().getActivityInfo(getComponentName(), GET_META_DATA);

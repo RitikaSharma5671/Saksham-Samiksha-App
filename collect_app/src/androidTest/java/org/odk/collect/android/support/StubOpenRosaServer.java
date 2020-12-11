@@ -40,10 +40,16 @@ public class StubOpenRosaServer implements OpenRosaHttpInterface {
     private final List<FormManifestEntry> forms = new ArrayList<>();
     private String username;
     private String password;
+    private boolean alwaysReturnError;
+    private boolean fetchingFormsError;
 
     @NonNull
     @Override
     public HttpGetResult executeGetRequest(@NonNull URI uri, @Nullable String contentType, @Nullable HttpCredentialsInterface credentials) throws Exception {
+        if (alwaysReturnError) {
+            return new HttpGetResult(null, new HashMap<>(), "", 500);
+        }
+
         if (!uri.getHost().equals(HOST)) {
             return new HttpGetResult(null, new HashMap<>(), "Trying to connect to incorrect server: " + uri.getHost(), 410);
         } else if (credentialsIncorrect(credentials)) {
@@ -51,6 +57,10 @@ public class StubOpenRosaServer implements OpenRosaHttpInterface {
         } else if (uri.getPath().equals(formListPath)) {
             return new HttpGetResult(getFormListResponse(), getStandardHeaders(), "", 200);
         } else if (uri.getPath().equals("/form")) {
+            if (fetchingFormsError) {
+                return new HttpGetResult(null, new HashMap<>(), "", 500);
+            }
+
             return new HttpGetResult(getFormResponse(uri), getStandardHeaders(), "", 200);
         } else {
             return new HttpGetResult(null, new HashMap<>(), "", 404);
@@ -60,6 +70,10 @@ public class StubOpenRosaServer implements OpenRosaHttpInterface {
     @NonNull
     @Override
     public HttpHeadResult executeHeadRequest(@NonNull URI uri, @Nullable HttpCredentialsInterface credentials) throws Exception {
+        if (alwaysReturnError) {
+            return new HttpHeadResult(500, new CaseInsensitiveEmptyHeaders());
+        }
+
         if (!uri.getHost().equals(HOST)) {
             return new HttpHeadResult(410, new CaseInsensitiveEmptyHeaders());
         } else if (credentialsIncorrect(credentials)) {
@@ -77,6 +91,10 @@ public class StubOpenRosaServer implements OpenRosaHttpInterface {
     @NonNull
     @Override
     public HttpPostResult uploadSubmissionFile(@NonNull List<File> fileList, @NonNull File submissionFile, @NonNull URI uri, @Nullable HttpCredentialsInterface credentials, @NonNull long contentLength) throws Exception {
+        if (alwaysReturnError) {
+            return new HttpPostResult("", 500, "");
+        }
+
         if (!uri.getHost().equals(HOST)) {
             return new HttpPostResult("Trying to connect to incorrect server: " + uri.getHost(), 410, "");
         } else if (credentialsIncorrect(credentials)) {
@@ -101,12 +119,20 @@ public class StubOpenRosaServer implements OpenRosaHttpInterface {
         this.password = password;
     }
 
-    public void addForm(String formLabel, String id, String formXML) {
-        forms.add(new FormManifestEntry(formLabel, formXML, id, "1"));
+    public void addForm(String formLabel, String id, String version, String formXML) {
+        forms.add(new FormManifestEntry(formLabel, formXML, id, version));
     }
 
     public void removeForm(String formLabel) {
         forms.removeIf(formManifestEntry -> formManifestEntry.getFormLabel().equals(formLabel));
+    }
+
+    public void alwaysReturnError() {
+        alwaysReturnError = true;
+    }
+
+    public void errorOnFetchingForms() {
+        fetchingFormsError = true;
     }
 
     public String getURL() {

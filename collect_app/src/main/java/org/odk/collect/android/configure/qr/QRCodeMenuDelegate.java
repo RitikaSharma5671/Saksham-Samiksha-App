@@ -14,7 +14,7 @@ import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.FileProvider;
 import org.odk.collect.android.utilities.MenuDelegate;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.android.async.Scheduler;
 
 import timber.log.Timber;
 

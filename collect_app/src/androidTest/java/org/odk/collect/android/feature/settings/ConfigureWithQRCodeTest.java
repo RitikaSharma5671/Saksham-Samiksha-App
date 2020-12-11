@@ -40,7 +40,7 @@ import org.odk.collect.android.support.pages.MainMenuPage;
 import org.odk.collect.android.support.pages.QRCodePage;
 import org.odk.collect.android.utilities.CompressionUtils;
 import org.odk.collect.android.views.BarcodeViewDecoder;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.android.async.Scheduler;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -111,23 +111,6 @@ public class ConfigureWithQRCodeTest {
                 .clickGeneralSettings()
                 .clickServerSettings()
                 .assertText("http://gallops.example");
-    }
-
-    @Test
-    public void clickConfigureQRCode_opensScanner_andThenScanning_whenUsingOldQR_importsSettingsAndMigrates() {
-        rule.mainMenu()
-                .clickOnMenu()
-                .clickConfigureQR();
-
-        // Use QR code with maps settings from 1.22.0
-        stubBarcodeViewDecoder.scan("{\"general\":{\"map_sdk_behavior\":\"osmdroid\",\"map_basemap_behavior\":\"openmap_streets\"},\"admin\":{}}");
-
-        new MainMenuPage(rule)
-                .assertOnPage()
-                .clickOnMenu()
-                .clickGeneralSettings()
-                .clickMaps()
-                .assertText("OpenStreetMap");
     }
 
     @Test

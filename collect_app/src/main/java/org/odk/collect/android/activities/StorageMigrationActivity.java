@@ -27,15 +27,14 @@ import com.samagra.commons.Modules;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
-import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.material.MaterialBanner;
 import org.odk.collect.android.storage.StorageStateProvider;
 import org.odk.collect.android.storage.migration.StorageMigrationDialog;
 import org.odk.collect.android.storage.migration.StorageMigrationRepository;
 import org.odk.collect.android.storage.migration.StorageMigrationResult;
 import org.odk.collect.android.utilities.DialogUtils;
+import org.odk.collect.utilities.material.MaterialBanner;
 
 import javax.inject.Inject;
 
@@ -66,7 +65,7 @@ public class StorageMigrationActivity extends CollectAbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Collect1.getInstance().getComponent().inject(this);
+        Collect.getInstance().getComponent().inject(this);
         setContentView(R.layout.main_menu1);
         storageMigrationRepository.getResult().observe(this, this::onStorageMigrationFinish);
         storageMigrationBanner = findViewById(R.id.storageMigrationBanner1);
@@ -172,7 +171,7 @@ public class StorageMigrationActivity extends CollectAbstractActivity {
             storageMigrationRepository.clearResult();
             Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
             ExchangeObject.SignalExchangeObject signalExchangeObject = new ExchangeObject.SignalExchangeObject(Modules.MAIN_APP, Modules.COLLECT_APP, intent, true);
-            Collect1.getInstance().getMainApplication().getEventBus().send(signalExchangeObject);
+            Collect.getInstance().getMainApplication().getEventBus().send(signalExchangeObject);
             finish();
         });
     }

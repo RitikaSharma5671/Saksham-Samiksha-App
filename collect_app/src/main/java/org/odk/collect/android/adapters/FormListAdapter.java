@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
+import org.odk.collect.android.utilities.MultiClickGuard;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -55,7 +56,7 @@ public class FormListAdapter extends SimpleCursorAdapter {
                 if (!timestampText.isEmpty()) {
                     TextView v = (TextView) view;
                     v.setText(timestampText);
-                    v.setVisibility(View.GONE);
+                    v.setVisibility(View.VISIBLE);
                 }
             } else if (columnName.equals(versionColumnName)) {
                 String versionIdText = "";
@@ -76,7 +77,7 @@ public class FormListAdapter extends SimpleCursorAdapter {
                 v.setVisibility(View.GONE);
                 if (!versionIdText.isEmpty()) {
                     v.setText(versionIdText);
-                    v.setVisibility(View.GONE);
+                    v.setVisibility(View.VISIBLE);
                 }
             } else if (columnName.equals(FormsColumns.GEOMETRY_XPATH)) {
                 String xpath = cursor.getString(columnIndex);
@@ -94,8 +95,11 @@ public class FormListAdapter extends SimpleCursorAdapter {
         View mapView = view.findViewById(R.id.map_view);
         if (mapView != null) {
             long id = cursor.getLong(cursor.getColumnIndex("_id"));
-            mapView.setOnClickListener(v -> mapButtonListener.onItemClick(
-                listView, view, cursor.getPosition(), id));
+            mapView.setOnClickListener(v -> {
+                if (MultiClickGuard.allowClick(getClass().getName())) {
+                    mapButtonListener.onItemClick(listView, view, cursor.getPosition(), id);
+                }
+            });
         }
     }
 

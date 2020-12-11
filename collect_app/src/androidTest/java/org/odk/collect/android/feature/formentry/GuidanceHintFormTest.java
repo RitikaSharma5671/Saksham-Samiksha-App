@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
-
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GuidanceHint;
@@ -78,7 +78,7 @@ public class GuidanceHintFormTest {
         onView(withId(R.id.menu_goto)).perform(click());
         onView(withId(R.id.jumpBeginningButton)).perform(click());
 
-        FormEntryPrompt prompt = Collect1.getInstance().getFormController().getQuestionPrompt();
+        FormEntryPrompt prompt = Collect.getInstance().getFormController().getQuestionPrompt();
         String guidance = prompt.getSpecialFormQuestionText(prompt.getQuestion().getHelpTextID(), "guidance");
         assertFalse(TextUtils.isEmpty(guidance));
 
@@ -94,7 +94,7 @@ public class GuidanceHintFormTest {
         onView(withId(R.id.menu_goto)).perform(click());
         onView(withId(R.id.jumpBeginningButton)).perform(click());
 
-        FormEntryPrompt prompt = Collect1.getInstance().getFormController().getQuestionPrompt();
+        FormEntryPrompt prompt = Collect.getInstance().getFormController().getQuestionPrompt();
         String guidance = prompt.getSpecialFormQuestionText(prompt.getQuestion().getHelpTextID(), "guidance");
         assertFalse(TextUtils.isEmpty(guidance));
 

@@ -2,16 +2,14 @@ package org.odk.collect.android.preferences;
 
 import android.content.Context;
 import android.preference.EditTextPreference;
-import androidx.annotation.ColorInt;
-import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import org.odk.collect.android.utilities.ThemeUtils;
+import androidx.annotation.ColorInt;
+import androidx.core.content.ContextCompat;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import org.odk.collect.android.utilities.ThemeUtils;
 
 /**
  * Custom EditTextPreference that allows the title and summary to be "greyed out"/disabled
@@ -19,8 +17,8 @@ import butterknife.ButterKnife;
  */
 public class ExtendedEditTextPreference extends EditTextPreference {
 
-    TextView title;
-    TextView summary;
+     TextView title;
+     TextView summary;
 
     @ColorInt
     private int enabledTitleColor;
@@ -59,7 +57,6 @@ public class ExtendedEditTextPreference extends EditTextPreference {
     @Override
     protected void onBindView(View view) {
         super.onBindView(view);
-        ButterKnife.bind(this, view);
         title = view.findViewById(android.R.id.title);
         summary = view.findViewById(android.R.id.summary);
         setupColorStates();

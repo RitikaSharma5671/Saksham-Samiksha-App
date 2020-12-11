@@ -15,7 +15,7 @@ import com.example.student_details.models.realm.StudentInfo
 import com.example.student_details.modules.StudentDataModel
 import com.hasura.model.SendAttendanceMutation
 import io.realm.Realm
-import org.odk.collect.android.application.Collect1
+import org.odk.collect.android.application.Collect
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -217,22 +217,22 @@ class MarkAttendanceViewModel : ViewModel() {
         val currentSelectedDate: String = DateFormat.format("yyyy-MM-dd", calendar).toString()
         model.uploadAttendanceData(currentSelectedDate, userName, list, object : ApolloQueryResponseListener<SendAttendanceMutation.Data> {
             override fun onResponseReceived(response: Response<SendAttendanceMutation.Data>?) {
-                try {
-                    Collect1.getInstance().analytics.logEvent("student_attendance_mark", "student_attendance_upload_successful",
-                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
-                } catch (e: Exception) {
-
-                }
+//                try {
+//                    Collect.getInstance().analytics.logEvent("student_attendance_mark", "student_attendance_upload_successful",
+//                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
+//                } catch (e: Exception) {
+//
+//                }
                 attendanceUploadSuccessful.postValue("Success")
             }
 
             override fun onFailureReceived(e: ApolloException?) {
-                try {
-                    Collect1.getInstance().analytics.logEvent("student_attendance_mark", "student_attendance_upload_failure",
-                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
-                } catch (e: Exception) {
-
-                }
+//                try {
+//                    Collect1.getInstance().analytics.logEvent("student_attendance_mark", "student_attendance_upload_failure",
+//                            """${userName}_${schoolName}_${schoolCode}_${district}_$block""")
+//                } catch (e: Exception) {
+//
+//                }
                 attendanceUploadSuccessful.postValue("Failure")
             }
 

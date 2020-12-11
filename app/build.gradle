@@ -4,17 +4,17 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.sentry.android.gradle'
-apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.androidCompileSdk
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "com.samagra.sakshamSamiksha"
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion rootProject.androidMinSdk
+        targetSdkVersion rootProject.androidTargetSdk
         versionCode 10050
         versionName "1.0.7"
+        buildConfigField 'int', 'VERSION_CODE', "10050"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -22,11 +22,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField 'String', "dsn", "\"https://1d7e1ffa0d084ae697a0c3dd334555ba@bugs.samagra.io/6\""
         }
         debug {
-            buildConfigField 'String', "dsn", "\"https://1d7e1ffa0d084ae697a0c3dd334555ba@bugs.samagra.io/6\""
+             buildConfigField 'String', "dsn", "\"https://1d7e1ffa0d084ae697a0c3dd334555ba@bugs.samagra.io/6\""
         }
     }
     dataBinding {
@@ -77,11 +77,8 @@ dependencies {
     implementation 'me.xdrop:fuzzywuzzy:1.2.0'
 
     //Dependency Injection (Cant be shared across modules)
-    annotationProcessor "com.google.dagger:dagger-compiler:2.19"
+    annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}"
     compileOnly 'javax.annotation:jsr250-api:1.0'
-
-    // Butterknife
-    annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
 
     // GSON
     implementation("com.google.code.gson:gson:2.6.2") {
@@ -103,9 +100,9 @@ dependencies {
     }
     implementation 'com.jakewharton:process-phoenix:2.0.1-SNAPSHOT'
     implementation "androidx.core:core-ktx:+"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-beta01"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.material:material:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.amazonaws:aws-android-sdk-core:2.2.13'
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.2.13'
     implementation 'com.amazonaws:aws-android-sdk-ses:2.2.13'

@@ -1,13 +1,12 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jakewharton.butterknife'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion rootProject.androidCompileSdk
 
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
+        minSdkVersion rootProject.androidMinSdk
+        targetSdkVersion rootProject.androidTargetSdk
         versionCode 1
         versionName "1.0"
 
@@ -47,7 +46,7 @@ dependencies {
 
     //Google Services
     api "com.google.android.gms:play-services-maps:17.0.0"
-    api "com.google.android.gms:play-services-location:17.0.0"
+    api "com.google.android.gms:play-services-location:17.1.0"
 
     //RxAndroidNetworking
     api 'com.amitshekhar.android:rx2-android-networking:1.0.2'
@@ -58,14 +57,13 @@ dependencies {
 
     // RxJava 2:
     api "io.reactivex.rxjava2:rxandroid:2.1.1"
-    api "io.reactivex.rxjava2:rxjava:2.2.10"
+    api "io.reactivex.rxjava2:rxjava:2.2.19"
 
     // Dependency Injection
-    api "com.google.dagger:dagger:2.19"
+    api "com.google.dagger:dagger:${rootProject.daggerVersion}"
     api 'javax.inject:javax.inject:1'
 
     // Butterknife
-    api "com.jakewharton:butterknife:10.1.0"
 
     // Locale Changer
     api "com.github.YarikSOffice:lingver:1.2.0"
