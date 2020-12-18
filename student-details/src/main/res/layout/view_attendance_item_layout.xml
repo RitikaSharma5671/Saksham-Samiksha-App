@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:tools="http://schemas.android.com/tools">
-
     <data>
-
         <import type="android.view.View" />
-
         <variable
             name="studentItemViewModel"
             type="com.example.student_details.ui.employee_aggregate.EmployeeItemViewModel" />
@@ -38,7 +35,7 @@
                 style="@style/LabelStyle4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="5dp"
                 android:gravity="center_vertical|start"
                 android:singleLine="true"
                 android:textSize="12.5sp"
@@ -49,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/name_student_employee"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical|start"
                 android:singleLine="true"
@@ -57,59 +54,37 @@
                 android:textSize="11.5sp"
                 android:textStyle="normal" />
         </RelativeLayout>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:id="@+id/vgfgfv"
-    android:layout_alignStart="@+id/student_details_box_employee"
-    android:layout_below="@+id/student_details_box_employee"
-    android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:id="@+id/attendance_status_label_employee"
-            android:letterSpacing="0.052"
-            android:textAllCaps="true"
-            android:layout_marginEnd="6dp"
-            android:maxLines="4"
-            android:singleLine="false"
-            android:gravity="center_vertical"
-            android:textColor="@color/color_primary"
-            android:text="@string/attendance_status"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            tools:ignore="RtlSymmetry" />
 
             <TextView
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="4dp"
+                android:layout_below="@+id/student_details_box_employee"
+                android:layout_alignStart="@+id/student_details_box_employee"
+                android:layout_marginTop="8dp"
+
                 android:paddingBottom="4dp"
                 android:minHeight="36dp"
-                android:layout_centerVertical="true"
                 android:minWidth="135dp"
-                android:layout_alignParentEnd="true"
                 android:id="@+id/attendance_status_present_employee"
                 android:background="@drawable/button_border_blue"
                 android:letterSpacing="0.052"
                 android:layout_marginEnd="8dp"
-                android:paddingStart="6dp"
-                android:paddingEnd="6dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:singleLine="false"
                 android:maxLines="5"
                 android:gravity="center_vertical|center_horizontal"
                 android:textColor="@color/color_primary"
-                android:textSize="11.5sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
-
-</RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1.5dp"
-            android:layout_below="@id/vgfgfv"
+            android:layout_below="@id/attendance_status_present_employee"
             android:layout_alignStart="@+id/student_details_box_employee"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="6dp"

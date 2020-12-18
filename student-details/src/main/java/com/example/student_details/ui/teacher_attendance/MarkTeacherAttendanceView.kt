@@ -42,7 +42,7 @@ class MarkTeacherAttendanceView : Fragment() {
         val block: String = sharedPreferences.getString("user.block", "")!!
         val schoolName:String =sharedPreferences.getString("user.schoolName", "")!!
         userName  = sharedPreferences.getString("user.username", "")!!
-        markAttendanceViewModel.fetchEmployeeData(schoolCode, schoolName)
+        markAttendanceViewModel.fetchEmployeeData()
         layoutBinding.vffv.setOnClickListener {
             markAttendanceViewModel.onSendAttendanceClicked()
         }

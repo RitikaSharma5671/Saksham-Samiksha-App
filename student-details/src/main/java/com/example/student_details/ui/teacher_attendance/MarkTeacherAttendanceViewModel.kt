@@ -43,7 +43,7 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
     }
 
     @SuppressLint("DefaultLocale")
-    fun fetchEmployeeData(schoolCode: String, schoolName: String) {
+    fun fetchEmployeeData() {
         isEmployeesListVisible.set(false)
         isEmptyListMessageVisible.set(false)
         isProgressBarVisible.set(true)

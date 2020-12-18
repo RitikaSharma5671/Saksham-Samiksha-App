@@ -39,7 +39,9 @@
         android:name=".ui.submissions.SubmissionsActivity"
         android:theme="@style/BaseAppTheme" />
         <activity android:name=".ui.HomeScreen.WebViewActivity"/>
-
+        <activity
+            android:name="com.samagra.parent.ui.error.ErrorActivity"
+            android:theme="@style/LoginTheme" />
         <activity
             android:name="com.samagra.parent.ui.splash.SplashActivity"
             android:screenOrientation="portrait"

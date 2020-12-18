@@ -19,7 +19,7 @@ import com.samagra.parent.R;
 import com.samagra.parent.base.BasePresenter;
 import com.samagra.parent.helper.BackendNwHelper;
 
-import org.odk.collect.android.BuildConfig;
+import com.samagra.parent.BuildConfig;
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.contracts.AppPermissionUserActionListener;
 import org.odk.collect.android.contracts.IFormManagementContract;
@@ -120,7 +120,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         try {
             packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA);
         } catch (PackageManager.NameNotFoundException e) {
-            Grove.e(e, "Unable to get package info");
+            Grove.e("Unable to get package info with error " + e.getMessage());
         }
 
         boolean firstRun = getMvpInteractor().isFirstRun();
@@ -241,7 +241,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                                 mainApplication.eventBusInstance().post(new ScreenChangeEvent("Splash", "Login"));
                             }
                         }, throwable -> {
-                            if (throwable instanceof ANError) {
+                            if (throwable != null && throwable instanceof ANError) {
                                 Grove.e("ANError Received while fetching JWT Token with error " + throwable);
                             } else {
                                 Grove.e("Fetch JWT Failed... " + throwable);

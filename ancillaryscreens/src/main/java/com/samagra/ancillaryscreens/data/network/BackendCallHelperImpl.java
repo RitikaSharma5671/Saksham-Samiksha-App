@@ -9,6 +9,7 @@ import com.rx2androidnetworking.Rx2AndroidNetworking;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
+import com.samagra.ancillaryscreens.screens.login.LoginContract;
 import com.samagra.commons.Constants;
 import com.samagra.grove.logging.Grove;
 
@@ -80,7 +81,7 @@ public class BackendCallHelperImpl implements BackendCallHelper {
      * @param loginRequest - The {@link LoginRequest} object which contains relevant info required by the API. The info
      *                     from this object is first converted in {@link JSONObject} and then passed in the post request.
      * @return a {@link Single} object which receives the result of the API response and can be observed.
-     * @see com.samagra.ancillaryscreens.screens.login.LoginPresenter#startAuthenticationTask(LoginRequest)
+     * @see LoginContract.Presenter#startAuthenticationTask(LoginRequest, Context)
      * @see {https://fusionauth.io/docs/v1/tech/apis/login#authenticate-a-user}
      */
     @Override

@@ -1,5 +1,6 @@
 package com.samagra.ancillaryscreens.screens.login;
 
+import android.content.Context;
 import android.content.Intent;
 
 import com.androidnetworking.error.ANError;
@@ -9,7 +10,6 @@ import com.samagra.ancillaryscreens.base.BasePresenter;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelper;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
-import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
 import com.samagra.commons.Constants;
 import com.samagra.commons.ExchangeObject;
 import com.samagra.commons.Modules;
@@ -21,7 +21,6 @@ import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -41,33 +40,32 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
      * This function starts the Login process by accepting a {@link LoginRequest} and then executing it.
      *
      * @param loginRequest - The {@link LoginRequest} passed to make the API call via {@link BackendCallHelperImpl#performLoginApiCall(LoginRequest)}
+     * @param activityContext
      * @see BackendCallHelperImpl#performLoginApiCall(LoginRequest)
      */
     @Override
-    public void startAuthenticationTask(LoginRequest loginRequest) {
+    public void startAuthenticationTask(LoginRequest loginRequest, Context activityContext) {
         getCompositeDisposable().add(getApiHelper()
                 .performLoginApiCall(loginRequest)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(loginResponse -> {
-                    if (LoginPresenter.this.getMvpView() != null) {
-                        if (loginResponse.token != null) {
+                         if (loginResponse.token != null) {
                             Grove.d("Received successful login response for the user");
-                            getMvpView().onLoginSuccess(loginResponse);
+                             ((LoginActivity)activityContext).onLoginSuccess(loginResponse);
                             getMvpInteractor().persistUserData(loginResponse);
                         } else
-                            LoginPresenter.this.getMvpView().onLoginFailed(getMvpView().getActivityContext().getResources().getString(R.string.errorlogin));
-                    }
+                             ((LoginActivity)activityContext).onLoginFailed(activityContext.getResources().getString(R.string.errorlogin));
+
                 }, throwable -> {
-                    if (throwable instanceof ANError) {
-                        if(((ANError) (throwable)).getErrorCode() == 404) {
-                            LoginPresenter.this.getMvpView().onLoginFailed(getMvpView().getActivityContext().getResources().getString(R.string.incorrect_credentials));
+                    if (throwable != null && throwable instanceof ANError) {
+                        if(((ANError) (throwable)) != null && ((ANError) (throwable)).getErrorCode() == 404) {
+                            ((LoginActivity)activityContext).onLoginFailed(activityContext.getResources().getString(R.string.incorrect_credentials));
                         }else {
-                            LoginPresenter.this.getMvpView().onLoginFailed(getMvpView().getActivityContext().getResources().getString(R.string.errorlogin));
+                            ((LoginActivity)activityContext).onLoginFailed(activityContext.getResources().getString(R.string.errorlogin));
                         }
-                        Grove.e("ERROR BODY %s ERROR CODE %s, ERROR DETAIL %s", ((ANError) (throwable)).getErrorBody(), ((ANError) (throwable)).getErrorCode(), ((ANError) (throwable)).getErrorDetail());
                     }else{
-                        LoginPresenter.this.getMvpView().onLoginFailed(getMvpView().getActivityContext().getResources().getString(R.string.errorlogin));
+                        ((LoginActivity)activityContext).onLoginFailed(activityContext.getResources().getString(R.string.errorlogin));
                     }
 
                     Grove.e("Login error " + throwable);
@@ -82,10 +80,7 @@ public class LoginPresenter<V extends LoginContract.View, I extends LoginContrac
      */
     @Override
     public void finishAndMoveToHomeScreen() {
-        Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
-        ExchangeObject.SignalExchangeObject signalExchangeObject = new ExchangeObject.SignalExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, intent, true);
-        AncillaryScreensDriver.mainApplication.getEventBus().send(signalExchangeObject);
-        getMvpView().finishActivity();
+
     }
 
 

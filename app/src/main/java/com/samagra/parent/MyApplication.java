@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ import com.samagra.parent.di.component.ApplicationComponent;
 import com.samagra.parent.di.component.DaggerApplicationComponent;
 import com.samagra.parent.di.modules.ApplicationModule;
 import com.samagra.parent.helper.OkHttpClientProvider;
+import com.samagra.parent.helper.UCEHandler;
 
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.application.FormManagmentModuleInitialisationListener;
@@ -78,6 +80,7 @@ public class MyApplication extends Application implements MainApplication, Lifec
     private static CompositeDisposable compositeDisposable = new CompositeDisposable();
     public static FirebaseRemoteConfig mFirebaseRemoteConfig;
     public static boolean isOnline = true;
+
 
     /**
      * All the external modules must be initialised here. This includes any modules that have an init
@@ -134,10 +137,11 @@ public class MyApplication extends Application implements MainApplication, Lifec
             }, true, true, BuildConfig.dsn, AppConstants.SENDER_EMAIL_ID, AppConstants.RECEIVER_EMAIL_ID);
         }
 
-        new UCHandler.Builder(getCurrentApplication())
+        new UCEHandler.Builder(getCurrentApplication())
                 .setTrackActivitiesEnabled(true)
                 .setBackgroundModeEnabled(true)
                 .build();
+
     }
 
     private void initializeFormManagementPackage() {

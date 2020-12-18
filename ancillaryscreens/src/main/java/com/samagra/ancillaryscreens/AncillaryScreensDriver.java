@@ -318,4 +318,9 @@ public class AncillaryScreensDriver {
     public static void onProfileSuccessfullyUpdated(String schoolCode) {
 
     }
+
+    public static void launchErrorScreen(Context context, Intent intent) {
+        checkValidConfig();
+        CommonUtilities.startActivityAsNewTask(intent, context);
+    }
 }

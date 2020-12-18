@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import com.samagra.grove.BuildConfig;
 import com.samagra.grove.hyperlog.HyperLog;
 
 import io.sentry.Sentry;
@@ -52,7 +51,7 @@ public class Grove {
 
     public static void e(String message, Object... args) {
         Class clazz = initClass();
-        if (clazz != null) {
+        if (clazz != null && args != null) {
             Timber.e(message, args);
             StringBuilder stringBuilder = new StringBuilder();
             for (Object argument : args) {
@@ -61,15 +60,12 @@ public class Grove {
             HyperLog.e(clazz.getName(), "Error with Arguments\n" + stringBuilder.toString() + " " + message);
             Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(clazz.getName() + "::" + formatMessage(message, args)).build());
         } else {
+            Timber.e(message);
+            HyperLog.e(clazz.getName(), "Error is: " + message);
+            Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(message).build());
         }
-        Timber.e(message, args);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Object argument : args) {
-            stringBuilder.append("").append(argument.toString());
-        }
-        HyperLog.e(TAG, "Error with Arguments\n" + stringBuilder.toString() + " " + message);
-        Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(TAG + "::" + formatMessage(message, args)).build());
-
+        Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(TAG + "::" + message).build());
+        Sentry.capture(message);
     }
 
     public static void e(Throwable e) {
@@ -78,13 +74,12 @@ public class Grove {
             Timber.tag(clazz.getName());
             Timber.e(e);
             HyperLog.e(clazz.getName(), "", e);
-            Sentry.capture(e);
         } else {
             Timber.tag(TAG);
             Timber.e(e);
             HyperLog.e(TAG, "", e);
-            Sentry.capture(e);
         }
+        Sentry.capture(e);
     }
 
     public static void e(String message) {
@@ -94,14 +89,13 @@ public class Grove {
             Timber.e(message);
             HyperLog.e(clazz.getName(), message);
             Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(clazz.getName() + "::" + message).build());
-            Sentry.capture(message);
         } else {
             Timber.tag(TAG);
             Timber.e(message);
             HyperLog.e(TAG, message);
             Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(TAG + "::" + message).build());
-            Sentry.capture(message);
         }
+        Sentry.capture(message);
     }
 
     public static void d(Throwable e) {
@@ -110,12 +104,10 @@ public class Grove {
             Timber.tag(clazz.getName());
             Timber.d(e);
             HyperLog.d(clazz.getName(), "", e);
-            Sentry.capture(e);
         } else {
             Timber.tag(TAG);
             Timber.d(e);
             HyperLog.d(TAG, "", e);
-            Sentry.capture(e);
         }
     }
 
@@ -142,7 +134,6 @@ public class Grove {
         Timber.tag(clazz.getName());
         Timber.i(e);
         HyperLog.i(clazz.getName(), "", e);
-        Sentry.capture(e);
     }
 
     public static void d(Throwable t, String message, Object... args) {
@@ -155,7 +146,6 @@ public class Grove {
             }
             HyperLog.d(clazz.getName(), "Debug Log with Arguments\n" + stringBuilder.toString() + " " + message, t);
             Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(clazz.getName() + "::" + formatMessage(message, args)).build());
-            Sentry.capture(t);
         } else {
             Timber.d(t, message, args);
             StringBuilder stringBuilder = new StringBuilder();
@@ -164,7 +154,6 @@ public class Grove {
             }
             HyperLog.d(TAG, "Debug Log with Arguments\n" + stringBuilder.toString() + " " + message, t);
             Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(TAG + "::" + formatMessage(message, args)).build());
-            Sentry.capture(t);
         }
     }
 
@@ -212,7 +201,6 @@ public class Grove {
         }
         HyperLog.i(clazz.getName(), "Info Log with Arguments\n" + stringBuilder.toString() + " " + message, t);
         Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(clazz.getName() + "::" + formatMessage(message, args)).build());
-        Sentry.capture(t);
     }
 
     public static void i(String message, Object... args) {
@@ -252,7 +240,6 @@ public class Grove {
         Timber.v(t, message, args);
         HyperLog.v(clazz.getName(), message);
         Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(clazz.getName() + "::" + formatMessage(message, args)).build());
-        Sentry.capture(t);
     }
 
     public static void v(String message, Object... args) {
@@ -284,7 +271,6 @@ public class Grove {
         }
         HyperLog.d(clazz.getName(), "Warning with Arguments\n" + stringBuilder.toString() + " " + message, t);
         Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage(clazz.getName() + "::" + formatMessage(message, args)).build());
-        Sentry.capture(t);
     }
 
     public static void w(String message, Object... args) {
@@ -303,8 +289,6 @@ public class Grove {
         Timber.tag(clazz.getName());
         Timber.w(e);
         HyperLog.w(clazz.getName(), "", e);
-
-        Sentry.capture(e);
     }
 
     /**

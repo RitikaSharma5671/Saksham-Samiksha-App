@@ -50,7 +50,7 @@
 
     <string name="less_than_8_pass" tools:ignore="MissingTranslation">Password cannot be less than 8 characters</string>
 
-    <string name="let_s_start_again" tools:ignore="MissingTranslation">Let\'s Start Again</string>
+    <string name="let_s_start_again" tools:ignore="MissingTranslation">CLOSE APP</string>
     <string name="log_in">LOG IN</string>
     <string name="logging_in">Logging you in</string>
     <string name="updating_details">Updating Details</string>

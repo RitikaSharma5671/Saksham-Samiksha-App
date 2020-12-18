@@ -1,17 +1,14 @@
 package com.samagra.ancillaryscreens.screens.login;
 
-import android.view.View;
+import android.content.Context;
 import android.widget.EditText;
 
-import com.samagra.ancillaryscreens.R;
 import com.samagra.ancillaryscreens.base.MvpInteractor;
 import com.samagra.ancillaryscreens.base.MvpPresenter;
 import com.samagra.ancillaryscreens.base.MvpView;
 import com.samagra.ancillaryscreens.data.network.BackendCallHelperImpl;
 import com.samagra.ancillaryscreens.data.network.model.LoginRequest;
 import com.samagra.ancillaryscreens.data.network.model.LoginResponse;
-import com.samagra.ancillaryscreens.utils.SnackbarUtils;
-import com.samagra.commons.CommonUtilities;
 
 /**
  * The interface contract for Login Screen. This interface contains the methods that the Model, View & Presenter
@@ -79,9 +76,10 @@ public interface LoginContract {
          * This function starts the Login process by accepting a {@link LoginRequest} and then executing it.
          *
          * @param loginRequest - The {@link LoginRequest} passed to make the API call via {@link BackendCallHelperImpl#performLoginApiCall(LoginRequest)}
+         * @param activityContext
          * @see BackendCallHelperImpl#performLoginApiCall(LoginRequest)
          */
-        void startAuthenticationTask(LoginRequest loginRequest);
+        void startAuthenticationTask(LoginRequest loginRequest, Context activityContext);
 
 
         /**

@@ -212,7 +212,7 @@ public class LoginPresenterTest {
         object.addProperty("a", "ada");
         loginResponse.user = object;
         when(apiHelper.performLoginApiCall(loginRequest)).thenReturn(Single.just(loginResponse));
-        loginPresenter.startAuthenticationTask(loginRequest);
+        loginPresenter.startAuthenticationTask(loginRequest, getActivityContext());
         testScheduler.triggerActions();
         verify(loginMvpView).onLoginSuccess(loginResponse);
     }
@@ -221,7 +221,7 @@ public class LoginPresenterTest {
     public void testLogin_Failure() {
         LoginRequest loginRequest = new LoginRequest(MOCK_USERNAME, MOCK_PASSWORD);
         when(apiHelper.performLoginApiCall(loginRequest)).thenReturn(Single.just(loginResponse));
-        loginPresenter.startAuthenticationTask(loginRequest);
+        loginPresenter.startAuthenticationTask(loginRequest, getActivityContext());
         testScheduler.triggerActions();
         verify(loginMvpView).onLoginFailed();
     }
@@ -232,7 +232,7 @@ public class LoginPresenterTest {
         when(apiHelper.performLoginApiCall(loginRequest)).thenReturn(Single.just(loginResponse).map(loginResponse -> {
             throw new Exception();
         }));
-        loginPresenter.startAuthenticationTask(loginRequest);
+        loginPresenter.startAuthenticationTask(loginRequest, getActivityContext());
         testScheduler.triggerActions();
         verify(loginMvpView).onLoginFailed();
     }

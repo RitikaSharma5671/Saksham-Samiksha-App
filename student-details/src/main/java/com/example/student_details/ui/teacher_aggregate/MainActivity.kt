@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         /* end after 2 months from now */
         val endDate = Calendar.getInstance()
-        endDate.add(Calendar.MONTH, 2)
+        endDate.add(Calendar.MONTH, 0)
 
         // Default Date set to Today.
         val defaultSelectedDate = Calendar.getInstance()

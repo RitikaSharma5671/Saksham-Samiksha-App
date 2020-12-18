@@ -49,7 +49,7 @@ public class InternetMonitor {
                 .host("www.google.com")
                 .httpResponse(200)
                 .timeout(5000)
-                .errorHandler((exception, message) -> Grove.e(exception, "Exception in Lib message - %s", message))
+                .errorHandler((exception, message) -> Grove.e("Exception in Lib message - "+ exception.getMessage()))
                 .build();
     }
 
@@ -96,7 +96,7 @@ public class InternetMonitor {
                         mainApplication.getEventBus().send(new ExchangeObject.DataExchangeObject<InternetStatus>(Modules.MAIN_APP, Modules.COMMONS, status));
 
                     }
-                }, throwable -> Grove.e(throwable, "Some error occurred %s", throwable.getMessage()));
+                }, throwable -> Grove.e("Some error occurred e - "+ throwable.getMessage()));
     }
 
     /**

@@ -8,7 +8,12 @@
     android:background="@color/white"
     android:orientation="vertical"
     tools:context=".screens.login.LoginActivity">
-
+    <ProgressBar
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:visibility="gone"
+        android:id="@+id/losin"
+        android:layout_centerInParent="true"/>
     <ScrollView
         android:id="@+id/scrollV"
         android:layout_width="match_parent"

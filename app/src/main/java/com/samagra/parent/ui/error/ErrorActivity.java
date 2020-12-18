@@ -1,11 +1,18 @@
-package com.samagra.grove.logging;
+package com.samagra.parent.ui.error;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.TextUtils;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Region;
@@ -15,100 +22,58 @@ import com.amazonaws.services.simpleemail.model.Body;
 import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
-import com.amazonaws.services.simpleemail.model.SendEmailRequest;
+import com.samagra.grove.logging.Grove;
+import com.samagra.grove.logging.SendEmailTask;
+import com.samagra.parent.BuildConfig;
+import com.samagra.parent.MyApplication;
+import com.samagra.parent.R;
+import com.samagra.parent.ui.splash.SplashActivity;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Deque;
 import java.util.Locale;
 
-class EmailHandler {
-    private final static int SUCCESS = 0;
-    private final static int ERROR = 1;
-    private Deque<String> activityLogs;
-    private final Throwable mThrowable;
-    private int result;
+public class ErrorActivity extends AppCompatActivity {
+
     private String strCurrentErrorLog;
-    private Context context;
-    private String stackTrace;
-    private String mLogs;
-    private String senderMailID;
-    private String receiverMailID;
+    private SharedPreferences sharedPreferences;
+    public static final String EXTRA_STACK_TRACE = "EXTRA_STACK_TRACE";
+    public static final String EXTRA_ACTIVITY_LOG = "EXTRA_ACTIVITY_LOG";
+    public static final String ACTIVITY_NAME = "ACTIVITY_NAME";
+    private String mailSubject; 
+    private String appName;
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(
+                R.layout.activity_show_error);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ErrorActivity.this);
+        appName = "com.samagra.sakshamSamiksha";
+        Grove.e("Starting Error Activity");
+        sendEmail();
 
-
-    private EmailHandler(EmailHandler.Builder builder) {
-        context = builder.context;
-        stackTrace = builder.mStackTrace;
-        activityLogs = builder.mActivityLog;
-        mLogs = builder.mLogs;
-        mThrowable = builder.mThrowable;
-        senderMailID = builder.mSendingUserEmail;
-        receiverMailID = builder.mReceivingUserEmail;
-    }
-
-    void sendErrorLogMail() {
-        // TODO: REPLACE WITH YOUR IDENTITY POOL AND REGION and LOADS CREDENTIALS FROM AWS COGNITO IDENTITY POOL
-        CognitoCachingCredentialsProvider credentials = new CognitoCachingCredentialsProvider(
-                context,
-                "us-west-2:213e041d-1a39-4006-90eb-e7fa28d6a41b", // IDENTITY POOL ID
-                Regions.US_WEST_2 // REGION
-        );
-
-        // CREATES SES CLIENT TO MANAGE SENDING EMAIL
-        final AmazonSimpleEmailServiceClient ses = new AmazonSimpleEmailServiceClient(credentials);
-        ses.setRegion(Region.getRegion(Regions.US_WEST_2));
-
-        Content subject = new Content(generateMailSubject());
-
-        Body body = new Body(new Content(getAllErrorDetailsFromIntent()));
-        final Message message = new Message(subject, body);
-        final String from = senderMailID;
-        String to = receiverMailID;
-
-        final Destination destination = new Destination()
-                .withToAddresses(to.contentEquals("") ? null : Arrays.asList(to.split("\\s*,\\s*")));
-
-        // CREATES SEPARATE THREAD TO ATTEMPT TO SEND EMAIL
-        Thread sendEmailThread = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    SendEmailRequest request = new SendEmailRequest(from, destination, message);
-                    ses.sendEmail(request);
-                    result = SUCCESS;
-                } catch (Exception e) {
-                    result = ERROR;
-                    Grove.e("Crash report could not be sent to the back-end Server.", e);
-                }
-            }
+        findViewById(R.id.restartApp_button).setOnClickListener(v -> {
+            PendingIntent intent = PendingIntent.getActivity(
+                    getApplication().getBaseContext(),
+                    0,
+                    new Intent(getIntent()),
+                    getIntent().getFlags());
+            AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 2000, intent);
+            System.exit(2);
+//            Intent mStartActivity = new Intent(ErrorActivity.this, SplashActivity.class);
+//            int mPendingIntentId = 123456;
+//            PendingIntent mPendingIntent = PendingIntent.getActivity(ErrorActivity.this, mPendingIntentId, mStartActivity,
+//                    PendingIntent.FLAG_CANCEL_CURRENT);
+//            AlarmManager mgr = (AlarmManager) ErrorActivity.this.getSystemService(Context.ALARM_SERVICE);
+//            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+//            System.exit(0);
         });
 
-        // RUNS SEND EMAIL THREAD
-        sendEmailThread.start();
 
-        try {
-            // WAITS THREAD TO COMPLETE TO ACT ON RESULT
-            sendEmailThread.join();
-            if (result == SUCCESS) {
-                Grove.d("Crash report has been successfully sent to the back-end Server.");
-            }
-        } catch (InterruptedException e) {
-            Grove.e("Crash report could not be sent to the back-end Server.", e);
-            e.printStackTrace();
-        }
-    }
-
-    private String generateMailSubject() {
-        String[] lines = stackTrace.split(":");
-        return "[CTT]  "+getApplicationName(context).toUpperCase() + " User: " + GroveUtils.getUserName() + " - ver(" + getVersionName(context) + ") - " +lines[0].substring(10)+ ":" +lines[1];
-
-    }
-
-    private String getApplicationName(Context context) {
-        ApplicationInfo applicationInfo = context.getApplicationInfo();
-        int stringId = applicationInfo.labelRes;
-        return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
     }
 
     private String getVersionName(Context context) {
@@ -119,19 +84,35 @@ class EmailHandler {
             return "Unknown";
         }
     }
-    private String getAllErrorDetailsFromIntent() {
+
+    private String getActivityLogFromIntent(Intent intent) {
+        return intent.getStringExtra(EXTRA_ACTIVITY_LOG);
+    }
+
+    private String getStackTraceFromIntent(Intent intent) {
+        return intent.getStringExtra(EXTRA_STACK_TRACE);
+    }
+
+    private String getActivityName(Intent intent) {
+        return intent.getStringExtra(ACTIVITY_NAME);
+    }
+
+    private String getAllErrorDetailsFromIntent(Context context, Intent intent) {
         if (TextUtils.isEmpty(strCurrentErrorLog)) {
             String LINE_SEPARATOR = "\n";
-            String userName = GroveUtils.getUserName();
+            String userName = sharedPreferences.getString("user.fullName", "");
             StringBuilder errorReport = new StringBuilder();
             errorReport.append("\n***** Error Title \n");
-            errorReport.append(getApplicationName(context));
+            errorReport.append(appName);
             errorReport.append(LINE_SEPARATOR);
             errorReport.append("Error: ");
-            String[] lines = stackTrace.split(":");
+            String[] lines = getStackTraceFromIntent(intent).split(":");
             if(lines[0].contains("java.lang."))
-                errorReport.append(lines[0].substring(10));
+            errorReport.append(lines[0].substring(10));
             String versionName = getVersionName(context);
+            String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+            mailSubject = "[CTT]  "+appName.toUpperCase() + " User: " + userName + " - ver(" + versionCode+ ") - " +lines[0].substring(10)+ ":" +lines[1];
+
             errorReport.append(lines[1]);
             String[] line = lines[3].split("at");
             errorReport.append(LINE_SEPARATOR);
@@ -139,16 +120,16 @@ class EmailHandler {
             errorReport.append(LINE_SEPARATOR);
 
             errorReport.append("\n***** BreadCrumbs \n");
-            errorReport.append(mLogs);
+            errorReport.append(intent.getStringExtra("LOGS"));
 
             errorReport.append("\n***** USER INFO \n");
             errorReport.append("Name: ");
             errorReport.append(userName);
             errorReport.append(LINE_SEPARATOR);
             errorReport.append("User Data: ");
-            errorReport.append(GroveUtils.getUserData());
+            errorReport.append(sharedPreferences.getString("user.data", ""));
             errorReport.append(LINE_SEPARATOR);
-            errorReport.append(GroveUtils.getUserData());
+            errorReport.append(sharedPreferences.getString("user.data", ""));
             errorReport.append(LINE_SEPARATOR);
 
             errorReport.append("\n***** DEVICE INFO \n");
@@ -168,7 +149,7 @@ class EmailHandler {
             errorReport.append(Build.PRODUCT);
             errorReport.append(LINE_SEPARATOR);
             errorReport.append("SDK: ");
-            errorReport.append(Build.VERSION.SDK);
+            errorReport.append(Build.VERSION.SDK_INT);
             errorReport.append(LINE_SEPARATOR);
             errorReport.append("Release: ");
             errorReport.append(Build.VERSION.RELEASE);
@@ -196,10 +177,10 @@ class EmailHandler {
             errorReport.append(dateFormat.format(currentDate));
             errorReport.append(LINE_SEPARATOR);
             errorReport.append("\n***** ERROR LOG \n");
-            errorReport.append(stackTrace);
+            errorReport.append(getStackTraceFromIntent(intent));
             errorReport.append(LINE_SEPARATOR);
-            String activityLog = activityLogs.toString();
-            errorReport.append(mThrowable);
+            String activityLog = getActivityLogFromIntent(intent);
+            errorReport.append(getActivityName(intent));
             errorReport.append(LINE_SEPARATOR);
             if (activityLog != null) {
                 errorReport.append("\n***** USER ACTIVITIES \n");
@@ -209,12 +190,9 @@ class EmailHandler {
             }
             errorReport.append("\n***** END OF LOG *****\n");
             strCurrentErrorLog = errorReport.toString();
-            return strCurrentErrorLog;
-        } else {
-            return strCurrentErrorLog;
         }
+        return strCurrentErrorLog;
     }
-
 
     private String getFirstInstallTimeAsString(Context context, DateFormat dateFormat) {
         long firstInstallTime;
@@ -229,7 +207,6 @@ class EmailHandler {
         }
     }
 
-
     private String getLastUpdateTimeAsString(Context context, DateFormat dateFormat) {
         long lastUpdateTime;
         try {
@@ -242,52 +219,32 @@ class EmailHandler {
             return "";
         }
     }
+    
+    private void sendEmail() {
+        CognitoCachingCredentialsProvider credentials = new CognitoCachingCredentialsProvider(
+                ErrorActivity.this, // CONTEXT
+                "us-west-2:213e041d-1a39-4006-90eb-e7fa28d6a41b", // IDENTITY POOL ID
+                Regions.US_WEST_2 // REGION
+        );
 
-    static class Builder {
-        private Context context;
-        private String mStackTrace;
-        private Throwable mThrowable;
-        private Deque<String> mActivityLog;
-        private String mLogs;
-        private String mSendingUserEmail;
-        private String mReceivingUserEmail;
+        // CREATES SES CLIENT TO MANAGE SENDING EMAIL
+        final AmazonSimpleEmailServiceClient ses = new AmazonSimpleEmailServiceClient(credentials);
+        ses.setRegion(Region.getRegion(Regions.US_WEST_2));
+        String[] lines = getStackTraceFromIntent(getIntent()).split(":");
+        String versionCode = String.valueOf(org.odk.collect.android.BuildConfig.VERSION_CODE);
+        String userName = sharedPreferences.getString("user.fullName", "");
+        mailSubject = "[CTT]  "+appName.toUpperCase() + " User: " + userName +
+                " - ver(" + versionCode+ ") - " +lines[0].substring(10)+ ":" +lines[1];
+        Content subject = new Content(mailSubject);
+        Body body = new Body(new Content(getAllErrorDetailsFromIntent(ErrorActivity.this,getIntent())));
+        final Message message = new Message(subject, body);
+        final String from = "test@samagragovernance.in";
+        String to = "umangbhola@samagragovernance.in";
 
-        Builder(Context context) {
-            this.context = context;
-        }
+        final Destination destination = new Destination()
+                .withToAddresses(to.contentEquals("") ? null : Arrays.asList(to.split("\\s*,\\s*")));
 
-        EmailHandler.Builder setStackTrace(String stackTrace) {
-            this.mStackTrace = stackTrace;
-            return this;
-        }
-
-        EmailHandler build() {
-            return new EmailHandler(this);
-        }
-
-        EmailHandler.Builder setThrowable(Throwable throwable) {
-            this.mThrowable = throwable;
-            return this;
-        }
-
-        EmailHandler.Builder setActivityLog(Deque<String> activityLog) {
-            this.mActivityLog = activityLog;
-            return this;
-        }
-
-        EmailHandler.Builder setAppLogs(String logs) {
-            this.mLogs = logs;
-            return this;
-        }
-
-        public Builder setSendingUserEmail(String sendingUserEmail) {
-            this.mSendingUserEmail = sendingUserEmail;
-            return this;
-        }
-
-        public Builder setReceivingUserEmail(String receivingUserEmail) {
-            this.mReceivingUserEmail = receivingUserEmail;
-            return this;
-        }
+        new SendEmailTask(to, from, destination, message, credentials, s -> Grove.e("Email sent with response: "+ s)).execute();
     }
+
 }

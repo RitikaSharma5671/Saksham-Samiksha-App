@@ -150,7 +150,7 @@ class OTPViewFragment : Fragment(), View.OnClickListener, OnOtpCompletionListene
                         }, { throwable: Throwable ->
                             run {
                                 mProgress.dismiss()
-                                if (throwable is ANError) {
+                                if (throwable != null && throwable is ANError) {
                                     if (throwable.errorCode == 400 && throwable.errorBody.contains("This OTP is incorrect")) {
                                         Toast.makeText(requireContext(), "Please enter a valid OTP.", Toast.LENGTH_LONG).show()
                                     } else {

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,6 +34,9 @@ import com.example.assets.uielements.MultiTextWatcher;
 import com.samagra.ancillaryscreens.screens.passReset.EnterMobileNumberFragment;
 import com.samagra.ancillaryscreens.utils.SnackbarUtils;
 import com.samagra.commons.CommonUtilities;
+import com.samagra.commons.Constants;
+import com.samagra.commons.ExchangeObject;
+import com.samagra.commons.Modules;
 import com.samagra.grove.logging.Grove;
 
 import org.odk.collect.android.activities.WebViewActivity;
@@ -50,7 +54,7 @@ import static com.samagra.commons.CustomTabHelper.OPEN_URL;
  * @author Pranav Sharma
  */
 @SuppressWarnings("ConstantConditions")
-public class LoginActivity extends BaseActivity implements LoginContract.View,MultiTextWatcher.TextWatcherWithInstance {
+public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     public RelativeLayout parentLoginLayout;
     private TextInputLayout textInputEmail;
@@ -58,7 +62,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
     private TextInputEditText userNameEditText;
     private TextInputEditText passwordEditText;
     private Button button;
-    private ProgressDialog mProgress;
+    private ProgressBar mProgress;
     private Button helpBtton;
     private TextView mentorFAQ;
     private TextView teacherFAQ;
@@ -100,24 +104,21 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
         helpBtton.setText(content1);
         passwordEditText = findViewById(R.id.pwd_field);
         button = findViewById(R.id.login_button);
-        new MultiTextWatcher()
-                .registerEditText(userNameEditText)
-                .registerEditText(passwordEditText)
-                .setCallback(this);
-        button.setEnabled(false);
-        button.setClickable(false);
-        mProgress = new ProgressDialog(this);
-        mProgress.setTitle(getString(R.string.logging_in));
-        mProgress.setMessage(getString(R.string.please_wait));
-        mProgress.setCancelable(false);
+//        new MultiTextWatcher()
+//                .registerEditText(userNameEditText)
+//                .registerEditText(passwordEditText)
+//                .setCallback(this);
+        button.setEnabled(true);
+        button.setClickable(true);
+        mProgress = findViewById(R.id.losin);
         mProgress.setIndeterminate(true);
 
         String urlFromConfig_MentorDoc = "http://bit.ly/Guidelines_document";
-        if(AncillaryScreensDriver.mainApplication.getConfig().getString("faq_mentor_url") != null && !AncillaryScreensDriver.mainApplication.getConfig().getString("faq_mentor_url").isEmpty())
+        if (AncillaryScreensDriver.mainApplication.getConfig().getString("faq_mentor_url") != null && !AncillaryScreensDriver.mainApplication.getConfig().getString("faq_mentor_url").isEmpty())
             urlFromConfig_MentorDoc = AncillaryScreensDriver.mainApplication.getConfig().getString("faq_mentor_url");
 
         String urlFromConfig_TeacherDoc = "http://bit.ly/samiksha-FAQ";
-        if(AncillaryScreensDriver.mainApplication.getConfig().getString("faq_teacher_url") != null && !AncillaryScreensDriver.mainApplication.getConfig().getString("faq_teacher_url").isEmpty())
+        if (AncillaryScreensDriver.mainApplication.getConfig().getString("faq_teacher_url") != null && !AncillaryScreensDriver.mainApplication.getConfig().getString("faq_teacher_url").isEmpty())
             urlFromConfig_TeacherDoc = AncillaryScreensDriver.mainApplication.getConfig().getString("faq_teacher_url");
 
         String finalUrlFromConfig_TeacherDoc = urlFromConfig_TeacherDoc;
@@ -136,12 +137,12 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
 
     @Override
     public void onForgotPasswordClicked(android.view.View v) {
-        if (CommonUtilities.isNetworkAvailable(this)){
+        if (CommonUtilities.isNetworkAvailable(this)) {
             EnterMobileNumberFragment mForgotPasswordFragment = new EnterMobileNumberFragment();
-            addFragment(R.id.login_fragment_container,getSupportFragmentManager(),
-                    mForgotPasswordFragment,"EnterMobileNumberFragment");
-        }else{
-            SnackbarUtils.showLongSnackbar(parentLoginLayout,  "It seems you are not connected to the internet. Please switch of on your mobile data to login.");
+            addFragment(R.id.login_fragment_container, getSupportFragmentManager(),
+                    mForgotPasswordFragment, "EnterMobileNumberFragment");
+        } else {
+            SnackbarUtils.showLongSnackbar(parentLoginLayout, "It seems you are not connected to the internet. Please switch of on your mobile data to login.");
         }
     }
 
@@ -175,11 +176,14 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
      */
     @Override
     public void onLoginSuccess(LoginResponse loginResponse) {
-        mProgress.dismiss();
+        mProgress.setVisibility(View.GONE);
         loginPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
             Grove.d("Failure to reset actions at Login screen " + failedResetActions);
             Grove.d("Moving to Home Screen");
-            loginPresenter.finishAndMoveToHomeScreen();
+            Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);
+            ExchangeObject.SignalExchangeObject signalExchangeObject = new ExchangeObject.SignalExchangeObject(Modules.MAIN_APP, Modules.ANCILLARY_SCREENS, intent, true);
+            AncillaryScreensDriver.mainApplication.getEventBus().send(signalExchangeObject);
+            finish();
         });
     }
 
@@ -189,7 +193,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
      */
     @Override
     public void onLoginFailed(String loginFailureError) {
-        mProgress.dismiss();
+        mProgress.setVisibility(View.GONE);
         button.setClickable(true);
         button.setEnabled(true);
         SnackbarUtils.showLongSnackbar(parentLoginLayout, loginFailureError);
@@ -210,10 +214,10 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
         if (emailInput.isEmpty()) {
             textInputEmail.setError(getString(R.string.user_name_empty_error));
             return false;
-        }else if(emailInput.length() > 0 && emailInput.length() <=3){
+        } else if (emailInput.length() > 0 && emailInput.length() <= 3) {
             textInputEmail.setError(getText(R.string.user_name_not_apt_length_error));
             return false;
-        } else{
+        } else {
             textInputEmail.setError(null);
             textInputEmail.setHelperText(getText(R.string.enter_your_username));
             return true;
@@ -226,10 +230,10 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
         if (passwordInput.isEmpty()) {
             textInputPassword.setError(getText(R.string.pass_cannot_be_empty));
             return false;
-        } else  if(passwordInput.length() <8) {
+        } else if (passwordInput.length() < 8) {
             textInputPassword.setError(getText(R.string.pass_less_than_8_error));
             return false;
-        }else{
+        } else {
             textInputPassword.setError(null);
             textInputPassword.setHelperText(getText(R.string.enter_your_password));
             return true;
@@ -238,16 +242,17 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
 
     @Override
     public void onLoginButtonClicked(View v) {
-        if (!validateEmail()  | !validatePassword()) {
+
+ if (!validateEmail() | !validatePassword()) {
             return;
         }
         if (CommonUtilities.isNetworkAvailable(this)) {
             String username = Objects.requireNonNull(userNameEditText.getText()).toString().trim();
             String password = Objects.requireNonNull(passwordEditText.getText()).toString().trim();
-            mProgress.show();
+            mProgress.setVisibility(View.VISIBLE);
             button.setEnabled(false);
             button.setClickable(false);
-            loginPresenter.startAuthenticationTask(new LoginRequest(username, password));
+            loginPresenter.startAuthenticationTask(new LoginRequest(username, password), getActivityContext());
         } else {
             SnackbarUtils.showLongSnackbar(parentLoginLayout, LoginActivity.this.getResources().getString(R.string.not_connected_to_internet));
         }
@@ -256,18 +261,18 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
     @Override
     public void onHelpButtonClicked(View v) {
         String urlFromConfig = AncillaryScreensDriver.mainApplication.getConfig().getString("help_url");
-        if(urlFromConfig.isEmpty())
+        if (urlFromConfig.isEmpty())
             urlFromConfig = "https://forms.gle/ReS5tMBVwpmCMhEe7";
         Uri websiteUri = Uri.parse(urlFromConfig);
-            try {
-                //open in external browser
-                getActivityContext().startActivity(new Intent(Intent.ACTION_VIEW, websiteUri));
-            } catch (ActivityNotFoundException | SecurityException e) {
-                //open in webview
-                Intent intent = new Intent(getActivityContext(), WebViewActivity.class);
-                intent.putExtra(OPEN_URL, websiteUri.toString());
-                getActivityContext().startActivity(intent);
-            }
+        try {
+            //open in external browser
+            getActivityContext().startActivity(new Intent(Intent.ACTION_VIEW, websiteUri));
+        } catch (ActivityNotFoundException | SecurityException e) {
+            //open in webview
+            Intent intent = new Intent(getActivityContext(), WebViewActivity.class);
+            intent.putExtra(OPEN_URL, websiteUri.toString());
+            getActivityContext().startActivity(intent);
+        }
     }
 
     @Override
@@ -304,28 +309,13 @@ public class LoginActivity extends BaseActivity implements LoginContract.View,Mu
     }
 
     @Override
-    public void beforeTextChanged(EditText editText, CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(EditText editText, CharSequence s, int start, int before, int count) {
-        validateLoginButton();
-    }
-
-    @Override
-    public void afterTextChanged(EditText editText, Editable editable) {
-        validateLoginButton();
-    }
-
-    @Override
     public void validateLoginButton() {
-        if(passwordEditText.getText() != null && passwordEditText.getText().toString().length() > 0 &&
-                userNameEditText.getText() != null && userNameEditText.getText().toString().length() > 0){
+        if (passwordEditText.getText() != null && passwordEditText.getText().toString().length() > 0 &&
+                userNameEditText.getText() != null && userNameEditText.getText().toString().length() > 0) {
             button.setEnabled(true);
             button.setClickable(true);
             button.setTextColor(ContextCompat.getColor(this, R.color.white));
-        }else{
+        } else {
             button.setEnabled(false);
             button.setClickable(false);
             button.setTextColor(ContextCompat.getColor(this, R.color.color1));
