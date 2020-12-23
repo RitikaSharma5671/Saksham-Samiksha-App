@@ -31,7 +31,7 @@ import org.odk.collect.android.support.MockFormEntryPromptBuilder;
 import org.odk.collect.android.support.RobolectricHelpers;
 import org.odk.collect.android.utilities.WidgetAppearanceUtils;
 import org.odk.collect.android.widgets.base.GeneralSelectOneWidgetTest;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.utilities.async.Scheduler;
 
 import java.util.List;
 

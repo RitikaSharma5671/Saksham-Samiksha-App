@@ -20,26 +20,45 @@ import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.WebViewActivity;
 import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.material.MaterialFullScreenDialogFragment;
 import org.odk.collect.android.preferences.AdminPasswordDialogFragment;
 import org.odk.collect.android.preferences.AdminPasswordDialogFragment.Action;
 import org.odk.collect.android.utilities.AdminPasswordProvider;
 import org.odk.collect.android.utilities.CustomTabHelper;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.MultiClickGuard;
+import org.odk.collect.material.MaterialFullScreenDialogFragment;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class StorageMigrationDialog extends MaterialFullScreenDialogFragment {
 
     public static final String ARG_UNSENT_INSTANCES = "unsentInstances";
 
-//    Button cancelButton;
+    @BindView(R.id.cancelButton)
+    Button cancelButton;
+
+    @BindView(R.id.migrateButton)
     Button migrateButton;
+
+    @BindView(R.id.messageText1)
     TextView messageText1;
+
+    @BindView(R.id.messageText2)
+    TextView messageText2;
+
+    @BindView(R.id.messageText3)
+    TextView messageText3;
+
+    @BindView(R.id.moreDetailsButton)
+    Button moreDetailsButton;
+
+    @BindView(R.id.errorText)
     TextView errorText;
+
+    @BindView(R.id.progressBar)
     LinearLayout progressBar;
 
     @Inject
@@ -47,6 +66,8 @@ public class StorageMigrationDialog extends MaterialFullScreenDialogFragment {
 
     @Inject
     StorageMigrationRepository storageMigrationRepository;
+
+    private int unsentInstancesNumber;
 
     @Override
     public void onAttach(@NotNull Context context) {
@@ -65,23 +86,23 @@ public class StorageMigrationDialog extends MaterialFullScreenDialogFragment {
         ButterKnife.bind(this, view);
 
         if (getArguments() != null) {
-            int unsentInstancesNumber = getArguments().getInt(ARG_UNSENT_INSTANCES);
+            unsentInstancesNumber = getArguments().getInt(ARG_UNSENT_INSTANCES);
         }
 
-//        setUpToolbar();
+        setUpToolbar();
         if (storageMigrationRepository.isMigrationBeingPerformed()) {
             disableDialog();
             showProgressBar();
+        } else {
+            setUpMessageAboutUnsetSubmissions();
         }
 
-
-        migrateButton= view.findViewById(R.id.migrateButton);
-
-        messageText1= view.findViewById(R.id.messageText1);
-
-
-        errorText = view.findViewById(R.id.errorText);
-        progressBar = view.findViewById(R.id.progressBar);
+        moreDetailsButton.setOnClickListener(v -> {
+            if (MultiClickGuard.allowClick(getClass().getName())) {
+                showMoreDetails();
+            }
+        });
+        cancelButton.setOnClickListener(v -> dismiss());
         migrateButton.setOnClickListener(v -> {
             if (MultiClickGuard.allowClick(getClass().getName())) {
                 if (adminPasswordProvider.isAdminPasswordSet()) {
@@ -106,18 +127,42 @@ public class StorageMigrationDialog extends MaterialFullScreenDialogFragment {
     @Nullable
     @Override
     protected Toolbar getToolbar() {
-        return null;
+        return getView().findViewById(R.id.toolbar);
     }
 
+    private void setUpToolbar() {
+        getToolbar().setTitle(R.string.storage_migration_dialog_title);
+        getToolbar().setNavigationIcon(null);
+    }
+
+    private void setUpMessageAboutUnsetSubmissions() {
+        if (unsentInstancesNumber > 0) {
+            messageText2.setVisibility(View.VISIBLE);
+            messageText2.setText(getString(R.string.storage_migration_dialog_message2, unsentInstancesNumber));
+        }
+    }
+
+    private void showMoreDetails() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://forum.getodk.org/t/25268"));
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException | SecurityException e) {
+            intent = new Intent(getContext(), WebViewActivity.class);
+            intent.putExtra(CustomTabHelper.OPEN_URL, "https://forum.getodk.org/t/25268");
+            startActivity(intent);
+        }
+    }
 
     private void disableDialog() {
         messageText1.setAlpha(.5f);
-//        messageText3.setVisibility(View.GONE);
-//
-//        moreDetailsButton.setVisibility(View.GONE);
-//
-//        cancelButton.setEnabled(false);
-//        cancelButton.setAlpha(.5f);
+        messageText2.setVisibility(View.GONE);
+        messageText3.setVisibility(View.GONE);
+
+        moreDetailsButton.setVisibility(View.GONE);
+
+        cancelButton.setEnabled(false);
+        cancelButton.setAlpha(.5f);
 
         migrateButton.setEnabled(false);
         migrateButton.setAlpha(.5f);
@@ -127,12 +172,13 @@ public class StorageMigrationDialog extends MaterialFullScreenDialogFragment {
 
     private void enableDialog() {
         messageText1.setAlpha(1);
-//        messageText3.setVisibility(View.VISIBLE);
+        messageText2.setVisibility(unsentInstancesNumber > 0 ? View.VISIBLE : View.GONE);
+        messageText3.setVisibility(View.VISIBLE);
 
-//        moreDetailsButton.setVisibility(View.VISIBLE);
-//
-//        cancelButton.setEnabled(true);
-//        cancelButton.setAlpha(1);
+        moreDetailsButton.setVisibility(View.VISIBLE);
+
+        cancelButton.setEnabled(true);
+        cancelButton.setAlpha(1);
 
         migrateButton.setEnabled(true);
         migrateButton.setAlpha(1);

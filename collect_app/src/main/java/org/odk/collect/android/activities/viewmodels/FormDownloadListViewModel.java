@@ -22,10 +22,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.formmanagement.ServerFormDetails;
 import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.TranslationHandler;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public class FormDownloadListViewModel extends ViewModel {
     }
 
     public String getProgressDialogMsg() {
-        return progressDialogMsg == null ? Collect1.getInstance().getApplicationVal().getResources().getString(R.string.please_wait) : progressDialogMsg;
+        return progressDialogMsg == null ? TranslationHandler.getString(Collect.getInstance(), R.string.please_wait) : progressDialogMsg;
     }
 
     public void setProgressDialogMsg(String progressDialogMsg) {

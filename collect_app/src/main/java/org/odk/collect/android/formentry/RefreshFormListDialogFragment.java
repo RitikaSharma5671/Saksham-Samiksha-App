@@ -7,8 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import org.odk.collect.android.R;
-
-import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.fragments.dialogs.ProgressDialogFragment;
 
 public class RefreshFormListDialogFragment extends ProgressDialogFragment {
@@ -23,7 +21,7 @@ public class RefreshFormListDialogFragment extends ProgressDialogFragment {
             listener = (RefreshFormListDialogFragmentListener) context;
         }
         setTitle(getString(R.string.downloading_data));
-        setMessage(Collect1.getInstance().getAppContext().getResources().getString(R.string.please_wait));
+        setMessage(getString(R.string.please_wait));
         setCancelable(false);
     }
 

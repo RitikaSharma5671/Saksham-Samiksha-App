@@ -3,8 +3,7 @@ package org.odk.collect.android.geo;
 import com.mapbox.mapboxsdk.Mapbox;
 
 import org.odk.collect.android.BuildConfig;
-import org.odk.collect.android.application.Collect1;
-
+import org.odk.collect.android.application.Collect;
 
 public class MapboxUtils {
     private static boolean initAttempted;
@@ -23,7 +22,7 @@ public class MapboxUtils {
         try {
             // To use the Mapbox base maps, we have to initialize the Mapbox SDK with
             // an access token. Configure this token in collect_app/secrets.properties.
-            mapbox = Mapbox.getInstance(Collect1.getInstance().getAppContext(), BuildConfig.MAPBOX_ACCESS_TOKEN);
+            mapbox = Mapbox.getInstance(Collect.getInstance(), BuildConfig.MAPBOX_ACCESS_TOKEN);
             Mapbox.setConnected(true);
         } catch (Exception | Error e) {
             // To keep our APK from getting too big, we decided to include the

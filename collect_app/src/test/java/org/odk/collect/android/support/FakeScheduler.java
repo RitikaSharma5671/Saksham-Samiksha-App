@@ -1,9 +1,9 @@
 package org.odk.collect.android.support;
 
 import org.jetbrains.annotations.NotNull;
-import org.odk.collect.async.Cancellable;
-import org.odk.collect.async.Scheduler;
-import org.odk.collect.async.TaskSpec;
+import org.odk.collect.utilities.async.Cancellable;
+import org.odk.collect.utilities.async.Scheduler;
+import org.odk.collect.utilities.async.TaskSpec;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

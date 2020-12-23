@@ -5,8 +5,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.odk.collect.android.application.Collect1;
-
+import org.odk.collect.android.application.Collect;
 
 public class ToastUtils {
 
@@ -31,15 +30,15 @@ public class ToastUtils {
     }
 
     private static void showToast(String message, int duration) {
-        Toast.makeText(Collect1.getInstance().getAppContext(), message, duration).show();
+        Toast.makeText(Collect.getInstance(), message, duration).show();
     }
 
     private static void showToast(int messageResource, int duration) {
-        Toast.makeText(Collect1.getInstance().getAppContext(), Collect1.getInstance().getAppContext().getResources().getString(messageResource), duration).show();
+        Toast.makeText(Collect.getInstance(), TranslationHandler.getString(Collect.getInstance(), messageResource), duration).show();
     }
 
     public static void showShortToastInMiddle(int messageResource) {
-        showToastInMiddle(Collect1.getInstance().getAppContext().getResources().getString(messageResource), Toast.LENGTH_SHORT);
+        showToastInMiddle(TranslationHandler.getString(Collect.getInstance(), messageResource), Toast.LENGTH_SHORT);
     }
 
     public static void showShortToastInMiddle(String message) {
@@ -47,11 +46,11 @@ public class ToastUtils {
     }
 
     public static void showLongToastInMiddle(int messageResource) {
-        showToastInMiddle(Collect1.getInstance().getAppContext().getResources().getString(messageResource), Toast.LENGTH_LONG);
+        showToastInMiddle(TranslationHandler.getString(Collect.getInstance(), messageResource), Toast.LENGTH_LONG);
     }
 
     private static void showToastInMiddle(String message, int duration) {
-        Toast toast = Toast.makeText(Collect1.getInstance().getAppContext(), message, duration);
+        Toast toast = Toast.makeText(Collect.getInstance(), message, duration);
         try {
             ViewGroup group = (ViewGroup) toast.getView();
             TextView messageTextView = (TextView) group.getChildAt(0);

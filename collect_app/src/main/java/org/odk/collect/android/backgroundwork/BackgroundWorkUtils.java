@@ -1,8 +1,9 @@
 package org.odk.collect.android.backgroundwork;
 
-import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect1;
+import android.content.Context;
 
+import org.odk.collect.android.R;
+import org.odk.collect.android.utilities.TranslationHandler;
 
 public class BackgroundWorkUtils {
 
@@ -15,14 +16,14 @@ public class BackgroundWorkUtils {
 
     }
 
-    public static long getPeriodInMilliseconds(String period) {
-        if (period.equals(Collect1.getInstance().getAppContext().getResources().getString(R.string.every_one_hour_value))) {
+    public static long getPeriodInMilliseconds(String period, Context context) {
+        if (period.equals(TranslationHandler.getString(context, R.string.every_one_hour_value))) {
             return ONE_HOUR_PERIOD;
-        } else if (period.equals(Collect1.getInstance().getAppContext().getResources().getString(R.string.every_six_hours_value))) {
+        } else if (period.equals(TranslationHandler.getString(context, R.string.every_six_hours_value))) {
             return SIX_HOURS_PERIOD;
-        } else if (period.equals(Collect1.getInstance().getAppContext().getResources().getString(R.string.every_24_hours_value))) {
+        } else if (period.equals(TranslationHandler.getString(context, R.string.every_24_hours_value))) {
             return ONE_DAY_PERIOD;
-        } else if (period.equals(Collect1.getInstance().getAppContext().getResources().getString(R.string.every_fifteen_minutes_value))) {
+        } else if (period.equals(TranslationHandler.getString(context, R.string.every_fifteen_minutes_value))) {
             return FIFTEEN_MINUTES_PERIOD;
         } else {
             throw new IllegalArgumentException();

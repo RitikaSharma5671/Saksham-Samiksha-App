@@ -5,7 +5,7 @@ import android.media.MediaPlayer;
 
 import org.odk.collect.android.audio.AudioHelper;
 import org.odk.collect.android.utilities.ScreenContext;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.utilities.async.Scheduler;
 
 import java.util.function.Supplier;
 
@@ -19,8 +19,9 @@ public class ScreenContextAudioHelperFactory implements AudioHelperFactory {
         this.mediaPlayerFactory = mediaPlayerFactory;
     }
 
+
+    @Override
     public AudioHelper create(Context context) {
-        ScreenContext screenContext = (ScreenContext) context;
-        return new AudioHelper(screenContext.getActivity(), screenContext.getViewLifecycle(), scheduler, mediaPlayerFactory);
+        return null;
     }
 }

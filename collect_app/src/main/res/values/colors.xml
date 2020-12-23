@@ -19,43 +19,8 @@ the License.
     <color name="blue_500">#2196F3</color>
     <color name="green_500">#4CAF50</color>
     <color name="deep_purple_500">#673AB7</color>
-    <color name="amber_500">#FFC107</color>
-
-    <color name="colorPrimary">#014d3f</color>
-    <color name="colorSecondary">#4CAF50</color>
-
-    <!-- Dark Theme Palette -->
-
-    <color name="color_primary">#014d3f</color>
-    <color name="color_primary_light">#014d3f</color>
-    <color name="color_primary_dark">#002519</color>
-    <color name="color_secondary">#007560</color>
-    <color name="color_secondary_light">#4aaf96</color>
-    <color name="color_secondary_dark">#00523e</color>
-    <color name="primary_text_color">#ffffff</color>
-    <color name="secondary_text_color">#ffffff</color>
-
-    <color name="darkPrimaryTextColor">#deffffff</color>
-    <color name="darkSecondaryTextColor">#99ffffff</color>
-    <color name="darkPopupDialogColor">#3f3f3f</color>
-    <color name="defaultDarkIconColor">#deffffff</color>
-    <color name="darkDividerColor">#1effffff</color>
-    <color name="darkRankItemColor">@android:color/black</color>
-    <color name="darkIconColorDisabled">#61ffffff</color>
-    <color name="darkIconColorEnabled">#deffffff</color>
-
-    <!-- Light Theme Palette -->
-    <color name="lightPrimaryTextColor">#de000000</color>
-    <color name="lightSecondaryTextColor">#99000000</color>
-    <color name="defaultLightIconColor">#de000000</color>
-    <color name="lightDividerColor">#1e000000</color>
-    <color name="lightRankItemColor">#EEEEEE</color>
-    <color name="lightAccentColor">@color/blue_500</color>
-    <color name="lightIconColorDisabled">#61000000</color>
-    <color name="lightIconColorEnabled">#de000000</color>
 
     <color name="highContrastHighlight">#ff8c00</color>
-    <color name="displaySubtextColor">@color/green_500</color>
 
     <!-- Background colors in the GeoTrace status bar, under white text. -->
     <color name="locationStatusSearching">#333333</color>
@@ -73,6 +38,4 @@ the License.
     <color name="mapPointCircle">#ffff0000</color>
     <color name="mapPointFill">#ffffffff</color>
     <color name="mapLine">#ffff0000</color>
-    <color name="white">#ffffff</color>
-    <color name="black">#000000</color>
 </resources>

@@ -11,7 +11,7 @@ import org.odk.collect.android.formmanagement.matchexactly.ServerFormsSynchroniz
 import org.odk.collect.android.formmanagement.matchexactly.SyncStatusRepository;
 import org.odk.collect.android.preferences.PreferencesProvider;
 import org.odk.collect.android.support.FakeScheduler;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.utilities.async.Scheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

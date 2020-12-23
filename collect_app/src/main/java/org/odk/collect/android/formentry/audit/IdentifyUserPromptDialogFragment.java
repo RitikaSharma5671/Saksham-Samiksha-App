@@ -14,7 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.material.MaterialFullScreenDialogFragment;
+import org.odk.collect.utilities.material.MaterialFullScreenDialogFragment;
 
 public class IdentifyUserPromptDialogFragment extends MaterialFullScreenDialogFragment {
 

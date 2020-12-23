@@ -4,15 +4,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.sentry.android.gradle'
-apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.androidCompileSdk
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "com.samagra.sakshamSamiksha"
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion rootProject.androidMinSdk
+        targetSdkVersion rootProject.androidTargetSdk
         versionCode 10060
         versionName "1.0.8"
         multiDexEnabled true
@@ -34,6 +33,8 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility 1.8
         targetCompatibility 1.8
         incremental true
@@ -47,6 +48,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
     implementation project(":commons")
     implementation project(":ancillaryscreens")
     implementation project(":collect_app")
@@ -102,7 +104,7 @@ dependencies {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
     implementation 'com.jakewharton:process-phoenix:2.0.1-SNAPSHOT'
-    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.core:core-ktx:1.3.2"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.material:material:1.2.0'

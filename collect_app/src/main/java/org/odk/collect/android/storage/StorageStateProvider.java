@@ -4,8 +4,8 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.StatFs;
 
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.utilities.Clock;
 
 import java.io.File;
 
@@ -14,11 +14,18 @@ import timber.log.Timber;
 import static org.odk.collect.android.preferences.MetaKeys.KEY_SCOPED_STORAGE_USED;
 
 public class StorageStateProvider {
+    private static long lastMigrationAttempt;
 
     private final SharedPreferences metaSharedPreferences;
+    private final Clock clock;
 
     public StorageStateProvider() {
-        metaSharedPreferences = Collect1.getInstance().getComponent().preferencesProvider().getMetaSharedPreferences();
+        this(System::currentTimeMillis);
+    }
+
+    public StorageStateProvider(Clock clock) {
+        this.clock = clock;
+        metaSharedPreferences = Collect.getInstance().getComponent().preferencesProvider().getMetaSharedPreferences();
     }
 
     public boolean isScopedStorageUsed() {
@@ -76,5 +83,23 @@ public class StorageStateProvider {
             }
         }
         return length;
+    }
+
+    public boolean shouldPerformAutomaticMigration() {
+        return !isScopedStorageUsed() && !alreadyTriedToMigrateDataToday(clock.getCurrentTime());
+    }
+
+    public boolean alreadyTriedToMigrateDataToday(long currentTime) {
+        long oneDayPeriod = 86400000;
+        boolean result = currentTime - lastMigrationAttempt < oneDayPeriod;
+        if (!result) {
+            lastMigrationAttempt = currentTime;
+        }
+        return result;
+    }
+
+    // just for tests
+    protected void clearLastMigrationAttemptTime() {
+        lastMigrationAttempt = 0;
     }
 }

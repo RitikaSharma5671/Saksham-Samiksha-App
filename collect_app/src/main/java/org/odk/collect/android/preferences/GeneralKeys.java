@@ -4,19 +4,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.mapbox.mapboxsdk.maps.Style;
 
 import org.odk.collect.android.R;
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.QuestionFontSizeUtils;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 
 public final class GeneralKeys {
     // server_preferences.xml
     public static final String KEY_PROTOCOL                 = "protocol";
-
-    public static final String TITLE                        = "title";
 
     // odk_server_preferences.xmll
     public static final String KEY_SERVER_URL               = "server_url";
@@ -76,14 +71,11 @@ public final class GeneralKeys {
 
     public static final String KEY_BACKGROUND_LOCATION      = "background_location";
 
-    static final String KEY_METADATA_MIGRATED               = "metadata_migrated";
-    // other keys
-    public static final String KEY_LAST_VERSION             = "lastVersion";
-    public static final String KEY_FIRST_RUN                = "firstRun";
     // values
     public static final String NAVIGATION_SWIPE             = "swipe";
-    public static final String CONSTRAINT_BEHAVIOR_ON_SWIPE = "on_swipe";
     public static final String NAVIGATION_BUTTONS           = "buttons";
+    public static final String NAVIGATION_BOTH              = "swipe_buttons";
+    public static final String CONSTRAINT_BEHAVIOR_ON_SWIPE = "on_swipe";
     private static final String AUTOSEND_OFF                = "off";
     private static final String GUIDANCE_HINT_OFF           = "no";
     static final String KEY_AUTOSEND_WIFI                   = "autosend_wifi";
@@ -100,10 +92,14 @@ public final class GeneralKeys {
     public static final String BASEMAP_SOURCE_STAMEN        = "stamen";
     public static final String BASEMAP_SOURCE_CARTO         = "carto";
 
+    // experimental
+    public static final String KEY_MAGENTA_THEME            = "magenta";
+    public static final String KEY_EXTERNAL_APP_RECORDING   = "external_app_recording";
+
     private static HashMap<String, Object> getHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
         // odk_server_preferences.xmll
-        hashMap.put(KEY_SERVER_URL,                 Collect1.getInstance().getAppContext().getResources().getString(R.string.default_server_url));
+        hashMap.put(KEY_SERVER_URL,                 Collect.getInstance().getString(R.string.default_server_url));
         hashMap.put(KEY_USERNAME,                   "");
         hashMap.put(KEY_PASSWORD,                   "");
         // form_management_preferences.xml
@@ -130,34 +126,27 @@ public final class GeneralKeys {
         // identity_preferences.xml
         hashMap.put(KEY_ANALYTICS,                  true);
         // custom_server_paths_preferenceshs_preferences.xml
-        hashMap.put(KEY_FORMLIST_URL,               Collect1.getInstance().getAppContext().getResources().getString(R.string.default_odk_formlist));
-        hashMap.put(KEY_SUBMISSION_URL,             Collect1.getInstance().getAppContext().getResources().getString(R.string.default_odk_submission));
+        hashMap.put(KEY_FORMLIST_URL,               Collect.getInstance().getString(R.string.default_odk_formlist));
+        hashMap.put(KEY_SUBMISSION_URL,             Collect.getInstance().getString(R.string.default_odk_submission));
         // server_preferences.xml
-        hashMap.put(KEY_PROTOCOL,                   Collect1.getInstance().getAppContext().getResources().getString(R.string.protocol_odk_default));
+        hashMap.put(KEY_PROTOCOL,                   Collect.getInstance().getString(R.string.protocol_odk_default));
         // user_interface_preferences.xml
-        hashMap.put(KEY_APP_THEME,                  Collect1.getInstance().getAppContext().getResources().getString(R.string.app_theme_light));
+        hashMap.put(KEY_APP_THEME,                  Collect.getInstance().getString(R.string.app_theme_light));
         hashMap.put(KEY_APP_LANGUAGE,               "");
         hashMap.put(KEY_FONT_SIZE,                  String.valueOf(QuestionFontSizeUtils.DEFAULT_FONT_SIZE));
-        hashMap.put(KEY_NAVIGATION,                 NAVIGATION_SWIPE);
+        hashMap.put(KEY_NAVIGATION,                 NAVIGATION_BOTH);
         hashMap.put(KEY_SHOW_SPLASH,                false);
-        hashMap.put(KEY_SPLASH_PATH,                Collect1.getInstance().getAppContext().getResources().getString(R.string.default_splash_path));
+        hashMap.put(KEY_SPLASH_PATH,                Collect.getInstance().getString(R.string.default_splash_path));
+        hashMap.put(KEY_MAGENTA_THEME,              false);
+        hashMap.put(KEY_EXTERNAL_APP_RECORDING,     true);
         // map_preferences.xml
         hashMap.put(KEY_BASEMAP_SOURCE,             BASEMAP_SOURCE_GOOGLE);
         hashMap.put(KEY_CARTO_MAP_STYLE,            "positron");
         hashMap.put(KEY_USGS_MAP_STYLE,             "topographic");
         hashMap.put(KEY_GOOGLE_MAP_STYLE,           String.valueOf(GoogleMap.MAP_TYPE_NORMAL));
         hashMap.put(KEY_MAPBOX_MAP_STYLE,           Style.MAPBOX_STREETS);
-        hashMap.put(KEY_SPLASH_PATH,                Collect1.getInstance().getAppContext().getResources().getString(R.string.default_splash_path));
         return hashMap;
     }
-
-    static final Collection<String> KEYS_WE_SHOULD_NOT_RESET = Arrays.asList(
-            KEY_LAST_VERSION,
-            KEY_FIRST_RUN,
-            KEY_METADATA_MIGRATED,
-            KEY_AUTOSEND_WIFI,
-            KEY_AUTOSEND_NETWORK
-    );
 
     public static final HashMap<String, Object> DEFAULTS = getHashMap();
 

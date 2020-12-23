@@ -17,10 +17,8 @@ package org.odk.collect.android.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.injection.DaggerUtils;
 
 import static org.odk.collect.android.preferences.AdminKeys.ALL_KEYS;
@@ -41,17 +39,13 @@ public class AdminSharedPreferences {
      */
     @Deprecated
     public static synchronized AdminSharedPreferences getInstance() {
-        return DaggerUtils.getComponent(Collect1.getInstance().getAppContext()).adminSharedPreferences();
+        return DaggerUtils.getComponent(Collect.getInstance()).adminSharedPreferences();
     }
 
     public Object get(String key) {
         if (key.equals(KEY_ADMIN_PW)) {
-            Log.d("wercfewrf", key  + "    tyoe " + key.getClass().getName());
-            sharedPreferences.edit().remove(KEY_ADMIN_PW).apply();
-            sharedPreferences.edit().putString(KEY_ADMIN_PW, "").apply();
-            return "";
+            return sharedPreferences.getString(key, (String) getDefault(key));
         } else {
-            Log.d("wercfewrf1111", key  + "    tyoe " + key.getClass().getName());
             return sharedPreferences.getBoolean(key, (Boolean) getDefault(key));
         }
     }

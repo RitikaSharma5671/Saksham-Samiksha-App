@@ -35,29 +35,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
-import org.odk.collect.android.contracts.CSVHelper;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.odk.collect.android.R;
-import org.odk.collect.android.R2;
 import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
 import org.odk.collect.android.analytics.Analytics;
-import org.odk.collect.android.analytics.AnalyticsEvents;
-
-import org.odk.collect.android.application.Collect1;
-import org.odk.collect.android.configure.LegacySettingsFileReader;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.configure.SettingsImporter;
+import org.odk.collect.android.configure.legacy.LegacySettingsFileImporter;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
-import org.odk.collect.android.contracts.CSVBuildStatusListener;
-import org.odk.collect.android.contracts.FormManagementSectionInteractor;
 import org.odk.collect.android.dao.InstancesDao;
-import org.odk.collect.android.forms.Form;
+import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.material.MaterialBanner;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPasswordDialogFragment;
 import org.odk.collect.android.preferences.AdminPasswordDialogFragment.Action;
@@ -75,13 +64,11 @@ import org.odk.collect.android.utilities.AdminPasswordProvider;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.MultiClickGuard;
-import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.material.MaterialBanner;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -121,9 +108,10 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     @Inject
     public Analytics analytics;
 
+    @BindView(R.id.storageMigrationBanner)
     MaterialBanner storageMigrationBanner;
 
-
+    @BindView(R.id.version_sha)
     TextView versionSHAView;
 
     @Inject
@@ -145,61 +133,28 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     MainMenuViewModel.Factory viewModelFactory;
     private MainMenuViewModel viewModel;
 
-
-    private JSONArray buildJSONArray() {
-        String jsonString = "{\"status\":\"Success\",\"data\":[{\"index\":55506,\"id\":55506,\"udise\":110,\"name\":\"Sukhpr\",\"parentContact\":\"9873887425\",\"grade\":2,\"section\":\"C\",\"fatherName\":\"Shsh\",\"motherName\":\"Shsh\",\"gender\":\"Male\",\"rollNumber\":5643,\"category\":\"General\",\"isCWSN\":\"Yes\",\"admissionNumber\":5643},{\"index\":55515,\"id\":55515,\"udise\":110,\"name\":\"new tool\",\"parentContact\":\"9873887425\",\"grade\":4,\"section\":\"B\",\"fatherName\":\"ok\",\"motherName\":\"ok\",\"gender\":\"Male\",\"rollNumber\":9653,\"category\":\"General\",\"isCWSN\":\"Yes\",\"admissionNumber\":9653},{\"index\":55737,\"id\":55737,\"udise\":110,\"name\":\"Kranti \",\"parentContact\":\"9418129628\",\"grade\":5,\"section\":\"A\",\"fatherName\":\"Divya fbks\",\"motherName\":\"Divya fbks\",\"gender\":\"Male\",\"rollNumber\":1245,\"category\":\"General\",\"isCWSN\":\"Yes\",\"admissionNumber\":1245},{\"index\":183968,\"id\":183968,\"udise\":110,\"name\":\"testing\",\"parentContact\":\"9415787824\",\"grade\":3,\"section\":\"A\",\"fatherName\":\"testing\",\"motherName\":\"testing\",\"gender\":\"Male\",\"rollNumber\":999999,\"category\":\"General\",\"isCWSN\":\"Yes\",\"admissionNumber\":999999},{\"index\":232306,\"id\":232306,\"udise\":110,\"name\":\"Saurav Kaul\",\"parentContact\":\"9873887425\",\"grade\":1,\"section\":\"A\",\"fatherName\":\"Ami\",\"motherName\":\"Ami\",\"gender\":\"Male\",\"rollNumber\":4,\"category\":\"General\",\"isCWSN\":\"No\",\"admissionNumber\":4},{\"index\":232309,\"id\":232309,\"udise\":110,\"name\":\"Shashikala\",\"parentContact\":\"9873887425\",\"grade\":1,\"section\":\"A\",\"fatherName\":\"Ami\",\"motherName\":\"Ami\",\"gender\":\"Female\",\"rollNumber\":6,\"category\":\"General\",\"isCWSN\":\"Yes\",\"admissionNumber\":6},{\"index\":232307,\"id\":232307,\"udise\":110,\"name\":\"Vidhi Kapoor\",\"parentContact\":\"9873887425\",\"grade\":1,\"section\":\"A\",\"fatherName\":\"Ami\",\"motherName\":\"Ami\",\"gender\":\"Female\",\"rollNumber\":3,\"category\":\"General\",\"isCWSN\":\"Yes\",\"admissionNumber\":3},{\"index\":232308,\"id\":232308,\"udise\":110,\"name\":\"Ramkrishan Galgotia\",\"parentContact\":\"9873887425\",\"grade\":1,\"section\":\"A\",\"fatherName\":\"Ami\",\"motherName\":\"Ami\",\"gender\":\"Female\",\"rollNumber\":2,\"category\":\"General\",\"isCWSN\":\"Yes\",\"admissionNumber\":2},{\"index\":232310,\"id\":232310,\"udise\":110,\"name\":\"Gaurav Sood\",\"parentContact\":\"9873887425\",\"grade\":1,\"section\":\"A\",\"fatherName\":\"Ami\",\"motherName\":\"Ami\",\"gender\":\"Male\",\"rollNumber\":5,\"category\":\"General\",\"isCWSN\":\"Yes\",\"admissionNumber\":5},{\"index\":232305,\"id\":232305,\"udise\":110,\"name\":\"Amitabh Ghose\",\"parentContact\":\"9873887425\",\"grade\":1,\"section\":\"A\",\"fatherName\":\"Ami\",\"motherName\":\"Ami\",\"gender\":\"Male\",\"rollNumber\":1,\"category\":\"General\",\"isCWSN\":\"Yes\",\"admissionNumber\":1}]}";
-        Gson gson = new Gson();
-        Map m = gson.fromJson(jsonString, Map.class);
-        ArrayList<LinkedTreeMap> students = (ArrayList<LinkedTreeMap>) m.get("data");
-        JSONArray jsonArray = new JSONArray();
-        for(LinkedTreeMap linkedTreeMap : students){
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("stud", linkedTreeMap.get("name").toString());
-                jsonObject.put("section", linkedTreeMap.get("section").toString());
-                if(linkedTreeMap.get("grade") != null){
-                    String value =linkedTreeMap.get("grade").toString().split("\\.")[0];
-                    jsonObject.put("class", "class"+value);
-                }
-                jsonArray.put(jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return jsonArray;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Collect1.getInstance().getComponent().inject(this);
+        Collect.getInstance().getComponent().inject(this);
         setContentView(R.layout.main_menu);
         ButterKnife.bind(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainMenuViewModel.class);
 
         initToolbar();
         DaggerUtils.getComponent(this).inject(this);
-        FormManagementSectionInteractor i = new FormManagementSectionInteractor();
 
         storageMigrationRepository.getResult().observe(this, this::onStorageMigrationFinish);
 
-        versionSHAView = findViewById(R.id.version_sha);
-
-        storageMigrationBanner = findViewById(R.id.storageMigrationBanner);
         // enter data button. expects a result.
         Button enterDataButton = findViewById(R.id.enter_data);
         enterDataButton.setText(getString(R.string.enter_data_button));
         enterDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(Form form:  i.getDownloadedFormsNamesFromDatabase()){
-                    i.updateFormBasedOnIdentifier(form.getDisplayName(), "udise", "110");
-                }
-                if (MultiClickGuard.allowClick(getClass().getName())) {
-                    Intent icc= new Intent(getApplicationContext(),
-                            FormChooserListActivity.class);
-                    startActivity(icc);
-                }
+                Intent i = new Intent(getApplicationContext(),
+                        FillBlankFormActivity.class);
+                startActivity(i);
             }
         });
 
@@ -209,12 +164,10 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         reviewDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MultiClickGuard.allowClick(getClass().getName())) {
-                    Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
-                    i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
-                            ApplicationConstants.FormModes.EDIT_SAVED);
-                    startActivity(i);
-                }
+                Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
+                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
+                        ApplicationConstants.FormModes.EDIT_SAVED);
+                startActivity(i);
             }
         });
 
@@ -224,33 +177,9 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         sendDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String referenceFileName = "student_list.csv";
-            ArrayList<String> mediaDirectoriesNames =  (PermissionUtils.areStoragePermissionsGranted(getApplicationContext())? CSVHelper.fetchFormMediaDirectoriesWithMedia(referenceFileName) : new ArrayList<>());
-            if (mediaDirectoriesNames.size() > 0) {
-                CSVHelper.buildCSVForODK(new CSVBuildStatusListener() {
-                    @Override
-                    public void onSuccess() {
-                            Timber.d("getCurrentStudentListForForms: kjHAHAHAHHAHAH");
-                        ToastUtils.showLongToast("ho gya");
-
-                    }
-
-                    @Override
-                    public void onFailure(Exception exception, org.odk.collect.android.contracts.CSVHelper.BuildFailureType buildFailureType) {
-                        Timber.d("kachra ho gya");
-                        ToastUtils.showLongToast("hua nahi");
-
-                    }
-
-                }, mediaDirectoriesNames, buildJSONArray(), referenceFileName);
-            }else{
-               Timber.e("eveklkerjerk Mila hi nahi");
-            }
-//                if (MultiClickGuard.allowClick(getClass().getName())) {
-//                    Intent i = new Intent(getApplicationContext(),
-//                            InstanceUploaderListActivity.class);
-//                    startActivity(i);
-//                }
+                Intent i = new Intent(getApplicationContext(),
+                        InstanceUploaderListActivity.class);
+                startActivity(i);
             }
         });
 
@@ -259,12 +188,10 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         viewSentFormsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MultiClickGuard.allowClick(getClass().getName())) {
-                    Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
-                    i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
-                            ApplicationConstants.FormModes.VIEW_SENT);
-                    startActivity(i);
-                }
+                Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
+                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
+                        ApplicationConstants.FormModes.VIEW_SENT);
+                startActivity(i);
             }
         });
 
@@ -274,26 +201,24 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         getFormsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MultiClickGuard.allowClick(getClass().getName())) {
-                    SharedPreferences sharedPreferences = PreferenceManager
-                            .getDefaultSharedPreferences(MainMenuActivity.this);
-                    String protocol = sharedPreferences.getString(
-                            GeneralKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
-                    Intent i = null;
-                    if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
-                        if (new PlayServicesChecker().isGooglePlayServicesAvailable(MainMenuActivity.this)) {
-                            i = new Intent(getApplicationContext(),
-                                    GoogleDriveActivity.class);
-                        } else {
-                            new PlayServicesChecker().showGooglePlayServicesAvailabilityErrorDialog(MainMenuActivity.this);
-                            return;
-                        }
-                    } else {
+                SharedPreferences sharedPreferences = PreferenceManager
+                        .getDefaultSharedPreferences(MainMenuActivity.this);
+                String protocol = sharedPreferences.getString(
+                        GeneralKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
+                Intent i = null;
+                if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
+                    if (new PlayServicesChecker().isGooglePlayServicesAvailable(MainMenuActivity.this)) {
                         i = new Intent(getApplicationContext(),
-                                FormDownloadListActivity.class);
+                                GoogleDriveActivity.class);
+                    } else {
+                        new PlayServicesChecker().showGooglePlayServicesAvailabilityErrorDialog(MainMenuActivity.this);
+                        return;
                     }
-                    startActivity(i);
+                } else {
+                    i = new Intent(getApplicationContext(),
+                            FormDownloadListActivity.class);
                 }
+                startActivity(i);
             }
         });
 
@@ -303,11 +228,9 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         manageFilesButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MultiClickGuard.allowClick(getClass().getName())) {
-                    Intent i = new Intent(getApplicationContext(),
-                            FileManagerTabs.class);
-                    startActivity(i);
-                }
+                Intent i = new Intent(getApplicationContext(),
+                        DeleteSavedFormActivity.class);
+                startActivity(i);
             }
         });
 
@@ -328,7 +251,18 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
             return;
         }
 
-        importSettingsFromLegacyFiles();
+        LegacySettingsFileImporter legacySettingsFileImporter = new LegacySettingsFileImporter(storagePathProvider, analytics, settingsImporter);
+        if (legacySettingsFileImporter.importFromFile()) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.successfully_imported_settings)
+                    .setMessage(R.string.settings_successfully_loaded_file_notification)
+                    .setPositiveButton(R.string.ok, (dialog, which) -> {
+                        dialog.dismiss();
+                        recreate();
+                    })
+                    .setCancelable(false)
+                    .create().show();
+        }
     }
 
     @Override
@@ -344,6 +278,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         setButtonsVisibility();
         invalidateOptionsMenu();
         setUpStorageMigrationBanner();
+        tryToPerformAutomaticMigration();
     }
 
     private void setButtonsVisibility() {
@@ -384,33 +319,35 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_configure_qr_code) {
-            analytics.logEvent(AnalyticsEvents.SCAN_QR_CODE, "MainMenu");
+        if (!MultiClickGuard.allowClick(getClass().getName())) {
+            return true;
+        }
 
-            if (adminPasswordProvider.isAdminPasswordSet()) {
-                Bundle args = new Bundle();
-                args.putSerializable(AdminPasswordDialogFragment.ARG_ACTION, Action.SCAN_QR_CODE);
-                showIfNotShowing(AdminPasswordDialogFragment.class, args, getSupportFragmentManager());
-            } else {
-                startActivity(new Intent(this, QRCodeTabsActivity.class));
-            }
-            return true;
-        } else if (itemId == R.id.menu_about) {
-            startActivity(new Intent(this, AboutActivity.class));
-            return true;
-        } else if (itemId == R.id.menu_general_preferences) {
-            startActivity(new Intent(this, PreferencesActivity.class));
-            return true;
-        } else if (itemId == R.id.menu_admin_preferences) {
-            if (adminPasswordProvider.isAdminPasswordSet()) {
-                Bundle args = new Bundle();
-                args.putSerializable(AdminPasswordDialogFragment.ARG_ACTION, Action.ADMIN_SETTINGS);
-                showIfNotShowing(AdminPasswordDialogFragment.class, args, getSupportFragmentManager());
-            } else {
-                startActivity(new Intent(this, AdminPreferencesActivity.class));
-            }
-            return true;
+        switch (item.getItemId()) {
+            case R.id.menu_configure_qr_code:
+                if (adminPasswordProvider.isAdminPasswordSet()) {
+                    Bundle args = new Bundle();
+                    args.putSerializable(AdminPasswordDialogFragment.ARG_ACTION, Action.SCAN_QR_CODE);
+                    showIfNotShowing(AdminPasswordDialogFragment.class, args, getSupportFragmentManager());
+                } else {
+                    startActivity(new Intent(this, QRCodeTabsActivity.class));
+                }
+                return true;
+            case R.id.menu_about:
+                startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            case R.id.menu_general_preferences:
+                startActivity(new Intent(this, PreferencesActivity.class));
+                return true;
+            case R.id.menu_admin_preferences:
+                if (adminPasswordProvider.isAdminPasswordSet()) {
+                    Bundle args = new Bundle();
+                    args.putSerializable(AdminPasswordDialogFragment.ARG_ACTION, Action.ADMIN_SETTINGS);
+                    showIfNotShowing(AdminPasswordDialogFragment.class, args, getSupportFragmentManager());
+                } else {
+                    startActivity(new Intent(this, AdminPreferencesActivity.class));
+                }
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -496,8 +433,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
             }
         } else {
             sendDataButton.setText(getString(R.string.send_data));
-            Timber.w("Cannot update \"Send Finalized\" button label since the database is closed. "
-                    + "Perhaps the app is running in the background?");
+            Timber.w("Cannot update \"Send Finalized\" button label since the database is closed. Perhaps the app is running in the background?");
         }
 
         if (savedCursor != null && !savedCursor.isClosed()) {
@@ -511,8 +447,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
             }
         } else {
             reviewDataButton.setText(getString(R.string.review_data));
-            Timber.w("Cannot update \"Edit Form\" button label since the database is closed. "
-                    + "Perhaps the app is running in the background?");
+            Timber.w("Cannot update \"Edit Form\" button label since the database is closed. Perhaps the app is running in the background?");
         }
 
         if (viewSentCursor != null && !viewSentCursor.isClosed()) {
@@ -526,8 +461,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
             }
         } else {
             viewSentFormsButton.setText(getString(R.string.view_sent_forms));
-            Timber.w("Cannot update \"View Sent\" button label since the database is closed. "
-                    + "Perhaps the app is running in the background?");
+            Timber.w("Cannot update \"View Sent\" button label since the database is closed. Perhaps the app is running in the background?");
         }
     }
 
@@ -638,20 +572,12 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         });
     }
 
-    private void importSettingsFromLegacyFiles() {
-//        try {
-//            String settings = new LegacySettingsFileReader(storagePathProvider).toJSON();
-//
-//            if (settings != null) {
-//                if (settingsImporter.fromJSON(settings)) {
-//                    ToastUtils.showLongToast(R.string.settings_successfully_loaded_file_notification);
-//                    recreate();
-//                } else {
-//                    ToastUtils.showLongToast(R.string.corrupt_settings_file_notification);
-//                }
-//            }
-//        } catch (LegacySettingsFileReader.CorruptSettingsFileException e) {
-//            ToastUtils.showLongToast(R.string.corrupt_settings_file_notification);
-//        }
+    private void tryToPerformAutomaticMigration() {
+        if (storageStateProvider.shouldPerformAutomaticMigration()) {
+            StorageMigrationDialog dialog = showStorageMigrationDialog();
+            if (dialog != null) {
+                dialog.startStorageMigration();
+            }
+        }
     }
 }

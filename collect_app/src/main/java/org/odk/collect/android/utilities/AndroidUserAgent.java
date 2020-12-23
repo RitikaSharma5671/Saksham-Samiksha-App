@@ -1,7 +1,6 @@
 package org.odk.collect.android.utilities;
 
-import androidx.multidex.BuildConfig;
-
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.utilities.UserAgentProvider;
 
 public final class AndroidUserAgent implements UserAgentProvider {

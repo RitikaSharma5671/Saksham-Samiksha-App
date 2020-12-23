@@ -6,10 +6,10 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.work.WorkManager;
 
 import org.jetbrains.annotations.NotNull;
-import org.odk.collect.async.Cancellable;
-import org.odk.collect.async.CoroutineAndWorkManagerScheduler;
-import org.odk.collect.async.Scheduler;
-import org.odk.collect.async.TaskSpec;
+import org.odk.collect.utilities.async.Cancellable;
+import org.odk.collect.utilities.async.CoroutineAndWorkManagerScheduler;
+import org.odk.collect.utilities.async.Scheduler;
+import org.odk.collect.utilities.async.TaskSpec;
 
 import java.util.ArrayList;
 import java.util.List;

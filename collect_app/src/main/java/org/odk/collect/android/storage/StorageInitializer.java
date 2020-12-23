@@ -4,8 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect1;
-
+import org.odk.collect.android.application.Collect;
 
 import java.io.File;
 
@@ -18,7 +17,7 @@ public class StorageInitializer {
     private Context context;
 
     public StorageInitializer() {
-        this(new StorageStateProvider(), new StoragePathProvider(), Collect1.getInstance().getAppContext());
+        this(new StorageStateProvider(), new StoragePathProvider(), Collect.getInstance());
     }
 
     public StorageInitializer(StorageStateProvider storageStateProvider, StoragePathProvider storagePathProvider, Context context) {
@@ -37,7 +36,7 @@ public class StorageInitializer {
             if (!dir.exists()) {
                 if (!dir.mkdirs()) {
                     String message = context.getString(R.string.cannot_create_directory, dirPath);
-                    Timber.d("Error while creating directories : " + message);
+                    Timber.w(message);
                     throw new RuntimeException(message);
                 }
             } else {

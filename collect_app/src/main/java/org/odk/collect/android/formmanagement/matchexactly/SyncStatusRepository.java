@@ -1,29 +1,30 @@
 package org.odk.collect.android.formmanagement.matchexactly;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import org.odk.collect.android.forms.FormSourceException;
 
 public class SyncStatusRepository {
 
     private final MutableLiveData<Boolean> syncing = new MutableLiveData<>(false);
-    private boolean started;
+    private final MutableLiveData<FormSourceException> lastSyncFailure = new MutableLiveData<>(null);
 
     public LiveData<Boolean> isSyncing() {
         return syncing;
     }
 
-    public synchronized boolean startSync() {
-        if (started) {
-            return false;
-        } else {
-            syncing.postValue(true);
-            started = true;
-            return true;
-        }
+    public void startSync() {
+        syncing.postValue(true);
     }
 
-    public void finishSync() {
+    public void finishSync(@Nullable FormSourceException exception) {
+        lastSyncFailure.postValue(exception);
         syncing.postValue(false);
-        started = false;
+    }
+
+    public LiveData<FormSourceException> getSyncError() {
+        return lastSyncFailure;
     }
 }

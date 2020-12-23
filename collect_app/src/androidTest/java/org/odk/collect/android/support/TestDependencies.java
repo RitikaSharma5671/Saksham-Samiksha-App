@@ -8,7 +8,7 @@ import androidx.work.WorkManager;
 import org.odk.collect.android.injection.config.AppDependencyModule;
 import org.odk.collect.android.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.storage.migration.StorageMigrationService;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.utilities.async.Scheduler;
 import org.odk.collect.utilities.UserAgentProvider;
 
 import java.util.List;

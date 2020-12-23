@@ -40,7 +40,7 @@ import org.odk.collect.android.support.pages.MainMenuPage;
 import org.odk.collect.android.support.pages.QRCodePage;
 import org.odk.collect.android.utilities.CompressionUtils;
 import org.odk.collect.android.views.BarcodeViewDecoder;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.utilities.async.Scheduler;
 
 import java.io.File;
 import java.io.FileOutputStream;

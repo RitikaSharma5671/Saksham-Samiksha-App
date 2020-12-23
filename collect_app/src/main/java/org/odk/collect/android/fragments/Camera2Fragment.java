@@ -820,9 +820,12 @@ public class Camera2Fragment extends Fragment
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.texture) {
-            textureView.setClickable(false);
-            takePicture();
+        switch (view.getId()) {
+            case R.id.texture: {
+                textureView.setClickable(false);
+                takePicture();
+                break;
+            }
         }
     }
 
@@ -853,7 +856,7 @@ public class Camera2Fragment extends Fragment
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
 
-            CameraUtils.savePhoto(new StoragePathProvider().getTmpFilePath(), bytes);
+            CameraUtils.savePhoto(new StoragePathProvider().getTmpImageFilePath(), bytes);
         }
     }
 

@@ -16,14 +16,14 @@ package org.odk.collect.android.tasks;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.instances.Instance;
 import org.odk.collect.android.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.upload.InstanceServerUploader;
 import org.odk.collect.android.upload.UploadAuthRequestedException;
 import org.odk.collect.android.upload.UploadException;
+import org.odk.collect.android.utilities.TranslationHandler;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 
 import java.util.HashMap;
@@ -38,8 +38,7 @@ import static org.odk.collect.android.analytics.AnalyticsEvents.SUBMISSION;
  *
  * @author Carl Hartung (carlhartung@gmail.com)
  */
-public class
-InstanceServerUploaderTask extends InstanceUploaderTask {
+public class InstanceServerUploaderTask extends InstanceUploaderTask {
     @Inject
     OpenRosaHttpInterface httpInterface;
 
@@ -56,7 +55,7 @@ InstanceServerUploaderTask extends InstanceUploaderTask {
     private String customPassword;
 
     public InstanceServerUploaderTask() {
-        Collect1.getInstance().getComponent().inject(this);
+        Collect.getInstance().getComponent().inject(this);
     }
 
     @Override
@@ -66,8 +65,8 @@ InstanceServerUploaderTask extends InstanceUploaderTask {
         InstanceServerUploader uploader = new InstanceServerUploader(httpInterface, webCredentialsUtils, new HashMap<>());
         List<Instance> instancesToUpload = uploader.getInstancesFromIds(instanceIdsToUpload);
 
-        String deviceId = new PropertyManager(Collect1.getInstance().getAppContext())
-                    .getSingularProperty(PropertyManager.withUri(PropertyManager.PROPMGR_DEVICE_ID));
+        String deviceId = new PropertyManager(Collect.getInstance().getApplicationContext())
+                    .getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
 
         for (int i = 0; i < instancesToUpload.size(); i++) {
             if (isCancelled()) {
@@ -80,17 +79,17 @@ InstanceServerUploaderTask extends InstanceUploaderTask {
             try {
                 String destinationUrl = uploader.getUrlToSubmitTo(instance, deviceId, completeDestinationUrl);
                 String customMessage = uploader.uploadOneSubmission(instance, destinationUrl);
-                outcome.messagesByInstanceId.put(instance.getDatabaseId().toString(),
-                        customMessage != null ? customMessage : Collect1.getInstance().getAppContext().getResources().getString(R.string.success));
+                outcome.messagesByInstanceId.put(instance.getId().toString(),
+                        customMessage != null ? customMessage : TranslationHandler.getString(Collect.getInstance(), R.string.success));
 
-                analytics.logEvent(SUBMISSION, "HTTP", Collect1.getFormIdentifierHash(instance.getJrFormId(), instance.getJrVersion()));
+                analytics.logEvent(SUBMISSION, "HTTP", Collect.getFormIdentifierHash(instance.getJrFormId(), instance.getJrVersion()));
             } catch (UploadAuthRequestedException e) {
                 outcome.authRequestingServer = e.getAuthRequestingServer();
                 // Don't add the instance that caused an auth request to the map because we want to
                 // retry. Items present in the map are considered already attempted and won't be
                 // retried.
             } catch (UploadException e) {
-                outcome.messagesByInstanceId.put(instance.getDatabaseId().toString(),
+                outcome.messagesByInstanceId.put(instance.getId().toString(),
                         e.getDisplayMessage());
             }
         }

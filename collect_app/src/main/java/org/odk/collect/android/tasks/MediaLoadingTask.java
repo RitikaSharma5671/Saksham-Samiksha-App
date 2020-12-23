@@ -2,14 +2,12 @@ package org.odk.collect.android.tasks;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
-
-import org.odk.collect.android.application.Collect1;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.helpers.ContentResolverHelper;
 import org.odk.collect.android.exception.GDriveConnectionException;
 import org.odk.collect.android.fragments.dialogs.ProgressDialogFragment;
@@ -50,17 +48,21 @@ public class MediaLoadingTask extends AsyncTask<Uri, Void, File> {
     protected File doInBackground(Uri... uris) {
 
         File instanceFile;
-        FormController formController = Collect1.getInstance().getFormController();
+        FormController formController = Collect.getInstance().getFormController();
 
         if (formController != null) {
             instanceFile = formController.getInstanceFile();
             if (instanceFile != null) {
                 String instanceFolder = instanceFile.getParent();
                 String extension = ContentResolverHelper.getFileExtensionFromUri(formEntryActivity.get(), uris[0]);
-                String destMediaPath = instanceFolder + File.separator + System.currentTimeMillis() + extension;
+                String destMediaPath = instanceFolder
+                        + File.separator
+                        + System.currentTimeMillis()
+                        + "."
+                        + extension;
 
                 try {
-                    File chosenFile = MediaUtils.getFileFromUri(formEntryActivity.get(), uris[0], MediaStore.Images.Media.DATA, connectivityProvider.get());
+                    File chosenFile = new MediaUtils().getFileFromUri(formEntryActivity.get(), uris[0], connectivityProvider.get());
                     if (chosenFile != null) {
                         final File newFile = new File(destMediaPath);
                         FileUtils.copyFile(chosenFile, newFile);
@@ -94,6 +96,6 @@ public class MediaLoadingTask extends AsyncTask<Uri, Void, File> {
         if (prev != null && !formEntryActivity.get().isInstanceStateSaved()) {
             ((DialogFragment) prev).dismiss();
         }
-        formEntryActivity.get().setBinaryWidgetData(result);
+        formEntryActivity.get().setWidgetData(result);
     }
 }

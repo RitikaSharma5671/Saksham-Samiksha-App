@@ -17,7 +17,7 @@ import org.odk.collect.android.formentry.questions.AudioVideoImageTextLabel;
 import org.odk.collect.android.logic.FileReference;
 import org.odk.collect.android.support.RobolectricHelpers;
 import org.odk.collect.android.support.TestScreenContextActivity;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.utilities.async.Scheduler;
 import org.robolectric.ParameterizedRobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 

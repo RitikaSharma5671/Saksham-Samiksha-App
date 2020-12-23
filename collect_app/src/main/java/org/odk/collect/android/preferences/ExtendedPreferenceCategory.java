@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
  */
 public class ExtendedPreferenceCategory extends PreferenceCategory {
 
+    @BindView(android.R.id.title)
     TextView title;
 
     @ColorInt
@@ -54,7 +55,6 @@ public class ExtendedPreferenceCategory extends PreferenceCategory {
     protected void onBindView(View view) {
         super.onBindView(view);
         ButterKnife.bind(this, view);
-        title = view.findViewById(android.R.id.title);
 
         setupColorStates();
 

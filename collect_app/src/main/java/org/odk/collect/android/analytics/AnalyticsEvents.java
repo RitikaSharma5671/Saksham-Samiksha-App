@@ -7,23 +7,10 @@ public class AnalyticsEvents {
     }
 
     /**
-     * Used to measure how popular different methods of adding repeats are. The "action" should
-     * describe the way the repeat was added. The label should be the form hash identifier.
-     */
-    public static final String ADD_REPEAT = "AddRepeat";
-
-    /**
      * Track changes to the server URL setting. The action should be the scheme followed by a space
      * followed by one of Appspot, Ona, Kobo or Other. The label should be a hash of the URL.
      */
     public static final String SET_SERVER = "SetServer";
-
-    /**
-     * Track changes to the custom formList or submission endpoint settings. The action should be
-     * the standard endpoint name followed by a space followed by the hash of the custom endpoint
-     * name.
-     */
-    public static final String SET_CUSTOM_ENDPOINT = "SetCustomEndpoint";
 
     /**
      * Track changes to the Google Sheets fallback submission URL setting. The action should be
@@ -56,22 +43,6 @@ public class AnalyticsEvents {
     public static final String ENCRYPT_SUBMISSION = "EncryptSubmission";
 
     /**
-     * Track changes to the filter applied to the list of forms to send. The action should be a
-     * filter.
-     */
-    public static final String FILTER_FORMS_TO_SEND = "FilterSendForms";
-
-    /**
-     * Track displays of the likert question type. The action should be a hash of the form definition.
-     */
-    public static final String LIKERT = "Likert";
-
-    /**
-     * Track null form controllers. The action should be a description of when this occurred.
-     */
-    public static final String NULL_FORM_CONTROLLER_EVENT = "NullFormControllerEvent";
-
-    /**
      * Track changes to preferences related to automatic form updates. The action should be the
      * preference name and the label should be the new preference value.
      */
@@ -90,22 +61,10 @@ public class AnalyticsEvents {
     public static final String SAVE_INCOMPLETE = "WidgetAttribute";
 
     /**
-     * Track displays of audio question types. The action should be the type of audio question and
+     * Track displays of widget/question types. The action should be the type of widget and
      * the label should be a hash of the form definition.
      */
-    public static final String AUDIO_QUESTION = "Prompt";
-
-    /**
-     * Track initiations of a configuration QR code scan. The action should describe where the scan
-     * was launched from.
-     */
-    public static final String SCAN_QR_CODE = "ScanQRCode";
-
-    /**
-     * Track launches of form definitions that have a background location action. The action should
-     * be a hash of the form definition.
-     */
-    public static final String LAUNCH_FORM_WITH_BG_LOCATION = "LaunchFormWithBGLocation";
+    public static final String PROMPT = "Prompt";
 
     /**
      * Track scoped storage migration attempts. The action should be the result of the attempt.
@@ -113,11 +72,9 @@ public class AnalyticsEvents {
     public static final String SCOPED_STORAGE_MIGRATION = "ScopedStorageMigration";
 
     /**
-     * Track presses of QRCode Configuration options which can be used to remove
-     * the admin or server password from the generated QR Code.
-     * The action should be the password removed/added.
+     * Track attempts to download a form with the same formid/version as one already on the device.
      */
-    public static final String CONFIGURE_QR_CODE = "ConfigureQRCode";
+    public static final String DOWNLOAD_SAME_FORMID_VERSION = "DownloadSameFormidVersion";
 
     /**
      * Track downloads initiated when there are no downloaded forms on the device. The action should
@@ -137,4 +94,90 @@ public class AnalyticsEvents {
      * {number of downloaded forms}/{total forms}-{form server hash}
      */
     public static final String SUBSEQUENT_FORM_DOWNLOAD = "SubsequentFormDownload";
+
+    /**
+     * Used to measure how popular the refresh button on Fill Blank Forms is. The button
+     * only displays when Match Exactly is enabled. Right now the action passed is "Manual". This
+     * means that we could extend the event to track auto or other syncs in the future.
+     */
+    public static final String MATCH_EXACTLY_SYNC = "MatchExactlySync";
+
+    /**
+     * Used to measure how the relative frequencies of different outcomes for a Match Exactly sync.
+     * The action should indicate the outcome as any of:
+     * - "Success"
+     * - "UNKNOWN_HOST"
+     * - "AUTH_REQUIRED"
+     * - "FETCH_ERROR"
+     */
+    public static final String MATCH_EXACTLY_SYNC_COMPLETED = "MatchExactlySyncCompleted";
+
+    /**
+     * Track the outcome of a QR code scan. Used to see whether changes in UX or documentation are
+     * needed to get users to a successful state. The action should be the outcome. The label should
+     * be a hash of the settings represented by the code.
+     */
+    public static final String SETTINGS_IMPORT_QR = "SettingsImportQr";
+
+    /**
+     * Track the outcome of a QR code read from image. The action should be the outcome. The label should
+     * be a hash of the settings represented by the code.
+     */
+    public static final String SETTINGS_IMPORT_QR_IMAGE = "SettingsImportQrImage";
+
+    /**
+     * Track the outcome of a .collect.settings file being imported. The action should be the outcome.
+     * The label should be a hash of the settings represented by the file.
+     */
+    public static final String SETTINGS_IMPORT_SERIALIZED = "SettingsImportSerialized";
+
+    /**
+     * Track the outcome of a .collect.settings.json file being imported. The action should be the outcome.
+     * The label should be a hash of the settings represented by the file.
+     */
+    public static final String SETTINGS_IMPORT_JSON = "SettingsImportJson";
+
+    /**
+     * Track submissions to a URL with a custom submission endpoint configured in settings. The action
+     * should be a hash of the endpoint setting.
+     */
+    public static final String CUSTOM_ENDPOINT_SUB = "CustomEndpointSub";
+
+    /**
+     * Track usage of legacy Aggregate < 1 form list API code paths.
+     */
+    public static final String LEGACY_FORM_LIST = "LegacyFormList";
+
+    /**
+     * Tracks how often the audio player seek bar is used.
+     */
+    public static final String AUDIO_PLAYER_SEEK = "AudioPlayerSeek";
+
+    /**
+     * Tracks how often pause action is used while recording audio
+     */
+    public static final String AUDIO_RECORDING_PAUSE = "AudioRecordingPause";
+
+    /**
+     * Tracks usage or internal recording vs external recording vs choosing files for
+     * audio question
+     */
+    public static final String AUDIO_RECORDING_INTERNAL = "AudioRecordingInternal";
+    public static final String AUDIO_RECORDING_EXTERNAL = "AudioRecordingExternal";
+    public static final String AUDIO_RECORDING_CHOOSE = "AudioRecordingChoose";
+
+    /**
+     * Tracks how often questions are answered while an audio recording is being made
+     */
+    public static final String ANSWER_WHILE_RECORDING = "AnswerWhileRecording";
+
+    /**
+     * Tracks how many users have opted in to internal recording as their default
+     */
+    public static final String INTERNAL_RECORDING_OPT_IN = "InternalRecordingOptIn";
+
+    /**
+     * Tracks how often people see the URL question
+     */
+    public static final String URL_QUESTION = "UrlQuestion";
 }

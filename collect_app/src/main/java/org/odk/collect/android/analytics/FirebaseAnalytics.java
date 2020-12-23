@@ -16,6 +16,7 @@ public class FirebaseAnalytics implements Analytics {
         setupRemoteAnalytics();
     }
 
+    @Deprecated
     @Override
     public void logEvent(String category, String action) {
         Bundle bundle = new Bundle();
@@ -23,13 +24,27 @@ public class FirebaseAnalytics implements Analytics {
         firebaseAnalytics.logEvent(category, bundle);
     }
 
+    @Deprecated
     @Override
     public void logEvent(String category, String action, String label) {
         Bundle bundle = new Bundle();
         bundle.putString("action", action);
         bundle.putString("label", label);
-        if(firebaseAnalytics !=null)
         firebaseAnalytics.logEvent(category, bundle);
+    }
+
+    @Override
+    public void logFormEvent(String event, String formId) {
+        Bundle bundle = new Bundle();
+        bundle.putString("form", formId);
+        firebaseAnalytics.logEvent(event, bundle);
+    }
+
+    @Override
+    public void logServerEvent(String event, String serverHash) {
+        Bundle bundle = new Bundle();
+        bundle.putString("server", serverHash);
+        firebaseAnalytics.logEvent(event, bundle);
     }
 
     private void setupRemoteAnalytics() {
@@ -39,5 +54,10 @@ public class FirebaseAnalytics implements Analytics {
 
     public void setAnalyticsCollectionEnabled(boolean isAnalyticsEnabled) {
         firebaseAnalytics.setAnalyticsCollectionEnabled(isAnalyticsEnabled);
+    }
+
+    @Override
+    public void setUserProperty(String name, String value) {
+        firebaseAnalytics.setUserProperty(name, value);
     }
 }
