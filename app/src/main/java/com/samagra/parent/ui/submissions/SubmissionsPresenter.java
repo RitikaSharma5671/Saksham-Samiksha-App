@@ -143,7 +143,7 @@ public class SubmissionsPresenter implements SubmissionsMvpPresenter, GetPDFList
         ArrayList<PDFItem> submissions = new ArrayList<>();
         if (!filterText.equals("")) {
             for (PDFItem sub : unfilteredSubmissions) {
-                if (sub.getPDFItemTags().getFORMNAME().toLowerCase().contains(filterText.toLowerCase())) submissions.add(sub);
+                if (sub.getPDFItemTags().getFormName().toLowerCase().contains(filterText.toLowerCase())) submissions.add(sub);
             }
         } else {
             submissions = unfilteredSubmissions;
@@ -157,7 +157,7 @@ public class SubmissionsPresenter implements SubmissionsMvpPresenter, GetPDFList
         if (!(selectedFormFilter == 0)) {
             ArrayList<PDFItem> submissionsCopy = new ArrayList<>();
             for (PDFItem sub : submissions) {
-                if (sub.getPDFItemTags().getFORMNAME().equals(formOptions.get(selectedFormFilter))) {
+                if (sub.getPDFItemTags().getFormName().equals(formOptions.get(selectedFormFilter))) {
                     submissionsCopy.add(sub);
                 }
             }
@@ -168,9 +168,9 @@ public class SubmissionsPresenter implements SubmissionsMvpPresenter, GetPDFList
         switch (selectedSortingOrder) {
             case BY_NAME_ASC:
                 Collections.sort(submissions, (o1, o2) -> {
-                    int res = String.CASE_INSENSITIVE_ORDER.compare(o1.getPDFItemTags().getFORMNAME(), o2.getPDFItemTags().getFORMNAME());
+                    int res = String.CASE_INSENSITIVE_ORDER.compare(o1.getPDFItemTags().getFormName(), o2.getPDFItemTags().getFormName());
                     if (res == 0) {
-                        res = o1.getPDFItemTags().getFORMNAME().compareTo(o2.getPDFItemTags().getFORMNAME());
+                        res = o1.getPDFItemTags().getFormName().compareTo(o2.getPDFItemTags().getFormName());
                     }
                     return res;
                 });
@@ -178,20 +178,30 @@ public class SubmissionsPresenter implements SubmissionsMvpPresenter, GetPDFList
 
             case BY_NAME_DESC:
                 Collections.sort(submissions, (o1, o2) -> {
-                    int res = String.CASE_INSENSITIVE_ORDER.compare(o2.getPDFItemTags().getFORMNAME(), o1.getPDFItemTags().getFORMNAME());
+                    int res = String.CASE_INSENSITIVE_ORDER.compare(o2.getPDFItemTags().getFormName(), o1.getPDFItemTags().getFormName());
                     if (res == 0) {
-                        res = o2.getPDFItemTags().getFORMNAME().compareTo(o1.getPDFItemTags().getFORMNAME());
+                        res = o2.getPDFItemTags().getFormName().compareTo(o1.getPDFItemTags().getFormName());
                     }
                     return res;
                 });
                 return submissions;
 
             case BY_DATE_DESC:
-                Collections.sort(submissions, (o1, o2) -> o2.getOutputData().get(0).getTags().getFORMSUBMISSIONDATE().compareTo(o1.getOutputData().get(0).getTags().getFORMSUBMISSIONDATE()));
+                Collections.sort(submissions, new Comparator<PDFItem>() {
+                    @Override
+                    public int compare(PDFItem o1, PDFItem o2) {
+                        return o2.getPDFItemTags().getFormSubmissionDate().compareTo(o1.getPDFItemTags().getFormSubmissionDate());
+                    }
+                });
                 return submissions;
 
             case BY_DATE_ASC:
-                Collections.sort(submissions, (o1, o2) -> o1.getOutputData().get(0).getTags().getFORMSUBMISSIONDATE().compareTo(o2.getOutputData().get(0).getTags().getFORMSUBMISSIONDATE()));
+                Collections.sort(submissions, new Comparator<PDFItem>() {
+                    @Override
+                    public int compare(PDFItem o1, PDFItem o2) {
+                        return o1.getPDFItemTags().getFormSubmissionDate().compareTo(o2.getPDFItemTags().getFormSubmissionDate());
+                    }
+                });
                 return submissions;
 
         }
@@ -208,7 +218,7 @@ public class SubmissionsPresenter implements SubmissionsMvpPresenter, GetPDFList
         ArrayList<PDFItem> submissions = getSubmissionsFromCache();
         ArrayList<String> formNames = new ArrayList<>();
         for (PDFItem submission : submissions) {
-            formNames.add((submission.getPDFItemTags().getFORMNAME()));
+            formNames.add((submission.getPDFItemTags().getFormName()));
         }
         formNames.add(0, "All");
         return new ArrayList<>(formNames);

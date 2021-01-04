@@ -48,6 +48,7 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.location.client.GoogleFusedLocationClient;
 import org.odk.collect.android.location.client.LocationClient;
@@ -521,7 +522,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
     private void enableLocationUpdates(boolean enable) {
         if (locationClient == null) {
             locationClient = LocationClientProvider.getClient(getActivity(), new PlayServicesChecker(),
-                    () -> new GoogleFusedLocationClient(getActivity().getApplication()));
+                    Collect1.getGoogleFusedLocationClient());
             locationClient.setListener(this);
         }
         if (enable) {

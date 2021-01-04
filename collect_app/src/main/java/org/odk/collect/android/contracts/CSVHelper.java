@@ -44,7 +44,12 @@ public class CSVHelper {
         File dir = new File(Collect1.getInstance().getStoragePathProvider().getDirPath(StorageSubdirectory.FORMS));
         File[] files;
         ArrayList<String> directoriesNames = new ArrayList<>();
-        FileFilter fileFilter = File::isDirectory;
+        FileFilter fileFilter = new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isDirectory();
+            }
+        };
         files = dir.listFiles(fileFilter);
         if (files.length == 0) {
             Timber.d("ODK Forms with media have not been downloaded. No such Directory exists.");
@@ -114,7 +119,12 @@ public class CSVHelper {
     private static ArrayList<String> fetchValidDirectories(ArrayList<String> directories, String referenceFileName) {
         ArrayList<String> directoriesAbsoluteName = new ArrayList<>();
         ArrayList<String> directoriesNames = new ArrayList<>(directories);
-        FileFilter fileFilter = File::isFile;
+        FileFilter fileFilter = new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isFile();
+            }
+        };
         for (String directoryName : directories) {
             File dir = new File(directoryName);
             File[] files;

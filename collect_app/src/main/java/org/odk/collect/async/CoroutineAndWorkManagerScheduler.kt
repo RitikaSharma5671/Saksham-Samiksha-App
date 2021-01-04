@@ -13,6 +13,7 @@ class CoroutineAndWorkManagerScheduler(private val foreground: CoroutineContext,
 
     override fun <T> immediate(background: Supplier<T>, foreground: Consumer<T>) {
         CoroutineScope(this.foreground).launch {
+            ->
             foreground.accept(withContext(this@CoroutineAndWorkManagerScheduler.background) { background.get() })
         }
     }

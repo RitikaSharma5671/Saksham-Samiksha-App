@@ -40,6 +40,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.google.android.gms.location.LocationListener;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.location.client.GoogleFusedLocationClient;
 import org.odk.collect.android.location.client.LocationClient;
@@ -182,7 +183,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         addMapLayoutChangeListener(map);
 
         locationClient = LocationClientProvider.getClient(getActivity(), new PlayServicesChecker(),
-                () -> new GoogleFusedLocationClient(getActivity().getApplication()));
+                Collect1.getGoogleFusedLocationClient());
         locationClient.setListener(this);
 
         osmLocationClientWrapper = new OsmLocationClientWrapper(locationClient);
@@ -412,7 +413,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     private void enableLocationUpdates(boolean enable) {
         if (locationClient == null) {
             locationClient = LocationClientProvider.getClient(getActivity(), new PlayServicesChecker(),
-                    () -> new GoogleFusedLocationClient(getActivity().getApplication()));
+                   Collect1.getGoogleFusedLocationClient());
             locationClient.setListener(this);
         }
 

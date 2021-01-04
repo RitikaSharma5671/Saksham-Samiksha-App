@@ -8,21 +8,19 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.odk.collect.async.Scheduler;
 
-import java.util.function.Supplier;
-
 class AudioPlayerViewModelFactory implements ViewModelProvider.Factory {
 
-    private final Supplier<MediaPlayer> mediaPlayerFactory;
+    private final MediaPlayer mediaPlayer;
     private final Scheduler scheduler;
 
-    AudioPlayerViewModelFactory(Supplier<MediaPlayer> mediaPlayerFactory, Scheduler scheduler) {
-        this.mediaPlayerFactory = mediaPlayerFactory;
+    AudioPlayerViewModelFactory(MediaPlayer mediaPlayer, Scheduler scheduler) {
+        this.mediaPlayer = mediaPlayer;
         this.scheduler = scheduler;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new AudioPlayerViewModel(mediaPlayerFactory, scheduler);
+        return (T) new AudioPlayerViewModel(mediaPlayer, scheduler);
     }
 }

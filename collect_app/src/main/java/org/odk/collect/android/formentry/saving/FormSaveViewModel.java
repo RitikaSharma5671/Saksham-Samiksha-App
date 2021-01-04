@@ -336,7 +336,12 @@ public class FormSaveViewModel extends ViewModel implements ProgressDialogFragme
             return formSaver.save(saveRequest.uri, formController,
                     saveRequest.shouldFinalize,
                     saveRequest.viewExiting, saveRequest.updatedSaveName,
-                    this::publishProgress, analytics
+                    new FormSaver.ProgressListener() {
+                        @Override
+                        public void onProgressUpdate(String values) {
+                            publishProgress(values);
+                        }
+                    }, analytics
             );
         }
 
@@ -370,7 +375,12 @@ public class FormSaveViewModel extends ViewModel implements ProgressDialogFragme
         @NonNull
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return (T) new FormSaveViewModel(System::currentTimeMillis, new DiskFormSaver(), analytics);
+            return (T) new FormSaveViewModel(new Clock() {
+                @Override
+                public long getCurrentTime() {
+                    return System.currentTimeMillis();
+                }
+            }, new DiskFormSaver(), analytics);
         }
     }
 }

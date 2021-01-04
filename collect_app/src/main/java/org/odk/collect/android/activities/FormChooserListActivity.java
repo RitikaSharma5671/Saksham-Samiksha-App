@@ -279,7 +279,12 @@ public class FormChooserListActivity extends FormListActivity implements
 
         listAdapter = new FormListAdapter(
                 listView, FormsColumns.JR_VERSION, this, R.layout.form_chooser_list_item,
-                this::onMapButtonClick, columnNames, viewIds);
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        FormChooserListActivity.this.onMapButtonClick(parent, view, position, id);
+                    }
+                }, columnNames, viewIds);
         listView.setAdapter(listAdapter);
     }
 

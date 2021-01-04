@@ -38,10 +38,6 @@ import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
  * View part of the MyVisits Screen. This class only handles the UI operations, all the business
  * logic is simply abstracted from this Activity. It <b>must</b> implement the {@link SubmissionsMvpView}
@@ -51,34 +47,17 @@ import butterknife.Unbinder;
  */
 public class SubmissionsActivity extends BaseActivity implements SubmissionsMvpView {
 
-    @BindView(R.id.submissions_rv)
-    public RecyclerView recyclerView;
-
-    @BindView(R.id.parent_of_submissions)
-    public RelativeLayout parentLayout;
-
-    @BindView(R.id.click_to_download)
-    public TextView clickToDownload;
-
-    @BindView(R.id.no_internet_iv)
-    public ImageView noSubmissionView;
-
-    @BindView(R.id.lottie_loader)
-    public LottieAnimationView lottie_loader;
-
-    @BindView(R.id.view_submissions)
-    public Button viewSubmissions;
-
-    @BindView(R.id.retry_fetching)
-    public Button retryFetching;
-
-    @BindView(R.id.internet_error_view)
-    public LinearLayout internetErrorView;
+    private RecyclerView recyclerView;
+    private RelativeLayout parentLayout;
+    private TextView clickToDownload;
+    private ImageView noSubmissionView;
+    private LottieAnimationView lottie_loader;
+    private Button viewSubmissions;
+    private Button retryFetching;
+    private LinearLayout internetErrorView;
 
     public SubmissionsAdapter submissionsAdapter;
     public RecyclerView.LayoutManager layoutManager;
-    private Unbinder unbinder;
-
     private BottomSheetDialog bottomSheetDialog;
     private boolean isBottomDialogShown = false;
     protected int[] sortingOptions;
@@ -102,7 +81,14 @@ public class SubmissionsActivity extends BaseActivity implements SubmissionsMvpV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submissions);
-        unbinder = ButterKnife.bind(this);
+        recyclerView = findViewById(R.id.submissions_rv);
+        parentLayout = findViewById(R.id.parent_of_submissions);
+        clickToDownload = findViewById(R.id.click_to_download);
+        noSubmissionView =  findViewById(R.id.no_internet_iv);
+        lottie_loader = findViewById(R.id.lottie_loader);
+        viewSubmissions = findViewById(R.id.view_submissions);
+        retryFetching = findViewById(R.id.retry_fetching);
+        internetErrorView = findViewById(R.id.internet_error_view);
         setupToolbar();
         showProgressBar();
         setupRecyclerView();
@@ -117,6 +103,7 @@ public class SubmissionsActivity extends BaseActivity implements SubmissionsMvpV
         setupBottomSheet();
         setupBottomSheetForForms();
         submissionsPresenter.updateFilters(filterText, selectedSortingOrder, selectedSortingOrder);
+
         retryFetching.setOnClickListener( v -> onRefreshButtonPressed());
         viewSubmissions.setOnClickListener( v -> onViewSubmissionsClicked());
     }
@@ -187,7 +174,6 @@ public class SubmissionsActivity extends BaseActivity implements SubmissionsMvpV
 
     @Override
     protected void onDestroy() {
-        unbinder.unbind();
         super.onDestroy();
     }
 

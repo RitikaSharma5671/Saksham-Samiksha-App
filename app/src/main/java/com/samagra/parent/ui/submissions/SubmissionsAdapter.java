@@ -1,7 +1,6 @@
 package com.samagra.parent.ui.submissions;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -59,28 +58,25 @@ public class SubmissionsAdapter extends RecyclerView.Adapter<SubmissionsAdapter.
     @Override
     public void onBindViewHolder(@NonNull SubmissionViewHolder holder, int position) {
         PDFItem submission = submissions.get(position);
-        holder.formName.setText(submission.getPDFItemTags().getFORMNAME());
+        holder.formName.setText(submission.getPDFItemTags().getFormName());
         holder.formName.setTypeface(Typeface.DEFAULT_BOLD);
-        if(submission.getOutputData() != null && submission.getOutputData().size() > 0){
-        holder.submissionDate.setText(submission.getOutputData().get(0).getTags().getFORMSUBMISSIONDATE());
-        if (submission.getCurrentStatus().equals("Queue") ||
-                submission.getOutputData().get(0).getDocName() == null ||
-                submission.getOutputData().get(0).getDocName() .equals("")) {
+        if(submission.getPDFItemTags() != null){
+        holder.submissionDate.setText(submission.getPDFItemTags().getUnprocessedDate());
             Drawable pdfIcon = context.getResources().getDrawable(R.drawable.pdf_icon);
             ImageView iv = holder.pdfURL.findViewById(R.id.pdf_icon);
-            iv.setImageAlpha(30);
+            if (submission.getPDFDocLink() == null ||
+                submission.getPDFDocLink().equals("")) {
+                iv.setImageAlpha(30);
             iv.setImageDrawable(pdfIcon);
             holder.pdfURL.setOnClickListener(v -> {
                         Toast.makeText(context, R.string.pdf_not_generated_error, Toast.LENGTH_LONG).show();
                     }
             );
         }else {
-            Drawable pdfIcon = context.getResources().getDrawable(R.drawable.pdf_icon);
-            ImageView iv = holder.pdfURL.findViewById(R.id.pdf_icon);
-            iv.setImageDrawable(pdfIcon);
+                iv.setImageDrawable(pdfIcon);
             iv.setImageAlpha(255);
             holder.pdfURL.setOnClickListener(v -> {
-               Uri websiteUri = Uri.parse(submission.getOutputData().get(0).getDocName());
+               Uri websiteUri = Uri.parse(submission.getPDFDocLink());
                 context.startActivity(new Intent(Intent.ACTION_VIEW, websiteUri));
                 Snackbar.make(context.getParentLayout(), R.string.file_download_start, Snackbar.LENGTH_LONG)
                         .setAction("CLOSE", view -> {

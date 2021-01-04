@@ -19,11 +19,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.function.Supplier;
 
 class AudioPlayerViewModel extends ViewModel implements MediaPlayer.OnCompletionListener {
 
-    private final Supplier<MediaPlayer> mediaPlayerFactory;
     private final Scheduler scheduler;
     private MediaPlayer mediaPlayer;
 
@@ -33,8 +31,8 @@ class AudioPlayerViewModel extends ViewModel implements MediaPlayer.OnCompletion
 
     private Cancellable positionUpdatesCancellable;
 
-    AudioPlayerViewModel(Supplier<MediaPlayer> mediaPlayerFactory, Scheduler scheduler) {
-        this.mediaPlayerFactory = mediaPlayerFactory;
+    AudioPlayerViewModel(MediaPlayer mediaPlayer, Scheduler scheduler) {
+        this.mediaPlayer = mediaPlayer;
         this.scheduler = scheduler;
 
         currentlyPlaying.setValue(null);
@@ -197,15 +195,18 @@ class AudioPlayerViewModel extends ViewModel implements MediaPlayer.OnCompletion
     }
 
     private void releaseMediaPlayer() {
-        getMediaPlayer().release();
-        mediaPlayer = null;
+       if(getMediaPlayer() != null) {
+           getMediaPlayer().release();
+           mediaPlayer = null;
+       }
+
     }
 
     private MediaPlayer getMediaPlayer() {
-        if (mediaPlayer == null) {
-            mediaPlayer = mediaPlayerFactory.get();
-            mediaPlayer.setOnCompletionListener(this);
-        }
+//        if (mediaPlayer == null) {
+//            mediaPlayer = mediaPlayerFactory.get();
+//            mediaPlayer.setOnCompletionListener(this);
+//        }
 
         return mediaPlayer;
     }

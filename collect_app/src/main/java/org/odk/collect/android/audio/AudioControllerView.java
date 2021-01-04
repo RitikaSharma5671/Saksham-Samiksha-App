@@ -16,6 +16,7 @@ package org.odk.collect.android.audio;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -26,10 +27,6 @@ import org.joda.time.DateTimeZone;
 import org.odk.collect.android.R;
 import org.odk.collect.android.R2;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -40,10 +37,8 @@ public class AudioControllerView extends FrameLayout {
 
     TextView totalDurationLabel;
 
-    @BindView(R2.id.playBtnee)
-    @SuppressFBWarnings("UR")
     ImageButton playButtonjljk;
-
+    Button fastForwardBtn;
 
     private final SwipeListener swipeListener;
 
@@ -51,20 +46,33 @@ public class AudioControllerView extends FrameLayout {
     private Integer position = 0;
     private Integer duration = 0;
 
+    Button fastRewindBtn;
     private Listener listener;
 
     public AudioControllerView(Context context) {
         super(context);
 
-        View.inflate(context, R.layout.audio_controller_layout, this);
-        ButterKnife.bind(this);
+      View view =   View.inflate(context, R.layout.audio_controller_layout, this);
+        playButtonjljk = view.findViewById(R.id.playBtnee);
+        fastForwardBtn = view.findViewById(R.id.fastForwardBtn);
         SeekBar seekBarCTA = findViewById(R.id.seekBarButton);
-
         swipeListener = new SwipeListener();
         seekBarCTA.setOnSeekBarChangeListener(swipeListener);
         playButtonjljk.setImageResource(R.drawable.ic_play_arrow_24dp);
         currentDurationLabel = findViewById(R.id.currentDuration);
         totalDurationLabel = findViewById(R.id.totalDuration);
+        fastForwardBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fastForwardMedia();
+            }
+        });
+        fastRewindBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rewindMedia();
+            }
+        });
         playButtonjljk.setOnClickListener(
                 new OnClickListener() {
                     @Override
@@ -75,14 +83,12 @@ public class AudioControllerView extends FrameLayout {
         );
     }
 
-    @OnClick(R2.id.fastForwardBtn)
     void fastForwardMedia() {
         int newPosition = position + 5000;
         onPositionChanged(newPosition);
     }
 
-    @OnClick(R2.id.fastRewindBtn)
-    void rewindMedia() {
+     void rewindMedia() {
         int newPosition = position - 5000;
         onPositionChanged(newPosition);
     }

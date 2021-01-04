@@ -17,58 +17,74 @@ public class Tags implements Serializable{
 
     @SerializedName("FORMID")
     @Expose
-    private String fORMID;
+    private String formId;
     @SerializedName("FORMNAME")
     @Expose
-    private String fORMNAME;
+    private String formName;
     @SerializedName("USERNAME")
     @Expose
-    private String uSERNAME;
+    private String username;
     @SerializedName("INSTANCEID")
     @Expose
-    private String iNSTANCEID;
+    private String instanceId;
     @SerializedName("FORMSUBMISSIONDATE")
     @Expose
-    private String fORMSUBMISSIONDATE;
+    private String formSubmissionDate;
 
-    public String getFORMID() {
-        return fORMID;
+    public String getFormId() {
+        return formId;
     }
 
-    public void setFORMID(String fORMID) {
-        this.fORMID = fORMID;
+    public void setFormId(String formId) {
+        this.formId = formId;
     }
 
-    public String getFORMNAME() {
-        return fORMNAME;
+    public String getFormName() {
+        return formName;
     }
 
-    public void setFORMNAME(String fORMNAME) {
-        this.fORMNAME = fORMNAME;
+    public void setFormName(String formName) {
+        this.formName = formName;
     }
 
-    public String getUSERNAME() {
-        return uSERNAME;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUSERNAME(String uSERNAME) {
-        this.uSERNAME = uSERNAME;
+    public void setUSERNAME(String username) {
+        this.username = username;
     }
 
-    public String getINSTANCEID() {
-        return iNSTANCEID;
+    public String getInstanceId() {
+        return instanceId;
     }
 
-    public void setINSTANCEID(String iNSTANCEID) {
-        this.iNSTANCEID = iNSTANCEID;
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
     }
 
-    public String getFormSubmissionDate() {
-            return fORMSUBMISSIONDATE;
+    public Date getFormSubmissionDate() {
+
+        if (formSubmissionDate == null || formSubmissionDate.isEmpty())
+            return new Date();
+        else {
+            DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+            // DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            try {
+                return df1.parse(formSubmissionDate);
+            } catch (ParseException | NullPointerException e) {
+                e.printStackTrace();
+                return new Date();
+            }
+        }
     }
 
-    public void setFORMSUBMISSIONDATE(String formSubmissionDate) {
-        this.fORMSUBMISSIONDATE = formSubmissionDate;
+    public String getUnprocessedDate(){
+        return formSubmissionDate;
+    }
+
+    public void setFormSubmissionDate(String formSubmissionDate) {
+        this.formSubmissionDate = formSubmissionDate;
     }
 
 }

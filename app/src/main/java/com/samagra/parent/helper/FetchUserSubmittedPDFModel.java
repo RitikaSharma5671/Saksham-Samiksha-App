@@ -1,6 +1,7 @@
 package com.samagra.parent.helper;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.samagra.parent.data.models.PDFAPIResponse;
@@ -32,11 +33,17 @@ public class FetchUserSubmittedPDFModel extends AsyncTask<String, Void, ArrayLis
     protected ArrayList<PDFItem> doInBackground(String[] strings) {
 
         String userName = this.userName;
-        String url = "http://68.183.94.187:5001/v1/graphql";
+        String url = "http://68.183.94.187:6001/v1/graphql";
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("application/json,text/plain");
-        RequestBody body = RequestBody.create("{\"query\":\"query MyQuery {\n  queuemanager(where: {tags: {_contains: {\n    USERNAME:\\\"" + userName + "\\\"\n  }}}) {\n    doc_name\n    instance_id\n    current_status\n    tags\n    outputtables {\n      doc_name\n      instance_id\n      tags\n    }\n  }\n}\"\n}\n", mediaType);
+        RequestBody body = RequestBody.create("{\"query\":\"query MyQuery {\n" +
+                "  outputtable(where: {tags: {_contains: {USERNAME: "+ userName+ "}}}) {\n" +
+                "    doc_name\n" +
+                "    tags\n" +
+                "  }\n" +
+                "}\"\n" +
+                "}", mediaType);
         Request request = new Request.Builder()
                 .url(url)
                 .method("POST", body)
@@ -47,7 +54,7 @@ public class FetchUserSubmittedPDFModel extends AsyncTask<String, Void, ArrayLis
             Response response = client.newCall(request).execute();
             if (response.isSuccessful() && response.code() == HttpURLConnection.HTTP_OK) {
                 String gg = response.body().string();
-                response.body().contentType();
+                Log.d("RESPSS", "RESPONSEEEEEEEEEEE   " + gg);
                 PDFAPIResponse example = new Gson().fromJson(gg, PDFAPIResponse.class);
                 if(example.getPDFData() != null && example.getPDFData().getPDFItems() != null){
                     return example.getPDFData().getPDFItems();

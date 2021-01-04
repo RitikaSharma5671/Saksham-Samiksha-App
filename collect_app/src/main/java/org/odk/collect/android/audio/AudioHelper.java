@@ -8,13 +8,13 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.odk.collect.async.Scheduler;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Object for setting up playback of audio clips with {@link AudioButton} and
@@ -38,10 +38,10 @@ public class AudioHelper {
     private final LifecycleOwner lifecycleOwner;
     private final AudioPlayerViewModel viewModel;
 
-    public AudioHelper(FragmentActivity activity, LifecycleOwner lifecycleOwner, Scheduler scheduler, Supplier<MediaPlayer> mediaPlayerFactory) {
+    public AudioHelper(FragmentActivity activity, LifecycleOwner lifecycleOwner, Scheduler scheduler, MediaPlayer mediaPlayer) {
         this.lifecycleOwner = lifecycleOwner;
 
-        AudioPlayerViewModelFactory factory = new AudioPlayerViewModelFactory(mediaPlayerFactory, scheduler);
+        AudioPlayerViewModelFactory factory = new AudioPlayerViewModelFactory(mediaPlayer, scheduler);
 
         viewModel = ViewModelProviders
                 .of(activity, factory)
@@ -60,7 +60,13 @@ public class AudioHelper {
 
         LiveData<Boolean> isPlaying = viewModel.isPlaying(clip.getClipID());
 
-        isPlaying.observe(lifecycleOwner, button::setPlaying);
+        isPlaying.observe(lifecycleOwner,
+                new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean isPlaying1) {
+                        button.setPlaying(isPlaying1);
+                    }
+                });
         button.setListener(new AudioButtonListener(viewModel, clip.getURI(), clip.getClipID()));
 
         return isPlaying;
@@ -73,8 +79,18 @@ public class AudioHelper {
     public void setAudio(AudioControllerView view, Clip clip) {
         AudioPlayerViewModel viewModel = this.viewModel;
 
-        viewModel.isPlaying(clip.getClipID()).observe(lifecycleOwner, view::setPlaying);
-        viewModel.getPosition(clip.getClipID()).observe(lifecycleOwner, view::setPosition);
+        viewModel.isPlaying(clip.getClipID()).observe(lifecycleOwner, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean playing) {
+                view.setPlaying(playing);
+            }
+        });
+        viewModel.getPosition(clip.getClipID()).observe(lifecycleOwner, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer position) {
+                view.setPosition(position);
+            }
+        });
         view.setDuration(getDurationOfFile(clip.getURI()));
         view.setListener(new AudioControllerViewListener(viewModel, clip.getURI(), clip.getClipID()));
     }

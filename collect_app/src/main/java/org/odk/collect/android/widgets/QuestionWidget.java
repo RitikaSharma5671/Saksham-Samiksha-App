@@ -59,7 +59,6 @@ import org.odk.collect.android.utilities.StringUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ViewUtils;
 import org.odk.collect.android.widgets.interfaces.Widget;
-import org.odk.collect.async.CoroutineAndWorkManagerScheduler;
 import org.odk.collect.async.Scheduler;
 
 import java.util.ArrayList;
@@ -123,7 +122,8 @@ public abstract class QuestionWidget
         super(context);
         getComponent(context).inject(this);
         setId(View.generateViewId());
-        audioHelperFactory = new ScreenContextAudioHelperFactory(scheduler, MediaPlayer::new);
+        audioHelperFactory = new ScreenContextAudioHelperFactory(scheduler,
+                new MediaPlayer());
         this.audioHelper = audioHelperFactory.create(context);
 
         themeUtils = new ThemeUtils(context);

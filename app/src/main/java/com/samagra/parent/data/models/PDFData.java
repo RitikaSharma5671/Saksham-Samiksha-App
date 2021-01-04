@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class PDFData implements Serializable {
 
-    @SerializedName("queuemanager")
+    @SerializedName("outputtable")
     @Expose
     private ArrayList<PDFItem> pdfItems = null;
 

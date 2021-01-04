@@ -196,7 +196,7 @@ public class AppDependencyModule {
 
     @Provides
     public AudioHelperFactory providesAudioHelperFactory(Scheduler scheduler) {
-        return new ScreenContextAudioHelperFactory(scheduler, MediaPlayer::new);
+        return new ScreenContextAudioHelperFactory(scheduler, new MediaPlayer());
     }
 
     @Provides

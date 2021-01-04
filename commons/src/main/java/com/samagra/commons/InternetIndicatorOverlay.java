@@ -75,7 +75,12 @@ class InternetIndicatorOverlay {
     public void show() {
         if (activityWeakReference != null && activityWeakReference.get() != null) {
             inflatedView.startAnimation(showAnimation);
-            handler.postDelayed(this::hide, duration);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    InternetIndicatorOverlay.this.hide();
+                }
+            }, duration);
         }
     }
 

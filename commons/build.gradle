@@ -47,7 +47,7 @@ dependencies {
 
     //Google Services
     api "com.google.android.gms:play-services-maps:17.0.0"
-    api "com.google.android.gms:play-services-location:17.0.0"
+    api "com.google.android.gms:play-services-location:17.1.0"
 
     //RxAndroidNetworking
     api 'com.amitshekhar.android:rx2-android-networking:1.0.2'

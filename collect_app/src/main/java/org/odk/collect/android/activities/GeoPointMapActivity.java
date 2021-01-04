@@ -23,6 +23,7 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import org.odk.collect.android.R;
@@ -125,7 +126,17 @@ public class GeoPointMapActivity extends BaseGeoMapActivity {
 
         Context context = getApplicationContext();
         mapProvider.createMapFragment(context)
-            .addTo(this, R.id.map_container, this::initMap, this::finish);
+            .addTo(this, R.id.map_container, new MapFragment.ReadyListener() {
+                @Override
+                public void onReady(@NonNull MapFragment newMapFragment) {
+                    GeoPointMapActivity.this.initMap(newMapFragment);
+                }
+            }, new MapFragment.ErrorListener() {
+                @Override
+                public void onError() {
+                    GeoPointMapActivity.this.finish();
+                }
+            });
     }
 
     @Override protected void onSaveInstanceState(Bundle state) {
@@ -181,8 +192,18 @@ public class GeoPointMapActivity extends BaseGeoMapActivity {
     @SuppressLint("MissingPermission") // Permission handled in Constructor
     public void initMap(MapFragment newMapFragment) {
         map = newMapFragment;
-        map.setDragEndListener(this::onDragEnd);
-        map.setLongPressListener(this::onLongPress);
+        map.setDragEndListener(new MapFragment.FeatureListener() {
+            @Override
+            public void onFeature(int draggedFeatureId) {
+                GeoPointMapActivity.this.onDragEnd(draggedFeatureId);
+            }
+        });
+        map.setLongPressListener(new MapFragment.PointListener() {
+            @Override
+            public void onPoint(@NonNull MapPoint point1) {
+                GeoPointMapActivity.this.onLongPress(point1);
+            }
+        });
 
         ImageButton acceptLocation = findViewById(R.id.accept_location);
         acceptLocation.setOnClickListener(v -> returnLocation());

@@ -12,6 +12,7 @@ import com.samagra.commons.MainApplication;
 
 import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.GeoPointActivity;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.initialization.ApplicationInitializer;
 import org.odk.collect.android.configure.SettingsImporter;
@@ -20,6 +21,7 @@ import org.odk.collect.android.external.ExternalDataManager;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
 import org.odk.collect.android.injection.config.DaggerAppDependencyComponent;
 import org.odk.collect.android.javarosawrapper.FormController;
+import org.odk.collect.android.location.client.GoogleFusedLocationClient;
 import org.odk.collect.android.preferences.PreferencesProvider;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageStateProvider;
@@ -43,6 +45,16 @@ public class Collect1 {
     @Inject
     public
     StorageMigrationRepository storageMigrationRepository;
+
+    public static GoogleFusedLocationClient getGoogleFusedLocationClient() {
+        return googleFusedLocationClient;
+    }
+
+    public static void setGoogleFusedLocationClient(GoogleFusedLocationClient googleFusedLocationClient) {
+        Collect1.googleFusedLocationClient = googleFusedLocationClient;
+    }
+
+    private static GoogleFusedLocationClient googleFusedLocationClient;
 
     public MainApplication getMainApplication() {
         return mainApplication;
@@ -213,6 +225,7 @@ public class Collect1 {
             defaultSysLanguage = Locale.getDefault().getLanguage();
             init1(mainApplication,context, login_bg,baseAppTheme, formEntryActivityTheme,baseAppTheme_SettingsTheme_Dark, maxValue);
             informer.onSuccess();
+            googleFusedLocationClient  = new GoogleFusedLocationClient(getApplicationVal());
         }else{
             informer.onFailure("Failed");
         }

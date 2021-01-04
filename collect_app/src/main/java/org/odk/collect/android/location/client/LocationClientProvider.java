@@ -7,8 +7,6 @@ import androidx.annotation.Nullable;
 
 import org.odk.collect.android.utilities.PlayServicesChecker;
 
-import java.util.function.Supplier;
-
 
 /** A static helper class for obtaining the appropriate LocationClient to use. */
 public class LocationClientProvider {
@@ -20,12 +18,13 @@ public class LocationClientProvider {
     // NOTE(ping): As of 2018-11-01, the GoogleFusedLocationClient never returns an
     // accuracy radius below 3m: https://issuetracker.google.com/issues/118789585
     public static LocationClient getClient(@NonNull Context context, @NonNull PlayServicesChecker playServicesChecker,
-                                           @NonNull Supplier<GoogleFusedLocationClient> googleFusedLocationClientProvider) {
-        return testClient != null
-            ? testClient
-            : playServicesChecker.isGooglePlayServicesAvailable(context)
-                ? googleFusedLocationClientProvider.get()
-                : new AndroidLocationClient(context);
+                                           @NonNull GoogleFusedLocationClient googleFusedLocationClientProvider) {
+        if (testClient != null) return testClient;
+        if (playServicesChecker.isGooglePlayServicesAvailable(context)){
+            return googleFusedLocationClientProvider;
+        }
+
+        return new AndroidLocationClient(context);
     }
 
     /** Sets the LocationClient.  For use in tests only. */

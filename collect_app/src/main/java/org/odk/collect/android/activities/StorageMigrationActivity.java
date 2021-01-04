@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import com.samagra.commons.Constants;
 import com.samagra.commons.ExchangeObject;
@@ -68,7 +69,12 @@ public class StorageMigrationActivity extends CollectAbstractActivity {
         super.onCreate(savedInstanceState);
         Collect1.getInstance().getComponent().inject(this);
         setContentView(R.layout.main_menu1);
-        storageMigrationRepository.getResult().observe(this, this::onStorageMigrationFinish);
+        storageMigrationRepository.getResult().observe(this, new Observer<StorageMigrationResult>() {
+            @Override
+            public void onChanged(StorageMigrationResult result) {
+                StorageMigrationActivity.this.onStorageMigrationFinish(result);
+            }
+        });
         storageMigrationBanner = findViewById(R.id.storageMigrationBanner1);
         // enter data button. expects a result.
     }

@@ -56,6 +56,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.work.Constraints;
 import androidx.work.ExistingWorkPolicy;
@@ -162,6 +163,7 @@ import org.odk.collect.android.widgets.RangeWidget;
 import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
 import org.odk.collect.android.widgets.utilities.FormControllerWaitingForDataRegistry;
+import org.odk.collect.utilities.Clock;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -472,7 +474,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 .of(this, new FormSaveViewModel.Factory(analytics))
                 .get(FormSaveViewModel.class);
 
-        formSaveViewModel.getSaveResult().observe(this, this::handleSaveResult);
+        formSaveViewModel.getSaveResult().observe(this, new Observer<FormSaveViewModel.SaveResult>() {
+            @Override
+            public void onChanged(FormSaveViewModel.SaveResult result) {
+                FormEntryActivity.this.handleSaveResult(result);
+            }
+        });
     }
 
     private void formControllerAvailable(FormController formController) {
@@ -2456,7 +2463,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (formController.getInstanceFile() == null) {
                     FormInstanceFileCreator formInstanceFileCreator = new FormInstanceFileCreator(
                             storagePathProvider,
-                            System::currentTimeMillis
+                            new Clock() {
+                                @Override
+                                public long getCurrentTime() {
+                                    return System.currentTimeMillis();
+                                }
+                            }
                     );
 
                     File instanceFile = formInstanceFileCreator.createInstanceFile(formPath);

@@ -33,6 +33,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.gson.Gson;
@@ -181,7 +182,12 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         DaggerUtils.getComponent(this).inject(this);
         FormManagementSectionInteractor i = new FormManagementSectionInteractor();
 
-        storageMigrationRepository.getResult().observe(this, this::onStorageMigrationFinish);
+        storageMigrationRepository.getResult().observe(this, new Observer<StorageMigrationResult>() {
+            @Override
+            public void onChanged(StorageMigrationResult result) {
+                MainMenuActivity.this.onStorageMigrationFinish(result);
+            }
+        });
 
         versionSHAView = findViewById(R.id.version_sha);
 

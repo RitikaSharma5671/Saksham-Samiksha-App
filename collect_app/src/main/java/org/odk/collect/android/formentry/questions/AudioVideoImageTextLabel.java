@@ -42,7 +42,7 @@ import org.javarosa.core.reference.ReferenceManager;
 import org.jetbrains.annotations.NotNull;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.R2;
+
 import org.odk.collect.android.audio.AudioButton;
 import org.odk.collect.android.audio.AudioHelper;
 import org.odk.collect.android.audio.Clip;
@@ -56,9 +56,6 @@ import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.nbistubs.BuildConfig;
 
 import java.io.File;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
@@ -67,7 +64,6 @@ import timber.log.Timber;
  */
 public class AudioVideoImageTextLabel extends RelativeLayout implements View.OnClickListener {
 
-    @BindView(R2.id.audioButton1)
     AudioButton audioButton1212;
 
     MaterialButton videoButton;
@@ -92,34 +88,28 @@ public class AudioVideoImageTextLabel extends RelativeLayout implements View.OnC
 
     public AudioVideoImageTextLabel(Context context) {
         super(context);
-        View.inflate(context, R.layout.audio_video_image_text_label, this);
-        labelTextView = findViewById(R.id.text_label);
-        ButterKnife.bind(this);
-        audioButton1212 = findViewById(R.id.audioButton1);
-        videoButton = findViewById(R.id.videoButton);
-        imageView = findViewById(R.id.imageView);
-        missingImage = findViewById(R.id.missingImage);
-        textContainer = findViewById(R.id.text_container);
-        labelTextView = findViewById(R.id.text_label);
-        mediaButtonsContainer = findViewById(R.id.media_buttons);
+        View v = View.inflate(context, R.layout.audio_video_image_text_label, this);
+        labelTextView = v.findViewById(R.id.text_label);
+         audioButton1212 = v.findViewById(R.id.audioButton1);
+        videoButton = v.findViewById(R.id.videoButton);
+        imageView = v.findViewById(R.id.imageView);
+        missingImage = v.findViewById(R.id.missingImage);
+        textContainer = v.findViewById(R.id.text_container);
+        labelTextView = v.findViewById(R.id.text_label);
+        mediaButtonsContainer = v.findViewById(R.id.media_buttons);
     }
 
     public AudioVideoImageTextLabel(Context context, AttributeSet attrs) {
         super(context, attrs);
-        View.inflate(context, R.layout.audio_video_image_text_label, this);
-        ButterKnife.bind(this);
-        audioButton1212 = findViewById(R.id.audioButton1);
-
-        videoButton = findViewById(R.id.videoButton);
-
-        imageView = findViewById(R.id.imageView);
-        missingImage = findViewById(R.id.missingImage);
-
-        textContainer = findViewById(R.id.text_container);
-
-        labelTextView = findViewById(R.id.text_label);
-
-       mediaButtonsContainer = findViewById(R.id.media_buttons);
+        View v = View.inflate(context, R.layout.audio_video_image_text_label, this);
+        labelTextView = v.findViewById(R.id.text_label);
+        audioButton1212 = v.findViewById(R.id.audioButton1);
+        videoButton = v.findViewById(R.id.videoButton);
+        imageView = v.findViewById(R.id.imageView);
+        missingImage = v.findViewById(R.id.missingImage);
+        textContainer = v.findViewById(R.id.text_container);
+        labelTextView = v.findViewById(R.id.text_label);
+        mediaButtonsContainer = v.findViewById(R.id.media_buttons);
     }
 
     public void setTextView(TextView questionText) {

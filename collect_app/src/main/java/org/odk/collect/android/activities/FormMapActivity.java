@@ -128,7 +128,17 @@ public class FormMapActivity extends BaseGeoMapActivity {
         MapFragment mapToAdd = mapProvider.createMapFragment(getApplicationContext());
 
         if (mapToAdd != null) {
-            mapToAdd.addTo(this, R.id.map_container, this::initMap, this::finish);
+            mapToAdd.addTo(this, R.id.map_container, new MapFragment.ReadyListener() {
+                @Override
+                public void onReady(@NonNull MapFragment newMapFragment) {
+                    FormMapActivity.this.initMap(newMapFragment);
+                }
+            }, new MapFragment.ErrorListener() {
+                @Override
+                public void onError() {
+                    FormMapActivity.this.finish();
+                }
+            });
         } else {
             finish(); // The configured map provider is not available
         }
@@ -201,14 +211,29 @@ public class FormMapActivity extends BaseGeoMapActivity {
         });
 
         map.setGpsLocationEnabled(true);
-        map.setGpsLocationListener(this::onLocationChanged);
+        map.setGpsLocationListener(new MapFragment.PointListener() {
+            @Override
+            public void onPoint(@NonNull MapPoint point) {
+                FormMapActivity.this.onLocationChanged(point);
+            }
+        });
 
         if (previousState != null) {
             restoreFromInstanceState(previousState);
         }
 
-        map.setFeatureClickListener(this::onFeatureClicked);
-        map.setClickListener(this::onClick);
+        map.setFeatureClickListener(new MapFragment.FeatureListener() {
+            @Override
+            public void onFeature(int featureId) {
+                FormMapActivity.this.onFeatureClicked(featureId);
+            }
+        });
+        map.setClickListener(new MapFragment.PointListener() {
+            @Override
+            public void onPoint(@NonNull MapPoint mapPoint) {
+                FormMapActivity.this.onClick(mapPoint);
+            }
+        });
         updateInstanceGeometry();
 
         if (viewModel.getSelectedSubmissionId() != -1) {
