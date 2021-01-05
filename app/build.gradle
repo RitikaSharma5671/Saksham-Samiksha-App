@@ -39,6 +39,9 @@ android {
         incremental true
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
     sentry {
         autoUpload true
         autoProguardConfig true
@@ -131,6 +134,8 @@ dependencies {
     testCompileOnly 'org.jetbrains:annotations:13.0'
     implementation 'javax.annotation:jsr250-api:1.0'
 
+    implementation 'androidx.work:work-runtime:2.4.0'
+    implementation "androidx.work:work-runtime-ktx:2.4.0"
 
 
 }

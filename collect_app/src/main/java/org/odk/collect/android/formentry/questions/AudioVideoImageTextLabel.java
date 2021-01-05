@@ -56,6 +56,7 @@ import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.nbistubs.BuildConfig;
 
 import java.io.File;
+
 import timber.log.Timber;
 
 /**
@@ -90,12 +91,11 @@ public class AudioVideoImageTextLabel extends RelativeLayout implements View.OnC
         super(context);
         View v = View.inflate(context, R.layout.audio_video_image_text_label, this);
         labelTextView = v.findViewById(R.id.text_label);
-         audioButton1212 = v.findViewById(R.id.audioButton1);
+        audioButton1212 = v.findViewById(R.id.audioButton1);
         videoButton = v.findViewById(R.id.videoButton);
         imageView = v.findViewById(R.id.imageView);
         missingImage = v.findViewById(R.id.missingImage);
         textContainer = v.findViewById(R.id.text_container);
-        labelTextView = v.findViewById(R.id.text_label);
         mediaButtonsContainer = v.findViewById(R.id.media_buttons);
     }
 
@@ -108,7 +108,6 @@ public class AudioVideoImageTextLabel extends RelativeLayout implements View.OnC
         imageView = v.findViewById(R.id.imageView);
         missingImage = v.findViewById(R.id.missingImage);
         textContainer = v.findViewById(R.id.text_container);
-        labelTextView = v.findViewById(R.id.text_label);
         mediaButtonsContainer = v.findViewById(R.id.media_buttons);
     }
 
@@ -212,16 +211,21 @@ public class AudioVideoImageTextLabel extends RelativeLayout implements View.OnC
     @Override
     public void setEnabled(boolean enabled) {
         labelTextView = findViewById(R.id.text_label);
-        if(labelTextView != null)
-        labelTextView.setEnabled(enabled);
+        if (labelTextView != null)
+            labelTextView.setEnabled(enabled);
         imageView = findViewById(R.id.imageView);
-        if(imageView != null)
-        imageView.setEnabled(enabled);
+        if (imageView != null)
+            imageView.setEnabled(enabled);
     }
 
     @Override
     public boolean isEnabled() {
-        return labelTextView.isEnabled() && imageView.isEnabled();
+        labelTextView = findViewById(R.id.text_label);
+        imageView = findViewById(R.id.imageView);
+        if (imageView != null && labelTextView != null)
+            return labelTextView.isEnabled() && imageView.isEnabled();
+        else
+            return true;
     }
 
     private void onImageClick() {

@@ -1,10 +1,15 @@
 package com.samagra.commons.notifications;
 
 import android.app.Application;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -13,11 +18,32 @@ import androidx.core.app.NotificationCompat;
 import com.samagra.commons.R;
 
 public class AppNotificationUtils {
-
+    public static final int DAILY_REMINDER_REQUEST_CODE = 100;
     public static final String CHANNEL_ID = "collect_notification_channel";
-    public static final int FORM_UPDATE_NOTIFICATION_ID = 0;
 
     private AppNotificationUtils() {
+    }
+
+    public static void showNotification(Context context, Class<?> cls, String title, String content) {
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Intent notifyIntent = new Intent(context, cls);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        notifyIntent.putExtra("title", title);
+        notifyIntent.putExtra("message", content);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, DAILY_REMINDER_REQUEST_CODE,
+                notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+        Notification notification = builder.setContentTitle(title)
+                .setContentText(content).setAutoCancel(true)
+                .setSound(alarmSound).setSmallIcon(R.drawable.saksham_notif_icon)
+                .setContentIntent(pendingIntent).build();
+
+        NotificationManager notificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(DAILY_REMINDER_REQUEST_CODE, notification);
     }
 
     public static void createNotificationChannel(Application application) {
@@ -54,7 +80,7 @@ public class AppNotificationUtils {
     }
 
 
-    public static void updateFirebaseToken(@NonNull Context context, String baseApiUrl, String apiKey){
+    public static void updateFirebaseToken(@NonNull Context context, String baseApiUrl, String apiKey) {
         new PushMessagingService().setContext(context, baseApiUrl, apiKey).getCurrentToken(context);
     }
 
@@ -77,9 +103,8 @@ public class AppNotificationUtils {
         }
     }
 
-        private static int getNotificationAppIcon() {
-            return R.drawable.saksham_notif_icon;
-        }
-
+    private static int getNotificationAppIcon() {
+        return R.drawable.saksham_notif_icon;
+    }
 
 }

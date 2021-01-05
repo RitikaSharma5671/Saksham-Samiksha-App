@@ -15,11 +15,9 @@
 package org.odk.collect.android.upload;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -27,7 +25,6 @@ import android.net.Uri;
 import android.os.Environment;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -35,11 +32,9 @@ import com.samagra.commons.ExchangeObject;
 import com.samagra.commons.Modules;
 import com.samagra.commons.PushNotification;
 
-import org.odk.collect.android.ODKDriver;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.NotificationActivity;
 import org.odk.collect.android.analytics.Analytics;
-
 import org.odk.collect.android.application.Collect1;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
@@ -53,12 +48,10 @@ import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.storage.migration.StorageMigrationRepository;
 import org.odk.collect.android.utilities.InstanceUploaderUtils;
-import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;

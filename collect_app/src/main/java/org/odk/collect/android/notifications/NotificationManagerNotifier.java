@@ -17,8 +17,6 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static org.odk.collect.android.activities.FormDownloadListActivity.DISPLAY_ONLY_UPDATED_FORMS;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes.FORMS_DOWNLOADED_NOTIFICATION;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes.FORM_UPDATES_AVAILABLE_NOTIFICATION;
-import static org.odk.collect.android.utilities.NotificationUtils.FORM_UPDATE_NOTIFICATION_ID;
-import static org.odk.collect.android.utilities.NotificationUtils.showNotification;
 
 public class NotificationManagerNotifier implements Notifier {
 

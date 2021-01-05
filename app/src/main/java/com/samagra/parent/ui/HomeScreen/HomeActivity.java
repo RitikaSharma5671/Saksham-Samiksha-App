@@ -1,23 +1,36 @@
 package com.samagra.parent.ui.HomeScreen;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import com.androidnetworking.AndroidNetworking;
 import com.example.assets.uielements.SamagraAlertDialog;
@@ -53,6 +66,7 @@ import org.odk.collect.android.utilities.PermissionUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -60,6 +74,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.samagra.commons.notifications.AppNotificationUtils.DAILY_REMINDER_REQUEST_CODE;
 
 /**
  * View part of the Home Screen. This class only handles the UI operations, all the business logic is simply
@@ -113,6 +129,98 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         homePresenter.fetchStudentData(getActivityContext());
         homePresenter.fetchSchoolEmployeeData(getActivityContext());
         renderLayoutInvisible();
+        setReminder();
+    }
+
+    public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
+    private final static String default_notification_channel_id = "default" ;
+    private void scheduleNotification (Notification notification , int delay) {
+        Intent notificationIntent = new Intent( this, MyNotificationPublisher. class ) ;
+        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION_ID , 1 ) ;
+        notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION , notification) ;
+        notificationIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        PendingIntent pendingIntent = PendingIntent. getBroadcast ( this, 0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
+
+        long futureInMillis = SystemClock. elapsedRealtime () + delay ;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE ) ;
+        assert alarmManager != null;
+//        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,SystemClock. elapsedRealtime () + 10000,
+                10000, pendingIntent);
+    }
+    private Notification getNotification (String content) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( this, default_notification_channel_id ) ;
+        builder.setContentTitle( "Scheduled Notification" ) ;
+        builder.setContentText(content) ;
+        builder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
+        builder.setAutoCancel( true ) ;
+        builder.setChannelId( NOTIFICATION_CHANNEL_ID ) ;
+        return builder.build() ;
+    }
+    public void setReminder()
+    {
+//        scheduleNotification(getNotification( "10 second delay" ) , 10000 ) ;
+
+
+//        Constraints constraints = new Constraints.Builder().setRequiresCharging(true).setRequiredNetworkType(NetworkType.UNMETERED).build();
+
+//        final PeriodicWorkRequest periodicWorkRequest1 = new PeriodicWorkRequest.
+//                Builder(BackgroundTaskJava.class,20, TimeUnit.MINUTES)
+//                .setInitialDelay(6000,TimeUnit.MILLISECONDS)
+//                .build();
+//
+//        WorkManager workManager =  WorkManager.getInstance(this);
+//
+//        workManager.enqueue(periodicWorkRequest1);
+//
+//        workManager.getWorkInfoByIdLiveData(periodicWorkRequest1.getId())
+//                .observe(this, new Observer<WorkInfo>() {
+//                    @Override
+//                    public void onChanged(@Nullable WorkInfo workInfo) {
+//                        if (workInfo != null) {
+//                            Log.d("periodicWorkRequest", "Status changed to : " + workInfo.getState());
+//
+//                        }
+//                    }
+//                });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ReminderWorker.Companion.runAt();
+        }
+//        Calendar calendar = Calendar.getInstance();
+////        Calendar setcalendar = Calendar.getInstance();
+////        setcalendar.set(Calendar.HOUR_OF_DAY, 16);
+////        setcalendar.set(Calendar.MINUTE, 15);
+////        setcalendar.set(Calendar.SECOND, 0);
+//        // cancel already scheduled reminders
+//        cancelReminder(getActivityContext(),HomeActivity.class);
+//
+////        if(setcalendar.before(calendar))
+////            setcalendar.add(Calendar.DATE,1);
+//
+//        // Enable a receiver
+//        ComponentName receiver = new ComponentName(getActivityContext(),HomeActivity.class);
+//        PackageManager pm = getActivityContext().getPackageManager();
+//        pm.setComponentEnabledSetting(receiver,
+//                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+//                PackageManager.DONT_KILL_APP);
+//
+//        Intent intent1 = new Intent(getActivityContext(),HomeActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivityContext(),
+//                DAILY_REMINDER_REQUEST_CODE, intent1,
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+//        AlarmManager am = (AlarmManager) getActivityContext().getSystemService(ALARM_SERVICE);
+//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis() + 10000,
+//                calendar.getTimeInMillis() + 10000, pendingIntent);
+
+
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//
+//        Intent intent = new Intent(this,AlarmReceiver.class);
+//
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, DAILY_REMINDER_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 4000, pendingIntent);
     }
 
     private void showUpdateMobileNumberDialog() {

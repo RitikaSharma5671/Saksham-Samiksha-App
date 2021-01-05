@@ -21,7 +21,6 @@ import org.odk.collect.android.logic.actions.setgeopoint.CollectSetGeopointActio
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.utilities.LocaleHelper;
-import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.utilities.UserAgentProvider;
 
 import java.util.Locale;
@@ -59,7 +58,7 @@ public class ApplicationInitializer {
     }
 
     public void initializeFrameworks() {
-        NotificationUtils.createNotificationChannel(context);
+//        NotificationUtils.createNotificationChannel(context);
         JodaTimeAndroid.init(context);
         initializeLogging();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
