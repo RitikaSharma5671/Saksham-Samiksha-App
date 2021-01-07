@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
+import androidx.security.crypto.MasterKeys;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
@@ -14,6 +18,9 @@ import com.samagra.ancillaryscreens.di.PreferenceInfo;
 
 import com.samagra.commons.PreferenceKeys;
 import com.samagra.grove.logging.Grove;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import javax.inject.Inject;
 
@@ -28,14 +35,28 @@ import static android.content.Context.MODE_PRIVATE;
 public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
 
     private final SharedPreferences sharedPreferences;
-    private final SharedPreferences defaultPreferences;
+    private SharedPreferences defaultPreferences;
     Context context;
 
     @Inject
     public CommonsPrefsHelperImpl(@ApplicationContext Context context, @PreferenceInfo String prefFileName) {
         this.sharedPreferences = context.getSharedPreferences(prefFileName, MODE_PRIVATE);
         this.context = context;
-        defaultPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        MasterKey mainKey = null;
+        try {
+            mainKey = new MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+            defaultPreferences =
+                    EncryptedSharedPreferences.create(
+                            context,  "SAMAGRA_PREFS",
+                            mainKey,
+                            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                    );
+        } catch (GeneralSecurityException | IOException e) {
+            defaultPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        }
     }
 
     @Override
@@ -62,9 +83,6 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
         if (firstLogIn) defaultPreferences.edit().putBoolean("firstLoginIn", false).apply();
         else defaultPreferences.edit().putBoolean("firstLoginIn", true).apply();
 
-        boolean firstLogIn2 = sharedPreferences.getBoolean("firstLoginIn2", false);
-        if (!firstLogIn2) defaultPreferences.edit().putBoolean("firstLoginIn2", true).apply();
-        else defaultPreferences.edit().putBoolean("firstLoginIn2", false).apply();
     }
 
     /**

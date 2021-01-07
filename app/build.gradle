@@ -9,7 +9,7 @@ android {
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "com.samagra.master.sakshamsamiksha"
-        minSdkVersion 19
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -52,6 +52,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
     implementation 'com.google.firebase:firebase-database:19.1.0'
+
+    implementation "androidx.security:security-crypto:1.0.0-rc03"
+
+    // For Identity Credential APIs
+    implementation "androidx.security:security-identity-credential:1.0.0-alpha01"
+
 
     implementation "com.google.firebase:firebase-storage:19.1.0"
     implementation 'com.google.firebase:firebase-config:19.0.2'

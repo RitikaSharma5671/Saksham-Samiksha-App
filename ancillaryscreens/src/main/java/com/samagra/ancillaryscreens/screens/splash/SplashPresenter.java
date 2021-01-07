@@ -3,9 +3,11 @@ package com.samagra.ancillaryscreens.screens.splash;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
@@ -25,6 +27,8 @@ import org.odk.collect.android.contracts.IFormManagementContract;
 import org.odk.collect.android.contracts.PermissionsHelper;
 
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import javax.inject.Inject;
 
@@ -142,7 +146,62 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
             getMvpInteractor().updateFirstRunFlag(false);
         getMvpView().showSimpleSplash();
         updateCurrentVersion();
+
     }
+
+    public boolean checkAppSignature(Context context) {
+
+
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = context.getPackageManager()
+
+                    .getPackageInfo(context.getPackageName(),
+
+                            PackageManager.GET_SIGNATURES);
+            for (Signature signature : packageInfo.signatures) {
+                // SHA1 the signature
+                String sha1 = getSHA1(signature.toByteArray());
+                Log.d("vfrvtrf",  "vtgvgt >> " + sha1);
+                // check is matches hardcoded value
+                return APP_SIGNATURE.equals(sha1);
+            }
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        return false;
+    }
+
+    public static String getSHA1(byte[] sig) {
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA1");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        digest.update(sig);
+        byte[] hashtext = digest.digest();
+        return bytesToHex(hashtext);
+    }
+
+    //util method to convert byte array to hex string
+    public static String bytesToHex(byte[] bytes) {
+        final char[] hexArray = { '0', '1', '2', '3', '4', '5', '6', '7', '8',
+                '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        char[] hexChars = new char[bytes.length * 2];
+        int v;
+        for (int j = 0; j < bytes.length; j++) {
+            v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+    private static final String APP_SIGNATURE = "69D48BA03BF239993AE74C7C65CAA3C6D7E6EA28";
 
     @Override
     public void requestStoragePermissions() {

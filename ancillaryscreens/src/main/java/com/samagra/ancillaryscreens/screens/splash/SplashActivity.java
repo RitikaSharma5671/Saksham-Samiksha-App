@@ -13,6 +13,7 @@ import com.samagra.ancillaryscreens.base.BaseActivity;
 import com.samagra.commons.Constants;
 import com.samagra.commons.ExchangeObject;
 import com.samagra.commons.Modules;
+import com.samagra.commons.utils.AlertDialogUtils;
 import com.samagra.grove.logging.Grove;
 
 import javax.inject.Inject;
@@ -65,8 +66,14 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         splashImage.setImageResource(R.drawable.login_bg);
         splashImage.setVisibility(View.VISIBLE);
 
-        Handler handler = new Handler();
-        handler.postDelayed(this::endSplashScreen, SPLASH_TIMEOUT);
+        if(splashPresenter.checkAppSignature(getActivityContext())) {
+            Handler handler = new Handler();
+            handler.postDelayed(this::endSplashScreen, SPLASH_TIMEOUT);
+        }else{
+            AlertDialogUtils.showDialog(AlertDialogUtils.createErrorDialog(getActivityContext(),
+                    "Invalid App Signature", true), this);
+        }
+
     }
 
     @Override

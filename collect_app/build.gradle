@@ -69,7 +69,7 @@ android {
     compileSdkVersion(28)
 
     defaultConfig {
-        minSdkVersion(16)
+        minSdkVersion 24
         targetSdkVersion(28)
         versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
         versionName getVersionName()

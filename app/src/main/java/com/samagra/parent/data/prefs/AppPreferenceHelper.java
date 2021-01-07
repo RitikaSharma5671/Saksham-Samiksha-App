@@ -2,8 +2,10 @@ package com.samagra.parent.data.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
-import androidx.preference.PreferenceManager;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
 
 import com.google.gson.Gson;
 import com.samagra.commons.Constants;
@@ -11,8 +13,8 @@ import com.samagra.commons.LocaleManager;
 import com.samagra.parent.di.ApplicationContext;
 import com.samagra.parent.di.PreferenceInfo;
 
-import org.odk.collect.android.utilities.LocaleHelper;
-
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,15 +28,29 @@ import javax.inject.Singleton;
  * @author Pranav Sharma
  */
 @Singleton
-public class AppPreferenceHelper implements PreferenceHelper {
+public class AppPreferenceHelper implements PreferenceHelper{
 
     private final SharedPreferences sharedPreferences;
-    private final SharedPreferences defaultPreferences;
-
+    private SharedPreferences defaultPreferences;
     @Inject
     public AppPreferenceHelper(@ApplicationContext Context context, @PreferenceInfo String prefFileName) {
         this.sharedPreferences = context.getSharedPreferences(prefFileName, Context.MODE_PRIVATE);
-        defaultPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+         MasterKey mainKey;
+        try {
+            mainKey = new MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+            defaultPreferences =
+                    EncryptedSharedPreferences.create(
+                            context,  "SAMAGRA_PREFS",
+                            mainKey,
+                            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                    );
+        } catch (GeneralSecurityException | IOException e) {
+            defaultPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        }
     }
 
     @Override

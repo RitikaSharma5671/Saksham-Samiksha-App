@@ -7,7 +7,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -35,6 +35,7 @@ dependencies {
     implementation project(":commons")
     // Butterknife
     implementation "com.jakewharton:butterknife:10.1.0"
+    implementation 'androidx.security:security-crypto:1.1.0-alpha03'
     annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
     annotationProcessor "com.google.dagger:dagger-compiler:2.19"
 
