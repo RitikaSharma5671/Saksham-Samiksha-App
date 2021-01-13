@@ -1,4 +1,4 @@
-package com.example.student_details.ui.teacher_attendance
+package com.example.student_details.viewmodels
 
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModel

@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.example.student_details.ui
+package com.example.student_details.viewmodels
 
 import android.annotation.SuppressLint
 import android.os.Bundle

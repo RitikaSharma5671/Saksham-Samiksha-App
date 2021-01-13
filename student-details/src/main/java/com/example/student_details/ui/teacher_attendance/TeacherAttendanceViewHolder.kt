@@ -5,7 +5,6 @@ package com.example.student_details.ui.teacher_attendance
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Application
-import android.content.Context
 import android.content.DialogInterface
 import android.graphics.drawable.Drawable
 import android.text.SpannableString
@@ -13,9 +12,7 @@ import android.text.style.UnderlineSpan
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
 import com.example.student_details.Utilities.findFirstLetterPosition
@@ -23,6 +20,7 @@ import com.example.student_details.databinding.ItemTeacherAttendanceRowBinding
 import com.example.student_details.models.realm.SchoolEmployeesAttendanceData
 import com.example.student_details.showNumberPickerDialog
 import com.example.student_details.ui.TextDrawable
+import com.example.student_details.viewmodels.TeacherAttendanceItemViewModel
 import com.samagra.grove.logging.Grove
 import java.math.RoundingMode
 import java.text.DecimalFormat

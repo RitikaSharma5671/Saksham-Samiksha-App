@@ -17,6 +17,7 @@ import com.example.student_details.Utilities.convert
 import com.example.student_details.Utilities.findFirstLetterPosition
 import com.example.student_details.databinding.ViewStudentAttendanceItemLayoutBinding
 import com.example.student_details.ui.TextDrawable
+import com.example.student_details.viewmodels.ViewStudentAttendanceViewModel
 import kotlinx.android.synthetic.main.view_student_attendance_item_layout.view.*
 
 class ViewAttendanceAdapter(

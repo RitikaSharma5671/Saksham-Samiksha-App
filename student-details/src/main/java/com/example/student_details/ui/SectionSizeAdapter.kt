@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
+import com.example.student_details.viewmodels.ClassFilterViewModel
 
 class SectionSizeAdapter(private val filterCollectionViewModel: ClassFilterViewModel) :
         RecyclerView.Adapter<SectionSizeAdapter.SizeViewHolder>() {

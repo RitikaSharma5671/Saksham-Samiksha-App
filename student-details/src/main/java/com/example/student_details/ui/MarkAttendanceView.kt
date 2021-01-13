@@ -13,6 +13,7 @@ import com.example.student_details.R
 import com.example.student_details.databinding.FragmentMarkAttendanceBinding
 import com.example.student_details.getViewModelProvider
 import com.example.student_details.models.realm.StudentInfo
+import com.example.student_details.viewmodels.MarkAttendanceViewModel
 
 class MarkAttendanceView : Fragment() {
     private var  userName : String = ""

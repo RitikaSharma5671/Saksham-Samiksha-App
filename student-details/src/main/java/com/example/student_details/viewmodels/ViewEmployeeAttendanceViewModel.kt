@@ -1,4 +1,4 @@
-package com.example.student_details.ui.employee_aggregate
+package com.example.student_details.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -6,6 +6,7 @@ import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.example.student_details.contracts.ApolloQueryResponseListener
 import com.example.student_details.modules.StudentDataModel
+import com.example.student_details.ui.employee_aggregate.EmpAttendanceData
 import com.hasura.model.FetchTeacherAttendanceQuery
 
 //import com.hasura.model.FetchTeacherAttendanceQuery

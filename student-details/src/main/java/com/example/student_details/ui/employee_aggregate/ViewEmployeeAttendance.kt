@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.student_details.R
 import com.example.student_details.databinding.ActivityEmployeeAttendanceBinding
 import com.example.student_details.getViewModelProvider
+import com.example.student_details.viewmodels.ViewEmployeeAttendanceViewModel
 import com.samagra.grove.logging.Grove
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener

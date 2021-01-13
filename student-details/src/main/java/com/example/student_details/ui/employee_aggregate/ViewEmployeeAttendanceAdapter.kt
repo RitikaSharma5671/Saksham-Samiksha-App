@@ -3,11 +3,9 @@ package com.example.student_details.ui.employee_aggregate
 import android.app.Application
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -18,6 +16,7 @@ import com.example.student_details.Utilities.convert
 import com.example.student_details.Utilities.findFirstLetterPosition
 import com.example.student_details.databinding.ViewAttendanceItemLayoutBinding
 import com.example.student_details.ui.TextDrawable
+import com.example.student_details.viewmodels.ViewEmployeeAttendanceViewModel
 import kotlinx.android.synthetic.main.view_attendance_item_layout.view.*
 
 class ViewEmployeeAttendanceAdapter(

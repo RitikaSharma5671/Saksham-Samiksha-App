@@ -35,4 +35,12 @@
     <string name="mark_attendance">Mark Attendance</string>
     <string name="enter_status">Enter Status</string>
     <string name="save">SAVE</string>
+    <string name="add_shiksha_mitr">REGISTER SHIKSHA MITR</string>
+    <string name="update_shiksha_mitr">UPDATE SHIKSHA MITR DETAILS</string>
+    <string name="student_name">Student Name</string>
+    <string name="srn_number">Student Registration Number (SRN)</string>
+    <string name="shiksha_mitra_name">Shiksha Mitr Name *</string>
+    <string name="sm_mobile_number">Shiksha Mitr Contact Number *</string>
+    <string name="sm_relation">Relation between Student and Shiksha Mitr *</string>
+    <string name="sm_address">Shiksha Mitr Adress</string>
 </resources>

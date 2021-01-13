@@ -1,9 +1,9 @@
-package com.example.student_details.ui
+package com.example.student_details.viewmodels
 
 import android.app.Application
-import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.example.student_details.ui.FilterAttributes
 
 class ClassFilterViewModel(application: Application) : AndroidViewModel(application) {
 

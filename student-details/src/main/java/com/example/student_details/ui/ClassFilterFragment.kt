@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.student_details.R
 import com.example.student_details.databinding.ClassFilterLayoutBinding
 import com.example.student_details.getViewModelProvider
+import com.example.student_details.viewmodels.ClassFilterViewModel
 import kotlinx.android.synthetic.main.filters_layout.*
 
 class ClassFilterFragment : Fragment() {

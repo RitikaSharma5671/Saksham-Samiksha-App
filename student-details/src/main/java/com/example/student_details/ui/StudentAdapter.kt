@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
@@ -22,6 +21,7 @@ import com.example.student_details.Utilities.convert
 import com.example.student_details.Utilities.findFirstLetterPosition
 import com.example.student_details.databinding.StudentItemLayoutBinding
 import com.example.student_details.models.realm.StudentInfo
+import com.example.student_details.viewmodels.StudentDetailsViewModel
 import com.samagra.grove.logging.Grove
 import kotlinx.android.synthetic.main.student_item_layout.view.*
 

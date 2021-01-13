@@ -31,4 +31,12 @@
         <item>Section C</item>
         <item>Section D</item>
     </string-array>
+    <string-array name="relation_list">
+        <item>Parent</item>
+        <item>Sibling</item>
+        <item>Neighbour</item>
+        <item>Extended Family</item>
+        <item>Community Volunteer</item>
+        <item>Others</item>
+    </string-array>
 </resources>

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
 import com.example.student_details.databinding.ItemAttendanceRowBinding
 import com.example.student_details.models.realm.StudentInfo
+import com.example.student_details.viewmodels.MarkAttendanceViewModel
 
 
 class AttendanceAdapter(

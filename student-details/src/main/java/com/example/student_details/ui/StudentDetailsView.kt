@@ -14,6 +14,8 @@ import com.example.student_details.R
 import com.example.student_details.databinding.FragmentStudentDetailsBinding
 import com.example.student_details.getViewModelProvider
 import com.example.student_details.models.realm.StudentInfo
+import com.example.student_details.viewmodels.StudentDetailsViewModel
+import com.example.student_details.viewmodels.StudentDetailsViewModelFactory
 import kotlinx.android.synthetic.main.fragment_student_details.*
 import kotlin.collections.ArrayList
 

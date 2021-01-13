@@ -7,7 +7,7 @@
 
         <variable
             name="studentDetailsViewModel"
-            type="com.example.student_details.ui.StudentDetailsViewModel" />
+            type="com.example.student_details.viewmodels.StudentDetailsViewModel" />
     </data>
 
     <RelativeLayout

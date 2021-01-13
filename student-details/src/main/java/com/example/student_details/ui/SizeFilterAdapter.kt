@@ -1,17 +1,12 @@
 package com.example.student_details.ui
 
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
-import com.google.android.material.button.MaterialButton
+import com.example.student_details.viewmodels.ClassFilterViewModel
 
 class SizeFilterAdapter(private val filterCollectionViewModel: ClassFilterViewModel) :
         RecyclerView.Adapter<SizeFilterAdapter.SizeViewHolder>() {

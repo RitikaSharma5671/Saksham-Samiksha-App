@@ -4,7 +4,7 @@
         <import type="android.view.View" />
         <variable
             name="studentItemViewModel"
-            type="com.example.student_details.ui.StudentItemViewModel" />
+            type="com.example.student_details.viewmodels.StudentItemViewModel" />
     </data>
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

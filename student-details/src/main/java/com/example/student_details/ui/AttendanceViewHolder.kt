@@ -3,16 +3,16 @@ package com.example.student_details.ui
 import android.annotation.SuppressLint
 import android.app.Application
 import android.graphics.drawable.Drawable
-import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
-import com.example.student_details.Utilities
 import com.example.student_details.Utilities.findFirstLetterPosition
 import com.example.student_details.databinding.ItemAttendanceRowBinding
 import com.example.student_details.models.realm.StudentInfo
 import com.example.student_details.showNumberPickerDialog
+import com.example.student_details.viewmodels.AttendanceItemViewModel
+import com.example.student_details.viewmodels.MarkAttendanceViewModel
 import java.math.RoundingMode
 import java.text.DecimalFormat
 

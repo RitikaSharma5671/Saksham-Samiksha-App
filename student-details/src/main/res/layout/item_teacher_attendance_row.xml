@@ -8,7 +8,7 @@
 
         <variable
             name="teacherAttendanceItemViewModel"
-            type="com.example.student_details.ui.teacher_attendance.TeacherAttendanceItemViewModel" />
+            type="com.example.student_details.viewmodels.TeacherAttendanceItemViewModel" />
 
     </data>
 

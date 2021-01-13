@@ -5,7 +5,7 @@
 
         <variable
             name="classFilterViewModel"
-            type="com.example.student_details.ui.ClassFilterViewModel" />
+            type="com.example.student_details.viewmodels.ClassFilterViewModel" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

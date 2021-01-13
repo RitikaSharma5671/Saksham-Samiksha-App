@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
+import com.example.student_details.viewmodels.ClassFilterViewModel
 
 class StreamSizeAdapter(private val filterCollectionViewModel: ClassFilterViewModel) :
         RecyclerView.Adapter<StreamSizeAdapter.SizeViewHolder>() {

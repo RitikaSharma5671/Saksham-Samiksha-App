@@ -7,7 +7,7 @@
 
         <variable
             name="viewAteftendanceViewModel"
-            type="com.example.student_details.ui.employee_aggregate.ViewEmployeeAttendanceViewModel" />
+            type="com.example.student_details.viewmodels.ViewEmployeeAttendanceViewModel" />
         <import type="android.view.View" />
 
     </data>

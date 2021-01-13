@@ -37,13 +37,15 @@ public class FetchUserSubmittedPDFModel extends AsyncTask<String, Void, ArrayLis
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("application/json,text/plain");
-        RequestBody body = RequestBody.create("{\"query\":\"query MyQuery {\n" +
-                "  outputtable(where: {tags: {_contains: {USERNAME: "+ userName+ "}}}) {\n" +
-                "    doc_name\n" +
+        RequestBody body = RequestBody.create(mediaType, "{\"query\":\"query MyQuery {\n" +
+                "  outputtable(where: {tags: {_contains: {USERNAME: "+userName +"}}}, distinct_on: doc_name) {\n" +
+                "   \n" +
+                "      doc_name\n" +
                 "    tags\n" +
                 "  }\n" +
-                "}\"\n" +
-                "}", mediaType);
+                "}\n" +
+                "\"\n" +
+                "}" );
         Request request = new Request.Builder()
                 .url(url)
                 .method("POST", body)

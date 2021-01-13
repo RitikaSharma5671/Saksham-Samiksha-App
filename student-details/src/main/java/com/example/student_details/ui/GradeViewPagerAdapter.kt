@@ -3,6 +3,7 @@ package com.example.student_details.ui
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
+import com.example.student_details.viewmodels.ClassFilterViewModel
 
 class GradeViewPagerAdapter(val lifecycleOwner: ClassFilterFragment, val filterCollectionViewModel: ClassFilterViewModel) : PagerAdapter() {
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
