@@ -99,6 +99,9 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
         if (response.user.has("accountName"))
             editor.putString("user.accountName", response.user.get("accountName").getAsString());
         else editor.putString("user.accountName", "");
+        if (response.user.has("mobilePhone"))
+            editor.putString("user.mobilePhone", response.user.get("mobilePhone").getAsString());
+        else editor.putString("user.mobilePhone", "");
 
         if (response.user.has("email"))
             editor.putString("user.email", response.user.get("email").getAsString());
@@ -112,10 +115,17 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
         if (response.token != null)
             editor.putString("user.token", response.token.getAsString());
 
-        if (response.user.has("data")) {
+        if(response.user.has("data") && response.user.get("data")!= null){
             editor.putString("user.data", response.user.get("data").toString());
             JsonObject data = response.user.get("data").getAsJsonObject();
+            if (data.has("roleData")) {
+                if (data.get("roleData").getAsJsonObject().has("designation")) {
+                    editor.putString("user.designation", response.user.get("data").
+                            getAsJsonObject().get("roleData").getAsJsonObject().
+                            get("designation").getAsJsonPrimitive().getAsString());
+                }
 
+            }
             if (data.has("category"))
                 editor.putString("user.category", data.get("category").getAsJsonPrimitive().getAsString());
             else editor.putString("user.category", "");
@@ -129,6 +139,12 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
             } else {
                 editor.putString("user.accountName", "");
             }
+
+            if (data.has("phone")) {
+                editor.putString("user.phone", data.get("phone").getAsString());
+            } else {
+                editor.putString("user.phone", "");
+            }
         }
         editor.apply();
     }
@@ -136,40 +152,29 @@ public class CommonsPrefsHelperImpl implements CommonsPreferenceHelper {
     @Override
     public void setCurrentUserAdditionalDetailsFromLogin(LoginResponse response) {
         SharedPreferences.Editor editor = defaultPreferences.edit();
-        if (response.user.has("registrations")) {
-            JsonArray registrations = response.user.get("registrations").getAsJsonArray();
-            for (int i = 0; i < registrations.size(); i++) {
-                if (registrations.get(i).getAsJsonObject().has("applicationId")) {
-
-                    String applicationId = registrations.get(i).getAsJsonObject().get("applicationId").getAsString();
-                    if (applicationId.equals(AncillaryScreensDriver.APPLICATION_ID)) {
-                        // This is applicationId for Shiksha Saathi
-                        editor.putString("user.role", registrations.get(i).getAsJsonObject().get("roles").getAsJsonArray().get(0).getAsJsonPrimitive().getAsString());
-                    }
-                }
-            }
-        }
-
         if (response.user.has("fullName"))
             editor.putString("user.fullName", response.user.get("fullName").getAsString());
         else editor.putString("user.fullName", response.user.get("username").getAsString());
         if (defaultPreferences.getString("user.username", "").isEmpty()) {
             editor.putString("user.username", response.user.get("fullName").getAsString());
-
         }
         editor.putString("user.id", response.user.get("id").getAsString());
-
-        if (response.user.has("mobilePhone"))
-            editor.putString("user.mobilePhone", response.user.get("mobilePhone").getAsString());
-        else editor.putString("user.mobilePhone", "");
-
-        if(response.user.has("data") && response.user.get("data")!= null){
-            JsonObject userData = response.user.get("data").getAsJsonObject();
-            if (userData.has("roleData")) {
-                if (userData.get("roleData").getAsJsonObject().has("designation"))
-                    editor.putString("user.designation", response.user.get("data").getAsJsonObject().get("roleData").getAsJsonObject().get("designation").getAsJsonPrimitive().getAsString());
-            }}
         editor.apply();
+//        editor = defaultPreferences.edit();
+//        if (response.user.has("registrations")) {
+//            JsonArray registrations = response.user.get("registrations").getAsJsonArray();
+//            for (int i = 0; i < registrations.size(); i++) {
+//                if (registrations.get(i).getAsJsonObject().has("applicationId")) {
+//
+//                    String applicationId = registrations.get(i).getAsJsonObject().get("applicationId").getAsString();
+//                    if (applicationId.equals(AncillaryScreensDriver.APPLICATION_ID)) {
+//                        // This is applicationId for Shiksha Saathi
+//                        editor.putString("user.role", registrations.get(i).getAsJsonObject().get("roles").getAsJsonArray().get(0).getAsJsonPrimitive().getAsString());
+//                    }
+//                }
+//            }
+//        }
+//        editor.apply();
     }
 
     @Override

@@ -77,7 +77,7 @@ public class AppPreferenceHelper implements PreferenceHelper{
     @Override
     public String getValueForKey(String content) {
         if (content.equals("user.mobilePhone")) {
-            return new HashMap<String, String>((Map) new Gson().fromJson(defaultPreferences.getString("user.data", ""), HashMap.class)).get("phone");
+            return defaultPreferences.getString("user.phone", "");
         } else
             return defaultPreferences.getString(content, "");
     }
@@ -98,11 +98,7 @@ public class AppPreferenceHelper implements PreferenceHelper{
 
     @Override
     public String getUserRoleFromPref() {
-        try {
-            return new HashMap<String, String>((Map) new Gson().fromJson(defaultPreferences.getString("user.data", ""), HashMap.class).get("roleData")).get("designation");
-        } catch (Exception e) {
-            return "";
-        }
+        return defaultPreferences.getString("user.designation", "");
     }
 
 
