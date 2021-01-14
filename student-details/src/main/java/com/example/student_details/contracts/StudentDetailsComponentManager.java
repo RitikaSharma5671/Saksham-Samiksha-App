@@ -20,7 +20,7 @@ public class StudentDetailsComponentManager {
      * @param application Application Instance
      * @param baseApiUrl
      */
-    public static void registerProfilePackage(IStudentDetailsContract profileContractImpl, Application application, String apiKey, String applicationId, String baseApiUrl) {
+    public static void registerStudentModule(IStudentDetailsContract profileContractImpl, Application application, String apiKey, String applicationId, String baseApiUrl) {
         iStudentDetailsContract = profileContractImpl;
         StudentDetailsComponentManager.API_KEY = apiKey;
         StudentDetailsComponentManager.APPLICATION_ID = applicationId;
@@ -38,14 +38,5 @@ public class StudentDetailsComponentManager {
                 .build();
         Realm.setDefaultConfiguration(realmConfig);
     }
-
-//    public static Realm getRealm(){
-////        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
-////                .name(Application.class.getName())
-////                .modules(new UserManagementRealmModule())
-////                .deleteRealmIfMigrationNeeded()
-////                .build();
-////        return Realm.getInstance(realmConfiguration);
-//    }
 
 }

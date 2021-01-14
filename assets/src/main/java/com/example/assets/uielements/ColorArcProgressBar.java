@@ -224,7 +224,9 @@ public class ColorArcProgressBar extends View {
             canvas.drawText(String.format("%.0f", curValues), centerX, centerY + textSize / 3, vTextPaint);
         }
         if (isNeedUnit) {
-            canvas.drawText(hintString, centerX, centerY + 2 * textSize / 3, hintPaint);
+//            float d = centerX + dipToPx(100);
+            canvas.drawText(hintString, centerX,centerY + 2 * textSize / 3, hintPaint);
+//            canvas.drawText(hintString, centerX, centerY + 2 * textSize / 3, hintPaint);
         }
         if (isNeedTitle) {
             canvas.drawText(titleString, centerX, centerY - 2 * textSize / 3, curSpeedPaint);
@@ -278,7 +280,7 @@ public class ColorArcProgressBar extends View {
 
     /**
      * 设置速度文字大小
-     * @param textSize
+     * @param textSize  1
      */
     public void setTextSize(int textSize) {
         this.textSize = textSize;

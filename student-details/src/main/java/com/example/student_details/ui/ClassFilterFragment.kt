@@ -91,7 +91,7 @@ class ClassFilterFragment : Fragment() {
                         (filterViewModel.selectedGrades.value!!.contains(11) || filterViewModel.selectedGrades.value!!.contains(12))) {
                     bundle.putSerializable("selectedStreams", filterViewModel.selectedStreams.value!!)
                 }
-                val markAttendanceView = MarkAttendanceView()
+                val markAttendanceView = MarkStudentAttendanceView()
                 markAttendanceView.arguments = bundle
                 addFragment(R.id.bleh_fragment_container, parentFragmentManager, markAttendanceView, "MarkAttendanceView")
 

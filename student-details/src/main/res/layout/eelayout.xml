@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <com.example.assets.uielements.SamagraNestedScrollView
+        android:id="@+id/my_points_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
+
+            <RelativeLayout
+                android:id="@+id/next_goal_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                >
+
+                <TextView
+                    android:id="@+id/next_goal1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginTop="20dp"
+                    android:text="NEXT GOAL:"
+                    android:textStyle="bold"
+                    android:textColor="@color/light_grey"
+                    android:textSize="13.5sp"/>
+
+                <TextView
+                    android:id="@+id/next_goal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_toEndOf="@+id/next_goal1"
+                    android:text="NEXT GOAL:"
+                    android:textStyle="normal"
+                    android:textSize="14sp"/>
+
+            </RelativeLayout>
+
+            <com.example.assets.uielements.ArcProgress
+                android:id="@+id/arc_progress"
+                android:layout_width="235dp"
+                android:layout_height="235dp"
+                android:layout_below="@+id/next_goal_view"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="13dp"
+                android:background="@color/white"
+                custom:arc_bottom_text="Bottom Text"
+                custom:arc_finished_color="@color/color2"
+                custom:arc_progress="0"
+                custom:arc_stroke_width="12dp"
+                custom:arc_text_color="@android:color/black"
+                custom:arc_unfinished_color="@color/color_primary"
+                custom:image_height="30dp"
+                custom:image_width="120dp"
+                custom:tv_next_goal="0"
+                custom:tv_next_goal_color="@color/color1"
+                custom:tv_next_goal_text_size="12sp"
+                custom:tv_points_to="0 points to"
+                custom:tv_points_to_color="@color/color1"
+                custom:tv_points_to_text_size="11sp"
+                custom:tv_reward="sample_reward_text"
+                custom:tv_reward_text="0"
+                custom:tv_reward_text_color="@color/green"
+                custom:tv_reward_text_size="40sp"
+                custom:tv_static_next_goal="NEXT GOAL"
+                custom:tv_static_next_goal_color="@color/color5"
+                custom:tv_static_next_goal_text_size="11sp"/>
+
+            <!--<View
+                android:id="@+id/view"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_line_height_below_email"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/arc_progress"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/view_margin_top_from_progress_arc"
+                android:layout_marginStart="@dimen/divider_margin_my_pints"
+                android:layout_marginEnd="@dimen/divider_margin_my_pints"
+                android:background="@color/restore_password_divider_line_color" />
+-->
+            <LinearLayout
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/arc_progress"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/view_divider_bottom_left"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.5"
+                    android:background="@color/color_primary"/>
+
+                <TextView
+                    android:id="@+id/recent_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="RECENT ACTIVITY"
+                    android:textStyle="bold"
+                    android:textColor="@color/color1"
+                    android:textSize="13.2sp"/>
+
+                <View
+                    android:id="@+id/view_divider_bottom_right"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.5"
+                    android:background="@color/color_primary"/>
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/view"
+                android:layout_marginTop="25dp">
+
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/view_more_item"
+                android:layout_width="match_parent"
+                android:layout_height="14sp"
+                android:layout_below="@+id/fragment_container"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:letterSpacing="0.10"
+                android:text="View More Items"
+                android:textStyle="bold"
+                android:textColor="@color/light_grey"
+                android:textSize="14sp"
+                android:visibility="gone"/>>
+
+            <ImageView
+                android:id="@+id/image_my_point"
+                android:layout_width="53.5dp"
+                android:layout_height="53.5dp"
+                android:layout_below="@+id/fragment_container"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_message1_table_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_my_point"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp">
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_message2_taable_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rl_message1_table_layout"
+                android:layout_centerHorizontal="true">
+
+            </RelativeLayout>
+
+            <!--<Button
+                android:id="@+id/view_my_activity_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/forgot_password_submit_button_height"
+                android:layout_below="@+id/rl_message2_taable_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/forgot_password_margin_left"
+                android:layout_marginRight="@dimen/forgot_password_margin_left"
+                android:layout_marginTop="@dimen/margin_top_points_summary_arc"
+                android:background="@drawable/round_button"
+                android:letterSpacing="0.10"
+                android:stateListAnimator="@null"
+                android:text="@string/button_text_my_activity"
+                android:textAppearance="@style/Font.proximaBold"
+                android:textColor="@color/black"
+                android:textSize="@dimen/button_text_size" />-->
+
+            <!-- <TextView
+                 android:id="@+id/about_reward"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@+id/view_my_activity_button"
+                 android:layout_centerHorizontal="true"
+                 android:layout_marginBottom="@dimen/margin_top_points_summary_arc"
+                 android:layout_marginTop="@dimen/margin_top_points_summary_arc"
+                 android:gravity="center"
+                 android:letterSpacing="0.10"
+                 android:text="@string/about_gb_rewards"
+                 android:textAppearance="@style/Font.proximaSemiBold"
+                 android:textColor="@color/grey"
+                 android:textSize="@dimen/points_summary_text_size" />&ndash;&gt;-->
+            <Button
+                android:id="@+id/about_rewards"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_below="@+id/view_more_item"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_style1_background"
+                android:letterSpacing="0.10"
+                android:stateListAnimator="@null"
+                android:text="About GB Rewards"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
+
+        </RelativeLayout>
+
+
+    </>
+
+    <ProgressBar
+        android:id="@+id/my_points_progress_bar"
+        style="@android:style/Widget.Holo.Light.ProgressBar"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/error_getting_response"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:letterSpacing="0.12"
+        android:text="Error occurred while fetching data."
+        android:textStyle="bold"
+        android:textColor="@color/color_primary"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+</RelativeLayout>
+

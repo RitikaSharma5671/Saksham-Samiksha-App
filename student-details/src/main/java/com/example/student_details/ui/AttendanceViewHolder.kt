@@ -12,12 +12,12 @@ import com.example.student_details.databinding.ItemAttendanceRowBinding
 import com.example.student_details.models.realm.StudentInfo
 import com.example.student_details.showNumberPickerDialog
 import com.example.student_details.viewmodels.AttendanceItemViewModel
-import com.example.student_details.viewmodels.MarkAttendanceViewModel
+import com.example.student_details.viewmodels.MarkStudentAttendanceViewModel
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
 class AttendanceViewHolder(val itemAttendanceRowBinding: ItemAttendanceRowBinding, val application: Application, markAttendanceView: LifecycleOwner,
-                           val markAttendanceViewModel: MarkAttendanceViewModel) : RecyclerView.ViewHolder(itemAttendanceRowBinding.root) {
+                           val markAttendanceViewModel: MarkStudentAttendanceViewModel) : RecyclerView.ViewHolder(itemAttendanceRowBinding.root) {
     private lateinit var attendanceItemDataViewModel: AttendanceItemViewModel
     @SuppressLint("DefaultLocale")
     fun bind(studentInfo: StudentInfo, layoutPosition: Int) {

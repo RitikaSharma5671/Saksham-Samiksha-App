@@ -14,12 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.student_details.R
 import com.example.student_details.databinding.ItemAttendanceRowBinding
 import com.example.student_details.models.realm.StudentInfo
-import com.example.student_details.viewmodels.MarkAttendanceViewModel
+import com.example.student_details.viewmodels.MarkStudentAttendanceViewModel
 
 
 class AttendanceAdapter(
         private var markAttendanceView: LifecycleOwner,
-        private var markAttendanceViewModel: MarkAttendanceViewModel
+        private var markAttendanceViewModel: MarkStudentAttendanceViewModel
 ) : ListAdapter<StudentInfo, AttendanceViewHolder>(
         OnAttendanceDataDiffCallback()) {
 

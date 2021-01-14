@@ -16,12 +16,9 @@ import com.example.student_details.models.realm.StudentInfo;
 import com.example.student_details.modules.AuthorizationInterceptor;
 import com.example.student_details.network.BackendCallHelperImpl;
 import com.example.student_details.ui.employee_aggregate.ViewEmployeeAttendance;
-import com.example.student_details.ui.teacher_aggregate.MainActivity;
 import com.example.student_details.ui.teacher_attendance.data.Employees;
 import com.hasura.model.GetStudentsForSchoolQuery;
-import com.hasura.model.SendAttendanceMutation;
 import com.hasura.model.SendUsageInfoMutation;
-import com.hasura.model.type.Attendance_insert_input;
 import com.hasura.model.type.TrackInstall_insert_input;
 import com.samagra.grove.logging.Grove;
 
@@ -42,14 +39,14 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
     @Override
     public void markTeacherAttendance(Context activityContext,
                                       int fragment_container, FragmentManager supportFragmentManager) {
-        Intent intent = new Intent(activityContext, HHH.class);
+        Intent intent = new Intent(activityContext, SchoolModuleLauncherView.class);
         intent.putExtra("nameOfActivity", "markTeacherAttendance");
         activityContext.startActivity(intent);
     }
 
     @Override
     public void viewStudentData(Context activityContext, int fragment_container, FragmentManager supportFragmentManager) {
-        Intent intent = new Intent(activityContext, HHH.class);
+        Intent intent = new Intent(activityContext, SchoolModuleLauncherView.class);
         intent.putExtra("nameOfActivity", "studentData");
         activityContext.startActivity(intent);
     }
@@ -169,14 +166,14 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
     @Override
     public void markStudentAttendance(Context activityContext,
                                       int fragment_container, FragmentManager supportFragmentManager) {
-        Intent intent = new Intent(activityContext, HHH.class);
+        Intent intent = new Intent(activityContext, SchoolModuleLauncherView.class);
         intent.putExtra("nameOfActivity", "markStudentAttendance");
         activityContext.startActivity(intent);
     }
 
     @Override
     public void launchStudentAttendanceView(Context activityContext) {
-        Intent intent = new Intent(activityContext, HHH.class);
+        Intent intent = new Intent(activityContext, SchoolModuleLauncherView.class);
         intent.putExtra("nameOfActivity", "markStudentAttendance");
         activityContext.startActivity(intent);
     }

@@ -23,6 +23,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.example.assets.uielements.SamagraAlertDialog;
 import com.example.student_details.contracts.IStudentDetailsContract;
 import com.example.student_details.contracts.StudentDetailsComponentManager;
+import com.example.student_details.ui.SSS;
 import com.example.student_details.ui.teacher_aggregate.MainActivity;
 import com.example.update.UpdateApp;
 import com.google.android.material.snackbar.Snackbar;
@@ -500,7 +501,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
 
     @Override
     public void onViewStudentAttendanceClicked() {
-        Intent i = new Intent(getActivityContext(), MainActivity.class);
+        Intent i = new Intent(getActivityContext(), SSS.class);
         startActivity(i);
     }
 

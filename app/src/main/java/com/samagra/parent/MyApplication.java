@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -124,7 +123,7 @@ public class MyApplication extends Application implements MainApplication, Lifec
     }
 
     private void initialiseStudentModule() {
-        StudentDetailsComponentManager.registerProfilePackage(new StudentDetailsSectionInteractor(),
+        StudentDetailsComponentManager.registerStudentModule(new StudentDetailsSectionInteractor(),
                 this, getApplicationContext().getResources().getString(R.string.fusionauth_api_key), AppConstants.APPLICATION_ID, AppConstants.BASE_API_URL);
 
     }

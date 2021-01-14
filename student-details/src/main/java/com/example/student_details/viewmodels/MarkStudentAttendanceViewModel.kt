@@ -19,7 +19,7 @@ import org.odk.collect.android.application.Collect1
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MarkAttendanceViewModel : ViewModel() {
+class MarkStudentAttendanceViewModel : ViewModel() {
     var filterText: MutableLiveData<String> = MutableLiveData()
     var studentsList: MutableLiveData<List<StudentInfo>> = MutableLiveData()
     val isStudentListVisible = ObservableBoolean(false)

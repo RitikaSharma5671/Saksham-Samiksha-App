@@ -2,35 +2,18 @@ package com.example.student_details.contracts;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.apollographql.apollo.ApolloCall;
-import com.apollographql.apollo.ApolloClient;
-import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.exception.ApolloException;
 import com.example.student_details.R;
-import com.example.student_details.models.realm.StudentInfo;
-import com.example.student_details.modules.AuthorizationInterceptor;
 import com.example.student_details.ui.ClassFilterFragment;
-import com.example.student_details.ui.MarkAttendanceView;
 import com.example.student_details.ui.StudentDetailsView;
 import com.example.student_details.ui.teacher_attendance.MarkTeacherAttendanceView;
-import com.hasura.model.GetStudentsForSchoolQuery;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-
-import io.realm.Realm;
-import okhttp3.OkHttpClient;
-
-public class HHH extends AppCompatActivity {
+public class SchoolModuleLauncherView extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -3,7 +3,7 @@
 
     <application>
         <activity
-        android:name=".contracts.HHH"
+        android:name=".contracts.SchoolModuleLauncherView"
             android:screenOrientation="portrait"
         android:theme="@style/MyMaterialTheme"/>
         <activity
@@ -11,6 +11,11 @@
             android:label="rfvrfvftv"
             android:screenOrientation="portrait"
             android:theme="@style/MyMaterialTheme"/>
+        <activity
+        android:name="com.example.student_details.ui.SSS"
+        android:label="rfvrfvssftv"
+        android:screenOrientation="portrait"
+        android:theme="@style/MyMaterialTheme"/>
         <activity
             android:name="com.example.student_details.ui.employee_aggregate.ViewEmployeeAttendance"
             android:label="fvfr"

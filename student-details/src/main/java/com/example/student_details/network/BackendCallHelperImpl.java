@@ -56,21 +56,6 @@ public class BackendCallHelperImpl implements BackendCallHelper {
                 "      ]\n" +
                 "            }\n" +
                 "}";
-
-//        String json1 = "{\n" +
-//                "    \"search\": {\n" +
-//                "        \"queryString\": \"(registrations.applicationId: "+ StudentDetailsComponentManager.APPLICATION_ID +
-//                ") AND (data.roleData.schoolCode: " + schoolCode + ") AND (data.roleData.schoolName: " +schoolName+ ")\",\n" +
-//                "NOT (data.roleData.designation: School Head)\",\n" +
-//                "        \"sortFields\": [\n" +
-//                "             {\n" +
-//                "        \"name\": \"fullName\",\n" +
-//                "        \"order\": \"asc\",\n" +
-//                "        \"numberOfResults\":1000\n" +
-//                "      }\n" +
-//                "      ]\n" +
-//                "            }\n" +
-//                "}";
         JSONObject body = new JSONObject();
         try {
             body = new JSONObject(json);

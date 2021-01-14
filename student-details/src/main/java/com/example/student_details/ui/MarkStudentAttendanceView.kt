@@ -13,17 +13,17 @@ import com.example.student_details.R
 import com.example.student_details.databinding.FragmentMarkAttendanceBinding
 import com.example.student_details.getViewModelProvider
 import com.example.student_details.models.realm.StudentInfo
-import com.example.student_details.viewmodels.MarkAttendanceViewModel
+import com.example.student_details.viewmodels.MarkStudentAttendanceViewModel
 
-class MarkAttendanceView : Fragment() {
+class MarkStudentAttendanceView : Fragment() {
     private var  userName : String = ""
     private lateinit var layoutBinding: FragmentMarkAttendanceBinding
     private lateinit var attendanceAdapter: AttendanceAdapter
     private val studentList: ArrayList<StudentInfo> = ArrayList()
     private lateinit var mProgress: ProgressDialog
-    private val markAttendanceViewModel: MarkAttendanceViewModel by lazy {
+    private val markAttendanceViewModel: MarkStudentAttendanceViewModel by lazy {
         getViewModelProvider(this).get(
-                MarkAttendanceViewModel::class.java
+                MarkStudentAttendanceViewModel::class.java
         )
     }
 

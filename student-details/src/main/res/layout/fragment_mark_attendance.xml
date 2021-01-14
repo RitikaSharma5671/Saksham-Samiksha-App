@@ -9,7 +9,7 @@
 
         <variable
             name="markAttendanceViewModel"
-            type="com.example.student_details.viewmodels.MarkAttendanceViewModel" />
+            type="com.example.student_details.viewmodels.MarkStudentAttendanceViewModel" />
     </data>
 
     <RelativeLayout
