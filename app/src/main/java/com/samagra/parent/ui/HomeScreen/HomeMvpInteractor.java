@@ -12,4 +12,6 @@ import com.samagra.parent.base.MvpInteractor;
 public interface HomeMvpInteractor extends MvpInteractor {
     String getUserName();
     String getUserFullName();
+String getJWTToken();
+    String getRefreshToken();
 }

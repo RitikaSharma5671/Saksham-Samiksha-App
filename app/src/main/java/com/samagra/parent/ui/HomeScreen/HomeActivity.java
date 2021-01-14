@@ -343,7 +343,7 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
                                 Grove.d("Logout Listener initialised");
                                 HomeActivity.this.initializeLogoutListener();
                             }
-                            AncillaryScreensDriver.performLogout(HomeActivity.this);
+                            AncillaryScreensDriver.performLogout(HomeActivity.this, homePresenter.getMvpInteractor().getRefreshToken(), homePresenter.getMvpInteractor().getJWTToken());
                         } else {
                             showSnackbar("It seems you are offline. Logout cannot happen in offline conditions.", 3000);
                         }

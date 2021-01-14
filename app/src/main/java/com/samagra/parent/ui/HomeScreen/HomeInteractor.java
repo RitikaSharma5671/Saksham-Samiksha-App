@@ -30,6 +30,16 @@ public class HomeInteractor extends BaseInteractor implements HomeMvpInteractor 
         return getPreferenceHelper().getCurrentUserFullName();
     }
 
+    @Override
+    public String getJWTToken() {
+        return getPreferenceHelper().getJWT();
+    }
+
+    @Override
+    public String getRefreshToken() {
+        return getPreferenceHelper().token();
+    }
+
 
     @Override
     public String getUserName() {

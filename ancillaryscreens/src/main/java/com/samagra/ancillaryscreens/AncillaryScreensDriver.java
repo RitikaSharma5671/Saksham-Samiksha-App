@@ -115,10 +115,11 @@ public class AncillaryScreensDriver {
      * RxJava EventBus system
      *
      * @param context - The current Activity's context.
+     * @param refreshToken
      * @see AncillaryScreensDriver#notifyLogoutInitiated()
      * @see AncillaryScreensDriver#notifyLogoutCompleted()
      */
-    public static void performLogout(@NonNull Context context) {
+    public static void performLogout(@NonNull Context context, String refreshToken, String jwtToken) {
         // TODO : Logout button => Logout from fusionAuth => Update user by removing registration token => Login splash_ss
         Grove.d("Inside performLogout() method....");
         checkValidConfig();
@@ -127,7 +128,7 @@ public class AncillaryScreensDriver {
         String token = sharedPreferences.getString("FCM.token", "");
         if (CommonUtilities.isNetworkAvailable(context)) {
             try {
-                makeRemoveTokenApiCall(context);
+                makeRemoveTokenApiCall(context,refreshToken, jwtToken);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -154,13 +155,13 @@ public class AncillaryScreensDriver {
      * the FCMToken from it. This is done to prevent logged out users from receiving notifications.
      *
      * @param context - The current Activity Context.
+     * @param refreshToken
      * @see AncillaryScreensDriver#removeFCMTokenFromObject(JSONObject) - This edits the JSONObject retrieved by removing the FCM token.
      */
-    private static void makeRemoveTokenApiCall(@NonNull Context context) throws JSONException {
+    private static void makeRemoveTokenApiCall(@NonNull Context context, String refreshToken, String jwtToken) throws JSONException {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String userId = sharedPreferences.getString("token", "");
         BackendCallHelperImpl.getInstance()
-                .performLogoutApiCall(sharedPreferences.getString("refreshToken", ""), userId)
+                .performLogoutApiCall(refreshToken, jwtToken)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<JSONObject>() {

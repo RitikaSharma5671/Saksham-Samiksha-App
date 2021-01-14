@@ -13,7 +13,7 @@ import java.util.HashMap;
  */
 public class AppConstants {
     public static final String PREF_FILE_NAME = "SAMAGRA_PREFS";
-    public static final String BASE_API_URL = "https://a62e7441bf45.ngrok.io";
+    public static final String BASE_API_URL = "https://relay2.saksham.staging.samagra.io";
     public static final String ROOT = Environment.getExternalStorageDirectory()
             + File.separator + "odk";
     public static final String FILE_PATH =  Environment.getExternalStorageDirectory()

@@ -68,6 +68,16 @@ public class AppPreferenceHelper implements PreferenceHelper{
     }
 
     @Override
+    public String token() {
+        return defaultPreferences.getString("refreshToken", "");
+    }
+
+    @Override
+    public String getJWT() {
+        return defaultPreferences.getString("token","");
+    }
+
+    @Override
     public void updateFormVersion(String version) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("formVersion", version);
