@@ -56,10 +56,11 @@ public class WebCredentialsUtils {
     }
 
     public String getServerUrlFromPreferences() {
-        if (GeneralSharedPreferences.getInstance() == null) {
-            return "";
-        }
-        return (String) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_SERVER_URL);
+        return  "https://agg.dummy.samagra.io/";
+//        if (GeneralSharedPreferences.getInstance() == null) {
+//            return "";
+//        }
+//        return (String) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_SERVER_URL);
     }
 
     public String getPasswordFromPreferences() {

@@ -100,8 +100,7 @@ public final class GeneralKeys {
     private static HashMap<String, Object> getHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
         // aggregate_preferences.xml
-        hashMap.put(KEY_SERVER_URL,                 Collect.getInstance().getAppContext().getResources().getString(R.string.default_server_url));
-        hashMap.put(KEY_USERNAME,                   "");
+         hashMap.put(KEY_USERNAME,                   "");
         hashMap.put(KEY_PASSWORD,                   "");
         // form_management_preferences.xml
         hashMap.put(KEY_AUTOSEND,                   AUTOSEND_OFF);

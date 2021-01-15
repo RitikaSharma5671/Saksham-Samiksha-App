@@ -76,9 +76,7 @@ public class DownloadFormListUtils {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
                 application);
 
-        String downloadListUrl = url != null ? url :
-                settings.getString(GeneralKeys.KEY_SERVER_URL,
-                        application.getString(R.string.default_server_url));
+        String downloadListUrl = url != null ? url :"https://agg.dummy.samagra.io/";
 
         while (downloadListUrl.endsWith("/")) {
             downloadListUrl = downloadListUrl.substring(0, downloadListUrl.length() - 1);
