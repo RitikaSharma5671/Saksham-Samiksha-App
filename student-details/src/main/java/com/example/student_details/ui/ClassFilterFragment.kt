@@ -63,7 +63,7 @@ class ClassFilterFragment : Fragment() {
         val grades = ArrayList<Int>()
         grades.addAll(arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
         val sections = ArrayList<String>()
-        sections.addAll(arrayOf("A", "B", "C", "D","E", "F", "G", "H"))
+        sections.addAll(arrayOf("A", "B", "C", "D","E", "F", "G", "H","I","J","K","L","M","N"))
         val streams = ArrayList<String>()
         streams.addAll(arrayOf("ARTS", "SCIENCE", "COMMERCE"))
         filterAttributes.allGrades = grades
@@ -176,7 +176,7 @@ class ClassFilterFragment : Fragment() {
         stream_recycler_view.setHasFixedSize(true)
         stream_recycler_view.adapter =
                 StreamSizeAdapter(filterViewModel)
-        val itemWidth1 = convertDpToPixel(110.0f, context!!).toInt()
+        val itemWidth1 = convertDpToPixel(110.0f, requireContext()).toInt()
         val parentWidth1 = size.x
         val spanCount1 = Math.min(parentWidth1 / itemWidth1, 3)
         stream_recycler_view.layoutManager = GridLayoutManager(context, spanCount1)

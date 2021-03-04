@@ -43,11 +43,15 @@ public class BackendCallHelperImpl implements BackendCallHelper {
 
     @Override
     public Single<EmployeeInfo> performLoginApiCall(String schoolCode, String schoolName) {
+        String name = schoolName;
+        if(schoolName.contains("/"))
+          name =  name.replace("/","//");
+
         String json = "{\n" +
                 "    \"search\": {\n" +
                 "        \"numberOfResults\":1000,\n"+
                 "        \"queryString\": \"(registrations.applicationId: " + StudentDetailsComponentManager.APPLICATION_ID
-                + ") AND (data.roleData.schoolCode: " + schoolCode + ") AND (data.roleData.schoolName : " + schoolName + ")\",\n" +
+                + ") AND (data.roleData.schoolCode: " + schoolCode + ") AND (data.roleData.schoolName : " + name + ")\",\n" +
                 "        \"sortFields\": [\n" +
                 "             {\n" +
                 "        \"name\": \"fullName\",\n" +

@@ -1,0 +1,245 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="shikshamitrViewModel"
+            type="com.example.student_details.ui.shikshamitr.ui.ShikshaMitrDetailsViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/student_sm_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color4"
+        android:clickable="true"
+        android:focusable="true">
+
+        <RelativeLayout
+            android:id="@+id/filter_header"
+            android:layout_width="match_parent"
+            android:layout_height="64dp">
+
+            <ImageView
+                android:id="@+id/close_cross_sm_summary_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/filter_close_button_margin_left"
+                android:contentDescription="@string/filter_cross_content_desc"
+                android:padding="10dp"
+                android:scaleType="center"
+
+                android:src="@drawable/filter_close_icon" />
+
+            <!--android:onClick="@{filterCollectionViewModel.onClose()}"-->
+            <TextView
+                android:id="@+id/filters_text"
+                style="@style/filter_screen_header_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:letterSpacing="0.052"
+                android:text="@string/shiksha_mitr_details"
+                android:textColor="@color/color1"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/filter_title_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/filter_header"
+            android:background="@color/color3" />
+
+        <LinearLayout
+            android:id="@+id/filters"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_below="@id/filter_title_divider"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:weightSum="2">
+            <Spinner
+                android:id="@+id/sm_summary_grade_spinner"
+                android:padding="4dp"
+                android:focusable="true"
+                android:clickable="true"
+                android:entries="@array/grades_list"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:background="@drawable/spinner_background_black"
+                android:layout_height="match_parent">
+            </Spinner>
+            <Spinner
+                android:id="@+id/sm_summary_section_spinner"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:padding="4dp"
+                android:focusable="true"
+                android:clickable="true"
+                android:entries="@array/sections_list"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:visibility="visible"
+                android:background="@drawable/spinner_background_black"
+                android:layout_height="match_parent">
+            </Spinner>
+
+      
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/sm_details_stream_category_rg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/filters"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_vertical"
+            android:minHeight="40dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+
+            <RadioButton
+                android:id="@+id/category_arts"
+                style="@style/LabelStyle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:button="@drawable/radio_bg"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="Arts"
+                android:textSize="12.5sp"
+                android:textStyle="normal" />
+
+            <RadioButton
+                android:id="@+id/category_science"
+                style="@style/LabelStyle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:button="@drawable/radio_bg"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="Science"
+                android:textSize="12.5sp"
+                android:textStyle="normal" />
+
+            <RadioButton
+                android:id="@+id/category_commerce"
+                style="@style/LabelStyle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:button="@drawable/radio_bg"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="Commerce"
+                android:textSize="12.5sp"
+                android:textStyle="normal" />
+        </RadioGroup>
+
+
+
+        <ProgressBar
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/progress_bar_sm_screen"
+            android:visibility="visible"
+            style="@style/Widget.AppCompat.ProgressBar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+         android:layout_centerHorizontal="true"
+        android:id="@+id/arclayout"
+        android:layout_below="@id/sm_details_stream_category_rg"
+        android:layout_height="wrap_content">
+        <com.example.student_details.ui.shikshamitr.ui.ArcProgress
+            android:id="@+id/arc_progress"
+            android:background="@color/trans"
+            android:layout_width="200dp"
+            custom:arc_text_color="@color/color_primary"
+            android:layout_marginTop="6dp"
+            custom:arc_bottom_text_size="11sp"
+            custom:arc_unfinished_color="@color/green"
+            android:layout_centerHorizontal="true"
+            custom:arc_bottom_text="Shiksha Mitr\n Registered"
+            custom:arc_finished_color="@color/color_primary"
+            android:layout_height="200dp"
+            custom:arc_progress="55" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_below="@id/arc_progress"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:id="@+id/hundered_layout"
+            android:visibility="gone"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:id="@+id/hun_image"
+                android:layout_marginTop="6dp"
+                android:src="@drawable/ic_star_svgrepo_com"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/LabelStyle2"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16.5sp"
+                android:layout_marginTop="8dp"
+                android:layout_below="@id/hun_image"
+                android:layout_centerHorizontal="true"
+                android:text="100% Shiksha Mitr Registrations"/>
+        </RelativeLayout>
+    </RelativeLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/student_sm_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/arclayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <TextView
+            android:id="@+id/no_student_sm"
+            style="@style/LabelStyle6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:maxLines="3"
+            android:textColor="@color/color2"
+            android:text="No students found corresponding to the filters applied."  />
+
+        <FrameLayout
+            android:id="@+id/sm_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+</layout>

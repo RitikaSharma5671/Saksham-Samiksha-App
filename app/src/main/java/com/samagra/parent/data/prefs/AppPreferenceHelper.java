@@ -78,6 +78,7 @@ public class AppPreferenceHelper implements PreferenceHelper {
         String designation = defaultPreferences.getString("user.designation", "");
         return !designation.contains("DDO") &&(designation.contains("TGT") ||
                 designation.contains("Clerk") ||
+                designation.contains("PTI") ||
                 designation.contains("Tabla") ||
                 designation.contains("Vocation") ||
                 designation.contains("Librarian") ||

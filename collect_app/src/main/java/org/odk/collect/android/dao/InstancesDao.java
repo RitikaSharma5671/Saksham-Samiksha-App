@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is used to encapsulate all access to the {@link org.odk.collect.android.provider.InstanceProvider#DATABASE_NAME}
+ * This class is used to encapsulate all access to the {@link org.odk.collect.android.provider.InstanceProvider}
  * For more information about this pattern go to https://en.wikipedia.org/wiki/Data_access_object
  */
 public class InstancesDao {
@@ -303,7 +303,7 @@ public class InstancesDao {
     /**
      * Returns all instances available through the cursor and closes the cursor.
      */
-    public List<Instance> getInstancesFromCursor(Cursor cursor) {
+    public static List<Instance> getInstancesFromCursor(Cursor cursor) {
         List<Instance> instances = new ArrayList<>();
         if (cursor != null) {
             try {

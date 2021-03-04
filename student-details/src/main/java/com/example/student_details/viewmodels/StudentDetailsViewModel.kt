@@ -64,9 +64,9 @@ class StudentDetailsViewModel(private val applicationValue: Application, private
 
     }
 
-    fun onSectionEdited(studentData: StudentInfo, changedValue: String) {
+    fun onSectionEdited(studentData: StudentInfo, changedValue: String,token:String) {
         progressBarVisible.postValue("true")
-        val model = StudentDataModel()
+        val model =  StudentDataModel(token)
         model.updateStudentSection(studentData.srn, changedValue, object : ApolloQueryResponseListener<UpdateStudentSectionMutation.Data> {
             override fun onResponseReceived(response: Response<UpdateStudentSectionMutation.Data>?) {
                 val realm = Realm.getDefaultInstance()

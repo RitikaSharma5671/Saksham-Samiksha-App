@@ -13,6 +13,7 @@ import com.apollographql.apollo.exception.ApolloException
 import com.example.student_details.contracts.ApolloQueryResponseListener
 import com.example.student_details.models.realm.StudentInfo
 import com.example.student_details.modules.StudentDataModel
+import com.example.student_details.ui.teacher_attendance.SortByName1
 import com.hasura.model.SendAttendanceMutation
 import io.realm.Realm
 import org.odk.collect.android.application.Collect1
@@ -21,6 +22,7 @@ import kotlin.collections.ArrayList
 
 class MarkStudentAttendanceViewModel : ViewModel() {
     var filterText: MutableLiveData<String> = MutableLiveData()
+    var absentPresent: MutableLiveData<String> = MutableLiveData()
     var studentsList: MutableLiveData<List<StudentInfo>> = MutableLiveData()
     val isStudentListVisible = ObservableBoolean(false)
     val isEmptyListMessageVisible = ObservableBoolean(false)
@@ -37,6 +39,8 @@ class MarkStudentAttendanceViewModel : ViewModel() {
             student.isPresent = checked
         }
         studentsList.postValue(list)
+        countPresentAbsentStudents(list)
+
     }
 
     @SuppressLint("DefaultLocale")
@@ -104,13 +108,18 @@ class MarkStudentAttendanceViewModel : ViewModel() {
         }
 //        realm.commitTransaction()
         if (studentList.size > 0) {
+            var dd = studentList
+            Collections.sort(dd, SortByName1())
             isStudentListVisible.set(true)
             isEmptyListMessageVisible.set(false)
+            studentsList.postValue(dd)
         } else {
             isStudentListVisible.set(false)
             isEmptyListMessageVisible.set(true)
+            studentsList.postValue(studentList.toList())
+
         }
-        studentsList.postValue(studentList.toList())
+
     }
 
     private fun makeFilterScreenTextVisible(selectedGrades: ArrayList<Int>, selectedSections: ArrayList<String>,
@@ -156,6 +165,16 @@ class MarkStudentAttendanceViewModel : ViewModel() {
         filterText.postValue(text)
     }
 
+
+    private fun countPresentAbsentStudents(list: List<StudentInfo>) {
+        val totalStudents = list.size
+        var present = 0
+        for (studentData in list) {
+            if (studentData.isPresent) present += 1
+        }
+        absentPresent.postValue("$totalStudents,$present")
+    }
+
     fun onPrioritySwitchClicked(priorityState: Int, studentInfo: StudentInfo) {
         val attendance = priorityState == 1
         val list = studentsList.value!!
@@ -166,6 +185,7 @@ class MarkStudentAttendanceViewModel : ViewModel() {
             }
         }
         studentsList.postValue(list)
+        countPresentAbsentStudents(list)
     }
 
     fun onSendAttendanceClicked() {
@@ -210,9 +230,9 @@ class MarkStudentAttendanceViewModel : ViewModel() {
         studentsList.postValue(lisss)
     }
 
-    fun uploadAttendanceData(userName: String, schoolName: String, schoolCode: String, district: String, block: String) {
+    fun uploadAttendanceData(userName: String, schoolName: String, schoolCode: String, district: String, block: String, token:String) {
         val list = studentsList.value!!
-        val model = StudentDataModel()
+        val model =  StudentDataModel(token)
         val calendar: Calendar = Calendar.getInstance()
         val currentSelectedDate: String = DateFormat.format("yyyy-MM-dd", calendar).toString()
         model.uploadAttendanceData(currentSelectedDate, userName, list, object : ApolloQueryResponseListener<SendAttendanceMutation.Data> {

@@ -35,12 +35,23 @@
     <string name="mark_attendance">Mark Attendance</string>
     <string name="enter_status">Enter Status</string>
     <string name="save">SAVE</string>
+    <string name="could_add_student">Unable to add/update Shiksha Mitr Data</string>
+    <string name="got_it">GOT IT</string>
     <string name="add_shiksha_mitr">REGISTER SHIKSHA MITR</string>
     <string name="update_shiksha_mitr">UPDATE SHIKSHA MITR DETAILS</string>
-    <string name="student_name">Student Name</string>
-    <string name="srn_number">Student Registration Number (SRN)</string>
+    <string name="student_name">Student Name *</string>
+    <string name="srn_number">Student Registration Number (SRN) *</string>
     <string name="shiksha_mitra_name">Shiksha Mitr Name *</string>
     <string name="sm_mobile_number">Shiksha Mitr Contact Number *</string>
     <string name="sm_relation">Relation between Student and Shiksha Mitr *</string>
-    <string name="sm_address">Shiksha Mitr Adress</string>
+    <string name="sm_address">Shiksha Mitr Address</string>
+    <string name="shiksha_mitr_details">SHIKSHA MITR DETAILS</string>
+    <string name="update_details">UPDATE DETAILS</string>
+
+    <string name="no_name_warning">Please enter Shiksha Mitr name</string>
+    <string name="incorrect_phone_warning">Please enter a valid Phone number</string>
+    <string name="failed_to_add_update_sm_details">There was an error in adding/updating Shiksha Mitr Details. Please try again.</string>
+    <string name="select_sm_relation">Please choose relation between Student and Shiksha Mitr</string>
+    <string name="sm_toehr_realtion_splaese_specify">Other Relations, Please specify *</string>
+    <string name="send_attendance_message">Please ensure that you have entered the correct data for the students.</string>
 </resources>

@@ -76,18 +76,6 @@
                 android:textSize="11.5sp"
                 android:gravity="center_vertical|left"
                 android:singleLine="true" />
-
-            <TextView
-                android:id="@+id/mother_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/father_details"
-                android:layout_marginTop="2dp"
-                android:textStyle="normal"
-                android:textColor="@color/color5"
-                android:textSize="11.5sp"
-                android:gravity="center_vertical|left"
-                android:singleLine="true" />
         </RelativeLayout>
 
         <View

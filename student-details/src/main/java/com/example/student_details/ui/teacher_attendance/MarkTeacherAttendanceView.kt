@@ -1,6 +1,10 @@
 package com.example.student_details.ui.teacher_attendance
 
 import android.app.ProgressDialog
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -87,8 +91,12 @@ class MarkTeacherAttendanceView : Fragment() {
 
                             }).show()
                 } else if (it == "Failure") {
+                    var tee = "The employee data could not be submitted.\n Click OK to try sending data again."
+                    if(!isNetworkAvailable()){
+                        tee="The employee data could not be submitted, as it seems that the device is not connected to internet\n Click OK to try sending data again."
+                    }
                     mProgress.dismiss()
-                    SamagraAlertDialog1.Builder(requireContext()).setTitle("DATA SUBMISSION FAILED").setMessage("The employee data could not be submitted.\n Click OK to try sending data again.")
+                    SamagraAlertDialog1.Builder(requireContext()).setTitle("DATA SUBMISSION FAILED").setMessage(tee)
                             .setAction2("OK", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {
                                 override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                     alertDialog.dismiss()
@@ -106,7 +114,13 @@ class MarkTeacherAttendanceView : Fragment() {
                             override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                 alertDialog.dismiss()
                                 mProgress.show()
-                                markAttendanceViewModel.uploadAttendanceData(userName, schoolCode,schoolName, district, block)
+                                if (isNetworkAvailable())
+                                    markAttendanceViewModel.uploadAttendanceData(userName, schoolCode, schoolName, district, block,
+                                            sharedPreferences.getString("token", "")!!)
+                                else {
+                                    Toast.makeText(context, "Please connect to internet to post Attendance data", Toast.LENGTH_LONG).show()
+                                    mProgress.dismiss()
+                                }
                             }
 
                         }).setAction3("CANCEL, WANT TO RECHECK", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {
@@ -141,12 +155,12 @@ class MarkTeacherAttendanceView : Fragment() {
         })
 
         markAttendanceViewModel.renderToast.observe(viewLifecycleOwner, Observer {
-         if(it != null && it == "Call Failure") {
-             layoutBinding.studentsList.visibility = View.GONE
-             layoutBinding.teacherAttendanceProgressBar.visibility = View.GONE
-             layoutBinding.emptyOnRackSectionMessageHeading.visibility = View.GONE
-             showToast()
-         }
+            if (it != null && it == "Call Failure") {
+                layoutBinding.studentsList.visibility = View.GONE
+                layoutBinding.teacherAttendanceProgressBar.visibility = View.GONE
+                layoutBinding.emptyOnRackSectionMessageHeading.visibility = View.GONE
+                showToast()
+            }
         })
         attendanceAdapter.submitList(employeeList)
         layoutBinding.markAllPresent.setOnClickListener {
@@ -166,4 +180,25 @@ class MarkTeacherAttendanceView : Fragment() {
         )
         binding.studentsList.adapter = attendanceAdapter
     }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val nw      = connectivityManager.activeNetwork ?: return false
+            val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
+            return when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                //for other device how are able to connect with Ethernet
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                //for check internet over Bluetooth
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+                else -> false
+            }
+        } else {
+            val nwInfo = connectivityManager.activeNetworkInfo ?: return false
+            return nwInfo.isConnected
+        }
+    }
+
 }

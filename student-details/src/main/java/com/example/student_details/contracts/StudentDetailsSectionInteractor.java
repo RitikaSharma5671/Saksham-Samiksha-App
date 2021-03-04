@@ -55,6 +55,18 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
     public void loadSchoolDistrictData() {
     }
 
+
+    @Override
+    public void rcr() {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        if (realm.getSchema().contains("SchoolEmployeesInfo"))
+            realm.delete(SchoolEmployeesInfo.class);
+        if (realm.getSchema().contains("StudentInfo"))
+            realm.delete(StudentInfo.class);
+        realm.commitTransaction();
+    }
+
     @Override
     public void fetchSchoolInfo(String school_code, String school_name, EmployeeInfoListener employeeInfoListener) {
         Realm realm = Realm.getDefaultInstance();
@@ -67,17 +79,20 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
                         realm.beginTransaction();
                         if (realm.getSchema().contains("SchoolEmployeesInfo"))
                             realm.delete(SchoolEmployeesInfo.class);
+                        realm.commitTransaction();
                         for (Employees employeeData : groupResponse.getUserInformation()) {
-                            if (!employeeData.getData().getRoleData().getDesignation().equals("School Head")) {
+                            if (employeeData.getData() != null && employeeData.getData().getRoleData() != null &&
+                                    employeeData.getData().getRoleData().getDesignation() != null && !employeeData.getData().getRoleData().getDesignation().equals("School Head")) {
+                                realm.beginTransaction();
                                 SchoolEmployeesInfo schoolEmployeesInfo = new SchoolEmployeesInfo(employeeData.getUsername(), employeeData.getData().getAccountName(),
                                         employeeData.getData().getPhone(), employeeData.getData().getRoleData().getDesignation(),
                                         employeeData.getData().getRoleData().getSchoolCode(),
                                         employeeData.getData().getRoleData().getSchoolName(),
                                         employeeData.getData().getRoleData().getDistrict());
-                                realm.copyToRealmOrUpdate(schoolEmployeesInfo);
+                                realm.insertOrUpdate(schoolEmployeesInfo);
+                                realm.commitTransaction();
                             }
                         }
-                        realm.commitTransaction();
                     }
                     List<SchoolEmployeesInfo> employees = realm.copyFromRealm(realm
                             .where(SchoolEmployeesInfo.class).findAll());
@@ -132,11 +147,13 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
     }
 
     @Override
-    public void updateUsageInfo(String username, String block, String schoolName, String schoolCode, String designation, String district, String misId, ApolloQueryResponseListener<SendUsageInfoMutation.Data> apolloQueryResponseListener) {
+    public void updateUsageInfo(String username, String block, String schoolName, String schoolCode,
+                                String designation, String district, String misId,
+                                ApolloQueryResponseListener<SendUsageInfoMutation.Data> apolloQueryResponseListener, String token) {
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl("http://167.71.227.241:5001/v1/graphql")
                 .okHttpClient(new OkHttpClient.Builder()
-                        .addInterceptor(new AuthorizationInterceptor())
+                        .addInterceptor(new AuthorizationInterceptor(token))
                         .build()
                 ).build();
 
@@ -149,7 +166,7 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
         apolloClient.mutate(sendUsageInfoMutation).enqueue(new ApolloCall.Callback<SendUsageInfoMutation.Data>() {
             @Override
             public void onResponse(@NotNull Response<SendUsageInfoMutation.Data> response) {
-                if (response.getData() != null && response.getErrors() == null){
+                if (response.getData() != null && response.getErrors() == null) {
                     apolloQueryResponseListener.onResponseReceived(response);
                 } else {
                     apolloQueryResponseListener.onResponseReceived(null);
@@ -179,15 +196,15 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
     }
 
     @Override
-    public void fetchStudentData(String code, ApolloQueryResponseListener<GetStudentsForSchoolQuery.Data> apolloQueryResponseListener) {
+    public void fetchStudentData(String code, ApolloQueryResponseListener<GetStudentsForSchoolQuery.Data> apolloQueryResponseListener, String token) {
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl("http://167.71.227.241:5001/v1/graphql")
                 .okHttpClient(new OkHttpClient.Builder()
-                        .addInterceptor(new AuthorizationInterceptor())
+                        .addInterceptor(new AuthorizationInterceptor(token))
                         .build()
                 ).build();
 
-        GetStudentsForSchoolQuery getStudentsForSchoolQuery = GetStudentsForSchoolQuery.builder().school_code(code).build();
+        GetStudentsForSchoolQuery getStudentsForSchoolQuery = GetStudentsForSchoolQuery.builder().build();
         apolloClient.query(getStudentsForSchoolQuery).enqueue(new ApolloCall.Callback<GetStudentsForSchoolQuery.Data>() {
             @Override
             public void onResponse(@NotNull Response<GetStudentsForSchoolQuery.Data> response) {
@@ -200,8 +217,9 @@ public class StudentDetailsSectionInteractor implements IStudentDetailsContract 
                         realm.delete(StudentInfo.class);
                     for (GetStudentsForSchoolQuery.Student student : jj) {
                         StudentInfo studentInfo = new StudentInfo(student.srn(), student.name(), student.grade(),
-                                student.section(), student.stream(), student.fatherName(), student.motherName(),
-                                student.fatherContactNumber(), student.school_code());
+                                student.section(), student.stream(), student.fatherName(),
+                                student.fatherContactNumber(), student.school_code(),
+                                student.shiksha_mitra_name(), student.shiksha_mitra_contact(), student.shiksha_mitra_relation(), student.shiksha_mitra_address(), student.is_sm_registered());
                         realm.copyToRealmOrUpdate(studentInfo);
                     }
                     realm.commitTransaction();

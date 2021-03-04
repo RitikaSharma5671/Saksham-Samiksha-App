@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
+    android:id="@+id/sm_update_screen_parent_layout"
+    android:focusable="true">
+
+
+
+        <RelativeLayout
+            android:id="@+id/samiksha_shiksha_mitr_add_screen_header"
+            android:layout_width="match_parent"
+            android:layout_height="64dp">
+
+            <ImageView
+                android:id="@+id/shiksha_mitr_close_cross_icon"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/go_back"
+                android:scaleType="center"
+                android:src="@drawable/cross_icon" />
+
+            <TextView
+                android:id="@+id/samiksha_shiksha_mitr_add_screen_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                 android:text="@string/add_shiksha_mitr"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                 android:letterSpacing="0.052"
+                 android:textColor="@color/color1"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+
+        <View
+            android:id="@+id/sm_screen_header_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/samiksha_shiksha_mitr_add_screen_header"
+            android:background="@color/color_primary" />
+
+        <ScrollView
+            android:id="@+id/samiksha_shiksha_mitr_add_screen_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sm_screen_header_divider"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/white"
+            android:defaultFocusHighlightEnabled="false"
+            android:fadeScrollbars="false"
+            android:fillViewport="true"
+            android:isScrollContainer="false"
+            android:scrollbarThumbVertical="@android:color/black"
+            android:scrollbars="none"
+            tools:targetApi="o">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/scroll_layout_sm_update_screen"
+                android:scrollbarAlwaysDrawVerticalTrack="true">
+
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentTop="true"
+                  android:layout_marginTop="16dp"
+                  android:text="@string/student_name"
+                  android:textColor="@color/color8"
+                  android:textSize="11.5sp"
+                  android:paddingStart="7dp"
+                  android:textStyle="normal"
+                  android:id="@+id/label1"/>
+                <EditText
+                    android:id="@+id/shiksha_mitr_student_name"
+                    android:background="@drawable/edit_text_disabled_background"
+                     android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_below="@id/label1"
+                    android:textSize="12sp"
+                    android:clickable="false"
+                    android:enabled="false"
+                    android:inputType="text"
+                    android:paddingStart="8dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:focusable="false"
+                    android:textColor="@color/color1"
+                    android:textColorHint="@color/color5"
+                    app:counterEnabled="false">
+
+                </EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/srn_number"
+                    android:textSize="11.5sp"
+                    android:textStyle="normal"
+                    android:layout_below="@id/shiksha_mitr_student_name"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/color8"
+                    android:paddingStart="7dp"
+                    android:id="@+id/label2"/>
+
+                <EditText
+                    android:id="@+id/shiksha_mitr_student_srn"
+                    style="@style/EditTextStyle1"
+                    android:layout_marginTop="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:textSize="12sp"
+                    android:paddingStart="8dp"
+                    android:gravity="center_vertical"
+                    android:layout_below="@id/label2"
+                    android:clickable="false"
+                    android:enabled="false"
+                    android:inputType="text"
+                    android:minHeight="48dp"
+                    android:textColor="@color/color1"
+                    android:focusable="false"
+                    android:background="@drawable/edit_text_disabled_background"
+                    android:textColorHint="@color/color5"
+                    app:counterEnabled="false">
+
+                </EditText>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/shiksha_mitr_name_layout"
+                    style="@style/EditTextStyle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/shiksha_mitr_student_srn"
+                    android:layout_marginTop="12dp"
+                    android:hint="@string/shiksha_mitra_name"
+                    android:inputType="number"
+                    android:minHeight="54dp"
+                    app:boxBackgroundColor="@color/trans"
+                    app:counterEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/shiksha_mitr_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:inputType="text"
+                        android:paddingStart="7dp"
+                        android:imeOptions="actionDone"
+                        android:textSize="12sp"
+                        android:textColor="@color/color1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/shiksha_mitr_contact_layout"
+                    style="@style/EditTextStyle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/shiksha_mitr_name_layout"
+                    android:layout_marginTop="12dp"
+                     android:hint="@string/sm_mobile_number"
+                    android:inputType="number"
+                    android:minHeight="54dp"
+                    app:boxBackgroundColor="@color/trans"
+                    app:boxStrokeErrorColor="@color/color2"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="10">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/shiksha_mitr_contact"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:imeOptions="actionDone"
+                        android:gravity="center_vertical"
+                        android:textSize="12sp"
+
+                        android:paddingStart="7dp"
+                        android:textColor="@color/color1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/shiksha_mitr_relation_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/shiksha_mitr_contact_layout"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/LabelStyle6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginEnd="20dp"
+                        android:textSize="11.5sp"
+                        android:textStyle="normal"
+                        android:layout_below="@id/shiksha_mitr_student_name"
+                        android:textColor="@color/color8"
+                        android:paddingStart="7dp"
+                        android:text="@string/sm_relation" />
+
+                    <Spinner
+                        android:id="@+id/shiksha_mitr_relation"
+                        android:layout_width="match_parent"
+                        android:layout_height="54dp"
+                        android:layout_marginTop="3dp"
+                        android:background="@drawable/spinner_background_black"
+                        android:entries="@array/relation_list"
+                        android:padding="12dp" />
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/shiksha_mitr_other_layout"
+                    style="@style/EditTextStyle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/shiksha_mitr_relation_layout"
+                    android:layout_marginTop="12dp"
+                    android:hint="@string/sm_toehr_realtion_splaese_specify"
+                    android:inputType="number"
+                    android:visibility="gone"
+                    android:minHeight="54dp"
+                    app:boxBackgroundColor="@color/trans"
+                    app:counterEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/shiksha_mitr_other"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:textSize="12sp"
+                        android:paddingStart="7dp"
+                        android:gravity="center_vertical"
+                        android:imeOptions="actionDone"
+                        android:textColor="@color/color1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/shiksha_mitr_address_layout"
+                    style="@style/EditTextStyle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/shiksha_mitr_other_layout"
+                    android:layout_marginTop="12dp"
+                    android:hint="@string/sm_address"
+                    android:inputType="number"
+                    android:minHeight="54dp"
+                    app:boxBackgroundColor="@color/trans"
+                    app:counterEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/shiksha_mitr_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:textSize="12sp"
+                        android:paddingStart="7dp"
+                        android:gravity="center_vertical"
+                        android:imeOptions="actionDone"
+                        android:textColor="@color/color1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ProgressBar
+                    android:id="@+id/sm_update_screen_loader"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true" />
+
+            </RelativeLayout>
+        </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/shiksha_mitr_save_details"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_primary">
+
+            <TextView
+                style="@style/LabelStyle4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/update_details"
+                android:textStyle="normal"
+                android:letterSpacing="0.055"
+                android:textColor="@color/white"
+                android:textSize="15.5sp" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                 android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="28dp"
+                android:layout_marginBottom="14dp"
+                android:src="@drawable/ic_right_arrow" />
+        </RelativeLayout>
+
+</RelativeLayout>
+

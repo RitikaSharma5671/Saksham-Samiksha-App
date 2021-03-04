@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -251,9 +252,9 @@ public class FormManagementSectionInteractor implements IFormManagementContract 
 
     private Document prefillFormBasedOnTags(Document document, String tag, String tagValue) {
         try {
-            if (document.getElementsByTagName(tag).item(0).getChildNodes().getLength() > 0)
+            if (document.getElementsByTagName(tag).item(0).getChildNodes().getLength() > 0){
                 document.getElementsByTagName(tag).item(0).getChildNodes().item(0).setNodeValue(tagValue);
-            else
+        }else
                 document.getElementsByTagName(tag).item(0).appendChild(document.createTextNode(tagValue));
         } catch (Exception e) {
             Timber.e("Unable to autofill: %s %s", tag, tagValue);

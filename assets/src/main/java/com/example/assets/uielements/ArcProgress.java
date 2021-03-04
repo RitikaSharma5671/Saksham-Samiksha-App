@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -73,7 +74,7 @@ public class ArcProgress extends View implements View.OnTouchListener {
     //Scale X for Bigger Texts
     private final float mScaleX = 1.6f;
     //Listener
-    private CustomViewClickListener customViewClickListener;
+//    private CustomViewClickListener customViewClickListener;
     //Defining the width and height of image
     private float mWidth;
     //defining the Default height and width
@@ -114,8 +115,8 @@ public class ArcProgress extends View implements View.OnTouchListener {
      */
     public ArcProgress(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.setOnTouchListener(this);
-        customViewClickListener = (CustomViewClickListener) context;
+//        this.setOnTouchListener(this);
+//        customViewClickListener = (CustomViewClickListener) context;
 
         mDefaultTextSize = sp2px(getResources(), 18);
         mMinSize = (int) dp2px(getResources(), 100);
@@ -170,6 +171,16 @@ public class ArcProgress extends View implements View.OnTouchListener {
 
     }
 
+    private Bitmap getBitmap(int drawableRes) {
+        Drawable drawable = getResources().getDrawable(drawableRes);
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
     /**
      * Method to set smile image in Progress bar according to rewards earned by user
      *
@@ -178,22 +189,25 @@ public class ArcProgress extends View implements View.OnTouchListener {
     private void generateBitMapForSmile(int rewardsEarned) {
 //        rewardsEarned = GBAppConfig.getUserRewardsPoints();
         rewardsEarned = 100;
-        if (rewardsEarned == 0) {
-            bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.smile_0pts_2);
-            bitmap = Bitmap.createScaledBitmap(bitmap, (int) mWidth, (int) 35f, true);
-        } else if (rewardsEarned > 0 && rewardsEarned < 10) {
-            bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.smile_10pts_2);
-            bitmap = Bitmap.createScaledBitmap(bitmap, (int) mWidth, (int) 40f, true);
-        } else if (rewardsEarned >= 10 && rewardsEarned < 2000) {
-            bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.smile_2000pts_2);
-            bitmap = Bitmap.createScaledBitmap(bitmap, (int) mWidth, (int) 50f, true);
-        } else if (rewardsEarned >= 2000 && rewardsEarned < 6000) {
-            bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.smile_4000pts_2);
-            bitmap = Bitmap.createScaledBitmap(bitmap, (int) mWidth, (int) 70f, true);
-        } else if (rewardsEarned >= 6000) {
-            bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.smile_6000pts_2);
-            bitmap = Bitmap.createScaledBitmap(bitmap, (int) mWidth, (int) 83f, true);
-        }
+        bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.starrr);
+        bitmap = Bitmap.createScaledBitmap(bitmap, (int) mWidth, (int) 35f, true);
+
+//        if (rewardsEarned == 0) {
+//            bitmap =getBitmap(R.drawable.ic_star_svgrepo_com);
+//            bitmap = Bitmap.createScaledBitmap(bitmap, (int) mWidth, (int) 35f, true);
+//        } else if (rewardsEarned > 0 && rewardsEarned < 10) {
+//            bitmap = getBitmap(R.drawable.ic_star_svgrepo_com);
+//            bitmap = Bitmap.createScaledBitmap(bitmap, (int) mWidth, (int) 40f, true);
+//        } else if (rewardsEarned >= 10 && rewardsEarned < 2000) {
+//            bitmap = getBitmap( R.drawable.ic_star_svgrepo_com);
+//            bitmap = Bitmap.createScaledBitmap(bitmap, (int) mWidth, (int) 50f, true);
+//        } else if (rewardsEarned >= 2000 && rewardsEarned < 6000) {
+//            bitmap = getBitmap( R.drawable.ic_star_svgrepo_com);
+//            bitmap = Bitmap.createScaledBitmap(bitmap, (int) mWidth, (int) 70f, true);
+//        } else if (rewardsEarned >= 6000) {
+//            bitmap = getBitmap( R.drawable.ic_star_svgrepo_com);
+//            bitmap = Bitmap.createScaledBitmap(bitmap, (int) mWidth, (int) 83f, true);
+//        }
     }
 
     /**
@@ -404,7 +418,7 @@ public class ArcProgress extends View implements View.OnTouchListener {
             mTextPaint.setTextScaleX(ONE);//setting the thickness of the letter
             mTextPaint.setColor(mRewardTextColor);//setting the color
             mTextPaint.setTextSize(mTvRewardTextSize);//setting the text size
-            float textHeight = mTextPaint.descent() + mTextPaint.ascent();//setting the height
+            float textHeight = mTextPaint.descent() + mTextPaint.ascent() + 30;//setting the height
             float textBaseline = (getHeight() - textHeight) / 3.0f;//setting the width
             canvas.drawText(mRewardEarned, (getWidth() - mTextPaint.measureText(mRewardEarned)) / TWO, textBaseline, mTextPaint);
             // passing reward earned by user to set image in progress Arc
@@ -424,7 +438,7 @@ public class ArcProgress extends View implements View.OnTouchListener {
         mTextPaint.setTextSize(50);//setting the text size
         float textHeight = mTextPaint.descent() + mTextPaint.ascent();//setting the height
         float textBaseline = (getHeight() - textHeight) / 2.4f;//setting the width
-        canvas.drawText("pts", (getWidth() - mTextPaint.measureText("pts")) / TWO, textBaseline, mTextPaint);
+//        canvas.drawText("pts", (getWidth() - mTextPaint.measureText("pts")) / TWO, textBaseline, mTextPaint);
 
         if (bitmap != null) {
             canvas.drawBitmap(bitmap, ((getWidth() - bitmap.getWidth()) / TWO), getHeight() / 1.9f, mPaint);
@@ -469,11 +483,11 @@ public class ArcProgress extends View implements View.OnTouchListener {
      */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (event.getY() >= (getHeight() - (mTextPaint.descent() + mTextPaint.ascent())) / 1.3f && event.getY() <= (getHeight() - (mTextPaint.descent() + mTextPaint.ascent())) / 1.1f && event.getX() >= (getWidth() - mTextPaint.measureText(mPointsTo)) / TWO && event.getX() <= (getWidth() + mTextPaint.measureText(mPointsTo)) / TWO) {
-            if (customViewClickListener != null) {
-                customViewClickListener.customTextClick();
-            }
-        }
+//        if (event.getY() >= (getHeight() - (mTextPaint.descent() + mTextPaint.ascent())) / 1.3f && event.getY() <= (getHeight() - (mTextPaint.descent() + mTextPaint.ascent())) / 1.1f && event.getX() >= (getWidth() - mTextPaint.measureText(mPointsTo)) / TWO && event.getX() <= (getWidth() + mTextPaint.measureText(mPointsTo)) / TWO) {
+//            if (customViewClickListener != null) {
+//                customViewClickListener.customTextClick();
+//            }
+//        }
         return false;
     }
 }

@@ -17,11 +17,12 @@ public interface IStudentDetailsContract {
     void markStudentAttendance(Context activityContext, int fragment_container, FragmentManager supportFragmentManager);
 
     //    void fetchStudentData(String code);
-    void fetchStudentData(String code, ApolloQueryResponseListener<GetStudentsForSchoolQuery.Data> apolloQueryResponseListener);
+    void fetchStudentData(String code, ApolloQueryResponseListener<GetStudentsForSchoolQuery.Data> apolloQueryResponseListener, String token);
 
     void launchStudentAttendanceView(Context activityContext);
 
     ArrayList<ArrayList<String>> buildJSONArray();
+    void rcr();
 
     void viewStudentData(Context activityContext, int fragment_container, FragmentManager supportFragmentManager);
 
@@ -35,5 +36,7 @@ public interface IStudentDetailsContract {
 
     void launchTeacherAttendanceView(Context activityContext);
 
-    void updateUsageInfo(String username, String block, String schoolName, String schoolCode, String designation, String district, String misId, ApolloQueryResponseListener<SendUsageInfoMutation.Data> apolloQueryResponseListener);
+    void updateUsageInfo(String username, String block, String schoolName, String schoolCode,
+                         String designation, String district, String misId,
+                         ApolloQueryResponseListener<SendUsageInfoMutation.Data> apolloQueryResponseListener, String token);
 }

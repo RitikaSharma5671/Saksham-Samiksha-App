@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -24,6 +25,7 @@ import com.example.assets.uielements.SamagraAlertDialog;
 import com.example.student_details.contracts.IStudentDetailsContract;
 import com.example.student_details.contracts.StudentDetailsComponentManager;
 import com.example.student_details.ui.SSS;
+import com.example.student_details.ui.shikshamitr.ui.ShikshaMitrSummaryView;
 import com.example.student_details.ui.teacher_aggregate.MainActivity;
 import com.example.update.UpdateApp;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,6 +45,7 @@ import com.samagra.commons.Modules;
 import com.samagra.commons.notifications.AppNotificationUtils;
 import com.samagra.grove.logging.Grove;
 import com.samagra.parent.AppConstants;
+import com.samagra.parent.BuildConfig;
 import com.samagra.parent.R;
 import com.samagra.parent.UtilityFunctions;
 import com.samagra.parent.base.BaseActivity;
@@ -195,8 +198,8 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         startWalletLoader(false);
         progressBarLayout.setVisibility(View.GONE);
         parentHome.setVisibility(View.VISIBLE);
-        if(!homePresenter.isProfileComplete())
-            showUpdateMobileNumberDialog();
+//        if(!homePresenter.isProfileComplete())
+//            showUpdateMobileNumberDialog();
         if(shouldShow) {
             mUpdateApp = UpdateApp.Builder(this);
             shouldShow = false;
@@ -323,46 +326,29 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
         if (popupMenu == null) {
             popupMenu = new PopupMenu(HomeActivity.this, v);
             popupMenu.getMenuInflater().inflate(R.menu.home_screen_menu, popupMenu.getMenu());
+            MenuItem menuItem = popupMenu.getMenu().getItem(4);
+            menuItem.setTitle("v " + BuildConfig.VERSION_NAME);
             popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-//                    case R.id.change_lang:
-//                        if (HomeActivity.this.findViewById(R.id.fragment_container) != null) {
-//                            UpdateAppLanguageFragment firstFragment = UpdateAppLanguageFragment.newInstance(PreferenceManager.getDefaultSharedPreferences(HomeActivity.this.getActivityContext())
-//                                    .getString(Constants.APP_LANGUAGE_KEY, "en"), language -> {
-//                                SharedPreferences.Editor edit = PreferenceManager
-//                                        .getDefaultSharedPreferences(getActivityContext()).edit();
-//                                edit.putString(KEY_APP_LANGUAGE, language);
-//                                edit.putString(Constants.APP_LANGUAGE_KEY, language);
-//                                edit.apply();
-//                                relaunchHomeScreen();
-//                            });
-//                            HomeActivity.this.addFragment(R.id.fragment_container, HomeActivity.this.getSupportFragmentManager(), firstFragment, "UpdateAppLanguageFragment");
-//                            parentHome.setVisibility(View.GONE);
-//                        }
-//                        break;
-                    case R.id.about_us:
-                        AncillaryScreensDriver.launchAboutActivity(HomeActivity.this, HomeActivity.this.provideAboutBundle());
-                        break;
-                    case R.id.tutorial_video:
-                        homePresenter.onViewHelplineClicked();
-                        break;
-                    case R.id.profile:
-                        Grove.d("User clicked on View Profile Section option");
-                        ArrayList<UserProfileElement> profileElements = homePresenter.getProfileConfig();
-                        AncillaryScreensDriver.launchProfileActivity(this, profileElements, homePresenter.fetchUserID());
-                        break;
-                    case R.id.logout:
-                        Grove.d("User clicked to logout out of application");
-                        if (homePresenter.isNetworkConnected()) {
-                            if (logoutListener == null) {
-                                Grove.d("Logout Listener initialised");
-                                HomeActivity.this.initializeLogoutListener();
-                            }
-                            AncillaryScreensDriver.performLogout(HomeActivity.this, HomeActivity.this.getActivityContext().getResources().getString(R.string.fusionauth_api_key));
-                        } else {
-                            showSnackbar("It seems you are offline. Logout cannot happen in offline conditions.", 3000);
+                int itemId = item.getItemId();
+                if (itemId == R.id.about_us) {
+                    AncillaryScreensDriver.launchAboutActivity(HomeActivity.this, HomeActivity.this.provideAboutBundle());
+                } else if (itemId == R.id.tutorial_video) {
+                    homePresenter.onViewHelplineClicked();
+                } else if (itemId == R.id.profile) {
+                    Grove.d("User clicked on View Profile Section option");
+                    ArrayList<UserProfileElement> profileElements = homePresenter.getProfileConfig();
+                    AncillaryScreensDriver.launchProfileActivity(this, profileElements, homePresenter.fetchUserID());
+                } else if (itemId == R.id.logout) {
+                    Grove.d("User clicked to logout out of application");
+                    if (homePresenter.isNetworkConnected()) {
+                        if (logoutListener == null) {
+                            Grove.d("Logout Listener initialised");
+                            HomeActivity.this.initializeLogoutListener();
                         }
-                        break;
+                        AncillaryScreensDriver.performLogout(HomeActivity.this, HomeActivity.this.getActivityContext().getResources().getString(R.string.fusionauth_api_key));
+                    } else {
+                        showSnackbar("It seems you are offline. Logout cannot happen in offline conditions.", 3000);
+                    }
                 }
                 return true;
             });
@@ -501,7 +487,13 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, IHomeItem
 
     @Override
     public void onViewStudentAttendanceClicked() {
-        Intent i = new Intent(getActivityContext(), SSS.class);
+        Intent i = new Intent(getActivityContext(), MainActivity.class);
+        startActivity(i);
+    }
+
+    @Override
+    public void onShikshaMitrRegnClicked() {
+        Intent i = new Intent(getActivityContext(), ShikshaMitrSummaryView.class);
         startActivity(i);
     }
 

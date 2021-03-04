@@ -1,11 +1,14 @@
 package com.example.student_details.models.realm;
 
+import android.util.Log;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
 public class StudentInfo extends RealmObject {
 
+    private boolean isSMRegistered;
     @Required
     @PrimaryKey
     private String srn;
@@ -21,11 +24,56 @@ public class StudentInfo extends RealmObject {
 
     private String fatherName;
 
-    private String motherName;
 
     private String fatherContactNumber;
 
     private boolean isPresent;
+
+    public String getShikshaMitrName() {
+        return shikshaMitrName;
+    }
+
+    public void setShikshaMitrName(String shikshaMitrName) {
+        this.shikshaMitrName = shikshaMitrName;
+    }
+
+    public String getShikshaMitrContact() {
+        return shikshaMitrContact;
+    }
+
+    public void setShikshaMitrContact(String shikshaMitrContact) {
+        this.shikshaMitrContact = shikshaMitrContact;
+    }
+
+    public String getShikshaMitrRelation() {
+        return shikshaMitrRelation;
+    }
+
+    public void setShikshaMitrRelation(String shikshaMitrRelation) {
+        this.shikshaMitrRelation = shikshaMitrRelation;
+    }
+
+    public String getShikshaMitrAddress() {
+        return shikshaMitrAddress;
+    }
+
+    public String getSchool_code() {
+        return school_code;
+    }
+
+    public void setSchool_code(String school_code) {
+        this.school_code = school_code;
+    }
+
+    private String shikshaMitrName;
+    private String shikshaMitrContact;
+    private String shikshaMitrRelation;
+
+    public void setShikshaMitrAddress(String shikshaMitrAddress) {
+        this.shikshaMitrAddress = shikshaMitrAddress;
+    }
+
+    private String shikshaMitrAddress;
 
     private float temp;
     @Required
@@ -34,18 +82,33 @@ public class StudentInfo extends RealmObject {
     public StudentInfo() {
     }
     public StudentInfo(String srn, String name, int grade, String section, String stream,
-                       String fatherName, String motherName, String fatherContactNumber, String school_code) {
+                       String fatherName, String fatherContactNumber, String school_code
+            , String shikshaMitrName, String shikshaMitrContact, String shikshaMitrRelation, String shikshaMitrAddress,
+                       boolean isSMRegistered) {
         this.srn = srn;
         this.name = name;
         this.grade = grade;
         this.section = section;
         this.stream = stream;
         this.fatherName = fatherName;
-        this.motherName = motherName;
         this.fatherContactNumber = fatherContactNumber;
         this.school_code = school_code;
         this.isPresent = false;
+        this.isSMRegistered = isSMRegistered;
         this.temp = 0.0f;
+        if(shikshaMitrRelation != null && !shikshaMitrRelation.equals(""))
+            this.shikshaMitrRelation =shikshaMitrRelation;
+         else   this.shikshaMitrRelation ="-";
+        if(shikshaMitrName != null && !shikshaMitrName.equals(""))
+            this.shikshaMitrName = shikshaMitrName;
+        else this.shikshaMitrName ="-";
+        if(shikshaMitrContact != null && !shikshaMitrContact.equals(""))
+            this.shikshaMitrContact =shikshaMitrContact ;
+        else  this.shikshaMitrContact ="-";
+        Log.d("gsgsgs", "SRN " + srn + " address " + shikshaMitrAddress);
+        if(shikshaMitrAddress != null && !shikshaMitrAddress.equals(""))
+             this.shikshaMitrAddress =shikshaMitrAddress ;
+         else  this.shikshaMitrAddress ="-";
     }
 
     public String getSrn() {
@@ -96,14 +159,6 @@ public class StudentInfo extends RealmObject {
         this.fatherName = fatherName;
     }
 
-    public String getMotherName() {
-        return motherName;
-    }
-
-    public void setMotherName(String motherName) {
-        this.motherName = motherName;
-    }
-
     public String getFatherContactNumber() {
         return fatherContactNumber;
     }
@@ -134,5 +189,13 @@ public class StudentInfo extends RealmObject {
 
     public void setTemp(float temp) {
         this.temp = temp;
+    }
+
+    public boolean isSMRegistered() {
+        return isSMRegistered;
+    }
+
+    public void setSMRegistered(boolean SMRegistered) {
+        isSMRegistered = SMRegistered;
     }
 }

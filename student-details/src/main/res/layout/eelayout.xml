@@ -237,7 +237,7 @@
         </RelativeLayout>
 
 
-    </>
+    </com.example.assets.uielements.SamagraNestedScrollView>
 
     <ProgressBar
         android:id="@+id/my_points_progress_bar"

@@ -7,6 +7,7 @@ public interface IHomeItemClickListener {
     void onViewODKSubmissionsClicked();
     void onMarkStudentAttendanceClicked();
     void onViewStudentAttendanceClicked();
+    void onShikshaMitrRegnClicked();
     void onViewSchoolAttendanceClicked();
     void onViewTeacherAttendanceClicked();
     void onMarkTeacherAttendanceClicked();

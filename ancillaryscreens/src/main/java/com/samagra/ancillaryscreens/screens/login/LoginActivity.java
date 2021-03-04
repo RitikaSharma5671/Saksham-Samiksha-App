@@ -23,6 +23,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.student_details.contracts.IStudentDetailsContract;
+import com.example.student_details.contracts.StudentDetailsComponentManager;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.samagra.ancillaryscreens.AncillaryScreensDriver;
@@ -178,6 +180,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     public void onLoginSuccess(LoginResponse loginResponse) {
         mProgress.setVisibility(View.GONE);
         loginPresenter.getIFormManagementContract().resetPreviousODKForms(failedResetActions -> {
+            IStudentDetailsContract iStudentDetailsContract = StudentDetailsComponentManager.iStudentDetailsContract;
+            iStudentDetailsContract.rcr();
             Grove.d("Failure to reset actions at Login screen " + failedResetActions);
             Grove.d("Moving to Home Screen");
             Intent intent = new Intent(Constants.INTENT_LAUNCH_HOME_ACTIVITY);

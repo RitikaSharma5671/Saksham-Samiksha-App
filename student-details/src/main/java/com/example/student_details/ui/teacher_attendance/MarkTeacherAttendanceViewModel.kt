@@ -142,11 +142,11 @@ class MarkTeacherAttendanceViewModel : ViewModel() {
         employeeList.postValue(lisss)
     }
 
-    fun uploadAttendanceData(userName: String, schoolCode: String, schoolName: String, district: String, block: String) {
+    fun uploadAttendanceData(userName: String, schoolCode: String, schoolName: String, district: String, block: String,token:String) {
         val list = employeeList.value!!
         val calendar: Calendar = Calendar.getInstance()
         val currentSelectedDate: String = DateFormat.format("yyyy-MM-dd", calendar).toString()
-        val model = StudentDataModel()
+        val model =  StudentDataModel(token)
         model.uploadEmployeeAttendanceData(currentSelectedDate, userName, list, object : ApolloQueryResponseListener<SendTeacherAttendanceNewFormatMutation.Data> {
             override fun onResponseReceived(response: Response<SendTeacherAttendanceNewFormatMutation.Data>?) {
                 try {

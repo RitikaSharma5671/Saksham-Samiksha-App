@@ -68,13 +68,19 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
                     break;
                 case "Mark Student Attendance":
                     textView.setText("MARK\nSTUDENT\nATTENDANCE");
-                    imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_mark_attendance));
+                    imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_attendance_icon));
                     relativeLayout.setOnClickListener(v -> listener.onMarkStudentAttendanceClicked());
                     break;
                 case "View Student Attendance":
                     textView.setText("VIEW\nSTUDENT\nATTENDANCE");
                     imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_view_data));
                     relativeLayout.setOnClickListener(v -> listener.onViewStudentAttendanceClicked());
+                    break;
+
+                case "Shiksha Mitr":
+                    textView.setText("SHIKSHA\nMITR\nREGISTRATION");
+                    imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_logo_design));
+                    relativeLayout.setOnClickListener(v -> listener.onShikshaMitrRegnClicked());
                     break;
                 case "View Forms":
                     textView.setText("VIEW\nSUBMISSIONS");
@@ -93,7 +99,7 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
                     break;
                 case "Mark Teacher Attendance":
                     textView.setText("MARK\nTEACHER\nATTENDANCE");
-                    imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_mark_attendance));
+                    imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_attendance_icon));
                     relativeLayout.setOnClickListener(v -> listener.onMarkTeacherAttendanceClicked());
                     break;
                 case "View Teacher Attendance":

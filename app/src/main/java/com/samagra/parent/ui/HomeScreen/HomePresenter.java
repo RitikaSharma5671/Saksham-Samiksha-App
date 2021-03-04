@@ -112,7 +112,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                         studentDownloadStatus = FormDownloadStatus.SUCCESS;
                         Grove.d("Failed to download student data " + e.getLocalizedMessage());
                     }
-                });
+                },getMvpInteractor().getPreferenceHelper().getToken());
             }
         }
     }
@@ -547,7 +547,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
                     public void onFailureReceived(ApolloException e) {
                         Grove.e("Unable to send the install info for the user");
                     }
-                });
+                },getMvpInteractor().getPreferenceHelper().getToken());
     }
 
     private void renderLayoutVisible(Context context) {
@@ -592,6 +592,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         ArrayList<String> atHomeItemsList = new ArrayList<>();
         if (isSchoolAccount()) {
             atHomeItemsList.add("Mark Teacher Attendance");
+            atHomeItemsList.add("Shiksha Mitr");
             atHomeItemsList.add("View Teacher Attendance");
             atHomeItemsList.add("Fill Forms");
             atHomeItemsList.add("View Forms");
@@ -600,6 +601,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
             return atHomeItemsList;
         } else if (isTeacherAccount()) {
             atHomeItemsList.add("Mark Student Attendance");
+            atHomeItemsList.add("Shiksha Mitr");
             atHomeItemsList.add("View Student Attendance");
             atHomeItemsList.add("Edit Student Data");
             atHomeItemsList.add("Helpline");
@@ -610,6 +612,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
         } else if (isUserSchoolHead()) {
             atHomeItemsList.add("Mark Teacher Attendance");
             atHomeItemsList.add("Mark Student Attendance");
+            atHomeItemsList.add("Shiksha Mitr");
             atHomeItemsList.add("View Teacher Attendance");
             atHomeItemsList.add("View Student Attendance");
             atHomeItemsList.add("Edit Student Data");

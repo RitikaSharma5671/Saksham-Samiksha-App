@@ -27,7 +27,8 @@ import kotlinx.android.synthetic.main.student_item_layout.view.*
 
 class StudentAdapter(
         private var studentDetailsView: LifecycleOwner,
-        private var studentDetailsViewModel: StudentDetailsViewModel
+        private var studentDetailsViewModel: StudentDetailsViewModel,
+        val token:String
 ) : ListAdapter<StudentInfo, StudentAdapter.StudentViewHolder>(
         OnStudentDataDiffCallback()) {
 
@@ -62,8 +63,7 @@ class StudentAdapter(
         holder.itemView.findViewById<TextView>(R.id.name_srn).text = ""
         holder.itemView.findViewById<TextView>(R.id.father_details).text = ""
         holder.itemView.findViewById<TextView>(R.id.grade_section).text = ""
-        holder.itemView.findViewById<TextView>(R.id.mother_details).text = ""
-    }
+     }
 
     inner class StudentViewHolder(private val itemAttendanceRowBinding: StudentItemLayoutBinding,
                                   val application: Application,
@@ -87,10 +87,6 @@ class StudentAdapter(
             } else {
                 itemView.father_details.text = convert(studentData.fatherName)
             }
-            if (studentData.motherName != null)
-                itemView.mother_details.text = convert(studentData.motherName)
-            else
-                itemView.mother_details.text = ""
 
             val gg = when (studentData.section) {
                 "A" -> 0
@@ -103,7 +99,7 @@ class StudentAdapter(
             val drawable: Drawable = TextDrawable.builder().round().build(findFirstLetterPosition(studentData.name), getColor(context, R.color.color_primary))
             itemView.profile_pic.setImageDrawable(drawable)
             itemAttendanceRowBinding.gradeSection.setOnClickListener {
-                val listItems = arrayOf("A", "B", "C", "D", "E", "F", "G", "H")
+                val listItems = arrayOf("A", "B", "C", "D", "E", "F", "G", "H","I","J","K","L","M","N")
 
                 val builder: AlertDialog.Builder = AlertDialog.Builder(context)
                 builder.setTitle("Choose Section")
@@ -116,7 +112,7 @@ class StudentAdapter(
                         fun(dialog: DialogInterface, _: Int) {
                             dialog.dismiss()
                             if (changedValue != studentData.section) {
-                                markAttendanceViewModel.onSectionEdited(studentData, changedValue)
+                                markAttendanceViewModel.onSectionEdited(studentData, changedValue,token)
                             }
                         }
                 )
@@ -126,7 +122,7 @@ class StudentAdapter(
                 dialog.show()
             }
             itemAttendanceRowBinding.editSection.setOnClickListener {
-                val listItems = arrayOf("A", "B", "C", "D", "E", "F", "G", "H")
+                val listItems = arrayOf("A", "B", "C", "D", "E", "F", "G", "H","I","J","K","L","M","N")
                 val builder: AlertDialog.Builder = AlertDialog.Builder(context)
                 builder.setTitle("Choose Section")
                 builder.setSingleChoiceItems(listItems, gg, fun(dialog: DialogInterface, which: Int) {
@@ -138,7 +134,7 @@ class StudentAdapter(
                         fun(dialog: DialogInterface, which: Int) {
                             dialog.dismiss()
                             if (changedValue != studentData.section) {
-                                markAttendanceViewModel.onSectionEdited(studentData, changedValue)
+                                markAttendanceViewModel.onSectionEdited(studentData, changedValue, token)
                             }
                         }
                 )

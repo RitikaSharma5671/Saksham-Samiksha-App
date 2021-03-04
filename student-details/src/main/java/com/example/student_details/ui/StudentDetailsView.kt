@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.student_details.R
@@ -24,7 +25,7 @@ class StudentDetailsView : Fragment(), OnSelectListener, EditListener {
     private lateinit var studentAdapter: StudentAdapter
     private val studentDetailsViewModel: StudentDetailsViewModel by lazy {
         getViewModelProvider(this, StudentDetailsViewModelFactory(
-                activity!!.application,""
+                requireActivity().application,""
         )).get(
                 StudentDetailsViewModel::class.java
         )
@@ -52,7 +53,7 @@ class StudentDetailsView : Fragment(), OnSelectListener, EditListener {
         super.onViewCreated(view, savedInstanceState)
         initFilters()
         view.findViewById<ImageView>(R.id.close_cross).setOnClickListener {
-            activity!!.finish()
+            requireActivity().finish()
         }
         mProgress = ProgressDialog(requireContext())
         mProgress.setTitle(getString(R.string.sending_the_request))
@@ -92,7 +93,9 @@ class StudentDetailsView : Fragment(), OnSelectListener, EditListener {
     private fun initializeAdapter(binding: FragmentStudentDetailsBinding) {
         studentAdapter = StudentAdapter(
                 viewLifecycleOwner,
-                studentDetailsViewModel
+                studentDetailsViewModel,
+
+                PreferenceManager.getDefaultSharedPreferences(requireContext()).getString("token","")!!
         )
         binding.studentList.adapter = studentAdapter
         binding.studentList.itemAnimator = DefaultItemAnimator()
@@ -114,7 +117,7 @@ class StudentDetailsView : Fragment(), OnSelectListener, EditListener {
         grades.add("Class 11")
         grades.add("Class 12")
         val adapter = ArrayAdapter(
-                context!!,
+                requireContext(),
                 R.layout.spinner_item, grades
         )
 
@@ -146,8 +149,14 @@ class StudentDetailsView : Fragment(), OnSelectListener, EditListener {
         sections.add("Section F")
         sections.add("Section G")
         sections.add("Section H")
+        sections.add("Section I")
+        sections.add("Section J")
+        sections.add("Section K")
+        sections.add("Section L")
+        sections.add("Section M")
+        sections.add("Section N")
         val adapter1 = ArrayAdapter(
-                context!!,
+                requireContext(),
                 R.layout.spinner_item, sections
         )
 

@@ -26,7 +26,7 @@ class ViewEmployeeAttendanceViewModel : ViewModel() {
     val isNoStudentDataMessageVisible = MutableLiveData<Boolean>()
     val isSundayMessageVisible = MutableLiveData<Boolean>()
 
-    fun fetchRelevantStudentData(currentDay: String, currentSelectedDate: String, schoolCode: String) {
+    fun fetchRelevantStudentData(currentDay: String, currentSelectedDate: String, schoolCode: String, token:String) {
         if (currentSelectedDate != "") {
             if (currentDay == "Sun") {
                 isProgressBarVisible.postValue(false)
@@ -35,24 +35,24 @@ class ViewEmployeeAttendanceViewModel : ViewModel() {
                 isNoStudentDataMessageVisible.postValue(false)
                 sundaySelected.postValue("Sunday Selected")
             } else {
-                fetchAttendanceForSchool(currentSelectedDate, schoolCode)
+                fetchAttendanceForSchool(currentSelectedDate, schoolCode,token)
             }
         }
 
     }
 
-    private fun fetchAttendanceForSchool(currentSelectedDate: String, schoolCode: String) {
+    private fun fetchAttendanceForSchool(currentSelectedDate: String, schoolCode: String, token:String) {
         isProgressBarVisible.postValue(true)
         isStudentListVisible.postValue(false)
         isSundayMessageVisible.postValue(false)
         isNoStudentDataMessageVisible.postValue(false)
-        StudentDataModel().fetchEmployeeAttendanceForSchool(currentSelectedDate, schoolCode,
+          StudentDataModel(token).fetchEmployeeAttendanceForSchool(currentSelectedDate, schoolCode,
                 object : ApolloQueryResponseListener<FetchTeacherAttendanceQuery.Data> {
                     override fun onResponseReceived(response: Response<FetchTeacherAttendanceQuery.Data>?) {
                         isProgressBarVisible.postValue(false)
-                        if (response?.data != null && response.data?.teacher_attendance_updated_aggregate()!!.nodes() != null &&
-                                response.data?.teacher_attendance_updated_aggregate()!!.nodes().size > 0) {
-                            val count = generateEmployeeList(response.data!!.teacher_attendance_updated_aggregate().nodes(),schoolCode)
+                        if (response?.data != null && response.data?.teacher_attendance_updated()!! != null &&
+                                response.data?.teacher_attendance_updated()!!.size > 0) {
+                            val count = generateEmployeeList(response.data!!.teacher_attendance_updated(),schoolCode)
                             if (count > 0) {
                                 isStudentListVisible.postValue(true)
                                 isNoStudentDataMessageVisible.postValue(false)
@@ -78,7 +78,7 @@ class ViewEmployeeAttendanceViewModel : ViewModel() {
                 })
     }
 
-    private fun generateEmployeeList(nodes: List<FetchTeacherAttendanceQuery.Node>,  schoolCode: String): Int {
+    private fun generateEmployeeList(nodes: List<FetchTeacherAttendanceQuery.Teacher_attendance_updated>,  schoolCode: String): Int {
         var present = 0
         val list = ArrayList<EmpAttendanceData>()
         for (studentInfo in nodes) {

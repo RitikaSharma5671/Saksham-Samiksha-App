@@ -267,6 +267,7 @@ public class ProfilePresenter<V extends ProfileContract.View, I extends ProfileC
         return !designation.contains("DDO")&&(designation.contains("TGT") || designation.contains("Clerk")
                 || designation.contains("Tabla") ||
                 designation.contains("Vocation") ||
+                designation.contains("PTI") ||
                 designation.contains("Computer")||
                 designation.contains("Laboratory")||
                 designation.contains("Librarian") ||

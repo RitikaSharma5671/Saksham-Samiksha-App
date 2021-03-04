@@ -13,40 +13,40 @@ class SSS:AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.eelayout)
-        bar1.setCurrentValues(80f);
+//        bar1.setCurrentValues(80f);
 
         //Initialization
         arcProgressInit()
     }
     private var emptyString = "" //Empty string when getting null from the response
     private var mBalance = 0
-    private val mAnimationDuration:Long = 1000 //Animation Duration in Mili-second
+    private val mAnimationDuration:Long = 2000 //Animation Duration in Milli-second
 
 
     override fun onResume() {
         super.onResume()
 
-        //checking if arcprogress is not null and setting the items in that
+        //checking if arc progress is not null and setting the items in that
         //and starting the animation
         if (arc_progress != null) {
-            arc_progress.setmRewardEarned(addCommasToNumber(mBalance))
-            // arc_progress.setmNextGoal(Utils.addCommasToNumber(mNearestRewardPoints));
-            arc_progress.setmPointsTo(message1)
-            arc_progress.setmRewardPrice(message2)
-            arc_progress.setmProgress(mBalance * mMax / mNearestRewardPoints)
-            val animation = ArcAngleAnimation(arcProgress, arc_progress.getmProgress(), mBalance)
+            arc_progress.setmRewardEarned("100%")
+             arc_progress.setmPointsTo("Shiksha Mitra")
+            arc_progress.setmRewardPrice("Registered")
+
+            arc_progress.setmProgress(100)
+            val animation = ArcAngleAnimation(arc_progress, arc_progress.getmProgress(), mBalance)
             animation.duration = mAnimationDuration
             arc_progress.startAnimation(animation)
         }
     }
 
     fun arcProgressInit() {
-        arc_progress.setmRewardEarned(emptyString)
-        arc_progress.setmPointsTo(emptyString)
-        arc_progress.setmRewardPrice(emptyString)
-        arc_progress.setmProgress(0)
+        arc_progress.setmRewardEarned("100%")
+        arc_progress.setmPointsTo("Shiksha Mitra")
+        arc_progress.setmRewardPrice("Registered")
+        arc_progress.setmProgress(100)
         val animation = ArcAngleAnimation(arc_progress, arc_progress.getmProgress(), mBalance)
-        animation.setDuration(mAnimationDuration)
+        animation.duration = mAnimationDuration
         arc_progress.startAnimation(animation)
     }
 

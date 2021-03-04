@@ -83,12 +83,14 @@ class ViewEmployeeAttendance : AppCompatActivity() {
                 selectedDay = selectedDateStr.split(",")[0]
 
                 viewStudentAttendanceViewModel.selectedDay.postValue(selectedDateStr.split(",")[0])
-                viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate, schoolCode)
+                viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate, schoolCode,
+                sharedPreferences.getString("token","")!!)
                 Timber.i("onDateSelected, $selectedDateStr  - Position = $position")
             }
         }
         initializeAdapter()
-        viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate, schoolCode)
+        viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate, schoolCode,
+                sharedPreferences.getString("token","")!!)
         viewStudentAttendanceViewModel.sundaySelected.observe(this, androidx.lifecycle.Observer {
             if (it != null && it == "Sunday Selected") {
                 employee_attendance_divider_view_attendance1.visibility = View.GONE

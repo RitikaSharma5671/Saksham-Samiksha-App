@@ -25,21 +25,46 @@ mutation sendTeacherAttendanceNewFormat($query_param: [teacher_attendance_update
     }
 }
 
-query getStudentsForSchool($school_code: String) {
-    student(where: {school_code: {_eq: $school_code}, isActive: {_eq: true}}) {
+query getStudentsForSchool {
+    student(where: {isActive: {_eq: true}}) {
         fatherContactNumber
         grade
         fatherName
-        motherName
+        shiksha_mitra_name
+        shiksha_mitra_contact
+        shiksha_mitra_address
+        shiksha_mitra_relation
         name
         school_code
         srn
         section
         stream
+        is_sm_registered
     }
 }
 
-
+mutation updateShikshaMitraDetails($srn: String, $updatedShikshaMitraName: String,
+    $updatedShikshaMitraContact: String, $updatedShikshaMitraRelation: String, $updatedShikshaMitraAddress: String) {  update_student(
+    where: {srn: {_eq: $srn}},
+    _set: {
+        shiksha_mitra_name: $updatedShikshaMitraName
+        shiksha_mitra_relation: $updatedShikshaMitraRelation
+        shiksha_mitra_contact: $updatedShikshaMitraContact
+        shiksha_mitra_address: $updatedShikshaMitraAddress
+        is_sm_registered : true
+    }
+) {
+    affected_rows
+    returning {
+        srn
+        shiksha_mitra_name
+        shiksha_mitra_address
+        shiksha_mitra_relation
+        shiksha_mitra_contact
+        is_sm_registered
+    }
+}
+}
 
 mutation updateStudentSection($srn: String, $changedSection: String) {  update_student(
     where: {srn: {_eq: $srn}},
@@ -60,8 +85,8 @@ mutation updateStudentSection($srn: String, $changedSection: String) {  update_s
 
 
 
-query FetchAttendanceByGradeSection($date: date, $grade: Int, $section: String, $school_code:String) {
-    attendance_aggregate(where: {date: {_eq: $date}, studentByStudent: {grade: {_eq: $grade}, section: {_eq: $section}, school_code:{_eq:$school_code}}}) {
+query FetchAttendanceByGradeSection($date: date, $grade: Int, $section: String) {
+    attendance_aggregate(where: {date: {_eq: $date}, studentByStudent: {grade: {_eq: $grade}, section: {_eq: $section}}}) {
         aggregate {
             count
         }
@@ -80,8 +105,8 @@ query FetchAttendanceByGradeSection($date: date, $grade: Int, $section: String, 
 }
 
 
-query FetchAttendanceByGradeSectionStream($date: date, $grade: Int, $section: String,  $stream: String, $school_code:String) {
-    attendance_aggregate(where: {date: {_eq: $date}, studentByStudent: {grade: {_eq: $grade}, section: {_eq: $section}, stream: {_eq: $stream}, school_code: {_eq: $school_code}}}) {
+query FetchAttendanceByGradeSectionStream($date: date, $grade: Int, $section: String,  $stream: String) {
+    attendance_aggregate(where: {date: {_eq: $date}, studentByStudent: {grade: {_eq: $grade}, section: {_eq: $section}, stream: {_eq: $stream}}}) {
         nodes {
             studentByStudent {
                 name
@@ -95,16 +120,15 @@ query FetchAttendanceByGradeSectionStream($date: date, $grade: Int, $section: St
     }
 }
 
-query FetchTeacherAttendance($school_code:String, $date:date) {
-    teacher_attendance_updated_aggregate(where: {school_code: {_eq: $school_code}, date_of_attendance : {_eq : $date}}) {
-        nodes {
+query FetchTeacherAttendance($date:date) {
+    teacher_attendance_updated(where: {date_of_attendance : {_eq : $date}}) {
             employee_id
             isPresentInSchool
             employee_name
             employee_designation
             attendance_status
             other_reason
-        }
+
     }
 }
 
@@ -113,3 +137,10 @@ mutation sendUsageInfo($query_param: [trackInstall_insert_input!]!) {
         affected_rows
     }
 }
+
+mutation sendSMUpdateData($query_param: [sm_usage_tracking_insert_input!]!) {
+    insert_sm_usage_tracking(objects: $query_param) {
+        affected_rows
+    }
+}
+

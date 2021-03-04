@@ -69,6 +69,8 @@ dependencies {
     // and use apollo-api instead
     implementation("com.apollographql.apollo:apollo-api:2.2.0")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.github.lzyzsd:circleprogress:1.2.1'
+
     kaptAndroidTest "androidx.databinding:databinding-compiler:4.0.1"
     kapt 'com.android.databinding:compiler:3.1.4'
     implementation "androidx.preference:preference:1.1.0"

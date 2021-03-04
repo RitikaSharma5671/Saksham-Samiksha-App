@@ -32,11 +32,13 @@
         <item>Section D</item>
     </string-array>
     <string-array name="relation_list">
+        <item>Choose Relation</item>
         <item>Parent</item>
         <item>Sibling</item>
         <item>Neighbour</item>
         <item>Extended Family</item>
         <item>Community Volunteer</item>
+        <item>Teacher</item>
         <item>Others</item>
     </string-array>
 </resources>

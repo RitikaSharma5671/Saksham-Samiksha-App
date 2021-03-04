@@ -85,7 +85,8 @@ class MainActivity : AppCompatActivity() {
                 selectedDay = selectedDateStr.split(",")[0]
 
                 viewStudentAttendanceViewModel.selectedDay.postValue(selectedDateStr.split(",")[0])
-                viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate, schoolCode!!)
+                viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate, schoolCode!!,
+                        sharedPreferences.getString("token","")!!)
 //                Timber.i("onDateSelected, " + $selectedDateStr + " + " -  Position = "+  $position")
             }
         }
@@ -114,7 +115,8 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Unable to fetch Attendance History for this selection", Toast.LENGTH_LONG).show()
             }
         })
-        activityMainBinding.applySelection.setOnClickListener { viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate, schoolCode!!) }
+        activityMainBinding.applySelection.setOnClickListener { viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate, schoolCode!!,
+                sharedPreferences.getString("token","")!!) }
         viewStudentAttendanceViewModel.attendanceList.observe(this , androidx.lifecycle.Observer {
             val attendanceList = viewStudentAttendanceViewModel.attendanceList.value
             when {
@@ -141,7 +143,8 @@ class MainActivity : AppCompatActivity() {
                     initializeAdapter(activityMainBinding)
                 }
             }        })
-        viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate, schoolCode!!)
+        viewStudentAttendanceViewModel.fetchRelevantStudentData(selectedDateStr.split(",")[0], currentSelectedDate, schoolCode!!,
+                sharedPreferences.getString("token","")!!)
     }
 
     private fun initFilters() {
@@ -190,6 +193,12 @@ class MainActivity : AppCompatActivity() {
         sections.add("Section F")
         sections.add("Section G")
         sections.add("Section H")
+        sections.add("Section I")
+        sections.add("Section J")
+        sections.add("Section K")
+        sections.add("Section L")
+        sections.add("Section M")
+        sections.add("Section N")
         val adapter1 = ArrayAdapter(
                 this,
                 R.layout.spinner_item, sections

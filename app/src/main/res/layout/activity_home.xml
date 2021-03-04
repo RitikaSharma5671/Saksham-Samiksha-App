@@ -78,7 +78,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold" />
 
-            <!--Weight 8-->
+            <!--Weight 8-->c
            <androidx.recyclerview.widget.RecyclerView
                android:id="@+id/home_items_layout"
                android:layout_width="match_parent"

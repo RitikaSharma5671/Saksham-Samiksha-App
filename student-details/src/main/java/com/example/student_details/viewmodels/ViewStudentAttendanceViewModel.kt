@@ -6,11 +6,15 @@ import androidx.lifecycle.ViewModel
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.example.student_details.contracts.ApolloQueryResponseListener
+import com.example.student_details.models.realm.StudentInfo
 import com.example.student_details.modules.StudentDataModel
 import com.example.student_details.ui.teacher_aggregate.AttendanceData
 import com.hasura.model.FetchAttendanceByGradeSectionQuery
 import com.hasura.model.FetchAttendanceByGradeSectionStreamQuery
+import java.util.*
+import kotlin.collections.ArrayList
 
+@Suppress("SENSELESS_COMPARISON")
 class ViewStudentAttendanceViewModel : ViewModel() {
 
     val toastRender: MutableLiveData<String> = MutableLiveData()
@@ -28,7 +32,7 @@ class ViewStudentAttendanceViewModel : ViewModel() {
     val selectedSection: MutableLiveData<String> = MutableLiveData("A")
     val selectedStream: MutableLiveData<String> = MutableLiveData("")
 
-    fun fetchRelevantStudentData(currentDay: String, currentSelectedDate: String, schoolCode: String) {
+    fun fetchRelevantStudentData(currentDay: String, currentSelectedDate: String, schoolCode: String, token:String) {
         if (currentSelectedDate != "") {
             if (currentDay == "Sun") {
                 isProgressBarVisible.set(false)
@@ -39,14 +43,14 @@ class ViewStudentAttendanceViewModel : ViewModel() {
             } else {
 
                 if (selectedGrade.value!! < 11) {
-                    fetchDataWithoutStreamSelected(currentSelectedDate, schoolCode)
+                    fetchDataWithoutStreamSelected(currentSelectedDate, schoolCode, token)
                 }else {
                     if(selectedStream.value != null && selectedStream.value!!.isEmpty()) {
-                        fetchDataWithoutStreamSelected(currentSelectedDate, schoolCode)
+                        fetchDataWithoutStreamSelected(currentSelectedDate, schoolCode,token)
                     }else if(selectedStream.value != null && selectedStream.value!!.isNotEmpty()){
-                        fetchDataWithStreamSelected(currentSelectedDate, schoolCode)
+                        fetchDataWithStreamSelected(currentSelectedDate, schoolCode,token)
                     }else {
-                        fetchDataWithoutStreamSelected(currentSelectedDate, schoolCode)
+                        fetchDataWithoutStreamSelected(currentSelectedDate, schoolCode,token)
                     }
                 }
             }
@@ -54,13 +58,13 @@ class ViewStudentAttendanceViewModel : ViewModel() {
 
     }
 
-    private fun fetchDataWithoutStreamSelected(currentSelectedDate: String, schoolCode: String) {
+    private fun fetchDataWithoutStreamSelected(currentSelectedDate: String, schoolCode: String, token:String) {
         isProgressBarVisible.set(true)
         isStudentListVisible.set(false)
         isSundayMessageVisible.set(true)
         isNoStudentDataMessageVisible.set(false)
-        StudentDataModel().fetchAttendanceByGradeSection(currentSelectedDate, selectedGrade.value!!, selectedSection.value!!,schoolCode,
-                object : ApolloQueryResponseListener<FetchAttendanceByGradeSectionQuery.Data> {
+         StudentDataModel(token).fetchAttendanceByGradeSection(currentSelectedDate, selectedGrade.value!!, selectedSection.value!!,
+                 object : ApolloQueryResponseListener<FetchAttendanceByGradeSectionQuery.Data> {
                     override fun onResponseReceived(response: Response<FetchAttendanceByGradeSectionQuery.Data>?) {
                         isProgressBarVisible.set(false)
                         if (response!!.data!!.attendance_aggregate().nodes().size > 0) {
@@ -86,14 +90,14 @@ class ViewStudentAttendanceViewModel : ViewModel() {
                 })
     }
 
-    private fun fetchDataWithStreamSelected(currentSelectedDate: String, schoolCode: String) {
+    private fun fetchDataWithStreamSelected(currentSelectedDate: String, schoolCode: String, token:String) {
         isProgressBarVisible.set(true)
         isStudentListVisible.set(false)
         isSundayMessageVisible.set(true)
         isNoStudentDataMessageVisible.set(false)
         val stream = selectedStream.value!!.substring(0, 1).toUpperCase() + selectedStream.value!!.substring(1).toLowerCase()
-        StudentDataModel().fetchAttendanceByGradeSectionStream(currentSelectedDate, selectedGrade.value!!, selectedSection.value!!, stream,schoolCode,
-                object : ApolloQueryResponseListener<FetchAttendanceByGradeSectionStreamQuery.Data> {
+         StudentDataModel(token).fetchAttendanceByGradeSectionStream(currentSelectedDate, selectedGrade.value!!, selectedSection.value!!, stream,
+                 object : ApolloQueryResponseListener<FetchAttendanceByGradeSectionStreamQuery.Data> {
                     override fun onResponseReceived(response: Response<FetchAttendanceByGradeSectionStreamQuery.Data>?) {
                         isProgressBarVisible.set(false)
                         if (response!!.data!!.attendance_aggregate().nodes().size > 0) {
@@ -131,7 +135,9 @@ class ViewStudentAttendanceViewModel : ViewModel() {
         }
         totalStudentCount.postValue(totalStudents)
         absentStudents.postValue(totalStudents - present)
-        attendanceList.postValue(list)
+        val dd = list
+        Collections.sort(dd, SortStudentAttendanceListByName())
+        attendanceList.postValue(dd)
         return totalStudents
     }
 
@@ -148,8 +154,23 @@ class ViewStudentAttendanceViewModel : ViewModel() {
         }
         totalStudentCount.postValue(totalStudents)
         absentStudents.postValue(totalStudents - present)
-        attendanceList.postValue(list)
+        val dd = list
+        Collections.sort(dd, SortStudentAttendanceListByName())
+        attendanceList.postValue(dd)
         return totalStudents
     }
+
+
+    private class SortStudentAttendanceListByName() : Comparator<AttendanceData> {
+        /** {@inheritDoc}  */
+        override fun compare(o1: AttendanceData, o2: AttendanceData): Int {
+            var result: Int = o1.name.compareTo(o2.name)
+            if (result == 0) {
+                result = o1.srn.compareTo(o2.srn)
+            }
+            return result
+        }
+    }
+
 
 }

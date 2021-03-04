@@ -104,14 +104,15 @@ class MarkStudentAttendanceView : Fragment() {
              val message =    if(markAttendanceViewModel.highTemp.value!!) {
                  Html.fromHtml("Please ensure that you have entered correct data for the students." + "<font><b>" + "<br/>There are some student(s) with Temperature > 100° F. <br/>Please follow necessary precautions for those student(s)." + "</b></font>" );
                 }else{
-                 "Please ensure that you have entered correct data for the students."
+                 requireContext().getString(R.string.send_attendance_message)
              }
                 SamagraAlertDialog1.Builder(requireContext()).setTitle("SEND STUDENT DATA").setMessage(message)
                         .setAction2("YES, PLEASE", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {
                             override fun onActionButtonClicked(actionIndex: Int, alertDialog: SamagraAlertDialog1) {
                                 alertDialog.dismiss()
                                 mProgress.show()
-                                markAttendanceViewModel.uploadAttendanceData(userName, schoolName, schoolCode, district,block)
+                                markAttendanceViewModel.uploadAttendanceData(userName, schoolName, schoolCode, district,block,
+                                        sharedPreferences.getString("token","")!!)
                             }
 
                         }).setAction3("CANCEL, WANT TO RECHECK", object : SamagraAlertDialog1.CaastleAlertDialogActionListener1 {

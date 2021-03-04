@@ -11,15 +11,21 @@ import com.hasura.model.FetchAttendanceByGradeSectionQuery;
 import com.hasura.model.FetchAttendanceByGradeSectionStreamQuery;
 import com.hasura.model.FetchTeacherAttendanceQuery;
 import com.hasura.model.SendAttendanceMutation;
+import com.hasura.model.SendSMUpdateDataMutation;
 import com.hasura.model.SendTeacherAttendanceNewFormatMutation;
+import com.hasura.model.SendUsageInfoMutation;
+import com.hasura.model.UpdateShikshaMitraDetailsMutation;
 import com.hasura.model.UpdateStudentSectionMutation;
 import com.hasura.model.type.Attendance_insert_input;
+import com.hasura.model.type.Sm_usage_tracking_insert_input;
 import com.hasura.model.type.Teacher_attendance_updated_insert_input;
+import com.hasura.model.type.TrackInstall_insert_input;
 import com.samagra.grove.logging.Grove;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -28,12 +34,18 @@ import okhttp3.OkHttpClient;
 
 public class StudentDataModel {
 
-    private static ApolloClient apolloClient = ApolloClient.builder()
-            .serverUrl("http://167.71.227.241:5001/v1/graphql")
-            .okHttpClient(new OkHttpClient.Builder()
-                    .addInterceptor(new AuthorizationInterceptor())
-                    .build()
-            ).build();
+    private static String token;
+
+    public StudentDataModel(String token){
+        this.token = token;
+        apolloClient  = ApolloClient.builder()
+                .serverUrl("http://167.71.227.241:5001/v1/graphql")
+                .okHttpClient(new OkHttpClient.Builder()
+                        .addInterceptor(new AuthorizationInterceptor(token))
+                        .build()
+                ).build();
+    }
+    private static ApolloClient apolloClient ;
 
 
     public void uploadAttendanceData(String date, String userName, List<StudentInfo> list,
@@ -65,7 +77,8 @@ public class StudentDataModel {
 
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
-                        Grove.e("Upload attendance failed for user " + userName + " with exception as " + e.getMessage());
+                        String s =e!= null && e.getStackTrace() != null ? Arrays.toString(e.getStackTrace()) :"";
+                        Grove.e("Upload student attendance failed for user " + userName + " with exception as " + e.getMessage() + " , with stack trace "+ s);
                         apolloQueryResponseListener.onFailureReceived(e);
                     }
                 });
@@ -78,8 +91,8 @@ public class StudentDataModel {
             Teacher_attendance_updated_insert_input attendance_insert_input =
                     Teacher_attendance_updated_insert_input.builder().taken_by(userName)
                             .employee_id(schoolEmployeesInfo.getEmployeeId())
-                            .school_code(schoolEmployeesInfo.getSchoolCode())
                             .employee_name(schoolEmployeesInfo.getName())
+                            .school_code(schoolEmployeesInfo.getSchoolCode())
                             .employee_designation(schoolEmployeesInfo.getDesignation())
                             .isPresentInSchool(schoolEmployeesInfo.isPresent())
                             .attendance_status(schoolEmployeesInfo.getAttendanceStatus())
@@ -103,6 +116,7 @@ public class StudentDataModel {
 
                             apolloQueryResponseListener.onResponseReceived(response);
                         } else {
+                            Grove.e("Employee Attendance Upload Failed with failure >>> " + response.getErrors());
                             apolloQueryResponseListener.onFailureReceived(new ApolloException(response.getErrors().toString()));
                         }
                     }
@@ -110,6 +124,37 @@ public class StudentDataModel {
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
                         Grove.e("Upload attendance failed for user " + userName + " with exception as " + e.getMessage());
+                        apolloQueryResponseListener.onFailureReceived(e);
+                    }
+                });
+    }
+
+
+    public void updateShikshaMitraDetails(String srn, String shikshaMitrName,String shikshaMitrContact, String shikshaMitrRelation,
+                                          String shikshaMitrAddress,
+                                          ApolloQueryResponseListener<UpdateShikshaMitraDetailsMutation.Data> apolloQueryResponseListener) {
+         UpdateShikshaMitraDetailsMutation    updateShikshaMitraDetailsMutation = UpdateShikshaMitraDetailsMutation.builder().srn(srn).
+                updatedShikshaMitraName(shikshaMitrName).updatedShikshaMitraContact(shikshaMitrContact).
+                updatedShikshaMitraRelation(shikshaMitrRelation).
+                updatedShikshaMitraAddress(shikshaMitrAddress).build();
+        apolloClient
+                .mutate(updateShikshaMitraDetailsMutation)
+                .enqueue(new ApolloCall.Callback<UpdateShikshaMitraDetailsMutation.Data>() {
+                    @Override
+                    public void onResponse(@NotNull Response<UpdateShikshaMitraDetailsMutation.Data> response) {
+                        if (response.getData() != null && response.getErrors() == null && response.getData().update_student() != null ) {
+                            Grove.d("Section update request with response " +
+                                    response.getData().update_student().affected_rows() + " and error fields as " + response.getErrors() + " new section as " + response.getData().update_student());
+                            apolloQueryResponseListener.onResponseReceived(response);
+                        } else {
+                            apolloQueryResponseListener.onFailureReceived(new ApolloException(response.getErrors().toString()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        String s =e!= null && e.getStackTrace() != null ? Arrays.toString(e.getStackTrace()) :"";
+                        Grove.e("Update Shiksha Mitr Details failed for the student " + srn + " with exception as " + e.getMessage() + " and stack trace" + s);
                         apolloQueryResponseListener.onFailureReceived(e);
                     }
                 });
@@ -134,16 +179,17 @@ public class StudentDataModel {
 
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
-                        Grove.e("Upload attendance failed for user " + srn + " with exception as " + e.getMessage());
+                        String s =e!= null && e.getStackTrace() != null ? Arrays.toString(e.getStackTrace()) :"";
+                        Grove.e("Update Student Attendance " + srn + " with exception as " + e.getMessage() + " with stack trace " + s);
                         apolloQueryResponseListener.onFailureReceived(e);
                     }
                 });
     }
 
-    public void fetchAttendanceByGradeSection(String date, int grade, String section,String schoolCode,
+    public void fetchAttendanceByGradeSection(String date, int grade, String section,
                                               ApolloQueryResponseListener<FetchAttendanceByGradeSectionQuery.Data> apolloQueryResponseListener) {
         FetchAttendanceByGradeSectionQuery fetchAttendanceByGradeSectionQuery = FetchAttendanceByGradeSectionQuery.builder().date(date).grade(grade)
-                .section(section).school_code(schoolCode).build();
+                .section(section).build();
         apolloClient
                 .query(fetchAttendanceByGradeSectionQuery)
                 .enqueue(new ApolloCall.Callback<FetchAttendanceByGradeSectionQuery.Data>() {
@@ -158,18 +204,17 @@ public class StudentDataModel {
 
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
-//                        Grove.e("Upload attendance failed for user " + srn + " with exception as " + e.getMessage());
+
                         apolloQueryResponseListener.onFailureReceived(e);
                     }
                 });
     }
 
-    public void fetchAttendanceByGradeSectionStream(String date, int grade, String section, String stream,String schoolCode,
+    public void fetchAttendanceByGradeSectionStream(String date, int grade, String section, String stream,
                                                     ApolloQueryResponseListener<FetchAttendanceByGradeSectionStreamQuery.Data> apolloQueryResponseListener) {
         FetchAttendanceByGradeSectionStreamQuery fetchAttendanceByGradeSectionStreamQuery = FetchAttendanceByGradeSectionStreamQuery.builder()
                 .date(date).grade(grade)
                 .stream(stream)
-                .school_code(schoolCode)
                 .section(section).build();
         apolloClient
                 .query(fetchAttendanceByGradeSectionStreamQuery)
@@ -185,7 +230,6 @@ public class StudentDataModel {
 
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
-//                        Grove.e("Upload attendance failed for user " + srn + " with exception as " + e.getMessage());
                         apolloQueryResponseListener.onFailureReceived(e);
                     }
                 });
@@ -193,7 +237,7 @@ public class StudentDataModel {
 
     public void fetchEmployeeAttendanceForSchool(String date, String schoolCode,
                                                  ApolloQueryResponseListener<FetchTeacherAttendanceQuery.Data> apolloQueryResponseListener) {
-        FetchTeacherAttendanceQuery fetchTeacherAttendanceQuery = FetchTeacherAttendanceQuery.builder().date(date).school_code(schoolCode).build();
+        FetchTeacherAttendanceQuery fetchTeacherAttendanceQuery = FetchTeacherAttendanceQuery.builder().date(date).build();
         apolloClient
                 .query(fetchTeacherAttendanceQuery)
                 .enqueue(new ApolloCall.Callback<FetchTeacherAttendanceQuery.Data>() {
@@ -201,7 +245,7 @@ public class StudentDataModel {
                     public void onResponse(@NotNull Response<FetchTeacherAttendanceQuery.Data> response) {
                         if (response.getData() != null && response.getErrors() == null) {
                             Grove.d("Section update request with response " +
-                                    response.getData().teacher_attendance_updated_aggregate().nodes().size());
+                                    response.getData().teacher_attendance_updated().size());
                             apolloQueryResponseListener.onResponseReceived(response);
                         } else {
                             apolloQueryResponseListener.onFailureReceived(new ApolloException(response.getErrors().get(0).getMessage()));
@@ -210,10 +254,36 @@ public class StudentDataModel {
 
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
-                        Grove.e("Upload attendance failed for school " + schoolCode + " with exception as " + e.getMessage());
+                        String s =e!= null && e.getStackTrace() != null ? Arrays.toString(e.getStackTrace()) :"";
+                        Grove.e("Upload attendance failed for school " + schoolCode + " with exception as " + e.getMessage() + " with stack trace: "+ s);
                         apolloQueryResponseListener.onFailureReceived(e);
                     }
                 });
     }
 
+
+    public void updateShikshaMitrUsageInfo(String username, String srn, String schoolCode,
+                                            String designation, String previousName, String previousContact,
+                                            ApolloQueryResponseListener<SendSMUpdateDataMutation.Data> apolloQueryResponseListener) {
+        List<Sm_usage_tracking_insert_input> trackInstall_insert_inputs = new ArrayList<>();
+        Sm_usage_tracking_insert_input trackInstall_insert_input = Sm_usage_tracking_insert_input.builder().school_code(schoolCode).username(username).
+                sm_previous_contact(previousContact).sm_previous_name(previousName).designation(designation).srn(srn).build();
+        trackInstall_insert_inputs.add(trackInstall_insert_input);
+        SendSMUpdateDataMutation sendSMUpdateDataMutation = SendSMUpdateDataMutation.builder().query_param(trackInstall_insert_inputs).build();
+        apolloClient.mutate(sendSMUpdateDataMutation).enqueue(new ApolloCall.Callback<SendSMUpdateDataMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<SendSMUpdateDataMutation.Data> response) {
+                if (response.getData() != null && response.getErrors() == null){
+                    apolloQueryResponseListener.onResponseReceived(response);
+                } else {
+                    apolloQueryResponseListener.onResponseReceived(null);
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                apolloQueryResponseListener.onFailureReceived(e);
+            }
+        });
+    }
 }
