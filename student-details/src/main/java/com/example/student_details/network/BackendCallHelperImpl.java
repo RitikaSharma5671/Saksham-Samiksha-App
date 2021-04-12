@@ -51,7 +51,7 @@ public class BackendCallHelperImpl implements BackendCallHelper {
                 "    \"search\": {\n" +
                 "        \"numberOfResults\":1000,\n"+
                 "        \"queryString\": \"(registrations.applicationId: " + StudentDetailsComponentManager.APPLICATION_ID
-                + ") AND (data.roleData.schoolCode: " + schoolCode + ") AND (data.roleData.schoolName : " + name + ")\",\n" +
+                + ") AND (data.roleData.schoolCode: \\\"" + schoolCode + "\\\") AND (data.roleData.schoolName : \\\"" + name + "\\\")\",\n" +
                 "        \"sortFields\": [\n" +
                 "             {\n" +
                 "        \"name\": \"fullName\",\n" +
