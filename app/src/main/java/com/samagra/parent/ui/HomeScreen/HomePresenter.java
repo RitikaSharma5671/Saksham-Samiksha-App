@@ -45,7 +45,7 @@ public class HomePresenter<V extends HomeMvpView, I extends HomeMvpInteractor> e
     private FormDownloadStatus formsDownloadStatus = FormDownloadStatus.FAILURE;
     private int currentProgress = 0;
     private int maxProgress = 10;
-
+a
     @Inject
     public HomePresenter(I mvpInteractor, IFormManagementContract iFormManagementContract) {
         super(mvpInteractor, iFormManagementContract);

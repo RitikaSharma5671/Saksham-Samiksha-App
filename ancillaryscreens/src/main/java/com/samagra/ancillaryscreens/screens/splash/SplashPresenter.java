@@ -35,6 +35,7 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * The presenter for the Splash Screen. This class controls the interactions between the View and the data.
@@ -150,8 +151,6 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
     }
 
     public boolean checkAppSignature(Context context) {
-
-
         PackageInfo packageInfo = null;
         try {
             packageInfo = context.getPackageManager()
@@ -159,13 +158,15 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
                     .getPackageInfo(context.getPackageName(),
 
                             PackageManager.GET_SIGNATURES);
-            for (Signature signature : packageInfo.signatures) {
-                // SHA1 the signature
-                String sha1 = getSHA1(signature.toByteArray());
-                Log.d("vfrvtrf",  "vtgvgt >> " + sha1);
-                // check is matches hardcoded value
-                return APP_SIGNATURE.equals(sha1);
-            }
+//            for (Signature signature : packageInfo.signatures) {
+//                // SHA1 the signature
+//                String sha1 = getSHA1(signature.toByteArray());
+//                Timber.d(  "App Signature is >> " + sha1);
+//                // check is matches hardcoded value
+//                return APP_SIGNATURE.equals(sha1);
+//            }
+            String sha1 = getSHA1(packageInfo.signatures[0].toByteArray());
+            return APP_SIGNATURE.equals(sha1);
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -201,7 +202,7 @@ public class SplashPresenter<V extends SplashContract.View, I extends SplashCont
         return new String(hexChars);
     }
 
-    private static final String APP_SIGNATURE = "69D48BA03BF239993AE74C7C65CAA3C6D7E6EA28";
+    private static final String APP_SIGNATURE = "7A69235A1EEE898F14F3593F0F60EE545034CA39";
 
     @Override
     public void requestStoragePermissions() {

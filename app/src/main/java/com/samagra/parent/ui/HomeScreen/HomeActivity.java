@@ -3,6 +3,9 @@ package com.samagra.parent.ui.HomeScreen;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -54,7 +57,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
+import static com.samagra.ancillaryscreens.screens.splash.SplashPresenter.getSHA1;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_LANGUAGE;
 
 /**
@@ -138,6 +143,28 @@ public class HomeActivity extends BaseActivity implements HomeMvpView, View.OnCl
         homePresenter.checkForFormUpdates();
         customizeToolbar();
         setDisposable();
+//String fvft = "--";
+//        PackageInfo packageInfo = null;
+//        try {
+//            packageInfo = getActivityContext().getPackageManager()
+//
+//                    .getPackageInfo(getActivityContext().getPackageName(),
+//
+//                            PackageManager.GET_SIGNATURES);
+//            for (Signature signature : packageInfo.signatures) {
+//                // SHA1 the signature
+//                String sha1 = getSHA1(signature.toByteArray());
+//                Timber.d(  "App Signature is >> " + sha1);
+//                fvft=fvft+"----"+ sha1;
+//                // check is matches hardcoded value
+////                return APP_SIGNATURE.equals(sha1);
+//            }
+//
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
+
+//        welcomeText.setText(fvft);
     }
 
     @SuppressWarnings("ConstantConditions")
